@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+					    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+					    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+					    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Gmail SMTP server properties -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="gmailusername" />
+		<property name="password" value="password" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Yahoo SMTP server properties -->
+	<bean id="yahooMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="port" value="587" />
+		<property name="host" value="smtp.mail.yahoo.com" />
+		<property name="username" value="yahoousername@yahoo.com" />
+		<property name="password" value="password" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Our main class to send email -->
+	<bean id="sendMail" class="com.black.wolves.SendEmail">
+		<property name="mailSender" ref="mailSender" />
+		<property name="yahooMailSender" ref="yahooMailSender" />
+	</bean>
+
+	<!-- Pre configured mail properties to send mail from yahoo -->
+	<bean id="sendMailFromYahoo" class="org.springframework.mail.SimpleMailMessage">
+		<property name="subject" value="Send email from yahoo" />
+		<property name="to" value="user@gmail.com"></property>
+		<property name="from" value="user@yahoo.com"></property>
+		<property name="text" value="Mail from spring framwork."></property>
+	</bean>
+
+</beans>
