@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans	xmlns:util="http://www.springframework.org/schema/util"
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+     	xsi:schemaLocation=	"http://www.springframework.org/schema/util 
+							http://www.springframework.org/schema/util/spring-util-4.0.xsd
+	   						http://www.springframework.org/schema/beans
+							http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+							http://www.springframework.org/schema/context
+							http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        					http://www.springframework.org/schema/tx
+        					http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:property-placeholder location="classpath:selenium.properties" ignore-unresolvable="true" />
+	 
+	<context:component-scan base-package="com.blackwolves.*"/>
+
+	<bean id="seleniumJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="selenium" />
+		<property name="targetMethod" value="sendCampaign" />
+	</bean>
+	
+	<bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="seleniumJobDetail" />
+	    <property name="cronExpression" value="${selenium.quartz.cron}" />
+	</bean>
+	
+	<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="seleniumJobDetail" />
+			</list>
+		</property>
+
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>
