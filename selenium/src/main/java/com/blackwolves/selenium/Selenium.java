@@ -9,6 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,9 @@ public class Selenium {
 	
 	@Value("${job.id}")
 	private String jobId;
+	
+	@Value("${job.final.contacts}")
+	private Long jobFinalContacts;
 
 	/**
 	 * Sends the campaign for the configured values
@@ -53,7 +57,7 @@ public class Selenium {
 		
 		logger.debug("Creating the driver");
 		WebDriver driver = new HtmlUnitDriver();
-
+		
 		logger.debug("Getting to the url: " + url);
         driver.get(url);
         
@@ -69,27 +73,44 @@ public class Selenium {
         logger.debug("Getting to the job url: " + jobUrl + jobId);
         driver.get(jobUrl + jobId);
         
-        logger.debug("Clearing the feed input");
-        driver.findElement(By.name("feed")).clear();
+        if(checkIndex(driver)){
+        	
+        	logger.debug("Clearing the feed input");
+            driver.findElement(By.name("feed")).clear();
+            
+            logger.debug("Entering feed value: " + feed);
+            driver.findElement(By.name("feed")).sendKeys(feed);
+	    
+        	logger.debug("Clicking the Send button");
+	        driver.findElement(By.name("submit")).click();
+	
+	        try {
+	        	logger.debug("Waiting " + waitTime + " minutes");
+				TimeUnit.MINUTES.sleep(waitTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	        
+	        logger.debug("Clicking the Delete Queue button");
+	        driver.get(deleteUrl  + jobId);
+        }
         
-        logger.debug("Entering feed value: " + feed);
-        driver.findElement(By.name("feed")).sendKeys(feed);
-        
-        logger.debug("Clicking the Send button");
-        driver.findElement(By.name("submit")).click();
-
-        try {
-        	logger.debug("Waiting " + waitTime + " minutes");
-			TimeUnit.MINUTES.sleep(waitTime);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-        
-        logger.debug("Clicking the Delete Queue button");
-        driver.get(deleteUrl  + jobId);
-
         logger.debug("Exiting the driver");
         driver.quit();
 	}
-		
+
+	/**
+	 * @param driver 
+	 * @return
+	 */
+	private boolean checkIndex(WebDriver driver) {
+		logger.debug("Getting the index value");
+		String[] emText = driver.findElement(By.tagName("em")).getText().split(" ");
+        String index = emText[0].replaceAll("\\(","");
+        Long feedValue = Long.valueOf(feed);
+        Long indexValue = Long.valueOf(index);
+        logger.debug("Comparing (feedValue + indexValue) > jobFinalContacts");
+		return ((feedValue + indexValue) > jobFinalContacts) ? false : true;
+	}
+	
 }
