@@ -9,7 +9,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -93,6 +92,8 @@ public class Selenium {
 	        
 	        logger.debug("Clicking the Delete Queue button");
 	        driver.get(deleteUrl  + jobId);
+        }else{
+        	logger.debug("Sending email");
         }
         
         logger.debug("Exiting the driver");
@@ -100,6 +101,7 @@ public class Selenium {
 	}
 
 	/**
+	 * Checks the index of the list to see if we have more contacts left to send
 	 * @param driver 
 	 * @return
 	 */
@@ -107,10 +109,29 @@ public class Selenium {
 		logger.debug("Getting the index value");
 		String[] emText = driver.findElement(By.tagName("em")).getText().split(" ");
         String index = emText[0].replaceAll("\\(","");
-        Long feedValue = Long.valueOf(feed);
         Long indexValue = Long.valueOf(index);
-        logger.debug("Comparing (feedValue + indexValue) > jobFinalContacts");
-		return ((feedValue + indexValue) > jobFinalContacts) ? false : true;
+        logger.debug("Comparing values");
+		return checkRemainingFeedAmount(indexValue);
+	}
+
+	/**
+	 * @param indexValue
+	 * @return
+	 */
+	private boolean checkRemainingFeedAmount(Long indexValue) {
+		Long feedValue = Long.valueOf(feed);
+		logger.debug("Comparing indexValue > jobFinalContacts");
+		if(indexValue >= jobFinalContacts){
+			return false;
+		}
+		logger.debug("Comparing (indexValue + feedValue) > jobFinalContacts");
+		if((indexValue + feedValue) >= jobFinalContacts){
+			Long newFeedValue = jobFinalContacts - indexValue;
+			feed = newFeedValue.toString();
+			return true;
+		}
+		logger.debug("Comparing nothing :) ");
+		return true;
 	}
 	
 }
