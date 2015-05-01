@@ -17,26 +17,38 @@
 	 
 	<context:component-scan base-package="com.blackwolves.*"/>
 
-	<bean id="seleniumJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<bean id="upJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="selenium" />
 		<property name="targetMethod" value="sendCampaign" />
 	</bean>
 	
-	<bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="jobDetail" ref="seleniumJobDetail" />
-	    <property name="cronExpression" value="${selenium.quartz.cron}" />
+	<bean id="intespireJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="selenium" />
+		<property name="targetMethod" value="runFbl" />
+	</bean>
+	
+	<bean id="upCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="upJobDetail" />
+	    <property name="cronExpression" value="${up.quartz.cron}" />
+	</bean>
+	
+	<bean id="interspireCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="intespireJobDetail" />
+	    <property name="cronExpression" value="${interspire.quartz.cron}" />
 	</bean>
 	
 	<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="jobDetails">
 			<list>
-				<ref bean="seleniumJobDetail" />
+<!-- 				<ref bean="upJobDetail" /> -->
+				<ref bean="intespireJobDetail" />
 			</list>
 		</property>
 
 		<property name="triggers">
 			<list>
-				<ref bean="cronTrigger" />
+<!-- 				<ref bean="upCronTrigger" /> -->
+				<ref bean="interspireCronTrigger" />
 			</list>
 		</property>
 	</bean>

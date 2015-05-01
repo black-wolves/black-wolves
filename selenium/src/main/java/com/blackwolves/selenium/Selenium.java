@@ -22,14 +22,14 @@ public class Selenium {
 	
 	private static final Logger logger = LogManager.getLogger(Selenium.class.getName());
 	
-	@Value("${url}")
-	private String url;
+	@Value("${up.url}")
+	private String upUrl;
 	
-	@Value("${user}")
-	private String user;
+	@Value("${up.user}")
+	private String upUser;
 	
-	@Value("${password}")
-	private String password;
+	@Value("${up.password}")
+	private String upPassword;
 	
 	@Value("${job.url}")
 	private String jobUrl;
@@ -37,8 +37,8 @@ public class Selenium {
 	@Value("${feed}")
 	private String feed;
 	
-	@Value("${wait.time}")
-	private int waitTime;
+	@Value("${up.wait.time}")
+	private int upWaitTime;
 	
 	@Value("${delete.url}")
 	private String deleteUrl;
@@ -57,14 +57,14 @@ public class Selenium {
 		logger.debug("Creating the driver");
 		WebDriver driver = new HtmlUnitDriver();
 		
-		logger.debug("Getting to the url: " + url);
-        driver.get(url);
+		logger.debug("Getting to the url: " + upUrl);
+        driver.get(upUrl);
         
-        logger.debug("Introducing username: " + user);
-        driver.findElement(By.name("username")).sendKeys(user);
+        logger.debug("Introducing username: " + upUser);
+        driver.findElement(By.name("username")).sendKeys(upUser);
         
         logger.debug("Introducing password: xxxxx");
-        driver.findElement(By.name("password")).sendKeys(password);
+        driver.findElement(By.name("password")).sendKeys(upPassword);
         
         logger.debug("Clicking login button");
         driver.findElement(By.className("btn-primary")).click();
@@ -84,8 +84,8 @@ public class Selenium {
 	        driver.findElement(By.name("submit")).click();
 	
 	        try {
-	        	logger.debug("Waiting " + waitTime + " minutes");
-				TimeUnit.MINUTES.sleep(waitTime);
+	        	logger.debug("Waiting " + upWaitTime + " minutes");
+				TimeUnit.MINUTES.sleep(upWaitTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -99,6 +99,64 @@ public class Selenium {
         logger.debug("Exiting the driver");
         driver.quit();
 	}
+	
+	@Value("${interspire.url}")
+	private String interspireUrl;
+	
+	@Value("${interspire.user}")
+	private String interspireUser;
+	
+	@Value("${interspire.password}")
+	private String interspirePassword;
+	
+	@Value("${interspire.fbl.url}")
+	private String interspireFblUrl;
+	
+	@Value("${interspire.wait.time}")
+	private int intesrpisreWaitTime;
+	
+	/**
+	 * Runs the FBL
+	 */
+	public void runFbl(){
+		
+		logger.debug("Creating the driver");
+		WebDriver driver = new HtmlUnitDriver();
+		
+		logger.debug("Getting to the url: " + interspireUrl);
+        driver.get(interspireUrl);
+        
+        logger.debug("Introducing username: " + interspireUser);
+        driver.findElement(By.name("ss_username")).sendKeys(interspireUser);
+        
+        logger.debug("Introducing password: xxxxx");
+        driver.findElement(By.name("ss_password")).sendKeys(interspirePassword);
+        
+        logger.debug("Clicking login button");
+        driver.findElement(By.name("SubmitButton")).click();
+        
+        try {
+        	logger.debug("Waiting " + intesrpisreWaitTime + " minutes");
+			TimeUnit.MINUTES.sleep(intesrpisreWaitTime);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+        logger.debug("Clicking the FBL button");
+        driver.get(interspireFblUrl);
+	
+        try {
+        	logger.debug("Waiting " + intesrpisreWaitTime + " minutes");
+			TimeUnit.MINUTES.sleep(intesrpisreWaitTime);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+        logger.debug(driver.findElement(By.className("FlashSuccess")).getText());
+        
+        logger.debug("Exiting the driver");
+        driver.quit();
+	}
 
 	/**
 	 * Checks the index of the list to see if we have more contacts left to send
@@ -108,7 +166,9 @@ public class Selenium {
 	private boolean checkIndex(WebDriver driver) {
 		logger.debug("Getting the index value");
 		String[] emText = driver.findElement(By.tagName("em")).getText().split(" ");
+		logger.debug("Replacing");
         String index = emText[0].replaceAll("\\(","");
+        logger.debug("Creating the variable");
         Long indexValue = Long.valueOf(index);
         logger.debug("Comparing values");
 		return checkRemainingFeedAmount(indexValue);
