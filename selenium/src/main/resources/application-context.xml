@@ -17,38 +17,38 @@
 	 
 	<context:component-scan base-package="com.blackwolves.*"/>
 
-	<bean id="upJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="selenium" />
-		<property name="targetMethod" value="sendCampaign" />
+<!-- 	<bean id="upJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
+<!-- 		<property name="targetObject" ref="up" /> -->
+<!-- 		<property name="targetMethod" value="sendCampaign" /> -->
+<!-- 	</bean> -->
+	
+	<bean id="seedJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="seeder" />
+		<property name="targetMethod" value="checkMail" />
 	</bean>
 	
-	<bean id="intespireJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="selenium" />
-		<property name="targetMethod" value="runFbl" />
-	</bean>
+<!-- 	<bean id="upCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
+<!-- 	    <property name="jobDetail" ref="upJobDetail" /> -->
+<!-- 	    <property name="cronExpression" value="${up.quartz.cron}" /> -->
+<!-- 	</bean> -->
 	
-	<bean id="upCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="jobDetail" ref="upJobDetail" />
-	    <property name="cronExpression" value="${up.quartz.cron}" />
-	</bean>
-	
-	<bean id="interspireCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="jobDetail" ref="intespireJobDetail" />
-	    <property name="cronExpression" value="${interspire.quartz.cron}" />
+	<bean id="seedCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="seedJobDetail" />
+	    <property name="cronExpression" value="${seed.quartz.cron}" />
 	</bean>
 	
 	<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="jobDetails">
 			<list>
 <!-- 				<ref bean="upJobDetail" /> -->
-				<ref bean="intespireJobDetail" />
+				<ref bean="seedJobDetail" />
 			</list>
 		</property>
 
 		<property name="triggers">
 			<list>
 <!-- 				<ref bean="upCronTrigger" /> -->
-				<ref bean="interspireCronTrigger" />
+				<ref bean="seedCronTrigger" />
 			</list>
 		</property>
 	</bean>

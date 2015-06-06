@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class Selenium {
+public class Up {
 	
-	private static final Logger logger = LogManager.getLogger(Selenium.class.getName());
+	private static final Logger logger = LogManager.getLogger(Up.class.getName());
 	
 	@Value("${up.url}")
 	private String upUrl;
@@ -100,64 +100,6 @@ public class Selenium {
         driver.quit();
 	}
 	
-	@Value("${interspire.url}")
-	private String interspireUrl;
-	
-	@Value("${interspire.user}")
-	private String interspireUser;
-	
-	@Value("${interspire.password}")
-	private String interspirePassword;
-	
-	@Value("${interspire.fbl.url}")
-	private String interspireFblUrl;
-	
-	@Value("${interspire.wait.time}")
-	private int intesrpisreWaitTime;
-	
-	/**
-	 * Runs the FBL
-	 */
-	public void runFbl(){
-		
-		logger.debug("Creating the driver");
-		WebDriver driver = new HtmlUnitDriver();
-		
-		logger.debug("Getting to the url: " + interspireUrl);
-        driver.get(interspireUrl);
-        
-        logger.debug("Introducing username: " + interspireUser);
-        driver.findElement(By.name("ss_username")).sendKeys(interspireUser);
-        
-        logger.debug("Introducing password: xxxxx");
-        driver.findElement(By.name("ss_password")).sendKeys(interspirePassword);
-        
-        logger.debug("Clicking login button");
-        driver.findElement(By.name("SubmitButton")).click();
-        
-        try {
-        	logger.debug("Waiting " + intesrpisreWaitTime + " minutes");
-			TimeUnit.MINUTES.sleep(intesrpisreWaitTime);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-        
-        logger.debug("Clicking the FBL button");
-        driver.get(interspireFblUrl);
-	
-        try {
-        	logger.debug("Waiting " + intesrpisreWaitTime + " minutes");
-			TimeUnit.MINUTES.sleep(intesrpisreWaitTime);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-        
-        logger.debug(driver.findElement(By.className("FlashSuccess")).getText());
-        
-        logger.debug("Exiting the driver");
-        driver.quit();
-	}
-
 	/**
 	 * Checks the index of the list to see if we have more contacts left to send
 	 * @param driver 
@@ -193,5 +135,5 @@ public class Selenium {
 		logger.debug("Comparing nothing :) ");
 		return true;
 	}
-	
+
 }
