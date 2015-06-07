@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.blackwolves.selenium;
+package com.blackwolves.selenium.up;
 
 import java.util.concurrent.TimeUnit;
 
