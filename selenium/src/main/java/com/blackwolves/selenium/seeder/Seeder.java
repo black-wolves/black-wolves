@@ -64,8 +64,6 @@ public class Seeder {
 		logger.debug("\nFinished all threads");
 	}
 	
-	private static final String SERVER = "142";
-
 	/**
 	 * @return
 	 */
@@ -82,12 +80,15 @@ public class Seeder {
 		return ips;
 	}
 
+	private static final String SERVER = "test";
+	
 	/**
 	 * @return
 	 */
 	private List<String[]> generateSeedsList() {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
+//			CSVReader reader = new CSVReader(new FileReader("C:\\Users\\gaston.dapice\\Dropbox\\Black Wolves\\Seeder\\" + SERVER + "\\seeds.csv"));
 			CSVReader reader = new CSVReader(new FileReader("C:\\Users\\gaston.dapice\\Dropbox\\Black Wolves\\Seeder\\" + SERVER + "\\seeds.csv"));
 			seeds = reader.readAll();
 		} catch (FileNotFoundException e) {

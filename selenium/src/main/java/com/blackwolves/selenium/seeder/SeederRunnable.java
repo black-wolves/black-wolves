@@ -11,8 +11,8 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Proxy;
-import org.openqa.selenium.Proxy.ProxyType;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -83,6 +83,16 @@ public class SeederRunnable implements Runnable {
 			        logger.debug("Getting the Bulk Url");
 			        driver.get(driver.findElement(By.id("bulk")).findElement(By.tagName("a")).getAttribute("href"));
 			        
+			        if(driver.findElements(By.className("mlink")).size() > 0){
+			        	logger.debug("mlink found");
+			        	List<WebElement> nlinkElements= driver.findElements(By.className("mlink"));
+			        	logger.debug("printing messages href");
+			        	for (WebElement webElement : nlinkElements) {
+							String href = webElement.getAttribute("href");
+							logger.debug(href);
+						}
+			        }
+			        
 			        if(driver.findElements(By.id("select_all")).size() > 0){
 			        	
 			        	logger.debug("Clicking Select all checkbox");
@@ -128,7 +138,7 @@ public class SeederRunnable implements Runnable {
         DesiredCapabilities capability = new DesiredCapabilities();
  
         Proxy proxy = new Proxy();
-        proxy.setProxyType(ProxyType.MANUAL);
+//        proxy.setProxyType(ProxyType.MANUAL);
         proxy.setHttpProxy(httpProxy);
         proxy.setSslProxy(sslProxy);
         proxy.setFtpProxy(ftpProxy);
