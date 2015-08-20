@@ -70,7 +70,7 @@ public class Seeder {
 	private List<String[]> generateIpsList() {
 		List<String[]> ips = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(new FileReader("C:\\Users\\gaston.dapice\\Dropbox\\Black Wolves\\Seeder\\" + SERVER + "\\ip_curl.txt"));
+			CSVReader reader = new CSVReader(new FileReader("/Users/gastondapice/Dropbox/Black Wolves/Seeder/" + SERVER + "/ip_curl.txt"));
 			ips = reader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
@@ -88,8 +88,7 @@ public class Seeder {
 	private List<String[]> generateSeedsList() {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-//			CSVReader reader = new CSVReader(new FileReader("C:\\Users\\gaston.dapice\\Dropbox\\Black Wolves\\Seeder\\" + SERVER + "\\seeds.csv"));
-			CSVReader reader = new CSVReader(new FileReader("C:\\Users\\gaston.dapice\\Dropbox\\Black Wolves\\Seeder\\" + SERVER + "\\seeds.csv"));
+			CSVReader reader = new CSVReader(new FileReader("/Users/gastondapice/Dropbox/Black Wolves/Seeder/" + SERVER + "/seeds.csv"));
 			seeds = reader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
