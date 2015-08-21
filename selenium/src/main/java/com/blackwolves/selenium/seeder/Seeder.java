@@ -29,15 +29,19 @@ import com.google.common.collect.Lists;
 public class Seeder {
 	
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
+	
+	public static void main(String[] args) {
+		checkMail();
+	}
 
 	/**
 	 * @throws BrokenBarrierException 
 	 * @throws InterruptedException 
 	 * 
 	 */
-	public void checkMail(){
+	public static void checkMail(){
 		
-		final int THREADS = 25;
+		final int THREADS = 10;
 		
 		List<String[]> seeds = generateSeedsList();
 		List<String[]> ips = generateIpsList();
@@ -54,7 +58,6 @@ public class Seeder {
 			executor.execute(worker);
 //			processSeeds(partition, ips, ipRandomizer);
 		}
-		
 
 		executor.shutdown();
 		// Wait until all threads are finish
@@ -64,14 +67,43 @@ public class Seeder {
 		logger.debug("\nFinished all threads");
 	}
 	
+	public void suscribeToNewsletters()
+	{
+		final int THREADS = 1;
+		
+		List<String[]> seeds = generateSeedsList();
+		List<String[]> ips = generateIpsList();
+		
+		List<List<String[]>> partitions = Lists.partition(seeds, 10);
+		
+		Random seedRandomizer = new Random();
+		final Random ipRandomizer = new Random();
+		
+		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+		for (final List<String[]> partition : partitions) {
+			
+			Runnable suscriber = new SuscriberRunnable(partition, ips, ipRandomizer);
+			executor.execute(suscriber);
+		}
+		
+
+		executor.shutdown();
+		// Wait until all threads are finish
+		while (!executor.isTerminated()) {
+			
+		}
+		logger.debug("\nFinished all threads");
+		
+	}
+	
 	/**
 	 * @return
 	 */
-	private List<String[]> generateIpsList() {
+	private static List<String[]> generateIpsList() {
 		List<String[]> ips = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(new FileReader("/Users/gastondapice/Dropbox/Black Wolves/Seeder/" + SERVER + "/ip_curl.txt"));
-			ips = reader.readAll();
+			CSVReader ipsReader = new CSVReader(new FileReader(ROUTE + "ip_curl.txt"));
+			ips = ipsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
@@ -79,17 +111,18 @@ public class Seeder {
 		}
 		return ips;
 	}
-
-	private static final String SERVER = "test";
+	
+	private static final String ROUTE = "/var/www/";
+//	private static final String ROUTE = "/Users/gastondapice/Dropbox/Black Wolves/Seeder/test";
 	
 	/**
 	 * @return
 	 */
-	private List<String[]> generateSeedsList() {
+	private static List<String[]> generateSeedsList() {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(new FileReader("/Users/gastondapice/Dropbox/Black Wolves/Seeder/" + SERVER + "/seeds.csv"));
-			seeds = reader.readAll();
+			CSVReader seedsReader = new CSVReader(new FileReader(ROUTE + "seeds.csv"));
+			seeds = seedsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {

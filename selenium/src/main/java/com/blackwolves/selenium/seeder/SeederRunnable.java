@@ -27,6 +27,8 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class SeederRunnable implements Runnable {
 	
+	private static final double PERCENTAGE = 0.3;
+
 	private static final Logger logger = LogManager.getLogger(SeederRunnable.class.getName());
 	
 	private final List<String[]> seeds;
@@ -63,23 +65,11 @@ public class SeederRunnable implements Runnable {
 //				WebDriver driver = new HtmlUnitDriver(capability);
 				WebDriver driver = new HtmlUnitDriver();
 				
-				driver.get("https://www.adidas.com/us/subscribe?email=afdsfdsf&signup_source=footer");
-				
-				driver.findElement(By.id("dwfrm_profile_customer_email")).clear();
-				driver.findElement(By.id("dwfrm_profile_customer_email")).sendKeys(seed[0]);
-				
-				List<WebElement> genderRadioButtons = driver.findElements(By.name("dwfrm_profile_customer_gender"));
-				Random rand = new Random();
-				int genderValue = rand.nextInt(1);
-				genderRadioButtons.get(genderValue).click();
-				
-				driver.findElement(By.id("newslettersubmitbutton")).click();
-				
-//				yahooLogin(yahooUrl, seed, driver);
-//		        
-//		        processBulk(driver);
-//		        
-//		        processInbox(driver);
+				yahooLogin(yahooUrl, seed, driver);
+		        
+		        processBulk(driver);
+		        
+		        processInbox(driver);
 		        
 		        logger.debug("Finished!!");
 
@@ -143,29 +133,29 @@ public class SeederRunnable implements Runnable {
 				logger.debug("mlink found");
 		    	List<WebElement> inboxMsgs = driver.findElements(By.className("mlink"));
 		    	
-		    	logger.debug("printing messages href");
-		    	int percentage = (int) (inboxMsgs.size() * 0.3);
+		    	int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 		    	for(int j = 0 ; j < percentage; j++){
 		    		inboxMsgs = driver.findElements(By.className("mlink"));
 		    		Random randomNo = new Random();
 		    		int randomPosition = randomNo.nextInt(inboxMsgs.size()>=50?50:inboxMsgs.size());
-			        	String href = inboxMsgs.get(randomPosition).getAttribute("href");
-						logger.debug(href);
-						driver.get(href);
-						WebElement div = driver.findElement(By.className("mailContent"));
-						List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-						Random rand = new Random();
-		        		int randomLinkNo = rand.nextInt(linksToGo.size());
-						String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
+		        	String href = inboxMsgs.get(randomPosition).getAttribute("href");
+					driver.get(href);
+					WebElement div = driver.findElement(By.className("mailContent"));
+					List<WebElement> linksToGo = div.findElements(By.tagName("a"));
+					Random rand = new Random();
+	        		int randomLinkNo = rand.nextInt(linksToGo.size());
+					String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
+					if(aUrl!=null){
 						if(aUrl.contains("unsub") || aUrl.contains("yahoo")){
 							logger.debug("Unsubscribe link!!");
 							logger.debug(aUrl);
 						}else{
 							openInNewWindow(driver, linksToGo.get(randomLinkNo));
 						}
-						
-//						Returns to inbox
-						driver.get(driver.findElement(By.id("inbox")).findElement(By.tagName("a")).getAttribute("href"));
+					}
+					
+//					Returns to inbox
+					driver.get(driver.findElement(By.id("inbox")).findElement(By.tagName("a")).getAttribute("href"));
 						
 		    	}
 		    }
@@ -187,7 +177,7 @@ public class SeederRunnable implements Runnable {
 		    	List<WebElement> spamMsgs = driver.findElements(By.className("mlink"));
 		    	
 		    	logger.debug("printing messages href");
-		    	int percentage = (int) (spamMsgs.size() * 0.3);
+		    	int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 		    	for(int j = 0 ; j < percentage; j++){
 		    		spamMsgs = driver.findElements(By.className("mlink"));
 		    		Random randomNo = new Random();
@@ -204,6 +194,12 @@ public class SeederRunnable implements Runnable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param driver
+	 * @param a
+	 * @throws InterruptedException
+	 */
 	private void openInNewWindow(WebDriver driver, WebElement a) throws InterruptedException {
 		
 		logger.debug("Cicking this link: " + a.getAttribute("href"));
