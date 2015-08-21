@@ -40,7 +40,14 @@ public class TestSelenium {
 	 * Checks mails
 	 */
 	@Test
+	@Ignore
 	public void testCheckMail() {
 		seeder.checkMail();
+	}
+	
+	@Test
+	public void testSuscriptions()
+	{
+		seeder.suscribeToNewsletters();
 	}
 }

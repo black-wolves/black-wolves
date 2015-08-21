@@ -64,13 +64,43 @@ public class Seeder {
 		logger.debug("\nFinished all threads");
 	}
 	
+	
+	public void suscribeToNewsletters()
+	{
+		final int THREADS = 1;
+		
+		List<String[]> seeds = generateSeedsList();
+		List<String[]> ips = generateIpsList();
+		
+		List<List<String[]>> partitions = Lists.partition(seeds, 10);
+		
+		Random seedRandomizer = new Random();
+		final Random ipRandomizer = new Random();
+		
+		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+		for (final List<String[]> partition : partitions) {
+			
+			Runnable suscriber = new SuscriberRunnable(partition, ips, ipRandomizer);
+			executor.execute(suscriber);
+		}
+		
+
+		executor.shutdown();
+		// Wait until all threads are finish
+		while (!executor.isTerminated()) {
+			
+		}
+		logger.debug("\nFinished all threads");
+		
+	}
+	
 	/**
 	 * @return
 	 */
 	private List<String[]> generateIpsList() {
 		List<String[]> ips = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(new FileReader("/Users/gastondapice/Dropbox/Black Wolves/Seeder/" + SERVER + "/ip_curl.txt"));
+			CSVReader reader = new CSVReader(new FileReader("/Users/danigrane/Documents/workspace/config/ip_curl.txt"));
 			ips = reader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
@@ -88,7 +118,7 @@ public class Seeder {
 	private List<String[]> generateSeedsList() {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(new FileReader("/Users/gastondapice/Dropbox/Black Wolves/Seeder/" + SERVER + "/seeds.csv"));
+			CSVReader reader = new CSVReader(new FileReader("/Users/danigrane/Documents/workspace/config/seeds.csv"));
 			seeds = reader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
