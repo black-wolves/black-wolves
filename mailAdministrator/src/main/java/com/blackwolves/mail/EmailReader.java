@@ -189,7 +189,7 @@ public class EmailReader {
 		folder.open(Folder.READ_ONLY);
 		Message msg[] = folder.getMessages();
 		for (Message message : msg) {
-			if(message!=null){
+			if(message!=null && message.getFrom()!=null &&  message.getFrom()[0].toString().split("@")[1]!=null){
 				String domain = message.getFrom()[0].toString().split("@")[1].replace(">","");
 				if(warmupDomains.contains(domain)){
 					Long domainCount = domains.get(domain);
