@@ -37,8 +37,7 @@ public class EmailReader {
 	private static final Logger logger = LogManager.getLogger(EmailReader.class.getName());
 	
 	private static final String IMAP_YAHOO = "imap.mail.yahoo.com";
-//	private static final String ROUTE = "/var/www/";
-	private static final String ROUTE = "/Users/gastondapice/Dropbox/Black Wolves/Seeder/test/";
+	private static final String ROUTE = "/var/www/";
 	private static final String INBOX = "Inbox";
 	private static final String SPAM = "Bulk Mail";
 
@@ -48,13 +47,14 @@ public class EmailReader {
 		try {
 			Session session = Session.getDefaultInstance(props, null);
 			List<String[]> seeds = generateSeedsList();
+			List<String> warmupDomains = generateDomainsList();
 			Map<String, Long> spamDomains = new HashMap<String, Long>();
 			Map<String, Long> inboxDomains = new HashMap<String, Long>();
 			for (String[] seed : seeds) {
 				Store store = session.getStore("imaps");
 				// IMAP host for yahoo.
 				store.connect(IMAP_YAHOO, seed[0], seed[1]);
-				obtainFoldersCount(store, spamDomains, inboxDomains);
+				obtainFoldersCount(store, spamDomains, inboxDomains, warmupDomains);
 				store.close();
 			}
 			Map<String, Double> percentageDomains = new HashMap<String, Double>();
@@ -103,20 +103,40 @@ public class EmailReader {
 		}
 		return seeds;
 	}
+	
+	/**
+	 * @return
+	 */
+	private static List<String> generateDomainsList() {
+		List<String[]> domains = new ArrayList<String[]>();
+		List<String> finalDomains = new ArrayList<String>();
+		try {
+			CSVReader domainsReader = new CSVReader(new FileReader(ROUTE + "domains.txt"));
+			domains = domainsReader.readAll();
+			for (String[] domain : domains) {
+				finalDomains.add(domain[0]);
+			}
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return finalDomains;
+	}
 
 	/**
 	 * 
 	 * @param store
-	 * @param inboxDomains 
-	 * @param spamDomains 
-	 * @param percentageDomains2 
+	 * @param spamDomains
+	 * @param inboxDomains
+	 * @param warmupDomains
 	 * @throws MessagingException
 	 */
-	private static void obtainFoldersCount(Store store, Map<String, Long> spamDomains, Map<String, Long> inboxDomains) throws MessagingException {
+	private static void obtainFoldersCount(Store store, Map<String, Long> spamDomains, Map<String, Long> inboxDomains, List<String> warmupDomains) throws MessagingException {
 		Folder spam = store.getFolder(SPAM);
 		Folder inbox = store.getFolder(INBOX);
-		spamDomains = obtainFolderCountByDomain(spamDomains, spam);
-		inboxDomains = obtainFolderCountByDomain(inboxDomains, inbox);
+		spamDomains = obtainFolderCountByDomain(spamDomains, spam, warmupDomains);
+		inboxDomains = obtainFolderCountByDomain(inboxDomains, inbox, warmupDomains);
 		
 //		double totalSpam = spam.getMessageCount();
 //		double totalInbox = inbox.getMessageCount();
@@ -160,17 +180,20 @@ public class EmailReader {
 	 * 
 	 * @param domains 
 	 * @param folder
+	 * @param warmupDomains 
 	 * @return
 	 * @throws MessagingException
 	 */
-	private static Map<String, Long> obtainFolderCountByDomain(Map<String, Long> domains, Folder folder)
+	private static Map<String, Long> obtainFolderCountByDomain(Map<String, Long> domains, Folder folder, List<String> warmupDomains)
 			throws MessagingException {
 		folder.open(Folder.READ_ONLY);
 		Message msg[] = folder.getMessages();
 		for (Message message : msg) {
 			String domain = message.getFrom()[0].toString().split("@")[1].replace(">","");
-			Long domainCount = domains.get(domain);
-			domains.put(domain, calculateDomainCount(domainCount));
+			if(warmupDomains.contains(domain)){
+				Long domainCount = domains.get(domain);
+				domains.put(domain, calculateDomainCount(domainCount));
+			}
 		}
 		folder.close(true);
 		return domains;
