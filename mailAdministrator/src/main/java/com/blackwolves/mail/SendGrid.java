@@ -1,6 +1,16 @@
 package com.blackwolves.mail;
 
-import com.sendgrid.smtpapi.SMTPAPI;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,8 +22,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.util.*;
+import com.sendgrid.smtpapi.SMTPAPI;
 
 public class SendGrid {
     private static final String VERSION = "2.2.2";
