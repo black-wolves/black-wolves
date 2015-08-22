@@ -189,10 +189,12 @@ public class EmailReader {
 		folder.open(Folder.READ_ONLY);
 		Message msg[] = folder.getMessages();
 		for (Message message : msg) {
-			String domain = message.getFrom()[0].toString().split("@")[1].replace(">","");
-			if(warmupDomains.contains(domain)){
-				Long domainCount = domains.get(domain);
-				domains.put(domain, calculateDomainCount(domainCount));
+			if(message!=null){
+				String domain = message.getFrom()[0].toString().split("@")[1].replace(">","");
+				if(warmupDomains.contains(domain)){
+					Long domainCount = domains.get(domain);
+					domains.put(domain, calculateDomainCount(domainCount));
+				}
 			}
 		}
 		folder.close(true);
