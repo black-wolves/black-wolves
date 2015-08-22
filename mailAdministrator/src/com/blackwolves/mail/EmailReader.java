@@ -3,6 +3,7 @@
  */
 package com.blackwolves.mail;
 
+import java.text.DecimalFormat;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -26,7 +27,7 @@ public class EmailReader {
 		try {
 			Session session = Session.getDefaultInstance(props, null);
 			Store store = session.getStore("imaps");
-			session.setDebug(true);
+//			session.setDebug(true);
 			// IMAP host for gmail.
 			// Replace <username> with the valid username of your Email ID.
 			// Replace <password> with a valid password of your Email ID.
@@ -34,16 +35,21 @@ public class EmailReader {
 			// store.connect("imap.gmail.com", "<username>", "<password>");
 
 			// IMAP host for yahoo.
-			store.connect("imap.mail.yahoo.com", "yaninadefays01", "madrivorules");
-
-			System.out.println(store);
-			Folder spam = store.getFolder("Bulk Mail");
-			spam.open(Folder.READ_WRITE);
-			Folder inbox = store.getFolder("Inbox");
-			inbox.open(Folder.READ_WRITE);
-			showMails(inbox, spam);
-			spam.close(true);
-			inbox.close(true);
+			store.connect("imap.mail.yahoo.com", "danielsaulino03", "madrivorules");
+			
+			calculatePercent(store);
+			
+//			System.out.println(store);
+//			Folder spam = store.getFolder("Bulk Mail");
+//			spam.open(Folder.READ_WRITE);
+//			Folder inbox = store.getFolder("Inbox");
+//			inbox.open(Folder.READ_WRITE);
+//			
+//			
+//			showMails(inbox, spam);
+//			showUnreadMails(inbox);
+//			spam.close(true);
+//			inbox.close(true);
 			store.close();
 
 		} catch (NoSuchProviderException e) {
@@ -54,6 +60,22 @@ public class EmailReader {
 			System.exit(2);
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param store
+	 * @throws MessagingException
+	 */
+	private static void calculatePercent(Store store) throws MessagingException {
+		Folder spam = store.getFolder("Bulk Mail");
+		Folder inbox = store.getFolder("Inbox");
+		double totalSpam = spam.getMessageCount();
+		double totalInbox = inbox.getMessageCount();
+		double totalMail = totalSpam + totalInbox;
+		Double percent = (totalInbox / (totalMail)) * 100;
+		DecimalFormat df = new DecimalFormat("#.00");
+		System.out.println("Inbox rate: " + df.format(percent));
 	}
 	
 	/**
@@ -75,7 +97,7 @@ public class EmailReader {
 					System.out.println("DATE: " + message.getSentDate().toString());
 					System.out.println("FROM: " + message.getFrom()[0].toString());
 					System.out.println("SUBJECT: " + message.getSubject().toString());
-					System.out.println("CONTENT: " + message.getContent().toString());
+//					System.out.println("CONTENT: " + message.getContent().toString());
 					System.out.println("******************************************");
 					message.saveChanges();
 				} catch (Exception e) {
@@ -98,7 +120,7 @@ public class EmailReader {
 					System.out.println("DATE: " + message.getSentDate().toString());
 					System.out.println("FROM: " + message.getFrom()[0].toString());
 					System.out.println("SUBJECT: " + message.getSubject().toString());
-					System.out.println("CONTENT: " + message.getContent().toString());
+//					System.out.println("CONTENT: " + message.getContent().toString());
 					System.out.println("******************************************");
 				} catch (Exception e) {
 					System.out.println("No Information");

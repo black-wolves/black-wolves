@@ -3,6 +3,7 @@
 		xmlns="http://www.springframework.org/schema/beans"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:p="http://www.springframework.org/schema/p"
 		xmlns:tx="http://www.springframework.org/schema/tx"
      	xsi:schemaLocation=	"http://www.springframework.org/schema/util 
 							http://www.springframework.org/schema/util/spring-util-4.0.xsd
@@ -52,5 +53,36 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="applicationContextProvider">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.blackwolves.persistence.entity" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.ejb.naming_strategy">${hibernate.ejb.naming_strategy}</prop>
+                <prop key="hibernate.check_nullability">${hibernate.check_nullability}</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!--	Data Source Declaration  -->
+
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close"
+			    p:driverClassName="${dataSource.driver}"
+			    p:url="${dataSource.url}"
+			    p:username="${dataSource.user}"
+			    p:password="${dataSource.password}"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
 
 </beans>

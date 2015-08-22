@@ -48,17 +48,17 @@ public class SuscriberRunnable implements Runnable {
 
 			try{
 
-				logger.debug("Counter i is now: " + i);
+				logger.info("Counter i is now: " + i);
 				//				String seed = seeds.get(seedRandomizer.nextInt(seeds.size()));
 				String[] seed = seeds.get(i);
 
 				String[] ip = ips.get(ipRandomizer.nextInt(ips.size()));
 
-				logger.debug("Creating the proxy capability");
+				logger.info("Creating the proxy capability");
 
 				DesiredCapabilities capability = SeederRunnable.addProxyCapabilities(ip[0]);
 
-				logger.debug("Creating the driver");
+				logger.info("Creating the driver");
 				//				WebDriver driver = new HtmlUnitDriver(capability);
 				WebDriver driver = new ChromeDriver();
 				suscribeToSkimm(seed, driver);
@@ -88,7 +88,7 @@ public class SuscriberRunnable implements Runnable {
 		driver.findElement(By.name("input_1")).submit();
 		if(driver.getPageSource().contains("Thanks"))
 			{
-				logger.debug("Fashion Magazine Suscription succesful.");
+				logger.info("Fashion Magazine Suscription succesful.");
 			}
 
 
@@ -127,7 +127,7 @@ public class SuscriberRunnable implements Runnable {
 		driver.findElement(By.id("daily-digg-email-submit-btn")).click();
 		if(driver.getPageSource().contains("Thanks for subscribing!"))
 		{
-			logger.debug("Suscribed "+ seed[0]+ " to Digg!");
+			logger.info("Suscribed "+ seed[0]+ " to Digg!");
 		}
 		
 		
@@ -140,7 +140,7 @@ public class SuscriberRunnable implements Runnable {
 		driver.get("https://www.adidas.com/us/subscribe");
 		
 		String email = driver.findElement(By.id("dwfrm_profile_customer_email")).getText();
-		logger.debug(email);
+		logger.info(email);
 
 		List<WebElement> genderRadioButtons = driver.findElements(By.name("dwfrm_profile_customer_gender"));
 //		genderRadioButtons.get(1).click();

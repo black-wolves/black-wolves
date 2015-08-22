@@ -64,7 +64,7 @@ public class Seeder {
 		while (!executor.isTerminated()) {
 			
 		}
-		logger.debug("\nFinished all threads");
+		logger.info("\nFinished all threads");
 	}
 	
 	public void suscribeToNewsletters()
@@ -92,7 +92,7 @@ public class Seeder {
 		while (!executor.isTerminated()) {
 			
 		}
-		logger.debug("\nFinished all threads");
+		logger.info("\nFinished all threads");
 		
 	}
 	
@@ -112,8 +112,8 @@ public class Seeder {
 		return ips;
 	}
 	
-	private static final String ROUTE = "/var/www/";
-//	private static final String ROUTE = "/Users/gastondapice/Dropbox/Black Wolves/Seeder/test";
+//	private static final String ROUTE = "/var/www/";
+	private static final String ROUTE = "/Users/gastondapice/Dropbox/Black Wolves/Seeder/test/";
 	
 	/**
 	 * @return

@@ -13,6 +13,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<selenium.version>2.45.0</selenium.version>
 		<spring.version>4.1.5.RELEASE</spring.version>
+		<hibernate.version>4.3.6.Final</hibernate.version>
+		<tomcat.jdbc.version>7.0.27</tomcat.jdbc.version>
+		<oracle.version>6</oracle.version>
+		<postgres.version>9.2-1003-jdbc4</postgres.version>
+		<mysql.version>5.1.30</mysql.version>
 		<quartz.version>2.2.1</quartz.version>
 		<log4j.version>1.2.17</log4j.version>
 		<junit.version>4.11</junit.version>
@@ -75,6 +80,63 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<!-- Hibernate dependencies -->
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		
+		<dependency>
+			 <groupId>org.hibernate</groupId>
+			 <artifactId>hibernate-envers</artifactId>
+			 <version>${hibernate.version}</version>
+		</dependency>
+				
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+        	
+		<!-- Tomcat DBCP -->
+		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+			<version>${tomcat.jdbc.version}</version>
+		</dependency>
+		
+		<!-- MySQL Java Connector library -->
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+
+		<!-- Oracle library -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.oracle</groupId> -->
+<!-- 			<artifactId>ojdbc6</artifactId> -->
+<!-- 			<version>${oracle.version}</version> -->
+<!-- 		</dependency> -->
+
+		<!-- Postgres library -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.postgresql</groupId> -->
+<!-- 			<artifactId>postgresql</artifactId> -->
+<!-- 			<version>${postgres.version}</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Quartz framework -->
 		<dependency>

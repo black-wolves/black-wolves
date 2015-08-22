@@ -20378,3 +20378,358 @@ Capabilities [{platform=MAC, acceptSslCerts=true, javascriptEnabled=true, browse
 2015-08-21 11:52:25,328 DEBUG [SuscriberRunnable] - Creating the proxy capability
 2015-08-21 11:52:25,328 DEBUG [SeederRunnable] - Using ip: 192.168.1.136
 2015-08-21 11:52:25,329 DEBUG [SuscriberRunnable] - Creating the driver
+2015-08-21 15:19:13,648 ERROR [Seeder] - /var/www/seeds.csv (No such file or directory)
+java.io.FileNotFoundException: /var/www/seeds.csv (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateSeedsList(Seeder.java:124)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:46)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:19:13,671 ERROR [Seeder] - /var/www/ip_curl.txt (No such file or directory)
+java.io.FileNotFoundException: /var/www/ip_curl.txt (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateIpsList(Seeder.java:105)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:47)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:19:13,735 DEBUG [Seeder] - 
+Finished all threads
+2015-08-21 15:25:35,614 ERROR [Seeder] - /var/www/seeds.csv (No such file or directory)
+java.io.FileNotFoundException: /var/www/seeds.csv (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateSeedsList(Seeder.java:124)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:46)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:25:35,625 ERROR [Seeder] - /var/www/ip_curl.txt (No such file or directory)
+java.io.FileNotFoundException: /var/www/ip_curl.txt (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateIpsList(Seeder.java:105)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:47)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:25:35,676 DEBUG [Seeder] - 
+Finished all threads
+2015-08-21 15:26:08,775 ERROR [Seeder] - /var/www/seeds.csv (No such file or directory)
+java.io.FileNotFoundException: /var/www/seeds.csv (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateSeedsList(Seeder.java:124)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:46)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:27:15,602 ERROR [Seeder] - /Users/gastondapice/Dropbox/Black Wolves/Seeder/testseeds.csv (No such file or directory)
+java.io.FileNotFoundException: /Users/gastondapice/Dropbox/Black Wolves/Seeder/testseeds.csv (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateSeedsList(Seeder.java:124)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:46)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:27:15,611 ERROR [Seeder] - /Users/gastondapice/Dropbox/Black Wolves/Seeder/testip_curl.txt (No such file or directory)
+java.io.FileNotFoundException: /Users/gastondapice/Dropbox/Black Wolves/Seeder/testip_curl.txt (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at com.blackwolves.selenium.seeder.Seeder.generateIpsList(Seeder.java:105)
+	at com.blackwolves.selenium.seeder.Seeder.checkMail(Seeder.java:47)
+	at selenium.TestSelenium.testCheckMail(TestSelenium.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:73)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:73)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:224)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:83)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:68)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:163)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+2015-08-21 15:27:15,628 DEBUG [Seeder] - 
+Finished all threads
+2015-08-21 15:27:45,999 DEBUG [SeederRunnable] - Counter i is now: 0
+2015-08-21 15:27:46,004 DEBUG [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:27:46,005 DEBUG [SeederRunnable] - Using ip: 62.216.76.105
+2015-08-21 15:27:46,017 DEBUG [SeederRunnable] - Creating the driver
+2015-08-21 15:27:47,864 DEBUG [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:27:53,360 DEBUG [SeederRunnable] - Introducing username: ubmzxqwee@yahoo.com
+2015-08-21 15:27:53,386 DEBUG [SeederRunnable] - Introducing password: a&DAA72ENeQ8qY4
+2015-08-21 15:27:53,387 DEBUG [SeederRunnable] - Clicking login button
+2015-08-21 15:27:57,954 DEBUG [SeederRunnable] - Getting the Bulk Url
+2015-08-21 15:27:58,760 DEBUG [SeederRunnable] - Getting the Inbox Url
+2015-08-21 15:27:59,313 DEBUG [SeederRunnable] - mlink found
+2015-08-21 15:28:04,153 DEBUG [SeederRunnable] - Unsubscribe link!!
+2015-08-21 15:28:04,888 DEBUG [SeederRunnable] - https://ssf.adidas.com/cdc/preference.action?unsubscriptionId=72190fe73ffb35adaf9c24bee0c9b150c231e9ad653b44bfc1cee0142b781c8e&uid=ZPEV6NIM76QBMR7Q&lid=EN&cm_mmca4=33333?cm_mmc=AdieEmail_PRGM-_-WelcomeProspect-_-PWP1_day0-_-preferences&cm_mmca1=US&cm_mmca3=ZPEV6NIM76QBMR7Q
+2015-08-21 15:30:03,027 DEBUG [SeederRunnable] - Counter i is now: 0
+2015-08-21 15:30:03,033 DEBUG [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:30:03,034 DEBUG [SeederRunnable] - Using ip: 176.96.50.131
+2015-08-21 15:30:03,038 DEBUG [SeederRunnable] - Creating the driver
+2015-08-21 15:30:04,438 DEBUG [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:30:08,210 DEBUG [SeederRunnable] - Counter i is now: 0
+2015-08-21 15:30:08,210 DEBUG [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:30:08,211 DEBUG [SeederRunnable] - Using ip: 62.216.73.136
+2015-08-21 15:30:08,211 DEBUG [SeederRunnable] - Creating the driver
+2015-08-21 15:30:08,221 DEBUG [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:30:19,961 DEBUG [SeederRunnable] - Introducing username: ubmzxqwee@yahoo.com
+2015-08-21 15:30:19,962 DEBUG [SeederRunnable] - Introducing username: ubmzxqwee@yahoo.com
+2015-08-21 15:30:21,222 DEBUG [SeederRunnable] - Introducing password: a&DAA72ENeQ8qY4
+2015-08-21 15:30:21,239 DEBUG [SeederRunnable] - Clicking login button
+2015-08-21 15:30:21,750 DEBUG [SeederRunnable] - Introducing password: a&DAA72ENeQ8qY4
+2015-08-21 15:30:21,760 DEBUG [SeederRunnable] - Clicking login button
+2015-08-21 15:30:26,126 DEBUG [SeederRunnable] - Finished!!
+2015-08-21 15:30:26,127 DEBUG [SeederRunnable] - Counter i is now: 1
+2015-08-21 15:30:26,127 DEBUG [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:30:26,127 DEBUG [SeederRunnable] - Using ip: 62.216.77.219
+2015-08-21 15:30:26,127 DEBUG [SeederRunnable] - Creating the driver
+2015-08-21 15:30:26,139 DEBUG [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:30:27,960 DEBUG [SeederRunnable] - Getting the Bulk Url
+2015-08-21 15:30:28,930 DEBUG [SeederRunnable] - Getting the Inbox Url
+2015-08-21 15:30:31,713 DEBUG [SeederRunnable] - mlink found
+2015-08-21 15:30:35,887 DEBUG [SeederRunnable] - Introducing username: wvamzzets@yahoo.com
+2015-08-21 15:30:37,874 DEBUG [SeederRunnable] - Introducing password: mRh*suv9g!V@k4F
+2015-08-21 15:30:37,888 DEBUG [SeederRunnable] - Clicking login button
+2015-08-21 15:30:42,187 DEBUG [SeederRunnable] - Finished!!
+2015-08-21 15:30:42,189 DEBUG [SeederRunnable] - Counter i is now: 2
+2015-08-21 15:30:42,189 DEBUG [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:30:42,189 DEBUG [SeederRunnable] - Using ip: 176.96.48.181
+2015-08-21 15:30:42,190 DEBUG [SeederRunnable] - Creating the driver
+2015-08-21 15:30:42,195 DEBUG [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:30:51,267 DEBUG [SeederRunnable] - Cicking this link: http://t.adidas-news.adidas.com//r/?id=h7fd00af5,2a4fb859,2a4fcaa7&p1=ZPEV6NIM76QBMR7Q&p2=ZPEV6NIM76QBMR7Q
+2015-08-21 15:30:51,292 DEBUG [SeederRunnable] - Introducing username: yaninadefays02@yahoo.com
+2015-08-21 15:30:52,365 DEBUG [SeederRunnable] - Introducing password: wolf2015.
+2015-08-21 15:30:52,375 DEBUG [SeederRunnable] - Clicking login button
+2015-08-21 15:32:47,215 INFO  [SeederRunnable] - Counter i is now: 0
+2015-08-21 15:32:47,218 INFO  [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:32:47,219 INFO  [SeederRunnable] - Using ip: 62.216.72.248
+2015-08-21 15:32:47,223 INFO  [SeederRunnable] - Creating the driver
+2015-08-21 15:32:48,302 INFO  [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:33:00,077 INFO  [SeederRunnable] - Counter i is now: 0
+2015-08-21 15:33:00,078 INFO  [SeederRunnable] - Creating the proxy capability
+2015-08-21 15:33:00,078 INFO  [SeederRunnable] - Using ip: 62.216.79.151
+2015-08-21 15:33:00,079 INFO  [SeederRunnable] - Creating the driver
+2015-08-21 15:33:00,085 INFO  [SeederRunnable] - Getting to the url: https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com
+2015-08-21 15:33:03,071 INFO  [SeederRunnable] - Introducing username: ubmzxqwee@yahoo.com
+2015-08-21 15:33:04,534 INFO  [SeederRunnable] - Introducing password: a&DAA72ENeQ8qY4
+2015-08-21 15:33:04,548 INFO  [SeederRunnable] - Clicking login button
+2015-08-21 15:33:09,599 INFO  [SeederRunnable] - Introducing username: ubmzxqwee@yahoo.com
+2015-08-21 15:33:10,476 INFO  [SeederRunnable] - Getting the Bulk Url
+2015-08-21 15:33:10,659 INFO  [SeederRunnable] - Introducing password: a&DAA72ENeQ8qY4
+2015-08-21 15:33:10,670 INFO  [SeederRunnable] - Clicking login button
+2015-08-21 15:33:11,534 INFO  [SeederRunnable] - Getting the Inbox Url
+2015-08-21 15:33:13,559 INFO  [SeederRunnable] - mlink found
+2015-08-21 15:33:16,746 INFO  [SeederRunnable] - Getting the Bulk Url
+2015-08-21 15:33:18,910 INFO  [SeederRunnable] - Getting the Inbox Url
+2015-08-21 15:33:19,737 INFO  [SeederRunnable] - mlink found
+2015-08-21 15:33:27,263 INFO  [SeederRunnable] - Cicking this link: http://foxweb.ontraport.com/c/s/Ui9/DW6e/v/v/j0o/67a2dM/vkF3gmEYQo
+2015-08-21 15:33:30,782 INFO  [SeederRunnable] - Cicking this link: http://t.adidas-news.adidas.com//r/?id=h7fd00af5,2a4fb859,2a4fca9f&p1=ZPEV6NIM76QBMR7Q
+2015-08-21 15:34:12,836 INFO  [SeederRunnable] - Cicking this link: http://foxweb.ontraport.com/c/s/Ui9/DWWc/6/e/j0o/67aVM8/sXQTwnlnqk

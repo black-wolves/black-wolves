@@ -16,7 +16,7 @@
     </appender>
 	
 	<logger name="com.blackwolves.selenium" additivity="false">
-  		<level value="debug"/>
+  		<level value="info"/>
   		<appender-ref ref="stdout" />
   		<appender-ref ref="fileAppender" /> 
 	</logger>

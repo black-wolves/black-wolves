@@ -54,49 +54,49 @@ public class Up {
 	 */
 	public void sendCampaign(){
 		
-		logger.debug("Creating the driver");
+		logger.info("Creating the driver");
 		WebDriver driver = new HtmlUnitDriver();
 		
-		logger.debug("Getting to the url: " + upUrl);
+		logger.info("Getting to the url: " + upUrl);
         driver.get(upUrl);
         
-        logger.debug("Introducing username: " + upUser);
+        logger.info("Introducing username: " + upUser);
         driver.findElement(By.name("username")).sendKeys(upUser);
         
-        logger.debug("Introducing password: xxxxx");
+        logger.info("Introducing password: xxxxx");
         driver.findElement(By.name("password")).sendKeys(upPassword);
         
-        logger.debug("Clicking login button");
+        logger.info("Clicking login button");
         driver.findElement(By.className("btn-primary")).click();
         
-        logger.debug("Getting to the job url: " + jobUrl + jobId);
+        logger.info("Getting to the job url: " + jobUrl + jobId);
         driver.get(jobUrl + jobId);
         
         if(checkIndex(driver)){
         	
-        	logger.debug("Clearing the feed input");
+        	logger.info("Clearing the feed input");
             driver.findElement(By.name("feed")).clear();
             
-            logger.debug("Entering feed value: " + feed);
+            logger.info("Entering feed value: " + feed);
             driver.findElement(By.name("feed")).sendKeys(feed);
 	    
-        	logger.debug("Clicking the Send button");
+        	logger.info("Clicking the Send button");
 	        driver.findElement(By.name("submit")).click();
 	
 	        try {
-	        	logger.debug("Waiting " + upWaitTime + " minutes");
+	        	logger.info("Waiting " + upWaitTime + " minutes");
 				TimeUnit.MINUTES.sleep(upWaitTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 	        
-	        logger.debug("Clicking the Delete Queue button");
+	        logger.info("Clicking the Delete Queue button");
 	        driver.get(deleteUrl  + jobId);
         }else{
-        	logger.debug("Sending email");
+        	logger.info("Sending email");
         }
         
-        logger.debug("Exiting the driver");
+        logger.info("Exiting the driver");
         driver.quit();
 	}
 	
@@ -106,13 +106,13 @@ public class Up {
 	 * @return
 	 */
 	private boolean checkIndex(WebDriver driver) {
-		logger.debug("Getting the index value");
+		logger.info("Getting the index value");
 		String[] emText = driver.findElement(By.tagName("em")).getText().split(" ");
-		logger.debug("Replacing");
+		logger.info("Replacing");
         String index = emText[0].replaceAll("\\(","");
-        logger.debug("Creating the variable");
+        logger.info("Creating the variable");
         Long indexValue = Long.valueOf(index);
-        logger.debug("Comparing values");
+        logger.info("Comparing values");
 		return checkRemainingFeedAmount(indexValue);
 	}
 
@@ -122,17 +122,17 @@ public class Up {
 	 */
 	private boolean checkRemainingFeedAmount(Long indexValue) {
 		Long feedValue = Long.valueOf(feed);
-		logger.debug("Comparing indexValue > jobFinalContacts");
+		logger.info("Comparing indexValue > jobFinalContacts");
 		if(indexValue >= jobFinalContacts){
 			return false;
 		}
-		logger.debug("Comparing (indexValue + feedValue) > jobFinalContacts");
+		logger.info("Comparing (indexValue + feedValue) > jobFinalContacts");
 		if((indexValue + feedValue) >= jobFinalContacts){
 			Long newFeedValue = jobFinalContacts - indexValue;
 			feed = newFeedValue.toString();
 			return true;
 		}
-		logger.debug("Comparing nothing :) ");
+		logger.info("Comparing nothing :) ");
 		return true;
 	}
 

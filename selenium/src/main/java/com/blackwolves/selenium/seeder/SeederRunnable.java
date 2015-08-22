@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Proxy;
@@ -51,19 +52,19 @@ public class SeederRunnable implements Runnable {
 			
 			try{
 				
-				logger.debug("Counter i is now: " + i);
+				logger.info("Counter i is now: " + i);
 //				String seed = seeds.get(seedRandomizer.nextInt(seeds.size()));
 				String[] seed = seeds.get(i);
 				
 				String[] ip = ips.get(ipRandomizer.nextInt(ips.size()));
 				
-				logger.debug("Creating the proxy capability");
+				logger.info("Creating the proxy capability");
 				
 				DesiredCapabilities capability = addProxyCapabilities(ip[0]);
 				
-				logger.debug("Creating the driver");
+				logger.info("Creating the driver");
 //				WebDriver driver = new HtmlUnitDriver(capability);
-				WebDriver driver = new HtmlUnitDriver();
+				WebDriver driver = new HtmlUnitDriver(true);
 				
 				yahooLogin(yahooUrl, seed, driver);
 		        
@@ -71,18 +72,18 @@ public class SeederRunnable implements Runnable {
 		        
 		        processInbox(driver);
 		        
-		        logger.debug("Finished!!");
+		        logger.info("Finished!!");
 
-//		        logger.debug(driver.getPageSource());		        
+//		        logger.info(driver.getPageSource());		        
 //		        Select all spams and move them to inbox
 //		        if(driver.findElements(By.id("select_all")).size() > 0){
 //		        	
-//		        	logger.debug("Clicking Select all checkbox");
+//		        	logger.info("Clicking Select all checkbox");
 //			        driver.findElement(By.id("select_all")).click();
 //			        
 //			        if(driver.findElements(By.id("top_ham")).size() > 0){
 //			        	
-//				        logger.debug("Clicking Not spam button");
+//				        logger.info("Clicking Not spam button");
 //				        driver.findElement(By.id("top_ham")).click();
 //			        }
 //		        }
@@ -103,18 +104,18 @@ public class SeederRunnable implements Runnable {
 	 * @param driver
 	 */
 	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
-		logger.debug("Getting to the url: " + yahooUrl);
+		logger.info("Getting to the url: " + yahooUrl);
 		driver.get(yahooUrl);
 		
-		logger.debug("Introducing username: " + seed[0]);
+		logger.info("Introducing username: " + seed[0]);
 		driver.findElement(By.id("login-username")).clear();
 		driver.findElement(By.id("login-username")).sendKeys(seed[0]);
 		
-		logger.debug("Introducing password: " + seed[1]);
+		logger.info("Introducing password: " + seed[1]);
 		driver.findElement(By.id("login-passwd")).clear();
 		driver.findElement(By.id("login-passwd")).sendKeys(seed[1]);
 		
-		logger.debug("Clicking login button");
+		logger.info("Clicking login button");
 		driver.findElement(By.id("login-signin")).click();
 	}
 
@@ -125,12 +126,12 @@ public class SeederRunnable implements Runnable {
 	private void processInbox(WebDriver driver) throws InterruptedException {
 		if(driver.findElements(By.id("inbox")).size() > 0){
 			
-			logger.debug("Getting the Inbox Url");
+			logger.info("Getting the Inbox Url");
 			driver.get(driver.findElement(By.id("inbox")).findElement(By.tagName("a")).getAttribute("href"));
 			
 			if(driver.findElements(By.className("mlink")).size() > 0){
 		    	
-				logger.debug("mlink found");
+				logger.info("mlink found");
 		    	List<WebElement> inboxMsgs = driver.findElements(By.className("mlink"));
 		    	
 		    	int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
@@ -147,9 +148,18 @@ public class SeederRunnable implements Runnable {
 					String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
 					if(aUrl!=null){
 						if(aUrl.contains("unsub") || aUrl.contains("yahoo")){
-							logger.debug("Unsubscribe link!!");
-							logger.debug(aUrl);
+							logger.info("Unsubscribe link!!");
+							logger.info(aUrl);
 						}else{
+//							scroll down
+							JavascriptExecutor jse = (JavascriptExecutor)driver;
+//							jse.executeScript("window.scrollBy(0,250)", "");
+//							OR
+							jse.executeScript("scroll(0, 250);");
+//							scroll up
+//							jse.executeScript("window.scrollBy(0,-250)", "");
+//							OR
+							jse.executeScript("scroll(0, -250);");
 							openInNewWindow(driver, linksToGo.get(randomLinkNo));
 						}
 					}
@@ -168,22 +178,22 @@ public class SeederRunnable implements Runnable {
 	private void processBulk(WebDriver driver) {
 		if(driver.findElements(By.id("bulk")).size() > 0){
 		
-		    logger.debug("Getting the Bulk Url");
+		    logger.info("Getting the Bulk Url");
 		    driver.get(driver.findElement(By.id("bulk")).findElement(By.tagName("a")).getAttribute("href"));
 		    
 		    if(driver.findElements(By.className("mlink")).size() > 0){
 		    	
-		    	logger.debug("mlink found");
+		    	logger.info("mlink found");
 		    	List<WebElement> spamMsgs = driver.findElements(By.className("mlink"));
 		    	
-		    	logger.debug("printing messages href");
+		    	logger.info("printing messages href");
 		    	int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 		    	for(int j = 0 ; j < percentage; j++){
 		    		spamMsgs = driver.findElements(By.className("mlink"));
 		    		Random randomNo = new Random();
 		    		int randomPosition = randomNo.nextInt(spamMsgs.size()>=50?50:spamMsgs.size());
 			        		String href = spamMsgs.get(randomPosition).getAttribute("href");
-							logger.debug(href);
+							logger.info(href);
 							driver.get(href);
 							Select notSpam = new Select(driver.findElement(By.name("top_action_select")));
 							notSpam.selectByValue("msg.ham");
@@ -202,7 +212,7 @@ public class SeederRunnable implements Runnable {
 	 */
 	private void openInNewWindow(WebDriver driver, WebElement a) throws InterruptedException {
 		
-		logger.debug("Cicking this link: " + a.getAttribute("href"));
+		logger.info("Cicking this link: " + a.getAttribute("href"));
 		Actions newTab = new Actions(driver);
 		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
 		Thread.sleep(5000);
@@ -233,7 +243,7 @@ public class SeederRunnable implements Runnable {
 	 */
 	public static DesiredCapabilities addProxyCapabilities(String ip) {
 		
-		logger.debug("Using ip: " + ip);
+		logger.info("Using ip: " + ip);
 		
 		System.setProperty("http.proxyHost", ip);
         System.setProperty("http.proxyPort", "80");
