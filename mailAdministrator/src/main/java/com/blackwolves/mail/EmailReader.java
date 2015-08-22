@@ -203,9 +203,9 @@ public class EmailReader {
 	 * @param domainCount
 	 * @return
 	 */
-	private static long calculateDomainCount(Long domainCount) {
+	private static Long calculateDomainCount(Long domainCount) {
 		if(domainCount!=null){
-			return Long.sum(domainCount, Long.valueOf(1));
+			return domainCount.longValue() + 1L;
 		}
 		return Long.valueOf(1);
 	}
