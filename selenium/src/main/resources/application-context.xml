@@ -23,36 +23,36 @@
 <!-- 		<property name="targetMethod" value="sendCampaign" /> -->
 <!-- 	</bean> -->
 	
-	<bean id="seedJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="seeder" />
-		<property name="targetMethod" value="checkMail" />
-	</bean>
+<!-- 	<bean id="seedJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
+<!-- 		<property name="targetObject" ref="seeder" /> -->
+<!-- 		<property name="targetMethod" value="checkMail" /> -->
+<!-- 	</bean> -->
 	
 <!-- 	<bean id="upCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
 <!-- 	    <property name="jobDetail" ref="upJobDetail" /> -->
 <!-- 	    <property name="cronExpression" value="${up.quartz.cron}" /> -->
 <!-- 	</bean> -->
 	
-	<bean id="seedCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="jobDetail" ref="seedJobDetail" />
-	    <property name="cronExpression" value="${seed.quartz.cron}" />
-	</bean>
+<!-- 	<bean id="seedCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
+<!-- 	    <property name="jobDetail" ref="seedJobDetail" /> -->
+<!-- 	    <property name="cronExpression" value="${seed.quartz.cron}" /> -->
+<!-- 	</bean> -->
 	
-	<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="jobDetails">
-			<list>
+<!-- 	<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="jobDetails"> -->
+<!-- 			<list> -->
 <!-- 				<ref bean="upJobDetail" /> -->
-				<ref bean="seedJobDetail" />
-			</list>
-		</property>
+<!-- 				<ref bean="seedJobDetail" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
 
-		<property name="triggers">
-			<list>
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
 <!-- 				<ref bean="upCronTrigger" /> -->
-				<ref bean="seedCronTrigger" />
-			</list>
-		</property>
-	</bean>
+<!-- 				<ref bean="seedCronTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 	
 <!-- 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="applicationContextProvider"> -->
 <!--         <property name="dataSource" ref="dataSource" /> -->

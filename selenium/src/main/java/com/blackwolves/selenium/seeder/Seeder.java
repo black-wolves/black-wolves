@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,33 +31,15 @@ public class Seeder {
 	private static final String ROUTE = "/var/www/";
 	
 	public static void main(String[] args) {
-		checkMail();
+		checkMail(args[0], args[1]);
 	}
 
-	/**
-	 * @throws BrokenBarrierException 
-	 * @throws InterruptedException 
-	 * 
-	 */
-	public static void checkMail(){
-		
+	public static void checkMail(String ip, String seed) {
 		final int THREADS = 1;
 		
-		List<String[]> seeds = generateSeedsList();
-		List<String[]> ips = generateIpsList();
-		
-		List<List<String[]>> partitions = Lists.partition(seeds, 10);
-		
-		Random seedRandomizer = new Random();
-		final Random ipRandomizer = new Random();
-		
 		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
-		for (final List<String[]> partition : partitions) {
-			
-			Runnable worker = new SeederRunnable(partition, ips, ipRandomizer);
-			executor.execute(worker);
-//			processSeeds(partition, ips, ipRandomizer);
-		}
+		Runnable worker = new SeederRunnable(null, null, null, ip, seed);
+		executor.execute(worker);
 
 		executor.shutdown();
 		// Wait until all threads are finish
@@ -66,7 +47,41 @@ public class Seeder {
 			
 		}
 		logger.info("\nFinished all threads");
+		
 	}
+
+//	/**
+//	 * @throws BrokenBarrierException 
+//	 * @throws InterruptedException 
+//	 * 
+//	 */
+//	public static void checkMail(){
+//		
+//		final int THREADS = 1;
+//		
+//		List<String[]> seeds = generateSeedsList();
+//		List<String[]> ips = generateIpsList();
+//		
+//		List<List<String[]>> partitions = Lists.partition(seeds, 10);
+//		
+//		Random seedRandomizer = new Random();
+//		final Random ipRandomizer = new Random();
+//		
+//		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+//		for (final List<String[]> partition : partitions) {
+//			
+//			Runnable worker = new SeederRunnable(partition, ips, ipRandomizer);
+//			executor.execute(worker);
+////			processSeeds(partition, ips, ipRandomizer);
+//		}
+//
+//		executor.shutdown();
+//		// Wait until all threads are finish
+//		while (!executor.isTerminated()) {
+//			
+//		}
+//		logger.info("\nFinished all threads");
+//	}
 	
 	public void suscribeToNewsletters()
 	{

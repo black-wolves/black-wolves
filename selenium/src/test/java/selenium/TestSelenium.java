@@ -41,7 +41,8 @@ public class TestSelenium {
 	 */
 	@Test
 	public void testCheckMail() {
-		Seeder.checkMail();
+		String[] args = {"10.10.1.1", "danielsaulino03@yahoo.com,madrivorules"};
+		Seeder.main(args);
 	}
 	
 	@Test

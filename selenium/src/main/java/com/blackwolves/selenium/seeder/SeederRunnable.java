@@ -35,11 +35,15 @@ public class SeederRunnable implements Runnable {
 	private final List<String[]> seeds;
 	private final List<String[]> ips;
 	private final Random ipRandomizer;
+	private final String seed;
+	private final String ip;
 
-	public SeederRunnable(List<String[]> partition, List<String[]> ips, Random ipRandomizer) {
+	public SeederRunnable(List<String[]> partition, List<String[]> ips, Random ipRandomizer, String ip, String seed) {
 		this.seeds = partition;
 		this.ips = ips;
 		this.ipRandomizer = ipRandomizer;
+		this.ip = ip;
+		this.seed = seed;
 	}
 
 	/* (non-Javadoc)
@@ -47,8 +51,9 @@ public class SeederRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
-		String[] seed = seeds.get(randInt(0, seeds.size()-1));
-		logger.info("Current Seed is : "+seed[0]);
+//		String[] seed = seeds.get(randInt(0, seeds.size()-1));
+//		logger.info("Current Seed is : "+seed[0]);
+		String[] seed = this.seed.split(",");
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
 			try{
 				logger.info("Creating new driver");
@@ -81,7 +86,7 @@ public class SeederRunnable implements Runnable {
 				logger.error(nse.getMessage(), nse);
 			}catch(Exception e){
 				logger.error(e.getMessage(), e);
-			}	
+			}
 		
 	}
 
