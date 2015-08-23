@@ -44,7 +44,7 @@ public class Seeder {
 	 */
 	public static void checkMail(){
 		
-		final int THREADS = 10;
+		final int THREADS = 1;
 		
 		List<String[]> seeds = generateSeedsList();
 		List<String[]> ips = generateIpsList();
