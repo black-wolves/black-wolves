@@ -34,7 +34,12 @@ public class Seeder {
 		checkMail(args[0], args[1]);
 	}
 
-	public static void checkMail(String ip, String seed) {
+	/**
+	 * 
+	 * @param ip
+	 * @param seed
+	 */
+	private static void checkMail(String ip, String seed) {
 		final int THREADS = 1;
 		
 		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
