@@ -51,7 +51,7 @@ public class SeederRunnable implements Runnable {
 		logger.info("Current Seed is : "+seed[0]);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
 			try{
-				logger.info("Creating the driver");
+				logger.info("Creating new driver");
 //				WebDriver driver = new HtmlUnitDriver(capability);
 				WebDriver driver = new HtmlUnitDriver(true);
 				
