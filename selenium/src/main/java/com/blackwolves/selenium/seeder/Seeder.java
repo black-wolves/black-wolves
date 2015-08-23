@@ -30,6 +30,8 @@ public class Seeder {
 	
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 	private static final String ROUTE = "/var/www/";
+	//private static final String ROUTE = "/Users/danigrane/Documents/repository/config/";
+
 	
 	public static void main(String[] args) {
 		checkMail();
@@ -113,8 +115,6 @@ public class Seeder {
 		return ips;
 	}
 	
-//	private static final String ROUTE = "/var/www/";
-	private static final String ROUTE = "/Users/danigrane/Documents/repository/config/";
 	
 	/**
 	 * @return
