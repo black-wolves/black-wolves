@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 public class Seeder {
 	
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
+	private static final String ROUTE = "/var/www/";
 	
 	public static void main(String[] args) {
 		checkMail();
