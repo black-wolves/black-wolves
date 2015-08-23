@@ -38,7 +38,7 @@ public class EmailReader {
 	
 	private static final String IMAP_YAHOO = "imap.mail.yahoo.com";
 //	private static final String ROUTE = "/var/www/";
-	private static final String ROUTE = "/Users/gastondapice/Dropbox/Black Wolves/Seeder/test/";
+	private static final String ROUTE = "/Users/danigrane/Documents/repository/config/";
 	private static final String INBOX = "Inbox";
 	private static final String SPAM = "Bulk Mail";
 

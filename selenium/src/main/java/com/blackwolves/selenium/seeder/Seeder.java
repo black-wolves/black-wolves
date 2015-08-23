@@ -113,7 +113,7 @@ public class Seeder {
 	}
 	
 //	private static final String ROUTE = "/var/www/";
-	private static final String ROUTE = "/Users/gastondapice/Dropbox/Black Wolves/Seeder/test/";
+	private static final String ROUTE = "/Users/danigrane/Documents/repository/config/";
 	
 	/**
 	 * @return

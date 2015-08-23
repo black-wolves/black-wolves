@@ -47,21 +47,10 @@ public class SeederRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		String[] seed = seeds.get(randInt(0, seeds.size()-1));
+		logger.info("Current Seed is : "+seed[0]);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
-		for (int i = 0; i < seeds.size(); i++) {
-			
 			try{
-				
-				logger.info("Counter i is now: " + i);
-//				String seed = seeds.get(seedRandomizer.nextInt(seeds.size()));
-				String[] seed = seeds.get(i);
-				
-				String[] ip = ips.get(ipRandomizer.nextInt(ips.size()));
-				
-				logger.info("Creating the proxy capability");
-				
-				DesiredCapabilities capability = addProxyCapabilities(ip[0]);
-				
 				logger.info("Creating the driver");
 //				WebDriver driver = new HtmlUnitDriver(capability);
 				WebDriver driver = new HtmlUnitDriver(true);
@@ -90,12 +79,10 @@ public class SeederRunnable implements Runnable {
 		        
 			}catch(NoSuchElementException nse){
 				logger.error(nse.getMessage(), nse);
-				continue;
 			}catch(Exception e){
 				logger.error(e.getMessage(), e);
-				continue;
 			}	
-		}
+		
 	}
 
 	/**
@@ -267,5 +254,16 @@ public class SeederRunnable implements Runnable {
         
         return capability;
     }
+	public static int randInt(int min, int max) {
+
+	    // Usually this can be a field rather than a method variable
+	    Random rand = new Random();
+
+	    // nextInt is normally exclusive of the top value,
+	    // so add 1 to make it inclusive
+	    int randomNum = rand.nextInt((max - min) + 1) + min;
+
+	    return randomNum;
+	}
 
 }
