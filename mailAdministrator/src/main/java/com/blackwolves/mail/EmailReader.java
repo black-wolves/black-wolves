@@ -44,53 +44,51 @@ public class EmailReader {
 	public static void main(String args[]) {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
-		try {
-			Session session = Session.getDefaultInstance(props, null);
-			List<String[]> seeds = generateSeedsList();
-			List<String> warmupDomains = generateDomainsList();
-			Map<String, Long> spamDomains = new HashMap<String, Long>();
-			Map<String, Long> inboxDomains = new HashMap<String, Long>();
-			int i = 1;
-			int max = seeds.size()<=50?seeds.size():50;
-			for (String[] seed : seeds) {
-				if (i > max){
-					break;
-				}
+		Session session = Session.getDefaultInstance(props, null);
+		List<String[]> seeds = generateSeedsList();
+		List<String> warmupDomains = generateDomainsList();
+		Map<String, Long> spamDomains = new HashMap<String, Long>();
+		Map<String, Long> inboxDomains = new HashMap<String, Long>();
+		int i = 1;
+		int max = seeds.size()<=50?seeds.size():50;
+		for (String[] seed : seeds) {
+			if (i > max){
+				break;
+			}
+			try{
 				Store store = session.getStore("imaps");
 				// IMAP host for yahoo.
 				store.connect(IMAP_YAHOO, seed[0], seed[1]);
 				obtainFoldersCount(store, spamDomains, inboxDomains, warmupDomains);
 				store.close();
 				i++;
+			} catch (NoSuchProviderException e) {
+				logger.error(e.getMessage(), e);
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
+			} catch(Exception e){
+				logger.error(e.getMessage(), e);
 			}
-			Map<String, Double> percentageDomains = new HashMap<String, Double>();
-			percentageDomains = obtainDomainPercentage(spamDomains, inboxDomains);
-			Set<String> domains = percentageDomains.keySet();
-			for (String domain : domains) {
-				DecimalFormat df = new DecimalFormat("#.00");
-				logger.info("Domain: " + domain + " ===>>> Inbox rate: " + df.format(percentageDomains.get(domain)) + "%");
-			}
-			
-//			logger.info(store);
-//			Folder spam = store.getFolder(SPAM);
-//			spam.open(Folder.READ_WRITE);
-//			Folder inbox = store.getFolder(INBOX);
-//			inbox.open(Folder.READ_WRITE);
-//			
-//			
-//			showMails(inbox, spam);
-//			showUnreadMails(inbox);
-//			spam.close(true);
-//			inbox.close(true);
-//			store.close();
-
-		} catch (NoSuchProviderException e) {
-			logger.error(e.getMessage(), e);
-			System.exit(1);
-		} catch (MessagingException e) {
-			logger.error(e.getMessage(), e);
-			System.exit(2);
 		}
+		Map<String, Double> percentageDomains = new HashMap<String, Double>();
+		percentageDomains = obtainDomainPercentage(spamDomains, inboxDomains);
+		Set<String> domains = percentageDomains.keySet();
+		for (String domain : domains) {
+			DecimalFormat df = new DecimalFormat("#.00");
+			logger.info("Domain: " + domain + " ===>>> Inbox rate: " + df.format(percentageDomains.get(domain)) + "%");
+		}
+		
+//		logger.info(store);
+//		Folder spam = store.getFolder(SPAM);
+//		spam.open(Folder.READ_WRITE);
+//		Folder inbox = store.getFolder(INBOX);
+//		inbox.open(Folder.READ_WRITE);
+//			
+//		showMails(inbox, spam);
+//		showUnreadMails(inbox);
+//		spam.close(true);
+//		inbox.close(true);
+//		store.close();
 
 	}
 	
