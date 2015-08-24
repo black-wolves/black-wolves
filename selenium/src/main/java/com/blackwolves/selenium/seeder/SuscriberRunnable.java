@@ -59,11 +59,13 @@ public class SuscriberRunnable implements Runnable {
 				logger.info("Creating the driver");
 				//				WebDriver driver = new HtmlUnitDriver(capability);
 				WebDriver driver = new ChromeDriver();
-				suscribeToSkimm(seed, driver);
-				suscribeToMatterMark(seed, driver);
-				suscribeFashionMagazine(seed, driver);
-				suscribeToDigg(seed, driver);
-			    driver.close();
+//				suscribeToSkimm(seed, driver);
+//				suscribeToMatterMark(seed, driver);
+//				suscribeFashionMagazine(seed, driver);
+//				suscribeToDigg(seed, driver);
+			    suscribeToTheWeek(seed, driver);
+			   
+				driver.close();
 				
 			}
 
@@ -128,25 +130,16 @@ public class SuscriberRunnable implements Runnable {
 			logger.info("Suscribed "+ seed[0]+ " to Digg!");
 		}
 		
-		
-		
 	}
 	
 	
-	private void  suscribeToAdidas(String[] seed, WebDriver driver)
+	private void  suscribeToTheWeek(String[] seed, WebDriver driver) throws InterruptedException
 	{
-		driver.get("https://www.adidas.com/us/subscribe");
-		
-		String email = driver.findElement(By.id("dwfrm_profile_customer_email")).getText();
-		logger.info(email);
-
-		List<WebElement> genderRadioButtons = driver.findElements(By.name("dwfrm_profile_customer_gender"));
-//		genderRadioButtons.get(1).click();
-		driver.findElement(By.id("dwfrm_profile_customer_email")).sendKeys(seed[0]);
-		driver.findElement(By.id("dwfrm_profile_customer_email")).submit();
-	//	driver.findElement(By.id("newslettersubmitbutton")).click();
-
-
+		driver.get("http://theweek.com/");
+		driver.findElement(By.name("email")).clear();;
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
+		driver.findElement(By.name("email")).submit();
+		Thread.sleep(1000);
 		
 	}
 	
