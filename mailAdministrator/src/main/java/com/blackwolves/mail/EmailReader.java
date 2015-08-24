@@ -50,12 +50,18 @@ public class EmailReader {
 			List<String> warmupDomains = generateDomainsList();
 			Map<String, Long> spamDomains = new HashMap<String, Long>();
 			Map<String, Long> inboxDomains = new HashMap<String, Long>();
+			int i = 1;
+			int max = seeds.size()<=50?seeds.size():50;
 			for (String[] seed : seeds) {
+				if (i > max){
+					break;
+				}
 				Store store = session.getStore("imaps");
 				// IMAP host for yahoo.
 				store.connect(IMAP_YAHOO, seed[0], seed[1]);
 				obtainFoldersCount(store, spamDomains, inboxDomains, warmupDomains);
 				store.close();
+				i++;
 			}
 			Map<String, Double> percentageDomains = new HashMap<String, Double>();
 			percentageDomains = obtainDomainPercentage(spamDomains, inboxDomains);
@@ -188,14 +194,20 @@ public class EmailReader {
 			throws MessagingException {
 		folder.open(Folder.READ_ONLY);
 		Message msg[] = folder.getMessages();
+		int i = 1;
+		int max = msg.length<=50?msg.length:50;
 		for (Message message : msg) {
-			if(validateMessage(message)){
-				String domain = message.getFrom()[0].toString().split("@")[1].replace(">","");
-				if(warmupDomains.contains(domain)){
-					Long domainCount = domains.get(domain);
-					domains.put(domain, calculateDomainCount(domainCount));
+			if(i >= max){
+				if(validateMessage(message)){
+					String domain = message.getFrom()[0].toString().split("@")[1].replace(">","");
+					if(warmupDomains.contains(domain)){
+						Long domainCount = domains.get(domain);
+						domains.put(domain, calculateDomainCount(domainCount));
+					}
 				}
+				i++;
 			}
+			
 		}
 		folder.close(true);
 		return domains;
