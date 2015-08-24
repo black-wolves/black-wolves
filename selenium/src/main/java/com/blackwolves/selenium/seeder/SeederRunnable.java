@@ -58,7 +58,8 @@ public class SeederRunnable implements Runnable {
 			try{
 				logger.info("Creating new driver");
 //				WebDriver driver = new HtmlUnitDriver(capability);
-				WebDriver driver = new HtmlUnitDriver(true);
+//				WebDriver driver = new HtmlUnitDriver(true);
+				WebDriver driver = new HtmlUnitDriver();
 				
 				yahooLogin(yahooUrl, seed, driver);
 		        
@@ -128,40 +129,71 @@ public class SeederRunnable implements Runnable {
 		    	
 		    	int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 		    	for(int j = 0 ; j < percentage; j++){
-		    		inboxMsgs = driver.findElements(By.className("mlink"));
-		    		Random randomNo = new Random();
-		    		int randomPosition = randomNo.nextInt(inboxMsgs.size()>=50?50:inboxMsgs.size());
-		        	String href = inboxMsgs.get(randomPosition).getAttribute("href");
-					driver.get(href);
-					WebElement div = driver.findElement(By.className("mailContent"));
-					List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-					Random rand = new Random();
-	        		int randomLinkNo = rand.nextInt(linksToGo.size());
-					String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
-					if(aUrl!=null){
-						if(aUrl.contains("unsub") || aUrl.contains("yahoo")){
-							logger.info("Unsubscribe link!!");
-							logger.info(aUrl);
-						}else{
-//							scroll down
-							JavascriptExecutor jse = (JavascriptExecutor)driver;
-//							jse.executeScript("window.scrollBy(0,250)", "");
-//							OR
-							jse.executeScript("scroll(0, 250);");
-//							scroll up
-//							jse.executeScript("window.scrollBy(0,-250)", "");
-//							OR
-							jse.executeScript("scroll(0, -250);");
-							openInNewWindow(driver, linksToGo.get(randomLinkNo));
-						}
-					}
-					
-//					Returns to inbox
-					driver.get(driver.findElement(By.id("inbox")).findElement(By.tagName("a")).getAttribute("href"));
+		    		if(driver.findElements(By.className("mlink")).size() != 0){
+		    			inboxMsgs = driver.findElements(By.className("mlink"));
+			    		Random randomNo = new Random();
+			    		int randomPosition = randomNo.nextInt(inboxMsgs.size()>=50?50:inboxMsgs.size());
+			        	String href = inboxMsgs.get(randomPosition).getAttribute("href");
+						driver.get(href);
+						clickShowImages(driver, "show-text");
+//						scrollDownAndUp(driver);
+						clickRandomLink(driver);
+						
+//						Returns to inbox
+						driver.get(driver.findElement(By.id("inbox")).findElement(By.tagName("a")).getAttribute("href"));
+		    		}
 						
 		    	}
 		    }
 		}
+	}
+
+	/**
+	 * @param driver
+	 * @throws InterruptedException
+	 */
+	private void clickRandomLink(WebDriver driver) throws InterruptedException {
+		WebElement div = driver.findElement(By.className("mailContent"));
+		if(div.findElements(By.tagName("a")).size()!=0){
+			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
+			Random rand = new Random();
+			int randomLinkNo = rand.nextInt(linksToGo.size());
+			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
+			if(aUrl!=null){
+				if(aUrl.contains("unsub") || aUrl.contains("yahoo")){
+					logger.info("Unsubscribe link!!");
+					logger.info(aUrl);
+				}else{
+					openInNewWindow(driver, linksToGo.get(randomLinkNo));
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param driver
+	 */
+	private void scrollDownAndUp(WebDriver driver) {
+//		scroll down
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+//		jse.executeScript("window.scrollBy(0,250)", "");
+//		OR
+		jse.executeScript("scroll(0, 250);");
+//		scroll up
+//		jse.executeScript("window.scrollBy(0,-250)", "");
+//		OR
+		jse.executeScript("scroll(0, -250);");
+	}
+
+	private void clickShowImages(WebDriver driver, String className) {
+		if(validateInboxShowImagesButton(driver, className)){
+			driver.findElement(By.className(className)).findElement(By.tagName("a")).click();
+		}
+		
+	}
+
+	private boolean validateInboxShowImagesButton(WebDriver driver, String className) {
+		return driver.findElements(By.className(className)).size() != 0;
 	}
 
 	/**
@@ -176,20 +208,22 @@ public class SeederRunnable implements Runnable {
 		    if(driver.findElements(By.className("mlink")).size() > 0){
 		    	
 		    	logger.info("mlink found");
-		    	List<WebElement> spamMsgs = driver.findElements(By.className("mlink"));
+	    		List<WebElement> spamMsgs = driver.findElements(By.className("mlink"));
 		    	
-		    	logger.info("printing messages href");
 		    	int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 		    	for(int j = 0 ; j < percentage; j++){
-		    		spamMsgs = driver.findElements(By.className("mlink"));
-		    		Random randomNo = new Random();
-		    		int randomPosition = randomNo.nextInt(spamMsgs.size()>=50?50:spamMsgs.size());
-			        		String href = spamMsgs.get(randomPosition).getAttribute("href");
-							logger.info(href);
-							driver.get(href);
-							Select notSpam = new Select(driver.findElement(By.name("top_action_select")));
-							notSpam.selectByValue("msg.ham");
-							driver.findElement(By.name("self_action_msg_topaction")).click();
+		    		if(driver.findElements(By.className("mlink")).size()!=0){
+		    			spamMsgs = driver.findElements(By.className("mlink"));
+			    		Random randomNo = new Random();
+			    		int randomPosition = randomNo.nextInt(spamMsgs.size()>=50?50:spamMsgs.size());
+		        		String href = spamMsgs.get(randomPosition).getAttribute("href");
+						logger.info(href);
+						driver.get(href);
+						clickShowImages(driver, "spamwarning");
+						Select notSpam = new Select(driver.findElement(By.name("top_action_select")));
+						notSpam.selectByValue("msg.ham");
+						driver.findElement(By.name("self_action_msg_topaction")).click();
+		    		}
 		    	}
 		    }
 

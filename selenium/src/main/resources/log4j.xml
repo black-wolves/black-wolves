@@ -20,7 +20,15 @@
   		<appender-ref ref="stdout" />
   		<appender-ref ref="fileAppender" /> 
 	</logger>
+
+	<logger name="com.gargoylesoftware.htmlunit" additivity="false">
+  		<level value="off"/>
+	</logger>
 	
+	<logger name="org.apache.http" additivity="false">
+  		<level value="off"/>
+	</logger>
+
     <root>
 		<priority value="error" />
 		<appender-ref ref="stdout" />
