@@ -20,12 +20,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 
 /**
  * @author gaston.dapice
@@ -71,20 +75,20 @@ public class SeederRunnable implements Runnable {
 			// WebDriver driver = new HtmlUnitDriver(true);
 			// WebDriver driver = new HtmlUnitDriver();
 			// WebDriver driver = new FirefoxDriver();
-			 System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver");
+		//	 System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver");
 		//	System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
+		//	ChromeDriver driver =  new ChromeDriver();
 		//	 Map<String, Object> chromeOptions = new HashMap();
 		//	 chromeOptions.put("binary", "/var/www/chromedriver");
 			// DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 			 //capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-			 WebDriver driver = new ChromeDriver();
-			// WebDriver driver = new InternetExplorerDriver();
 
+			HtmlUnitDriver driver = new HtmlUnitDriver();
+			driver.setJavascriptEnabled(true);
 			yahooLogin(yahooUrl, seed, driver);
 
 			validateYahooVersion(driver, seed);
 
-			processNewYahoo2Inbox(driver, seed);
 
 			logger.info("Finished!!");
 
@@ -131,9 +135,12 @@ public class SeederRunnable implements Runnable {
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
+				processInbox(driver, seed);
 				processOldYahooVersionBulk(driver, seed);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
+				processNewYahoo2Inbox(driver, seed);
+
 				processNewYahoo2Bulk(driver, seed);
 				// SuscriberRunnable.writeToFile("new_yahoo_2_version.html",
 				// driver.getPageSource());
@@ -143,8 +150,7 @@ public class SeederRunnable implements Runnable {
 				// driver.getPageSource());
 			} else {
 				logger.info("**********   There is a new yahoo version in town  **********");
-				// SuscriberRunnable.writeToFile("new_version_in_town.html",
-				// driver.getPageSource());
+				SuscriberRunnable.writeToFile("new_version_in_town.html",driver.getPageSource());
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -264,7 +270,7 @@ public class SeederRunnable implements Runnable {
 			}
 		} else {
 			logger.info("**********   No bulk Url found   **********");
-			SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
+		//	SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
 		}
 	}
 
@@ -274,15 +280,20 @@ public class SeederRunnable implements Runnable {
 	 * @throws InterruptedException
 	 */
 	private void processNewYahoo2Inbox(WebDriver driver, String[] seed) throws InterruptedException {
-		driver.findElement(By.className("inbox-label")).click();
+		checkWelcomeDialog(driver);		 
 		WebDriverWait wait = new WebDriverWait(driver, 60);
+		try{
+			driver.findElement(By.className("inbox-label")).click();
+			SuscriberRunnable.writeToFile("dana.html", driver.getPageSource());
+		}
+		catch (Exception e ){
+			logger.info("Inbox link not visible. Try to click in the Dialog again");
+			Thread.sleep(5000);
+			checkWelcomeDialog(driver);
+			driver.findElement(By.className("inbox-label")).click();
+		}
 		wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 		Thread.sleep(1000 + randInt(0, 2000));
-		List dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
-		if (!dialogs.isEmpty()) {
-			WebElement welcomeDialog = (WebElement) dialogs.get(0);
-			welcomeDialog.click();
-		}		 
 		wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 
 		if (driver.findElements(By.className("subj")).size() > 0) {
@@ -296,7 +307,10 @@ public class SeederRunnable implements Runnable {
 					try {
 						logger.info("Obtaining a random message position so it can be open");
 						int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
-						inboxMsgs.get(randomPosition).click();
+						WebElement currentMsg = inboxMsgs.get(randomPosition);
+						logger.info("Clicking in Msg : "+currentMsg.getText());
+						currentMsg.click();
+						
 						Thread.sleep(1000 + randInt(1000, 5000));
 						clickShowImages(driver, "show-text");
 
@@ -320,6 +334,14 @@ public class SeederRunnable implements Runnable {
 			}
 		} else {
 			logger.info("**********   No mlink found or no messages available   **********");
+		}
+	}
+
+	private void checkWelcomeDialog(WebDriver driver) {
+		List dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
+		if (!dialogs.isEmpty()) {
+			WebElement welcomeDialog = (WebElement) dialogs.get(0);
+			welcomeDialog.click();
 		}
 	}
 
@@ -348,7 +370,7 @@ public class SeederRunnable implements Runnable {
 						String href = inboxMsgs.get(randomPosition).getAttribute("href");
 						logger.info("Opening this inbox message: " + href);
 						driver.get(href);
-						clickShowImages(driver, "btn show-text");
+						clickShowImages(driver, "show-text");
 
 						scrollDownAndUp(driver);
 
