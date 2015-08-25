@@ -67,13 +67,11 @@ public class SeederRunnable implements Runnable {
 			logger.info("Creating new driver");
 			// WebDriver driver = new HtmlUnitDriver(capability);
 			// WebDriver driver = new HtmlUnitDriver(true);
-			WebDriver driver = new HtmlUnitDriver();
+			// WebDriver driver = new HtmlUnitDriver();
 			// WebDriver driver = new FirefoxDriver();
-			// System.setProperty("webdriver.chrome.driver",
-			// "/Users/gastondapice/Downloads/chromedriver");
-			// System.setProperty("webdriver.chrome.driver",
-			// "/Users/danigrane/Downloads/Software/chromedriver");
-			// WebDriver driver = new ChromeDriver();
+			 System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver");
+		//	System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
+			 WebDriver driver = new ChromeDriver();
 			// WebDriver driver = new InternetExplorerDriver();
 
 			yahooLogin(yahooUrl, seed, driver);
@@ -270,7 +268,7 @@ public class SeederRunnable implements Runnable {
 	 * @throws InterruptedException
 	 */
 	private void processNewYahoo2Inbox(WebDriver driver, String[] seed) throws InterruptedException {
-		// driver.findElement(By.className("inbox-label")).click();
+		driver.findElement(By.className("inbox-label")).click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
 		wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 		Thread.sleep(1000 + randInt(0, 2000));
@@ -278,13 +276,13 @@ public class SeederRunnable implements Runnable {
 		if (!dialogs.isEmpty()) {
 			WebElement welcomeDialog = (WebElement) dialogs.get(0);
 			welcomeDialog.click();
-		}
+		}		 
 		wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 
 		if (driver.findElements(By.className("subj")).size() > 0) {
 			logger.info("subj found");
 			List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
-			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
+			int percentage =  (int) (inboxMsgs.size() * PERCENTAGE);
 			for (int j = 0; j < percentage; j++) {
 				logger.info((percentage - j) + " emails to go ");
 
@@ -298,9 +296,9 @@ public class SeederRunnable implements Runnable {
 
 						// scrollDownAndUp(driver);
 
-						// The first time works fine. Then it tries to go to the
-						// same link every time and breaks.
-						// clickRandomLinkForNewYahoo2(driver);
+						
+						//The first time works fine. Then it tries to go to the same link every time and breaks.
+						//clickRandomLinkForNewYahoo2(driver);
 
 						logger.info("Going back to inbox");
 						driver.findElement(By.className("inbox-label")).click();
@@ -411,7 +409,7 @@ public class SeederRunnable implements Runnable {
 		if (div.findElements(By.tagName("a")).size() != 0) {
 			logger.info("Links found");
 			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-			int randomLinkNo = randInt(0, linksToGo.size());
+			int randomLinkNo = randInt(0,linksToGo.size());
 			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
 			if (aUrl != null) {
 				if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
