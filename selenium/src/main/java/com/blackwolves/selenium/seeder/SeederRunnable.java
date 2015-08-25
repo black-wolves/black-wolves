@@ -16,7 +16,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -54,21 +54,22 @@ public class SeederRunnable implements Runnable {
 //		String[] seed = seeds.get(randInt(0, seeds.size()-1));
 //		logger.info("Current Seed is : "+seed[0]);
 		String[] seed = this.seed.split(",");
-		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
+//		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
+		
+		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 			try{
 				logger.info("Creating new driver");
 //				WebDriver driver = new HtmlUnitDriver(capability);
 //				WebDriver driver = new HtmlUnitDriver(true);
-				WebDriver driver = new HtmlUnitDriver();
+//				WebDriver driver = new HtmlUnitDriver();
 //				WebDriver driver = new FirefoxDriver();
-//				WebDriver driver = new ChromeDriver();
+				System.setProperty("webdriver.chrome.driver", "/Users/gastondapice/Downloads/chromedriver");
+				WebDriver driver = new ChromeDriver();
 //				WebDriver driver = new InternetExplorerDriver();
 				
 				yahooLogin(yahooUrl, seed, driver);
 				
 				validateYahooVersion(driver, seed);
-		        
-		        processBulk(driver, seed);
 		        
 		        processInbox(driver, seed);
 		        
@@ -113,26 +114,32 @@ public class SeederRunnable implements Runnable {
 	 * @param seed 
 	 */
 	private void validateYahooVersion(WebDriver driver, String[] seed) {
-		if(driver.findElements(By.className("uh-srch-btn")).size() > 0){
-			logger.info("**********   Old yahoo version   **********");
-		}else if(driver.findElements(By.id("UHSearchProperty")).size() > 0){
-			logger.info("**********   New yahoo 2 version   **********");
-			SuscriberRunnable.writeToFile("new_yahoo_2_version.html", driver.getPageSource());
-		}else if(driver.findElements(By.id("mail-search-btn")).size() > 0){
-			logger.info("**********   New yahoo version   **********");
-			SuscriberRunnable.writeToFile("new_yahoo_version.html", driver.getPageSource());
-		}else{
-			logger.info("**********   There is a new yahoo version in town  **********");
-			SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
+		try {
+			Thread.sleep(5000);
+			if(driver.findElements(By.className("uh-srch-btn")).size() > 0){
+				logger.info("**********   Old yahoo version   **********");
+				processOldYahooVersionBulk(driver, seed);
+			}else if(driver.findElements(By.id("UHSearchProperty")).size() > 0){
+				logger.info("**********   New yahoo 2 version   **********");
+				processNewYahoo2Bulk(driver, seed);
+//				SuscriberRunnable.writeToFile("new_yahoo_2_version.html", driver.getPageSource());
+			}else if(driver.findElements(By.id("mail-search-btn")).size() > 0){
+				logger.info("**********   New yahoo version   **********");
+//				SuscriberRunnable.writeToFile("new_yahoo_version.html", driver.getPageSource());
+			}else{
+				logger.info("**********   There is a new yahoo version in town  **********");
+				SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
+			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
 		}
-		
 	}
 	
 	/**
 	 * @param driver
 	 * @param seed 
 	 */
-	private void processBulk(WebDriver driver, String[] seed) {
+	private void processOldYahooVersionBulk(WebDriver driver, String[] seed) {
 		if(driver.findElements(By.id("bulk")).size() > 0){
 		
 		    logger.info("Getting the Bulk Url");
@@ -150,6 +157,7 @@ public class SeederRunnable implements Runnable {
 		    			
 		    			logger.info("Obtaining a random message position so it can be open");
 			    		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
+			    		spamMsgs.get(randomPosition).click();
 		        		String href = spamMsgs.get(randomPosition).getAttribute("href");
 						
 		        		logger.info("Opening this spam message: " + href);
@@ -168,6 +176,58 @@ public class SeederRunnable implements Runnable {
 		    }else{
 		    	logger.info("**********   No mlink found or no messages available   **********");
 		    }
+		}else{
+			logger.info("**********   No bulk Url found   **********");
+			SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
+		}
+	}
+	
+	/**
+	 * @param driver
+	 * @param seed 
+	 */
+	private void processNewYahoo2Bulk(WebDriver driver, String[] seed) {
+		if(driver.findElements(By.id("spam-label")).size() > 0){
+		
+		    logger.info("Getting the Bulk Url");
+		    driver.findElement(By.id("spam-label")).click();
+		    try{
+			    Thread.sleep(2000);
+			    if(driver.findElements(By.className("subj")).size() > 0){
+			    	
+			    	logger.info("subj found");
+			    	List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
+			    	
+			    	int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+			    	for(int j = 0 ; j < percentage; j++){
+			    		Thread.sleep(5000);
+			    		if(driver.findElements(By.className("subj")).size() > 0){
+			    			spamMsgs = driver.findElements(By.className("subj"));
+			    			
+			    			logger.info("Obtaining a random message position so it can be open");
+				    		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
+				    		
+				    		Thread.sleep(2000);
+				    		logger.info("Opening the spam message");
+				    		spamMsgs.get(randomPosition).click();
+							
+				    		Thread.sleep(2000);
+				    		clickShowImages(driver, "show-text");
+							
+				    		Thread.sleep(2000);
+				    		logger.info("Clicking the not spam option");
+							driver.findElement(By.id("main-btn-spam")).click();
+							
+			    		}else{
+					    	logger.info("**********   No mlink found or no messages available   **********");
+					    }
+			    	}
+			    }else{
+			    	logger.info("**********   No mlink found or no messages available   **********");
+			    }
+		    } catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+			}
 		}else{
 			logger.info("**********   No bulk Url found   **********");
 			SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
@@ -266,7 +326,7 @@ public class SeederRunnable implements Runnable {
 	private void clickShowImages(WebDriver driver, String className) {
 		if(validateInboxShowImagesButton(driver, className)){
 			logger.info("Clicking the show images button");
-			driver.findElement(By.className(className)).findElement(By.tagName("a")).click();
+			driver.findElement(By.className(className)).click();
 		}else{
 			logger.info("**********   No show images button found or there is none   **********");
 		}

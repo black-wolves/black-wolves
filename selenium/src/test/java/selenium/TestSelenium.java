@@ -42,7 +42,10 @@ public class TestSelenium {
 	@Test
 	public void testCheckMail() {
 //		String[] args = {"10.10.1.1", "danielsaulino03@yahoo.com,wolf2015."};
-		String[] args = {"10.10.1.1", "eonhmxb@yahoo.com,Sx4z3daYKrxeE5&"};
+//		String[] args = {"10.10.1.1", "eonhmxb@yahoo.com,Sx4z3daYKrxeE5&"};
+//		String[] args = {"10.10.1.1", "azuwqaglw@yahoo.com,Bs%wfXf29qJj#$x"};
+		String[] args = {"10.10.1.1", "lzxaxdtike@yahoo.com,2kVr?a5Htf7%pB2"};
+		
 		Seeder.main(args);
 	}
 	
