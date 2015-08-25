@@ -3,7 +3,9 @@
  */
 package com.blackwolves.selenium.seeder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -17,7 +19,7 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -71,7 +73,11 @@ public class SeederRunnable implements Runnable {
 			// WebDriver driver = new FirefoxDriver();
 			 System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver");
 		//	System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
-			 WebDriver driver = new ChromeDriver();
+			 Map<String, Object> chromeOptions = new HashMap();
+			 chromeOptions.put("binary", "/var/www/chromedriver");
+			 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			 capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+			 WebDriver driver = new ChromeDriver(capabilities);
 			// WebDriver driver = new InternetExplorerDriver();
 
 			yahooLogin(yahooUrl, seed, driver);
