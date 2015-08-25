@@ -75,7 +75,7 @@ public class SeederRunnable implements Runnable {
 			// WebDriver driver = new HtmlUnitDriver(true);
 			// WebDriver driver = new HtmlUnitDriver();
 			// WebDriver driver = new FirefoxDriver();
-		//	 System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver");
+		    System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
 		//	System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
 		//	ChromeDriver driver =  new ChromeDriver();
 		//	 Map<String, Object> chromeOptions = new HashMap();
