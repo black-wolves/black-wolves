@@ -2,6 +2,7 @@ package com.blackwolves.selenium.seeder;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Random;
 
@@ -26,6 +27,8 @@ public class SuscriberRunnable implements Runnable {
 	private final List<String[]> seeds;
 	private final List<String[]> ips;
 	private final Random ipRandomizer;
+
+
 	
 
 
@@ -39,6 +42,7 @@ public class SuscriberRunnable implements Runnable {
 
 	@Override
 	public void run() {
+		WebDriver driver = null;
 		System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
 
 	   
@@ -58,22 +62,24 @@ public class SuscriberRunnable implements Runnable {
 
 				logger.info("Creating the driver");
 				//				WebDriver driver = new HtmlUnitDriver(capability);
-				WebDriver driver = new ChromeDriver();
-//				suscribeToSkimm(seed, driver);
-//				suscribeToMatterMark(seed, driver);
-//				suscribeFashionMagazine(seed, driver);
-//				suscribeToDigg(seed, driver);
+				driver = new ChromeDriver();
+				suscribeToSkimm(seed, driver);
+				suscribeToMatterMark(seed, driver);
+				suscribeFashionMagazine(seed, driver);
+				suscribeToDigg(seed, driver);
 			    suscribeToTheWeek(seed, driver);
 			   
-				driver.close();
+			    driver.close();
 				
 			}
 
 			catch(NoSuchElementException nse){
 				logger.error(nse.getMessage(), nse);
+				 driver.close();
 				continue;
 			}catch(Exception e){
 				logger.error(e.getMessage(), e);
+				 driver.close();
 				continue;
 			}	
 		}
