@@ -66,11 +66,11 @@ public class SeederRunnable implements Runnable {
 				
 				yahooLogin(yahooUrl, seed, driver);
 				
-				validateYahooVersion(driver);
+				validateYahooVersion(driver, seed);
 		        
-		        processBulk(driver);
+		        processBulk(driver, seed);
 		        
-		        processInbox(driver);
+		        processInbox(driver, seed);
 		        
 		        logger.info("Finished!!");
 
@@ -110,27 +110,29 @@ public class SeederRunnable implements Runnable {
 	/**
 	 * 
 	 * @param driver
+	 * @param seed 
 	 */
-	private void validateYahooVersion(WebDriver driver) {
+	private void validateYahooVersion(WebDriver driver, String[] seed) {
 		if(driver.findElements(By.className("uh-srch-btn")).size() > 0){
 			logger.info("**********   Old yahoo version   **********");
 		}else if(driver.findElements(By.id("UHSearchProperty")).size() > 0){
 			logger.info("**********   New yahoo 2 version   **********");
-			logger.info(driver.getPageSource());
+			SuscriberRunnable.writeToFile(seed[0] + "/" + "new_yahoo_2_version.html", driver.getPageSource());
 		}else if(driver.findElements(By.id("mail-search-btn")).size() > 0){
 			logger.info("**********   New yahoo version   **********");
-			logger.info(driver.getPageSource());
+			SuscriberRunnable.writeToFile(seed[0] + "/" + "new_yahoo_version.html", driver.getPageSource());
 		}else{
 			logger.info("**********   There is a new yahoo version in town  **********");
-			logger.info(driver.getPageSource());
+			SuscriberRunnable.writeToFile(seed[0] + "/" + "new_version_in_town.html", driver.getPageSource());
 		}
 		
 	}
 	
 	/**
 	 * @param driver
+	 * @param seed 
 	 */
-	private void processBulk(WebDriver driver) {
+	private void processBulk(WebDriver driver, String[] seed) {
 		if(driver.findElements(By.id("bulk")).size() > 0){
 		
 		    logger.info("Getting the Bulk Url");
@@ -165,19 +167,19 @@ public class SeederRunnable implements Runnable {
 		    	}
 		    }else{
 		    	logger.info("**********   No mlink found or no messages available   **********");
-		    	logger.info(driver.getPageSource());
 		    }
 		}else{
 			logger.info("**********   No bulk Url found   **********");
-			logger.info(driver.getPageSource());
+			SuscriberRunnable.writeToFile(seed[0] + "/" + "now_bulk_url.html", driver.getPageSource());
 		}
 	}
 
 	/**
 	 * @param driver
+	 * @param seed 
 	 * @throws InterruptedException
 	 */
-	private void processInbox(WebDriver driver) throws InterruptedException {
+	private void processInbox(WebDriver driver, String[] seed) throws InterruptedException {
 		if(driver.findElements(By.id("inbox")).size() > 0){
 			
 			logger.info("Getting the Inbox Url");
@@ -211,11 +213,10 @@ public class SeederRunnable implements Runnable {
 		    	}
 		    }else{
 		    	logger.info("**********   No mlink found or no messages available   **********");
-		    	logger.info(driver.getPageSource());
 		    }
 		}else{
 			logger.info("**********   No inbox Url found   **********");
-			logger.info(driver.getPageSource());
+			SuscriberRunnable.writeToFile(seed[0] + "/" + "no_inbox_url.html", driver.getPageSource());
 		}
 	}
 	
