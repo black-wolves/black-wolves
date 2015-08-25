@@ -2,7 +2,6 @@ package com.blackwolves.selenium.seeder;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Random;
 
