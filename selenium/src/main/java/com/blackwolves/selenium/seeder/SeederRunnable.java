@@ -3,9 +3,7 @@
  */
 package com.blackwolves.selenium.seeder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -18,18 +16,13 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 
 /**
  * @author gaston.dapice
@@ -75,8 +68,8 @@ public class SeederRunnable implements Runnable {
 			// WebDriver driver = new HtmlUnitDriver(true);
 			// WebDriver driver = new HtmlUnitDriver();
 			// WebDriver driver = new FirefoxDriver();
-		    System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-		//	System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
+		//    System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+	//		System.setProperty("binary", "/Users/danigrane/Downloads/Software/wires-0.3.0-osx");
 		//	ChromeDriver driver =  new ChromeDriver();
 		//	 Map<String, Object> chromeOptions = new HashMap();
 		//	 chromeOptions.put("binary", "/var/www/chromedriver");
@@ -84,11 +77,14 @@ public class SeederRunnable implements Runnable {
 			 //capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
 			DesiredCapabilities caps = new DesiredCapabilities();
-			caps.setCapability("browser_version", "35.0");
+	//		caps.setCapability("binary", "/Users/danigrane/Downloads/Software/wires-0.3.0-osx");
+			caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+			
 			caps.setCapability("os", "OS X");
 			caps.setCapability("os_version", "Yosemite");
 			caps.setCapability("resolution", "1280x1024");
-		    WebDriver driver =  new ChromeDriver(caps);
+		    WebDriver driver =  new FirefoxDriver(caps);
+		    
 			yahooLogin(yahooUrl, seed, driver);
 
 			validateYahooVersion(driver, seed);
