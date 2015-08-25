@@ -117,13 +117,13 @@ public class SeederRunnable implements Runnable {
 			logger.info("**********   Old yahoo version   **********");
 		}else if(driver.findElements(By.id("UHSearchProperty")).size() > 0){
 			logger.info("**********   New yahoo 2 version   **********");
-			SuscriberRunnable.writeToFile(seed[0] +"new_yahoo_2_version.html", driver.getPageSource());
+			SuscriberRunnable.writeToFile("new_yahoo_2_version.html", driver.getPageSource());
 		}else if(driver.findElements(By.id("mail-search-btn")).size() > 0){
 			logger.info("**********   New yahoo version   **********");
-			SuscriberRunnable.writeToFile(seed[0] + "new_yahoo_version.html", driver.getPageSource());
+			SuscriberRunnable.writeToFile("new_yahoo_version.html", driver.getPageSource());
 		}else{
 			logger.info("**********   There is a new yahoo version in town  **********");
-			SuscriberRunnable.writeToFile(seed[0] + "new_version_in_town.html", driver.getPageSource());
+			SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
 		}
 		
 	}
@@ -170,7 +170,7 @@ public class SeederRunnable implements Runnable {
 		    }
 		}else{
 			logger.info("**********   No bulk Url found   **********");
-			SuscriberRunnable.writeToFile(seed[0] + "now_bulk_url.html", driver.getPageSource());
+			SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
 		}
 	}
 
@@ -216,7 +216,7 @@ public class SeederRunnable implements Runnable {
 		    }
 		}else{
 			logger.info("**********   No inbox Url found   **********");
-			SuscriberRunnable.writeToFile(seed[0] + "no_inbox_url.html", driver.getPageSource());
+			SuscriberRunnable.writeToFile("no_inbox_url.html", driver.getPageSource());
 		}
 	}
 	
