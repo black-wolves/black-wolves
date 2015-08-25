@@ -116,10 +116,13 @@ public class SeederRunnable implements Runnable {
 			logger.info("**********   Old yahoo version   **********");
 		}else if(driver.findElements(By.id("UHSearchProperty")).size() > 0){
 			logger.info("**********   New yahoo 2 version   **********");
+			logger.info(driver.getPageSource());
 		}else if(driver.findElements(By.id("mail-search-btn")).size() > 0){
 			logger.info("**********   New yahoo version   **********");
+			logger.info(driver.getPageSource());
 		}else{
 			logger.info("**********   There is a new yahoo version in town  **********");
+			logger.info(driver.getPageSource());
 		}
 		
 	}
@@ -162,9 +165,11 @@ public class SeederRunnable implements Runnable {
 		    	}
 		    }else{
 		    	logger.info("**********   No mlink found or no messages available   **********");
+		    	logger.info(driver.getPageSource());
 		    }
 		}else{
 			logger.info("**********   No bulk Url found   **********");
+			logger.info(driver.getPageSource());
 		}
 	}
 
@@ -206,9 +211,11 @@ public class SeederRunnable implements Runnable {
 		    	}
 		    }else{
 		    	logger.info("**********   No mlink found or no messages available   **********");
+		    	logger.info(driver.getPageSource());
 		    }
 		}else{
 			logger.info("**********   No inbox Url found   **********");
+			logger.info(driver.getPageSource());
 		}
 	}
 	
