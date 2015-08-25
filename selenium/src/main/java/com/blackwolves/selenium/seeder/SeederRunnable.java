@@ -73,11 +73,11 @@ public class SeederRunnable implements Runnable {
 			// WebDriver driver = new FirefoxDriver();
 			 System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver");
 		//	System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
-			 Map<String, Object> chromeOptions = new HashMap();
-			 chromeOptions.put("binary", "/var/www/chromedriver");
-			 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			 capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-			 WebDriver driver = new ChromeDriver(capabilities);
+		//	 Map<String, Object> chromeOptions = new HashMap();
+		//	 chromeOptions.put("binary", "/var/www/chromedriver");
+			// DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			 //capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+			 WebDriver driver = new ChromeDriver();
 			// WebDriver driver = new InternetExplorerDriver();
 
 			yahooLogin(yahooUrl, seed, driver);
