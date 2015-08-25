@@ -83,14 +83,12 @@ public class SeederRunnable implements Runnable {
 			// DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 			 //capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
-			//HtmlUnitDriver driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
 			DesiredCapabilities caps = new DesiredCapabilities();
-		    caps.setCapability("browser", "IE");
-		    caps.setCapability("browser_version", "7.0");
-		    caps.setCapability("os", "Windows");
-		    caps.setCapability("os_version", "XP");
-		    caps.setCapability("browserstack.debug", "true");
-		    WebDriver driver =  new HtmlUnitDriver(caps);
+			caps.setCapability("browser_version", "35.0");
+			caps.setCapability("os", "OS X");
+			caps.setCapability("os_version", "Yosemite");
+			caps.setCapability("resolution", "1280x1024");
+		    WebDriver driver =  new ChromeDriver(caps);
 			yahooLogin(yahooUrl, seed, driver);
 
 			validateYahooVersion(driver, seed);
