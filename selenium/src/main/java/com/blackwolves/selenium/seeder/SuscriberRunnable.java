@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -20,6 +19,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  *
  */
 public class SuscriberRunnable implements Runnable {
+
+	private static final String HTML_LOCATION = "/root/htmls/";
+
 
 	private static final Logger logger = LogManager.getLogger(SuscriberRunnable.class.getName());
 	
@@ -150,14 +152,14 @@ public class SuscriberRunnable implements Runnable {
 	}
 	
 	 public static void writeToFile(String fileName,String fileContent) {
-	        try {
-	            FileWriter writer = new FileWriter("/Users/danigrane/Documents/workspace/"+fileName, true);
-	            writer.write(fileContent);
-	           
-	            writer.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	 
-	    }
+		 try {
+			 logger.info("Writing page to: " + HTML_LOCATION + fileName);
+			 FileWriter writer = new FileWriter(HTML_LOCATION + fileName, true);
+			 writer.write(fileContent);
+
+			 writer.close();
+		 } catch (IOException e) {
+			 e.printStackTrace();
+		 }
+    }
 }
