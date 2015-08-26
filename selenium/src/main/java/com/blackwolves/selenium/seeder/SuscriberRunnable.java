@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
@@ -43,13 +44,13 @@ public class SuscriberRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		WebDriver driver = null;
-		System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
-
+		
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		caps.setCapability("resolution", "1280x800");
+		WebDriver driver = new FirefoxDriver(caps);
 		for (int i = 0; i < seeds.size(); i++) {
-
 			try{
-
 				logger.info("Counter i is now: " + i);
 				String[] seed = seeds.get(i);
 
@@ -57,16 +58,16 @@ public class SuscriberRunnable implements Runnable {
 
 				logger.info("Creating the proxy capability");
 
-				DesiredCapabilities capability = SeederRunnable.addProxyCapabilities(ip[0]);
+				DesiredCapabilities capability = OldYahooRunnable.addProxyCapabilities(ip[0]);
 
 				logger.info("Creating the driver");
 				//				WebDriver driver = new HtmlUnitDriver(capability);
-				driver = new ChromeDriver();
+				driver = new FirefoxDriver();
 				suscribeToSkimm(seed, driver);
 				suscribeToMatterMark(seed, driver);
 				suscribeFashionMagazine(seed, driver);
 				suscribeToDigg(seed, driver);
-			    suscribeToTheWeek(seed, driver);
+			  //  suscribeToTheWeek(seed, driver);
 			   
 			    driver.close();
 				
