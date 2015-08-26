@@ -153,9 +153,9 @@ public class SuscriberRunnable implements Runnable {
 	 public static void writeToFile(String fileName,String fileContent) {
 		 try {
 			 logger.info("Writing page to: " + fileName);
-			 FileWriter writer = new FileWriter(fileName, true);
+			 FileWriter writer = new FileWriter(fileName, false);
 			 writer.write(fileContent);
-
+			 
 			 writer.close();
 		 } catch (IOException e) {
 			 e.printStackTrace();

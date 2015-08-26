@@ -66,34 +66,28 @@ public class SeederRunnable implements Runnable {
 	@Override
 	public void run() {
 		String[] seed = this.seed.split(",");
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		caps.setCapability("os", "OS X");
+		caps.setCapability("os_version", "Yosemite");
+		caps.setCapability("resolution", "1280x800");
 
+		WebDriver driver =  new FirefoxDriver(caps);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
 			logger.info("Creating new driver");
-
-			DesiredCapabilities caps = new DesiredCapabilities();
-	//		caps.setCapability("binary", "/Users/danigrane/Downloads/Software/wires-0.3.0-osx");
-			caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
-			
-			caps.setCapability("os", "OS X");
-			caps.setCapability("os_version", "Yosemite");
-			caps.setCapability("resolution", "1280x800");
-		    WebDriver driver =  new FirefoxDriver(caps);
-		    
 			yahooLogin(yahooUrl, seed, driver);
-
 			validateYahooVersion(driver, seed);
-
-
 			logger.info("Finished!!");
-			
 			driver.close();
-			
 
 		} catch (NoSuchElementException nse) {
 			logger.error(nse.getMessage(), nse);
+			driver.close();
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+			driver.close();
 		}
 
 	}
