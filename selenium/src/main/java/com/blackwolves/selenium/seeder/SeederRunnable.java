@@ -101,16 +101,19 @@ public class SeederRunnable implements Runnable {
 	 */
 	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) throws IOException, InterruptedException {
 		WebDriverWait wait = new WebDriverWait(driver, 60);
+		getScreenShot(driver, "START");
 		logger.info("Getting to the url: " + yahooUrl);
 		driver.get(yahooUrl);
-
+		getScreenShot(driver, "AT_LOGIN_PAGE");
 		logger.info("Introducing username: " + seed[0]);
 		driver.findElement(By.id("login-username")).clear();
 		driver.findElement(By.id("login-username")).sendKeys(seed[0]);
+		getScreenShot(driver, "AFTER_LOGIN_NAME");
 
 		logger.info("Introducing password: " + seed[1]);
 		driver.findElement(By.id("login-passwd")).clear();
 		driver.findElement(By.id("login-passwd")).sendKeys(seed[1]);
+		getScreenShot(driver, "AFTER_SETTING_PASS");
 
 		logger.info("Clicking login button");
 		getScreenShot(driver, "before-click");
@@ -123,7 +126,6 @@ public class SeederRunnable implements Runnable {
 		catch (Exception e ){
 			logger.info("Login buton is not ready.");
 		//	Thread.sleep(5000);
-			wait.until(ExpectedConditions.elementToBeClickable(By.className("UHSearchProperty")));
 			//driver.findElement(By.id("login-signin")).click();
 		}
 		
