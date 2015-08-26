@@ -47,11 +47,13 @@ public class Seeder {
 		executor.execute(worker);
 
 		executor.shutdown();
+		
 		// Wait until all threads are finish
 		while (!executor.isTerminated()) {
 			
 		}
 		logger.info("\nFinished all threads");
+		executor.shutdownNow();
 		
 	}
 
@@ -114,6 +116,7 @@ public class Seeder {
 			
 		}
 		logger.info("\nFinished all threads");
+		
 		
 	}
 	

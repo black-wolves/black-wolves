@@ -124,7 +124,7 @@ public class SeederRunnable implements Runnable {
 			driver.findElement(By.id("login-signin")).click();
 		}
 		catch (Exception e ){
-			logger.info("Login buton is not ready.");
+			logger.info("Already logged in..Moving forward!");
 		//	Thread.sleep(5000);
 			//driver.findElement(By.id("login-signin")).click();
 		}
