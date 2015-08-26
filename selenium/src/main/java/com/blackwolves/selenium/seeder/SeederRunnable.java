@@ -3,6 +3,10 @@
  */
 package com.blackwolves.selenium.seeder;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -13,7 +17,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -24,13 +30,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import org.apache.commons.io.FileUtils;
+
 /**
  * @author gaston.dapice
  *
  */
 public class SeederRunnable implements Runnable {
 
-	private static final double PERCENTAGE = 0.2;
+	private static final double PERCENTAGE = 0.18;
 
 	private static final Logger logger = LogManager.getLogger(SeederRunnable.class.getName());
 
@@ -39,6 +47,8 @@ public class SeederRunnable implements Runnable {
 	private final Random ipRandomizer;
 	private final String seed;
 	private final String ip;
+
+	private String IMAGES_PATH = "/var/www/screenshots/";
 
 	public SeederRunnable(List<String[]> partition, List<String[]> ips, Random ipRandomizer, String ip, String seed) {
 		this.seeds = partition;
@@ -55,26 +65,11 @@ public class SeederRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
-		// String[] seed = seeds.get(randInt(0, seeds.size()-1));
-		// logger.info("Current Seed is : "+seed[0]);
 		String[] seed = this.seed.split(",");
-		// String yahooUrl =
-		// "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
 
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
 			logger.info("Creating new driver");
-			// WebDriver driver = new HtmlUnitDriver(capability);
-			// WebDriver driver = new HtmlUnitDriver(true);
-			// WebDriver driver = new HtmlUnitDriver();
-			// WebDriver driver = new FirefoxDriver();
-		//    System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-	//		System.setProperty("binary", "/Users/danigrane/Downloads/Software/wires-0.3.0-osx");
-		//	ChromeDriver driver =  new ChromeDriver();
-		//	 Map<String, Object> chromeOptions = new HashMap();
-		//	 chromeOptions.put("binary", "/var/www/chromedriver");
-			// DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			 //capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
 			DesiredCapabilities caps = new DesiredCapabilities();
 	//		caps.setCapability("binary", "/Users/danigrane/Downloads/Software/wires-0.3.0-osx");
@@ -82,7 +77,7 @@ public class SeederRunnable implements Runnable {
 			
 			caps.setCapability("os", "OS X");
 			caps.setCapability("os_version", "Yosemite");
-			caps.setCapability("resolution", "1280x1024");
+			caps.setCapability("resolution", "1280x800");
 		    WebDriver driver =  new FirefoxDriver(caps);
 		    
 			yahooLogin(yahooUrl, seed, driver);
@@ -91,10 +86,9 @@ public class SeederRunnable implements Runnable {
 
 
 			logger.info("Finished!!");
-
-			// logger.info(driver.getPageSource());
-
-			// clickNotSpamForAllMessages(driver);
+			
+			driver.close();
+			
 
 		} catch (NoSuchElementException nse) {
 			logger.error(nse.getMessage(), nse);
@@ -108,8 +102,9 @@ public class SeederRunnable implements Runnable {
 	 * @param yahooUrl
 	 * @param seed
 	 * @param driver
+	 * @throws IOException 
 	 */
-	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
+	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) throws IOException {
 		logger.info("Getting to the url: " + yahooUrl);
 		driver.get(yahooUrl);
 
@@ -122,6 +117,8 @@ public class SeederRunnable implements Runnable {
 		driver.findElement(By.id("login-passwd")).sendKeys(seed[1]);
 
 		logger.info("Clicking login button");
+		getScreenShot(driver, "before-click");
+		
 		driver.findElement(By.id("login-signin")).click();
 	}
 
@@ -132,6 +129,7 @@ public class SeederRunnable implements Runnable {
 	 */
 	private void validateYahooVersion(WebDriver driver, String[] seed) {
 		try {
+			getScreenShot(driver, "AfterLogin");
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
@@ -219,6 +217,8 @@ public class SeederRunnable implements Runnable {
 			driver.findElement(By.id("spam-label")).click();
 			WebDriverWait wait = new WebDriverWait(driver, 20);
 			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+			getScreenShot(driver, "processNewYahoo2Bulk");
+
 			if (driver.findElements(By.className("subj")).size() > 0) {
 
 				logger.info("subj found");
@@ -233,9 +233,7 @@ public class SeederRunnable implements Runnable {
 					if (driver.findElements(By.className("subj")).size() > 0) {
 
 						try {
-
 							spamMsgs = driver.findElements(By.className("subj"));
-
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 							logger.info("Opening the spam message");
@@ -283,8 +281,8 @@ public class SeederRunnable implements Runnable {
 		checkWelcomeDialog(driver);		 
 		WebDriverWait wait = new WebDriverWait(driver, 60);
 		try{
+			getScreenShot(driver, "processNewYahoo2Inbox");
 			driver.findElement(By.className("inbox-label")).click();
-			SuscriberRunnable.writeToFile("dana.html", driver.getPageSource());
 		}
 		catch (Exception e ){
 			logger.info("Inbox link not visible. Try to click in the Dialog again");
@@ -355,7 +353,6 @@ public class SeederRunnable implements Runnable {
 
 			logger.info("Getting the Inbox Url");
 			driver.get(driver.findElement(By.id("inbox")).findElement(By.tagName("a")).getAttribute("href"));
-
 			if (driver.findElements(By.className("mlink")).size() > 0) {
 
 				logger.info("mlink found");
@@ -403,6 +400,20 @@ public class SeederRunnable implements Runnable {
 		return randomPosition;
 	}
 
+	public  void getScreenShot(WebDriver driver,String name) {
+		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		// Now you can do whatever you need to do with it, for example copy somewhere
+		try {
+			FileUtils.copyFile(scrFile, new File(IMAGES_PATH+name+".jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
+
+	
+	
 	/**
 	 * @param driver
 	 * @throws InterruptedException
