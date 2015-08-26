@@ -140,7 +140,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 * @param driver
 	 * @throws InterruptedException
 	 */
-	private void clickRandomLink(WebDriver driver) throws InterruptedException {
+	public void clickRandomLink(WebDriver driver) throws InterruptedException {
 		logger.info("Getting the content of the message");
 		WebElement div = driver.findElement(By.className("mailContent"));
 		logger.info("Looking for links inside the message");
@@ -184,41 +184,6 @@ public class OldYahooRunnable extends YahooRunnable{
 			logger.info("**********   No links found or none available  **********");
 		}
 	}
-
-
-
-	/**
-	 * 
-	 * @param driver
-	 * @param a
-	 * @throws InterruptedException
-	 */
-	private void openInNewWindow(WebDriver driver, WebElement a) throws InterruptedException {
-
-		logger.info("Cicking this link: " + a.getAttribute("href"));
-		Actions newTab = new Actions(driver);
-		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
-		Thread.sleep(5000);
-
-		// handle windows change
-		String base = driver.getWindowHandle();
-		Set<String> set = driver.getWindowHandles();
-
-		set.remove(base);
-		assert set.size() == 1;
-		driver.switchTo().window((String) set.toArray()[0]);
-
-		// close the window
-		driver.close();
-		driver.switchTo().window(base);
-
-		// handle windows change and switch back to the main window
-		Thread.sleep(1500);
-		for (String winHandle : driver.getWindowHandles()) {
-			driver.switchTo().window(winHandle);
-		}
-	}
-
 	
 
 	/**

@@ -2,13 +2,16 @@ package com.blackwolves.selenium.seeder;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 /**
  * @author danigrane
@@ -33,6 +36,8 @@ public abstract class YahooRunnable implements Runnable {
 	public abstract void processInbox(WebDriver driver, String[] seed) throws InterruptedException;
 
 	public abstract void processSpam(WebDriver driver, String[] seed) throws InterruptedException;
+	
+	public abstract void  clickRandomLink(WebDriver driver) throws InterruptedException;
 
 	@Override
 	public void run() {
@@ -82,6 +87,9 @@ public abstract class YahooRunnable implements Runnable {
 		return randomPosition;
 	}
 
+	
+	
+	
 	/**
 	 * 
 	 * @param driver
@@ -99,9 +107,44 @@ public abstract class YahooRunnable implements Runnable {
 		} else {
 			logger.info("**********   No show images button found or there is none   **********");
 		}
-
 	}
 
+
+
+
+	/**
+	 * 
+	 * @param driver
+	 * @param a
+	 * @throws InterruptedException
+	 */
+	protected void openInNewWindow(WebDriver driver, WebElement a) throws InterruptedException {
+
+		logger.info("Cicking this link: " + a.getAttribute("href"));
+		Actions newTab = new Actions(driver);
+		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
+		Thread.sleep(5000);
+
+		// handle windows change
+		String base = driver.getWindowHandle();
+		Set<String> set = driver.getWindowHandles();
+
+		set.remove(base);
+		assert set.size() == 1;
+		driver.switchTo().window((String) set.toArray()[0]);
+
+		// close the window
+		driver.close();
+		driver.switchTo().window(base);
+
+		// handle windows change and switch back to the main window
+		Thread.sleep(1500);
+		for (String winHandle : driver.getWindowHandles()) {
+			driver.switchTo().window(winHandle);
+		}
+	}
+
+	
 	/**
 	 * 
 	 * @param driver

@@ -57,10 +57,12 @@ public class Seeder {
 		String [] seed =  mySeed.split(",");
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		logger.info("Creating new driver");
 		WebDriver driver = new FirefoxDriver(caps);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
-			logger.info("Creating new driver");
+			 // Maximize Window
+		    driver.manage().window().maximize();
 			yahooLogin(yahooUrl, seed, driver);
 			handler =   validateYahooVersion(driver, mySeed);
 		}

@@ -4,12 +4,14 @@
 package com.blackwolves.selenium.seeder;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -37,18 +39,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 			driver.findElement(By.className("inbox-label")).click();
 			inboxFolder = driver.findElement(By.className("empty-folder"));
 		} catch (Exception e) {
-			logger.info("Inbox link not visible or empty folder. Sleeping just in case");
-			Thread.sleep(5000);
-			checkWelcomeDialog(driver);
-			//driver.findElement(By.className("inbox-label")).click();
+			logger.info("Inbox Folder is not empty");
 		}
+		
+		
 		// Check if inbox is empty
 		if (inboxFolder != null && inboxFolder.isDisplayed()) {
 			logger.info("Inbox Folder is empty.");
-		} else {
+		} 
+		//If not empty, proceed
+		else {
 			Thread.sleep(1000 + randInt(0, 2000));
 			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-
+		   
 			if (driver.findElements(By.className("subj")).size() > 0) {
 				logger.info("subj found");
 				List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
@@ -58,6 +61,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 					if (driver.findElements(By.className("subj")).size() > 0) {
 						try {
+						    Actions mouse = new Actions(driver);
+							mouse.moveByOffset(200+randInt(0, 300), 300+randInt(0, 400));
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
@@ -74,7 +79,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 							// clickRandomLinkForNewYahoo2(driver);
 
 							logger.info("Going back to inbox");
-							driver.findElement(By.className("inbox-label")).click();
+						
+							
+						     mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+
 						}
 
 						catch (Exception exception) {
@@ -92,11 +100,22 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private void checkWelcomeDialog(WebDriver driver) {
-		List<?> dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
-		if (!dialogs.isEmpty()) {
-			WebElement welcomeDialog = (WebElement) dialogs.get(0);
-			welcomeDialog.click();
+		int retries = 2;
+		for (int i = 0; i <retries ; i++) {
+			try {
+				List<?> dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
+				if (!dialogs.isEmpty()) {
+					logger.info("WelcomeDialog found. Closing it.");
+					WebElement welcomeDialog = (WebElement) dialogs.get(0);
+					welcomeDialog.click();
+					break;
+				}
+			} catch (Exception e) {
+				driver.manage().timeouts().implicitlyWait(3000+randInt(500, 2000), TimeUnit.SECONDS);
+			}
+			
 		}
+	
 	}
 
 		
@@ -178,6 +197,28 @@ public class ModernYahooRunnable extends YahooRunnable {
 					logger.info("**********   No mlink found or no messages available   **********");
 				}
 			}
+		}
+	}
+	
+	public void clickRandomLink(WebDriver driver) throws InterruptedException {
+		logger.info("Getting the content of the message");
+		WebElement div = driver.findElement(By.className("thread-body"));
+		logger.info("Looking for links inside the message");
+		if (div.findElements(By.tagName("a")).size() != 0) {
+			logger.info("Links found");
+			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
+			int randomLinkNo = randInt(0, linksToGo.size());
+			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
+			if (aUrl != null) {
+				if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
+					logger.info("It is an Unsubscribe link!! - we are not clicking it");
+					logger.info(aUrl);
+				} else {
+					openInNewWindow(driver, linksToGo.get(randomLinkNo));
+				}
+			}
+		} else {
+			logger.info("**********   No links found or none available  **********");
 		}
 	}
 
