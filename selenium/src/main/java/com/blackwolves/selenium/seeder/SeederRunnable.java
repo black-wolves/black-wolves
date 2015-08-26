@@ -72,7 +72,7 @@ public class SeederRunnable implements Runnable {
 		caps.setCapability("os_version", "Yosemite");
 		caps.setCapability("resolution", "1280x800");
 
-		WebDriver driver =  new FirefoxDriver(caps);
+		WebDriver driver = new FirefoxDriver(caps);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
 			logger.info("Creating new driver");
@@ -84,7 +84,7 @@ public class SeederRunnable implements Runnable {
 		} catch (NoSuchElementException nse) {
 			logger.error(nse.getMessage(), nse);
 			driver.close();
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			driver.close();
@@ -96,8 +96,8 @@ public class SeederRunnable implements Runnable {
 	 * @param yahooUrl
 	 * @param seed
 	 * @param driver
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	 * @throws IOException
+	 * @throws InterruptedException
 	 */
 	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) throws IOException, InterruptedException {
 		WebDriverWait wait = new WebDriverWait(driver, 60);
@@ -117,20 +117,16 @@ public class SeederRunnable implements Runnable {
 
 		logger.info("Clicking login button");
 		getScreenShot(driver, "before-click");
-		SuscriberRunnable.writeToFile(IMAGES_PATH+"before-click.html", driver.getPageSource());
-		
-		
-		try{
+		SuscriberRunnable.writeToFile(IMAGES_PATH + "before-click.html", driver.getPageSource());
+
+		try {
 			driver.findElement(By.id("login-signin")).click();
-		}
-		catch (Exception e ){
+		} catch (Exception e) {
 			logger.info("Already logged in..Moving forward!");
-		//	Thread.sleep(5000);
-			//driver.findElement(By.id("login-signin")).click();
+			// Thread.sleep(5000);
+			// driver.findElement(By.id("login-signin")).click();
 		}
-		
-		
-		
+
 	}
 
 	/**
@@ -159,7 +155,7 @@ public class SeederRunnable implements Runnable {
 				// driver.getPageSource());
 			} else {
 				logger.info("**********   There is a new yahoo version in town  **********");
-				SuscriberRunnable.writeToFile("new_version_in_town.html",driver.getPageSource());
+				SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -223,63 +219,71 @@ public class SeederRunnable implements Runnable {
 	 */
 	private void processNewYahoo2Bulk(WebDriver driver, String[] seed) throws InterruptedException {
 		if (driver.findElements(By.id("spam-label")).size() > 0) {
-
-			logger.info("Getting the Bulk Url");
-			driver.findElement(By.id("spam-label")).click();
 			WebDriverWait wait = new WebDriverWait(driver, 20);
-			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-			getScreenShot(driver, "processNewYahoo2Bulk");
-
-			if (driver.findElements(By.className("subj")).size() > 0) {
-
-				logger.info("subj found");
-				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-
-				List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
-
-				int percentage = (int) (spamMsgs.size() * PERCENTAGE);
-				for (int j = 0; j < percentage; j++) {
-					logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
-
-					if (driver.findElements(By.className("subj")).size() > 0) {
-
-						try {
-							spamMsgs = driver.findElements(By.className("subj"));
-							logger.info("Obtaining a random message position so it can be open");
-							int randomPosition = obtainRandomMsgsPosition(spamMsgs);
-							logger.info("Opening the spam message");
-							spamMsgs.get(randomPosition).click();
-							Thread.sleep(1000 + randInt(1000, 5000));
-							clickShowImages(driver, "blocked-image");
-							logger.info("Clicking the not spam option");
-							wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
-
-							// Clicking not spam in 83% of the cases
-							if (throwDice()) {
-								driver.findElement(By.id("main-btn-spam")).click();
-							} else {
-								driver.findElement(By.id("spam-label")).click();
-								wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-							}
-						} catch (Exception e) {
-							logger.info("Way too fast Usain Bolt...Let's go to spam folder and keep going");
-							driver.findElement(By.id("spam-label")).click();
-						}
-
-						// wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container
-						// ml-bg tcLabel-y")));
-						Thread.sleep(3000);
-
-					} else {
-						logger.info("**********   No mlink found or no messages available   **********");
-					}
-				}
-			} else {
-				logger.info("**********   No mlink found or no messages available   **********");
+			WebElement spamFolder = null;
+			try {
+				logger.info("Getting the Bulk Url");
+				driver.findElement(By.id("spam-label")).click();
+				Thread.sleep(2000 + randInt(0, 2000));
+				spamFolder = driver.findElement(By.className("empty-folder"));
+			} catch (Exception e) {
+				logger.info("There are msgs in the spam folder, go get them Tiger!");
 			}
-		} else {
-			logger.info("**********   No bulk Url found   **********");
-		//	SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
+
+			// Check if the spam folder is empty
+			if (spamFolder != null && spamFolder.isDisplayed()) {
+				logger.info("Spam Folder is empty! UOHOOO!");
+			} else {
+				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+				getScreenShot(driver, "processNewYahoo2Bulk");
+				if (driver.findElements(By.className("subj")).size() > 0) {
+
+					logger.info("subj found");
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+
+					List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
+
+					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+					for (int j = 0; j < percentage; j++) {
+						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
+
+						if (driver.findElements(By.className("subj")).size() > 0) {
+
+							try {
+								spamMsgs = driver.findElements(By.className("subj"));
+								logger.info("Obtaining a random message position so it can be open");
+								int randomPosition = obtainRandomMsgsPosition(spamMsgs);
+								logger.info("Opening the spam message");
+								spamMsgs.get(randomPosition).click();
+								Thread.sleep(1000 + randInt(1000, 5000));
+								clickShowImages(driver, "blocked-image");
+								logger.info("Clicking the not spam option");
+								wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
+
+								// Clicking not spam in 83% of the cases
+								if (throwDice()) {
+									driver.findElement(By.id("main-btn-spam")).click();
+								} else {
+									driver.findElement(By.id("spam-label")).click();
+									wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+								}
+							} catch (Exception e) {
+								logger.info("Way too fast Usain Bolt...Let's go to spam folder and keep going");
+								driver.findElement(By.id("spam-label")).click();
+							}
+
+							// wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container
+							// ml-bg tcLabel-y")));
+							Thread.sleep(3000);
+
+						} else {
+							logger.info("**********   No mlink found or no messages available   **********");
+						}
+					}
+				} else {
+					logger.info("**********   No mlink found or no messages available   **********");
+				}
+			}
 		}
 	}
 
@@ -289,60 +293,67 @@ public class SeederRunnable implements Runnable {
 	 * @throws InterruptedException
 	 */
 	private void processNewYahoo2Inbox(WebDriver driver, String[] seed) throws InterruptedException {
-		checkWelcomeDialog(driver);		 
-		WebDriverWait wait = new WebDriverWait(driver, 60);
-		try{
+		checkWelcomeDialog(driver);
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebElement inboxFolder = null;
+		try {
 			getScreenShot(driver, "processNewYahoo2Inbox");
 			driver.findElement(By.className("inbox-label")).click();
-		}
-		catch (Exception e ){
+			inboxFolder = driver.findElement(By.className("empty-folder"));
+		} catch (Exception e) {
 			logger.info("Inbox link not visible. Try to click in the Dialog again");
 			Thread.sleep(5000);
 			checkWelcomeDialog(driver);
 			driver.findElement(By.className("inbox-label")).click();
 		}
-		wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-		Thread.sleep(1000 + randInt(0, 2000));
-		wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+		// Check if inbox is empty
 
-		if (driver.findElements(By.className("subj")).size() > 0) {
-			logger.info("subj found");
-			List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
-			int percentage =  (int) (inboxMsgs.size() * PERCENTAGE);
-			for (int j = 0; j < percentage; j++) {
-				logger.info((percentage - j) + " emails to go ");
-
-				if (driver.findElements(By.className("subj")).size() > 0) {
-					try {
-						logger.info("Obtaining a random message position so it can be open");
-						int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
-						WebElement currentMsg = inboxMsgs.get(randomPosition);
-						logger.info("Clicking in Msg : "+currentMsg.getText());
-						currentMsg.click();
-						
-						Thread.sleep(1000 + randInt(1000, 5000));
-						clickShowImages(driver, "show-text");
-
-						// scrollDownAndUp(driver);
-
-						
-						//The first time works fine. Then it tries to go to the same link every time and breaks.
-						//clickRandomLinkForNewYahoo2(driver);
-
-						logger.info("Going back to inbox");
-						driver.findElement(By.className("inbox-label")).click();
-					}
-
-					catch (Exception exception) {
-						logger.info("Need to sync the thread...Going to inbox to keep going ");
-						driver.findElement(By.className("inbox-label")).click();
-					}
-				} else {
-					logger.info("**********   No mlink found or no messages available   **********");
-				}
-			}
+		if (inboxFolder != null && inboxFolder.isDisplayed()) {
+			logger.info("Inbox Folder is empty.");
 		} else {
-			logger.info("**********   No mlink found or no messages available   **********");
+			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+			Thread.sleep(1000 + randInt(0, 2000));
+			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+
+			if (driver.findElements(By.className("subj")).size() > 0) {
+				logger.info("subj found");
+				List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
+				int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
+				for (int j = 0; j < percentage; j++) {
+					logger.info((percentage - j) + " emails to go ");
+
+					if (driver.findElements(By.className("subj")).size() > 0) {
+						try {
+							logger.info("Obtaining a random message position so it can be open");
+							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
+							WebElement currentMsg = inboxMsgs.get(randomPosition);
+							logger.info("Clicking in Msg : " + currentMsg.getText());
+							currentMsg.click();
+
+							Thread.sleep(1000 + randInt(1000, 5000));
+							clickShowImages(driver, "show-text");
+
+							// scrollDownAndUp(driver);
+
+							// The first time works fine. Then it tries to go to
+							// the same link every time and breaks.
+							// clickRandomLinkForNewYahoo2(driver);
+
+							logger.info("Going back to inbox");
+							driver.findElement(By.className("inbox-label")).click();
+						}
+
+						catch (Exception exception) {
+							logger.info("Need to sync the thread...Going to inbox to keep going ");
+							driver.findElement(By.className("inbox-label")).click();
+						}
+					} else {
+						logger.info("**********   No mlink found or no messages available   **********");
+					}
+				}
+			} else {
+				logger.info("**********   No mlink found or no messages available   **********");
+			}
 		}
 	}
 
@@ -411,20 +422,19 @@ public class SeederRunnable implements Runnable {
 		return randomPosition;
 	}
 
-	public  void getScreenShot(WebDriver driver,String name) {
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-		// Now you can do whatever you need to do with it, for example copy somewhere
+	public void getScreenShot(WebDriver driver, String name) {
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		// Now you can do whatever you need to do with it, for example copy
+		// somewhere
 		try {
-			FileUtils.copyFile(scrFile, new File(IMAGES_PATH+name+".jpg"));
+			FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+
 	}
 
-	
-	
 	/**
 	 * @param driver
 	 * @throws InterruptedException
@@ -459,7 +469,7 @@ public class SeederRunnable implements Runnable {
 		if (div.findElements(By.tagName("a")).size() != 0) {
 			logger.info("Links found");
 			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-			int randomLinkNo = randInt(0,linksToGo.size());
+			int randomLinkNo = randInt(0, linksToGo.size());
 			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
 			if (aUrl != null) {
 				if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {

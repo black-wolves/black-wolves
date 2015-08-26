@@ -46,13 +46,11 @@ public class SuscriberRunnable implements Runnable {
 		WebDriver driver = null;
 		System.setProperty("webdriver.chrome.driver", "/Users/danigrane/Downloads/Software/chromedriver");
 
-	   
 		for (int i = 0; i < seeds.size(); i++) {
 
 			try{
 
 				logger.info("Counter i is now: " + i);
-				//				String seed = seeds.get(seedRandomizer.nextInt(seeds.size()));
 				String[] seed = seeds.get(i);
 
 				String[] ip = ips.get(ipRandomizer.nextInt(ips.size()));
