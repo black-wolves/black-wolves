@@ -73,15 +73,15 @@ public class Seeder {
 		if (handler != null) {
 			ExecutorService executor = Executors.newFixedThreadPool(THREADS);
 			executor.execute(handler);
-			
-			executor.shutdownNow();
+			executor.shutdown();
 
 			// Wait until all threads are finish
 			while (!executor.isTerminated()) {
 
 			}
+			executor.shutdownNow();
 			driver.close();;
-			logger.info("Shutting down browser");
+			logger.info("Shutting down browser...");
 
 		}
 		else
@@ -176,7 +176,7 @@ public class Seeder {
 				// driver.getPageSource());
 			} else {
 				logger.info("**********   There is a new yahoo version in town  **********");
-				SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
+				//SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
