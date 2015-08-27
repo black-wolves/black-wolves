@@ -23,7 +23,7 @@ public abstract class YahooRunnable implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = 0.16;
+	protected static final double PERCENTAGE = 0.36;
 
 	private String seed = "";
 

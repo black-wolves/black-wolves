@@ -204,7 +204,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
 
 								// Clicking not spam in 83% of the cases
-								if (throwDice()) {
+								if (true) {
 									driver.findElement(By.id("main-btn-spam")).click();
 								} else {
 									driver.findElement(By.id("spam-label")).click();
@@ -217,7 +217,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 							// wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container
 							// ml-bg tcLabel-y")));
-							Thread.sleep(3000);
+							Thread.sleep(randInt(1000, 3000));
 
 						} else {
 							logger.info("**********   No mlink found or no messages available   **********");
