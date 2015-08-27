@@ -73,6 +73,7 @@ public class Seeder {
 		if (handler != null) {
 			ExecutorService executor = Executors.newFixedThreadPool(THREADS);
 			executor.execute(handler);
+			driver.close();
 			executor.shutdown();
 
 			// Wait until all threads are finish
@@ -80,7 +81,7 @@ public class Seeder {
 
 			}
 			executor.shutdownNow();
-			driver.close();;
+			
 			logger.info("Shutting down browser...");
 
 		}
