@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -61,18 +60,16 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 					if (driver.findElements(By.className("subj")).size() > 0) {
 						try {
-						    Actions mouse = new Actions(driver);
-							mouse.moveByOffset(200+randInt(0, 300), 300+randInt(0, 400));
+					    	mouse.moveByOffset(200+randInt(0, 300), 300+randInt(0, 400));
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
 							logger.info("Clicking in Msg : " + currentMsg.getText());
 							currentMsg.click();
-
+							humanizeMe();
 							Thread.sleep(1000 + randInt(1000, 5000));
+							humanizeMe();
 							clickShowImages(driver, "show-text");
-
-							// scrollDownAndUp(driver);
 
 							// The first time works fine. Then it tries to go to
 							// the same link every time and breaks.
@@ -81,7 +78,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Going back to inbox");
 						
 							
-						     mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+						//     mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+							driver.findElement(By.className("inbox-label")).click();
 
 						}
 
@@ -97,6 +95,36 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("**********   No mlink found or no messages available   **********");
 			}
 		}
+	}
+
+	private void humanizeMe() {
+		logger.info("Adding Human Behaviour");
+		
+		int goToX = randInt(0, 100);
+		int goToY = randInt(0, 100);
+		logger.info("Starting to move mouse randomly. ");
+		for (int i = randInt(10, 150); i > 0; i--) {
+			mouse.moveByOffset(goToX+i, goToY+i);
+			driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+		}
+		logger.info("Ended mouse simulation. ");
+
+
+	//	WebElement searchBar = driver.findElement(By.id("UHSearchProperty"));
+	//	mouse.moveToElement(searchBar).build().perform();
+		
+		if(true){  
+			jse.executeScript("window.scrollBy(0,250)", "");
+			driver.manage().timeouts().implicitlyWait(randInt(2, 5), TimeUnit.SECONDS);
+		}
+		
+		if(throwDice()){  
+			jse.executeScript("scroll(0, -250);");
+			//Reading email
+			driver.manage().timeouts().implicitlyWait(randInt(2, 5), TimeUnit.SECONDS);
+		}
+		
+		
 	}
 
 	private void checkWelcomeDialog(WebDriver driver) {
@@ -166,10 +194,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 								spamMsgs = driver.findElements(By.className("subj"));
 								logger.info("Obtaining a random message position so it can be open");
 								int randomPosition = obtainRandomMsgsPosition(spamMsgs);
+								Thread.sleep(1000 + randInt(1000, 3000));
 								logger.info("Opening the spam message");
 								spamMsgs.get(randomPosition).click();
-								Thread.sleep(1000 + randInt(1000, 5000));
-								clickShowImages(driver, "blocked-image");
+								Thread.sleep(1000 + randInt(1000, 3000));
+								humanizeMe();
+								clickShowImages(driver, "show-text");
 								logger.info("Clicking the not spam option");
 								wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
 

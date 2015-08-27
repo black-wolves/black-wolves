@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -22,22 +23,28 @@ public abstract class YahooRunnable implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = 0.18;
+	protected static final double PERCENTAGE = 0.16;
 
 	private String seed = "";
 
 	protected WebDriver driver;
 
+	protected Actions mouse;
+
+	protected JavascriptExecutor jse;
+
 	public YahooRunnable(WebDriver driver, String seed) {
 		this.driver = driver;
 		this.seed = seed;
+		mouse = new Actions(driver);
+		jse = (JavascriptExecutor) driver;
 	}
 
 	public abstract void processInbox(WebDriver driver, String[] seed) throws InterruptedException;
 
 	public abstract void processSpam(WebDriver driver, String[] seed) throws InterruptedException;
-	
-	public abstract void  clickRandomLink(WebDriver driver) throws InterruptedException;
+
+	public abstract void clickRandomLink(WebDriver driver) throws InterruptedException;
 
 	@Override
 	public void run() {
@@ -87,9 +94,6 @@ public abstract class YahooRunnable implements Runnable {
 		return randomPosition;
 	}
 
-	
-	
-	
 	/**
 	 * 
 	 * @param driver
@@ -98,19 +102,24 @@ public abstract class YahooRunnable implements Runnable {
 	 */
 	protected void clickShowImages(WebDriver driver, String className) throws InterruptedException {
 		if (validateInboxShowImagesButton(driver, className)) {
-			logger.info("Clicking the show images button");
-			List<WebElement> divs = driver.findElements(By.className("show-text"));
-			divs.get(0).click();
-			logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
-			Thread.sleep(3000 + randInt(1000, 4000));
+			try {
+
+				logger.info("Clicking the show images button");
+				List<WebElement> divs = driver.findElements(By.className("show-text"));
+				WebElement showImage = divs.get(0);
+				WebElement a1 = showImage.findElement(By.tagName("a"));
+				mouse.moveToElement(a1);
+				a1.click();
+				logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
+				Thread.sleep(3000 + randInt(1000, 4000));
+			} catch (Exception exception) {
+				logger.info("No Images to click");
+			}
 
 		} else {
 			logger.info("**********   No show images button found or there is none   **********");
 		}
 	}
-
-
-
 
 	/**
 	 * 
@@ -144,7 +153,6 @@ public abstract class YahooRunnable implements Runnable {
 		}
 	}
 
-	
 	/**
 	 * 
 	 * @param driver
