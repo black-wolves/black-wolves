@@ -62,7 +62,8 @@ public class Seeder {
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
 			 // Maximize Window
-		    driver.manage().window().maximize();
+		   // driver.manage().window().maximize();
+			logger.info("Trying to login in....");
 			yahooLogin(yahooUrl, seed, driver);
 			handler =   validateYahooVersion(driver, mySeed);
 		}
