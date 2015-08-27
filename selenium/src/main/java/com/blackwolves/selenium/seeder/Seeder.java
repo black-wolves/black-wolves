@@ -36,13 +36,13 @@ import com.google.common.collect.Lists;
  */
 @Component
 public class Seeder {
-	
+
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 	private static final String ROUTE = "/var/www/";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
 
 	private static YahooRunnable handler;
-	
+
 	public static void main(String[] args) {
 		checkMail(args[0], args[1]);
 	}
@@ -54,71 +54,66 @@ public class Seeder {
 	 */
 	private static void checkMail(String myIp, String mySeed) {
 		final int THREADS = 1;
-		String [] seed =  mySeed.split(",");
+		String[] seed = mySeed.split(",");
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
 		logger.info("Creating new driver");
 		WebDriver driver = new FirefoxDriver(caps);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
-			 // Maximize Window
-		   // driver.manage().window().maximize();
+			// Maximize Window
+			// driver.manage().window().maximize();
 			logger.info("Trying to login in....");
 			yahooLogin(yahooUrl, seed, driver);
-			handler =   validateYahooVersion(driver, mySeed);
-		}
-		catch (Exception e)
-		{
+			handler = validateYahooVersion(driver, mySeed);
+		} catch (Exception e) {
 			logger.info("Something went wrong at login");
 		}
-		
-		
-		
-		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
-		executor.execute(handler);
 
-		executor.shutdown();
-		
-		// Wait until all threads are finish
-		while (!executor.isTerminated()) {
+		if (handler != null) {
+			ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+			executor.execute(handler);
 			
+			executor.shutdownNow();
+
+			// Wait until all threads are finish
+			while (!executor.isTerminated()) {
+
+			}
+			driver.close();;
+			logger.info("Shutting down browser");
+
 		}
-		logger.info("\nFinished all threads");
-		executor.shutdownNow();
-		
+		else
+			logger.info("New Interface detected.Exiting");
 	}
 
-
-	
-	public void suscribeToNewsletters()
-	{
+	public void suscribeToNewsletters() {
 		final int THREADS = 1;
-		
+
 		List<String[]> seeds = generateSeedsList();
 		List<String[]> ips = generateIpsList();
-		
+
 		List<List<String[]>> partitions = Lists.partition(seeds, 10);
-		
+
 		final Random ipRandomizer = new Random();
-		
+
 		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
 		for (final List<String[]> partition : partitions) {
-			
+
 			Runnable suscriber = new SuscriberRunnable(partition, ips, ipRandomizer);
 			executor.execute(suscriber);
 		}
-		
 
-		executor.shutdown();
+		executor.shutdownNow();
 		// Wait until all threads are finish
 		while (!executor.isTerminated()) {
-			
+
 		}
 		logger.info("\nFinished all threads");
-		
-		
+
 	}
-	
+
 	/**
 	 * @param yahooUrl
 	 * @param seed
@@ -126,7 +121,8 @@ public class Seeder {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) throws IOException, InterruptedException {
+	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver)
+			throws IOException, InterruptedException {
 		getScreenShot(driver, "START");
 		logger.info("Getting to the url: " + yahooUrl);
 		driver.get(yahooUrl);
@@ -154,21 +150,21 @@ public class Seeder {
 		}
 
 	}
-	
+
 	/**
 	 * 
 	 * @param driver
 	 * @param seed
 	 */
 	private static YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
-		
+
 		try {
 			getScreenShot(driver, "AfterLogin");
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
-				handler =  new OldYahooRunnable(driver, seed);
-				
+				handler = new OldYahooRunnable(driver, seed);
+
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
 				handler = new ModernYahooRunnable(driver, seed);
@@ -187,8 +183,7 @@ public class Seeder {
 		}
 		return handler;
 	}
-	
-	
+
 	public static void getScreenShot(WebDriver driver, String name) {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// Now you can do whatever you need to do with it, for example copy
@@ -202,8 +197,6 @@ public class Seeder {
 
 	}
 
-	
-	
 	/**
 	 * @return
 	 */
@@ -219,7 +212,7 @@ public class Seeder {
 		}
 		return ips;
 	}
-	
+
 	/**
 	 * @return
 	 */
