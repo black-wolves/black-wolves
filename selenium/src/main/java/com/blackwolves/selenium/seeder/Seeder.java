@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
@@ -73,16 +74,19 @@ public class Seeder {
 		if (handler != null) {
 			ExecutorService executor = Executors.newFixedThreadPool(THREADS);
 			executor.execute(handler);
-			driver.close();
-			executor.shutdown();
-
-			// Wait until all threads are finish
-			while (!executor.isTerminated()) {
-
-			}
-			executor.shutdownNow();
 			
-			logger.info("Shutting down browser...");
+			executor.shutdown();
+			try {
+				final boolean done = executor.awaitTermination(1, TimeUnit.MINUTES);
+				logger.info("Is program still alive?  "+done);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// Wait until all threads are finish
+			while (executor.isTerminated()) {
+			}
+			
 
 		}
 		else

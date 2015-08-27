@@ -53,17 +53,15 @@ public abstract class YahooRunnable implements Runnable {
 			processInbox(driver, seed);
 			processSpam(driver, seed);
 			logger.info("Finished!!");
-			driver.close();
 
 		} catch (NoSuchElementException nse) {
 			logger.error(nse.getMessage(), nse);
-			driver.close();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			driver.close();
 		}
-
+		driver.close();
+		logger.info("Thread should end now.");
 	}
 
 	protected static int randInt(int min, int max) {
