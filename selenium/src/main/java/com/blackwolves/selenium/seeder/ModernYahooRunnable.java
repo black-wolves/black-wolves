@@ -55,6 +55,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			if (driver.findElements(By.className("subj")).size() > 0) {
 				logger.info("subj found");
 				List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
+				logger.info("Percentage is " +PERCENTAGE);
 				int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 				for (int j = 0; j < percentage; j++) {
 					logger.info((percentage - j) + " emails to go ");
@@ -184,7 +185,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 
 					List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
-
+					logger.info("Percentage is " +PERCENTAGE);
 					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 					for (int j = 0; j < percentage; j++) {
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
