@@ -79,7 +79,7 @@ public class Seeder {
 			pool.shutdown(); // Disable new tasks from being submitted
 			try {
 				// Wait a while for existing tasks to terminate
-				if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+				if (!pool.awaitTermination(4, TimeUnit.MINUTES)) {
 					pool.shutdownNow(); // Cancel currently executing tasks
 					// Wait a while for tasks to respond to being cancelled
 					if (!pool.awaitTermination(60, TimeUnit.SECONDS))
