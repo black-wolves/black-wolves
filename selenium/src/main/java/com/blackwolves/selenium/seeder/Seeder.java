@@ -72,22 +72,8 @@ public class Seeder {
 		}
 
 		if (handler != null) {
-			ExecutorService executor = Executors.newFixedThreadPool(THREADS);
-			executor.execute(handler);
-			
-			executor.shutdown();
-			try {
-				final boolean done = executor.awaitTermination(1, TimeUnit.MINUTES);
-				logger.info("Is program still alive?  "+done);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// Wait until all threads are finish
-			while (executor.isTerminated()) {
-			}
-			
-
+			Thread thread =  new Thread(handler);
+			thread.start();
 		}
 		else
 			logger.info("New Interface detected.Exiting");
