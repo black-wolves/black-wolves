@@ -94,6 +94,7 @@ public class Seeder {
 
 		} else
 			logger.info("New Interface detected.Exiting");
+			System.exit(0);
 	}
 
 	public void suscribeToNewsletters() {
