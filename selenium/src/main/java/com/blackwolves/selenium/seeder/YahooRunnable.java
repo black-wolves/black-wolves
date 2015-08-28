@@ -23,7 +23,7 @@ public abstract class YahooRunnable implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = 0.16;
+	protected static final double PERCENTAGE = 0.1;
 
 	private String seed = "";
 
@@ -53,6 +53,7 @@ public abstract class YahooRunnable implements Runnable {
 			processInbox(driver, seed);
 			processSpam(driver, seed);
 			logger.info("Finished!!");
+			
 
 		} catch (NoSuchElementException nse) {
 			logger.error(nse.getMessage(), nse);

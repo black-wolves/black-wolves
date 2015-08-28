@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -72,10 +73,26 @@ public class Seeder {
 		}
 
 		if (handler != null) {
-			Thread thread =  new Thread(handler);
-			thread.start();
-		}
-		else
+			ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+			pool.execute(handler);
+
+			pool.shutdown(); // Disable new tasks from being submitted
+			try {
+				// Wait a while for existing tasks to terminate
+				if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+					pool.shutdownNow(); // Cancel currently executing tasks
+					// Wait a while for tasks to respond to being cancelled
+					if (!pool.awaitTermination(60, TimeUnit.SECONDS))
+						logger.info("Pool did not terminate");
+				}
+			} catch (InterruptedException ie) {
+				// (Re-)Cancel if current thread also interrupted
+				pool.shutdownNow();
+				// Preserve interrupt status
+				Thread.currentThread().interrupt();
+			}
+
+		} else
 			logger.info("New Interface detected.Exiting");
 	}
 
@@ -167,7 +184,8 @@ public class Seeder {
 				// driver.getPageSource());
 			} else {
 				logger.info("**********   There is a new yahoo version in town  **********");
-				//SuscriberRunnable.writeToFile("new_version_in_town.html", driver.getPageSource());
+				// SuscriberRunnable.writeToFile("new_version_in_town.html",
+				// driver.getPageSource());
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
