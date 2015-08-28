@@ -22,6 +22,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -64,7 +65,7 @@ public class Seeder {
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 		try {
 			// Maximize Window
-			// driver.manage().window().maximize();
+			driver.manage().window().maximize();
 			logger.info("Trying to login in....");
 			yahooLogin(yahooUrl, seed, driver);
 			handler = validateYahooVersion(driver, mySeed);
@@ -132,20 +133,19 @@ public class Seeder {
 	 */
 	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver)
 			throws IOException, InterruptedException {
-		getScreenShot(driver, "START");
 		logger.info("Getting to the url: " + yahooUrl);
 		driver.get(yahooUrl);
 		getScreenShot(driver, "AT_LOGIN_PAGE");
 		logger.info("Introducing username: " + seed[0]);
-		driver.findElement(By.id("login-username")).clear();
-		driver.findElement(By.id("login-username")).sendKeys(seed[0]);
+		WebElement accountInput = driver.findElement(By.id("login-username"));
+		simulateTyping(accountInput,seed[0], driver);
+		
 		getScreenShot(driver, "AFTER_LOGIN_NAME");
 
 		logger.info("Introducing password: " + seed[1]);
-		driver.findElement(By.id("login-passwd")).clear();
-		driver.findElement(By.id("login-passwd")).sendKeys(seed[1]);
-		getScreenShot(driver, "AFTER_SETTING_PASS");
-
+		WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+		simulateTyping(passwordInput, seed[1], driver);
+		
 		logger.info("Clicking login button");
 		getScreenShot(driver, "before-click");
 		SuscriberRunnable.writeToFile(IMAGES_PATH + "before-click.html", driver.getPageSource());
@@ -158,6 +158,16 @@ public class Seeder {
 			// driver.findElement(By.id("login-signin")).click();
 		}
 
+	}
+
+	private static void simulateTyping(WebElement input,String seed, WebDriver driver) throws InterruptedException {
+		char[] charArray = seed.toCharArray();
+		for (int i = 0; i < charArray.length; i++) {
+		
+			Character myCharacter =  new Character(charArray[i]);
+			input.sendKeys(myCharacter.toString());
+			Thread.sleep(YahooRunnable.randInt(200, 500));
+		}
 	}
 
 	/**
@@ -205,6 +215,19 @@ public class Seeder {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void getFingerPrint()
+	{
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		logger.info("Creating new driver");
+		WebDriver driver = new FirefoxDriver(caps);
+		String url = "https://panopticlick.eff.org/";
+		driver.get(url);
+		WebElement clickMe =  driver.findElement(By.id("clicklink"));
+		clickMe.click();
+		
 	}
 
 	/**

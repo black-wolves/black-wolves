@@ -3,6 +3,7 @@
  */
 package com.blackwolves.selenium.seeder;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -194,30 +195,41 @@ public class ModernYahooRunnable extends YahooRunnable {
 								spamMsgs = driver.findElements(By.className("subj"));
 								logger.info("Obtaining a random message position so it can be open");
 								int randomPosition = obtainRandomMsgsPosition(spamMsgs);
-								Thread.sleep(1000 + randInt(1000, 3000));
+								Thread.sleep(1000 + randInt(1000, 2000));
 								logger.info("Opening the spam message");
 								spamMsgs.get(randomPosition).click();
-								Thread.sleep(1000 + randInt(1000, 3000));
-								humanizeMe();
+								Thread.sleep(1000 + randInt(1000, 2000));
+							//	humanizeMe();
 								clickShowImages(driver, "show-text");
 								logger.info("Clicking the not spam option");
 								wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
 
-								// Clicking not spam in 83% of the cases
-								if (true) {
-									driver.findElement(By.id("main-btn-spam")).click();
-								} else {
-									driver.findElement(By.id("spam-label")).click();
-									wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+									List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
+									for (WebElement ahref : elements) {
+									if (ahref.isDisplayed()) {
+										jse.executeScript("arguments[0].scrollIntoView(true);",ahref);
+										mouse.moveToElement(ahref);
+										ahref.findElement(By.tagName("a")).click();
+										List <WebElement> myList =  driver.findElements(By.className("spamactions"));
+										List <WebElement> submenuList =  myList.get(0).findElements(By.tagName("li"));
+										Thread.sleep(randInt(1500, 2500));
+										WebElement notSpamMultare = submenuList.get(1);
+										notSpamMultare.click();
+										logger.info("Clicking not spam from submenu");
+										Thread.sleep(randInt(1000, 2000));
+									}
 								}
+									
+										
 							} catch (Exception e) {
 								logger.info("Way too fast Usain Bolt...Let's go to spam folder and keep going");
+								logger.info("This is the error "+e.getMessage());
 								driver.findElement(By.id("spam-label")).click();
 							}
 
 							// wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container
 							// ml-bg tcLabel-y")));
-							Thread.sleep(randInt(1000, 3000));
+						//	Thread.sleep(randInt(1000, 3000));
 
 						} else {
 							logger.info("**********   No mlink found or no messages available   **********");

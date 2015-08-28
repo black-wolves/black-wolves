@@ -50,8 +50,8 @@ public abstract class YahooRunnable implements Runnable {
 	public void run() {
 		String[] seed = this.seed.split(",");
 		try {
-			processInbox(driver, seed);
 			processSpam(driver, seed);
+//			processInbox(driver, seed);
 			logger.info("Finished!!");
 			
 

@@ -54,4 +54,10 @@ public class TestSelenium {
 	{
 		seeder.suscribeToNewsletters();
 	}
+	@Test
+	@Ignore
+	public void testFingerPrint()
+	{
+		seeder.getFingerPrint();
+	}
 }
