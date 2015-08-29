@@ -24,7 +24,7 @@ public abstract class YahooRunnable implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0, 3) ;
+	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.2) ;
 
 	private String seed = "";
 
@@ -54,7 +54,8 @@ public abstract class YahooRunnable implements Runnable {
 		String[] seed = this.seed.split(",");
 		try {
 			processInbox(driver, seed);
-			if (throwDice()) {
+			if (!throwDice()) {
+				logger.info("Processing Spam....");
 				processSpam(driver, seed);
 			}
 			

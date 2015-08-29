@@ -77,10 +77,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 							// the same link every time and breaks.
 							// clickRandomLinkForNewYahoo2(driver);
 
-							logger.info("Going back to inbox");
+							//logger.info("Going back to inbox");
 
 							// mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
-							driver.findElement(By.className("inbox-label")).click();
+							//driver.findElement(By.className("inbox-label")).click();
 
 						}
 
@@ -159,7 +159,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			try {
 				logger.info("Getting the Bulk Url");
 				driver.findElement(By.id("spam-label")).click();
-				Thread.sleep(2000 + randInt(0, 2000));
+				Thread.sleep(randInt(1000, 3000));
 				spamFolder = driver.findElement(By.className("empty-folder"));
 			} catch (Exception e) {
 				logger.info("There are msgs in the spam folder, go get them Tiger!");
@@ -177,12 +177,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 					logger.info("Percentage is " + PERCENTAGE);
 					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 					for (int j = 0; j < percentage; j++) {
+						Thread.sleep(randInt(1000, 3000));
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
-
-						if (throwDice()) {
-							dragAndDropNotSpam(driver, wait);
-						} else {
+						int chances =  randInt(0, 10);
+						if (chances <=6 ) {
 							normalNotSpam(driver, wait);
+						} else {
+							dragAndDropNotSpam(driver, wait);
 						}
 					}
 				} else {
@@ -196,13 +197,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 		// TODO Auto-generated method stub
 
 		List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
-		logger.info("Obtaining a random message position so it can be open");
 		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 		Thread.sleep(randInt(1000, 2000));
 		logger.info("Selecting spam message");
 		WebElement msg = spamMsgs.get(randomPosition);
 		WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
-
+		logger.info("******** Dragging Message to inbox ***********");
 		(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
 	}
 
@@ -220,10 +220,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 			clickShowImages(driver, "show-text");
 			wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
 
-			if (throwDice()) {
+			if (!throwDice()) {
+				logger.info("******** Clicking the not spam LIST button ***********");
 				notSpamFromSubList(driver);
 			} else {
-				logger.info("Clicking the not spam main button");
+				logger.info("******** Clicking the not spam MAIN button ***********");
 				driver.findElement(By.id("main-btn-spam")).click();
 				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 
