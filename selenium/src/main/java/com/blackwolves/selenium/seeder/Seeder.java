@@ -37,6 +37,7 @@ import au.com.bytecode.opencsv.CSVReader;
 @Component
 public class Seeder {
 
+	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 	private static final String ROUTE = "/var/www/";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
@@ -65,7 +66,7 @@ public class Seeder {
 		
 		logger.info("Creating new driver");
 		WebDriver driver = new FirefoxDriver(caps);
-		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
+		String yahooUrl = YAHOO_MAIL_RO_URL;
 		try {
 			// Maximize Window
 			driver.manage().window().maximize();
@@ -73,7 +74,7 @@ public class Seeder {
 			yahooLogin(yahooUrl, seed, driver);
 			handler = validateYahooVersion(driver, mySeed);
 		} catch (Exception e) {
-			logger.info("Something went wrong at login");
+			logger.error("Something went wrong at login");
 		}
 
 		if (handler != null) {

@@ -3,7 +3,6 @@
  */
 package com.blackwolves.selenium.seeder;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -25,7 +23,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	public ModernYahooRunnable(WebDriver driver, String seed) {
 		super(driver, seed);
-		// TODO Auto-generated constructor stub
 	}
 
 	private static final Logger logger = LogManager.getLogger(ModernYahooRunnable.class.getName());
@@ -194,8 +191,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private void dragAndDropNotSpam(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-		// TODO Auto-generated method stub
-
 		List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
 		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 		Thread.sleep(randInt(1000, 2000));
