@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -25,13 +24,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 
-import au.com.bytecode.opencsv.CSVReader;
-
-import com.gargoylesoftware.htmlunit.protocol.about.Handler;
 import com.google.common.collect.Lists;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author gaston.dapice
@@ -45,6 +42,8 @@ public class Seeder {
 	private static String IMAGES_PATH = "/var/www/screenshots/";
 
 	private static YahooRunnable handler;
+	
+	private static Human human;
 
 	public static void main(String[] args) {
 		checkMail(args[0], args[1]);
@@ -60,6 +59,10 @@ public class Seeder {
 		String[] seed = mySeed.split(",");
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		
+		logger.info("Random Human generation started");
+		human = generateRandomHumanUser();
+		
 		logger.info("Creating new driver");
 		WebDriver driver = new FirefoxDriver(caps);
 		String yahooUrl = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
@@ -96,6 +99,18 @@ public class Seeder {
 		} else
 			logger.info("New Interface detected.Exiting");
 			System.exit(0);
+	}
+
+	private static Human generateRandomHumanUser() {
+		int number =  YahooRunnable.randInt(0, 10);
+		if(number <= 3)
+		{
+			return new DumbHuman();
+		}
+		else if (number >=4  && number <= 8) {
+			return new AverageHuman();
+		}
+		return new FastHuman();
 	}
 
 	public void suscribeToNewsletters() {
@@ -135,16 +150,16 @@ public class Seeder {
 			throws IOException, InterruptedException {
 		logger.info("Getting to the url: " + yahooUrl);
 		driver.get(yahooUrl);
-		getScreenShot(driver, "AT_LOGIN_PAGE");
+		//getScreenShot(driver, "AT_LOGIN_PAGE");
 		logger.info("Introducing username: " + seed[0]);
 		WebElement accountInput = driver.findElement(By.id("login-username"));
-		simulateTyping(accountInput,seed[0], driver);
+		human.type(accountInput,seed[0], driver);
 		
 		getScreenShot(driver, "AFTER_LOGIN_NAME");
 
 		logger.info("Introducing password: " + seed[1]);
 		WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-		simulateTyping(passwordInput, seed[1], driver);
+		human.type(passwordInput, seed[1], driver);
 		
 		logger.info("Clicking login button");
 		getScreenShot(driver, "before-click");
@@ -158,16 +173,6 @@ public class Seeder {
 			// driver.findElement(By.id("login-signin")).click();
 		}
 
-	}
-
-	private static void simulateTyping(WebElement input,String seed, WebDriver driver) throws InterruptedException {
-		char[] charArray = seed.toCharArray();
-		for (int i = 0; i < charArray.length; i++) {
-		
-			Character myCharacter =  new Character(charArray[i]);
-			input.sendKeys(myCharacter.toString());
-			Thread.sleep(YahooRunnable.randInt(200, 500));
-		}
 	}
 
 	/**

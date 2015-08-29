@@ -13,6 +13,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author danigrane
@@ -23,7 +24,7 @@ public abstract class YahooRunnable implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = 0.2 ;
+	protected static final double PERCENTAGE = generateDoubleRandom(0, 3) ;
 
 	private String seed = "";
 
@@ -45,16 +46,23 @@ public abstract class YahooRunnable implements Runnable {
 	public abstract void processSpam(WebDriver driver, String[] seed) throws InterruptedException;
 
 	public abstract void clickRandomLink(WebDriver driver) throws InterruptedException;
+	
+	public abstract void addToAddressBook(WebDriver driver) throws InterruptedException;
 
 	@Override
 	public void run() {
 		String[] seed = this.seed.split(",");
 		try {
 			processInbox(driver, seed);
-			processSpam(driver, seed);
-			logger.info("Finished!!");
+			if (throwDice()) {
+				processSpam(driver, seed);
+			}
 			
-
+			//Does not work yet
+			//addToAddressBook(driver);
+		
+			
+			logger.info("Finished!!");
 		} catch (NoSuchElementException nse) {
 			logger.error(nse.getMessage(), nse);
 
@@ -65,7 +73,7 @@ public abstract class YahooRunnable implements Runnable {
 		logger.info("Thread should end now.");
 	}
 
-	protected static int randInt(int min, int max) {
+	public static int randInt(int min, int max) {
 
 		// Usually this can be a field rather than a method variable
 		Random rand = new Random();
@@ -80,7 +88,7 @@ public abstract class YahooRunnable implements Runnable {
 	// Throw dices to get random results
 	public static boolean throwDice() {
 		int dice = randInt(1, 6);
-		return dice != 6;
+		return dice == 6;
 	}
 
 	/**
@@ -163,5 +171,14 @@ public abstract class YahooRunnable implements Runnable {
 		Thread.sleep(3000 + randInt(1000, 4000));
 		return driver.findElements(By.className(className)).size() > 0;
 	}
+	
+	
+	public static double generateDoubleRandom(double max, double min) {
+		   double r = Math.random();
+		   if (r < 0.5) {
+		      return ((1 - Math.random()) * (max - min) + min);
+		   }
+		   return (Math.random() * (max - min) + min);
+		}
 
 }

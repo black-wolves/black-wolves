@@ -19,6 +19,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author gaston.dapice
@@ -251,6 +252,13 @@ public class OldYahooRunnable extends YahooRunnable{
 		capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 
 		return capability;
+	}
+
+
+	@Override
+	public void addToAddressBook(WebDriver driver) throws InterruptedException {
+		// TODO Auto-generated method stub
+		
 	}
 
 

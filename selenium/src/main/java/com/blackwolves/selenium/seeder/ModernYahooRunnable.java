@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -21,14 +23,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class ModernYahooRunnable extends YahooRunnable {
 
-	
 	public ModernYahooRunnable(WebDriver driver, String seed) {
 		super(driver, seed);
 		// TODO Auto-generated constructor stub
 	}
 
 	private static final Logger logger = LogManager.getLogger(ModernYahooRunnable.class.getName());
-	
+
 	@Override
 	public void processInbox(WebDriver driver, String[] seed) throws InterruptedException {
 		checkWelcomeDialog(driver);
@@ -41,28 +42,27 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (Exception e) {
 			logger.info("Inbox Folder is not empty");
 		}
-		
-		
+
 		// Check if inbox is empty
 		if (inboxFolder != null && inboxFolder.isDisplayed()) {
 			logger.info("Inbox Folder is empty.");
-		} 
-		//If not empty, proceed
+		}
+		// If not empty, proceed
 		else {
 			Thread.sleep(1000 + randInt(0, 2000));
 			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-		   
+
 			if (driver.findElements(By.className("subj")).size() > 0) {
 				logger.info("subj found");
 				List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
-				logger.info("Percentage is " +PERCENTAGE);
+				logger.info("Percentage is " + PERCENTAGE);
 				int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 				for (int j = 0; j < percentage; j++) {
 					logger.info((percentage - j) + " emails to go ");
 
 					if (driver.findElements(By.className("subj")).size() > 0) {
 						try {
-					    	mouse.moveByOffset(200+randInt(0, 300), 300+randInt(0, 400));
+							mouse.moveByOffset(200 + randInt(0, 300), 300 + randInt(0, 400));
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
@@ -78,9 +78,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 							// clickRandomLinkForNewYahoo2(driver);
 
 							logger.info("Going back to inbox");
-						
-							
-						//     mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+
+							// mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
 							driver.findElement(By.className("inbox-label")).click();
 
 						}
@@ -101,37 +100,35 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	private void humanizeMe() {
 		logger.info("Adding Human Behaviour");
-		
+
 		int goToX = randInt(0, 100);
 		int goToY = randInt(0, 100);
 		logger.info("Starting to move mouse randomly. ");
 		for (int i = randInt(10, 150); i > 0; i--) {
-			mouse.moveByOffset(goToX+i, goToY+i);
+			mouse.moveByOffset(goToX + i, goToY + i);
 			driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
 		}
 		logger.info("Ended mouse simulation. ");
 
+		// WebElement searchBar = driver.findElement(By.id("UHSearchProperty"));
+		// mouse.moveToElement(searchBar).build().perform();
 
-	//	WebElement searchBar = driver.findElement(By.id("UHSearchProperty"));
-	//	mouse.moveToElement(searchBar).build().perform();
-		
-		if(true){  
+		if (true) {
 			jse.executeScript("window.scrollBy(0,250)", "");
 			driver.manage().timeouts().implicitlyWait(randInt(2, 5), TimeUnit.SECONDS);
 		}
-		
-		if(throwDice()){  
+
+		if (throwDice()) {
 			jse.executeScript("scroll(0, -250);");
-			//Reading email
+			// Reading email
 			driver.manage().timeouts().implicitlyWait(randInt(2, 5), TimeUnit.SECONDS);
 		}
-		
-		
+
 	}
 
 	private void checkWelcomeDialog(WebDriver driver) {
 		int retries = 2;
-		for (int i = 0; i <retries ; i++) {
+		for (int i = 0; i < retries; i++) {
 			try {
 				List<?> dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
 				if (!dialogs.isEmpty()) {
@@ -141,23 +138,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 					break;
 				}
 			} catch (Exception e) {
-				driver.manage().timeouts().implicitlyWait(3000+randInt(500, 2000), TimeUnit.SECONDS);
+				driver.manage().timeouts().implicitlyWait(3000 + randInt(500, 2000), TimeUnit.SECONDS);
 			}
-			
+
 		}
-	
+
 	}
 
-		
-		
-		
-		
-		
-		
-		
-
-	/* (non-Javadoc)
-	 * @see com.blackwolves.selenium.seeder.YahooHandler#spamHandler(org.openqa.selenium.WebDriver, java.lang.String[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.blackwolves.selenium.seeder.YahooHandler#spamHandler(org.openqa.
+	 * selenium.WebDriver, java.lang.String[])
 	 */
 	@Override
 	public void processSpam(WebDriver driver, String[] seed) throws InterruptedException {
@@ -178,62 +170,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("Spam Folder is empty! UOHOOO!");
 			} else {
 				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-				Seeder.getScreenShot(driver, "processNewYahoo2Bulk");
 				if (driver.findElements(By.className("subj")).size() > 0) {
-
 					logger.info("subj found");
 					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-
 					List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
-					logger.info("Percentage is " +PERCENTAGE);
+					logger.info("Percentage is " + PERCENTAGE);
 					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 					for (int j = 0; j < percentage; j++) {
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
 
-						if (driver.findElements(By.className("subj")).size() > 0) {
-
-							try {
-								spamMsgs = driver.findElements(By.className("subj"));
-								logger.info("Obtaining a random message position so it can be open");
-								int randomPosition = obtainRandomMsgsPosition(spamMsgs);
-								Thread.sleep(1000 + randInt(1000, 2000));
-								logger.info("Opening the spam message");
-								spamMsgs.get(randomPosition).click();
-								Thread.sleep(1000 + randInt(1000, 2000));
-							//	humanizeMe();
-								clickShowImages(driver, "show-text");
-								logger.info("Clicking the not spam option");
-								wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
-
-									List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
-									for (WebElement ahref : elements) {
-									if (ahref.isDisplayed()) {
-										jse.executeScript("arguments[0].scrollIntoView(true);",ahref);
-										mouse.moveToElement(ahref);
-										ahref.findElement(By.tagName("a")).click();
-										List <WebElement> myList =  driver.findElements(By.className("spamactions"));
-										List <WebElement> submenuList =  myList.get(0).findElements(By.tagName("li"));
-										Thread.sleep(randInt(1500, 2500));
-										WebElement notSpamMultare = submenuList.get(1);
-										notSpamMultare.click();
-										logger.info("Clicking not spam from submenu");
-										Thread.sleep(randInt(1000, 2000));
-									}
-								}
-									
-										
-							} catch (Exception e) {
-								logger.info("Way too fast Usain Bolt...Let's go to spam folder and keep going");
-								logger.info("This is the error "+e.getMessage());
-								driver.findElement(By.id("spam-label")).click();
-							}
-
-							// wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container
-							// ml-bg tcLabel-y")));
-						//	Thread.sleep(randInt(1000, 3000));
-
+						if (throwDice()) {
+							dragAndDropNotSpam(driver, wait);
 						} else {
-							logger.info("**********   No mlink found or no messages available   **********");
+							normalNotSpam(driver, wait);
 						}
 					}
 				} else {
@@ -242,7 +191,71 @@ public class ModernYahooRunnable extends YahooRunnable {
 			}
 		}
 	}
-	
+
+	private void dragAndDropNotSpam(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+		// TODO Auto-generated method stub
+
+		List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
+		logger.info("Obtaining a random message position so it can be open");
+		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
+		Thread.sleep(randInt(1000, 2000));
+		logger.info("Selecting spam message");
+		WebElement msg = spamMsgs.get(randomPosition);
+		WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
+
+		(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
+	}
+
+	private void normalNotSpam(WebDriver driver, WebDriverWait wait) {
+		List<WebElement> spamMsgs;
+		try {
+			spamMsgs = driver.findElements(By.className("subj"));
+			logger.info("Obtaining a random message position so it can be open");
+			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
+			Thread.sleep(1000 + randInt(1000, 2000));
+			logger.info("Opening the spam message");
+			spamMsgs.get(randomPosition).click();
+			Thread.sleep(1000 + randInt(1000, 2000));
+			// humanizeMe();
+			clickShowImages(driver, "show-text");
+			wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
+
+			if (throwDice()) {
+				notSpamFromSubList(driver);
+			} else {
+				logger.info("Clicking the not spam main button");
+				driver.findElement(By.id("main-btn-spam")).click();
+				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+
+			}
+
+		} catch (Exception e) {
+			logger.info("Way too fast Usain Bolt...Let's go to spam folder and keep going");
+			logger.info("This is the error " + e.getMessage());
+			driver.findElement(By.id("spam-label")).click();
+		}
+	}
+
+	private void notSpamFromSubList(WebDriver driver) throws InterruptedException {
+		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
+		for (WebElement ahref : elements) {
+			if (ahref.isDisplayed()) {
+				logger.info("Clicking not spam from submenu");
+				jse.executeScript("arguments[0].scrollIntoView(true);", ahref);
+				mouse.moveToElement(ahref);
+				ahref.findElement(By.tagName("a")).click();
+				List<WebElement> myList = driver.findElements(By.className("spamactions"));
+				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
+				Thread.sleep(randInt(1500, 2500));
+				WebElement notSpamMultare = submenuList.get(1);
+				notSpamMultare.click();
+
+				Thread.sleep(randInt(1000, 2000));
+			}
+
+		}
+	}
+
 	public void clickRandomLink(WebDriver driver) throws InterruptedException {
 		logger.info("Getting the content of the message");
 		WebElement div = driver.findElement(By.className("thread-body"));
@@ -265,5 +278,25 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
+	@Override
+	public void addToAddressBook(WebDriver driver) throws InterruptedException {
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebElement contactButton = driver.findElement(By.className("nav-item-contacts"));
+		contactButton.click();
+		//wait.until(ExpectedConditions.elementT(By.id("legend")));
+		//driver.navigate().refresh();
+		Thread.sleep(randInt(1500, 2500));
+	//	SuscriberRunnable.writeToFile("lalala.html", driver.getPageSource());
+//		driver.findElement(By.partialLinkText("Contact nou"));
+		Thread.sleep(randInt(1500, 2500));
+		List <WebElement> inputs = driver.findElements(By.tagName("input"));
+		for (WebElement webElement : inputs) {
+			if (webElement.isDisplayed() && webElement.isEnabled()) {
+				webElement.sendKeys("asdasdasd");
+				
+			}
+		}
+		
+	}
 
 }
