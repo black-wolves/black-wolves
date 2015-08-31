@@ -26,9 +26,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Lists;
-
 import au.com.bytecode.opencsv.CSVReader;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author gaston.dapice

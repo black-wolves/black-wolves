@@ -66,12 +66,6 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>com.googlecode.ehcache-spring-annotations</groupId>
-		    <artifactId>ehcache-spring-annotations</artifactId>
-		    <version>1.2.0</version>
-		</dependency>
 
 		<!-- Test -->
 
