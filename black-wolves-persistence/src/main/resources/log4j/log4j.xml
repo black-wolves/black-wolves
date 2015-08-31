@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration>
+
+    <appender name="appenderAggregator" class="org.apache.log4j.AsyncAppender">
+        <param name="LocationInfo" value="true" />
+        <appender-ref ref="rollingFileAppender" />
+        <appender-ref ref="smtpAppender" />
+    </appender>
+
+   <appender name="rollingFileAppender" class="org.apache.log4j.rolling.RollingFileAppender">
+   
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+            <param name="FileNamePattern" value="${catalina.base}/logs/black-wolves-persistence.%d{yyyy-MM-dd-HH-mm}.log.gz" />
+            <param name="ActiveFileName" value="${catalina.base}/logs/black-wolves-persistence.log" />
+        </rollingPolicy>
+        <triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
+            <param name="MaxFileSize" value="20480000" />   <!-- 20MB -->
+        </triggeringPolicy>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+        </layout>
+    </appender>
+    
+    <appender name="smtpAppender" class="org.apache.log4j.net.SMTPAppender">
+        <param name="Threshold" value="ERROR" />
+        <param name="SMTPHost" value="intramail.cis.cat.com" />
+        <param name="Subject" value="BlackWolves Persistence Error" />
+        <param name="To" value="gaston.dapice@madrivo.com" />
+        <param name="From" value="blackwolves@madrivo.com" />
+        
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+        </layout>
+        
+        <filter class="org.apache.log4j.varia.StringMatchFilter">
+            <param name="StringToMatch" value="(FATAL)" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+        
+        <filter class="org.apache.log4j.varia.DenyAllFilter" />
+    </appender>
+    
+    <category name="com.blackwolves" additivity="false">
+    	<priority value="debug" />
+    	<appender-ref ref="appenderAggregator" />
+    </category>
+    
+    <root>
+		<priority value="error" />
+		<appender-ref ref="appenderAggregator" />
+	</root>
+</log4j:configuration>
