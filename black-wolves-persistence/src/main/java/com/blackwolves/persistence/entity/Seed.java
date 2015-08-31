@@ -2,7 +2,6 @@ package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
 import java.util.Set;
-import java.util.SortedSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,6 +59,15 @@ public class Seed implements Serializable {
 						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
 				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDDM_SEED_ID", "SDDM_DOMN_ID" }) })
 	private Set<Domain> domains;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "SEED_SESSION"
+				, joinColumns = { @JoinColumn(name = "SDSS_SEED_ID"
+						, foreignKey = @ForeignKey(name = "FK_SEED_SESSION_01")) }
+				, inverseJoinColumns = { @JoinColumn(name = "SDDM_SESS_ID"
+						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
+				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSS_SEED_ID", "SDDM_SESS_ID" }) })
+	private Set<Domain> sessions;
 
 	/**
 	 * @return the id
@@ -141,7 +149,7 @@ public class Seed implements Serializable {
 	/**
 	 * @param subscriptions the subscriptions to set
 	 */
-	public void setSubscriptions(SortedSet<Subscription> subscriptions) {
+	public void setSubscriptions(Set<Subscription> subscriptions) {
 		this.subscriptions = subscriptions;
 	}
 
@@ -155,8 +163,22 @@ public class Seed implements Serializable {
 	/**
 	 * @param domains the domains to set
 	 */
-	public void setDomains(SortedSet<Domain> domains) {
+	public void setDomains(Set<Domain> domains) {
 		this.domains = domains;
+	}
+
+	/**
+	 * @return the sessions
+	 */
+	public Set<Domain> getSessions() {
+		return sessions;
+	}
+
+	/**
+	 * @param sessions the sessions to set
+	 */
+	public void setSessions(Set<Domain> sessions) {
+		this.sessions = sessions;
 	}
 
 	/**
