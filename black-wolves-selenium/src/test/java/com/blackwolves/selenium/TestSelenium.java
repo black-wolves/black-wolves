@@ -1,7 +1,7 @@
 /**
  * 
  */
-package selenium;
+package com.blackwolves.selenium;
 
 import org.junit.Ignore;
 import org.junit.Test;
