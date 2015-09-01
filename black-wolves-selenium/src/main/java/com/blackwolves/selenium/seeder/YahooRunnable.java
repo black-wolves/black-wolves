@@ -108,20 +108,19 @@ public abstract class YahooRunnable {
 	 */
 	protected void clickShowImages(WebDriver driver, String className) throws InterruptedException {
 		if (validateInboxShowImagesButton(driver, className)) {
-			try {
-
-				logger.info("Clicking the show images button");
+			if(driver.findElements(By.className("show-text")).size() > 0){
+				logger.info("Getting the show images div");
 				List<WebElement> divs = driver.findElements(By.className("show-text"));
 				WebElement showImage = divs.get(0);
-				WebElement a1 = showImage.findElement(By.tagName("a"));
-				mouse.moveToElement(a1);
-				a1.click();
+				WebElement a = showImage.findElement(By.tagName("a"));
+				mouse.moveToElement(a);
+				logger.info("Clicking the show images button");
+				a.click();
 				logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
 				Thread.sleep(3000 + randInt(1000, 4000));
-			} catch (Exception exception) {
+			}else{
 				logger.info("No Images to click");
 			}
-
 		} else {
 			logger.info("**********   No show images button found or there is none   **********");
 		}

@@ -26,7 +26,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	@Override
 	public void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException {
-		
 		logger.info("Processing inbox");
 		checkWelcomeDialog(driver);
 		
@@ -67,6 +66,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 							
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
+							
+							logger.info("Getting the random message");
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
 							
 							logger.info("Clicking in Msg : " + currentMsg.getText());
@@ -165,20 +166,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 	private void checkWelcomeDialog(WebDriver driver) {
 		int retries = 2;
 		for (int i = 0; i < retries; i++) {
-			try {
-				List<?> dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
-				if (!dialogs.isEmpty()) {
-					logger.info("WelcomeDialog found. Closing it.");
-					WebElement welcomeDialog = (WebElement) dialogs.get(0);
-					welcomeDialog.click();
-					break;
-				}
-			} catch (Exception e) {
+			if(driver.findElements(By.className("ob-contactimport-btn-skip")).size() > 0){
+				List<WebElement> dialogs = driver.findElements(By.className("ob-contactimport-btn-skip"));
+				logger.info("Welcome Dialog found. Closing it.");
+				WebElement welcomeDialog = dialogs.get(0);
+				welcomeDialog.click();
+			}else {
 				driver.manage().timeouts().implicitlyWait(3000 + randInt(500, 2000), TimeUnit.SECONDS);
 			}
-
 		}
-
 	}
 
 	/*
@@ -251,7 +247,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Opening the spam message");
 			spamMsgs.get(randomPosition).click();
 			Thread.sleep(1000 + randInt(1000, 2000));
-			// humanizeMe();
 			clickShowImages(driver, "show-text");
 			wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
 
@@ -316,16 +311,20 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	@Override
 	public void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException {
+		logger.info("Replying to an email");
 //		String body = human.generateRandomBody(driver, wait);
 		driver.findElement(By.className("icon-reply")).click();
 //		Thread.sleep(randInt(2500, 3500));
 //		WebElement bodyMail = driver.findElement(By.id("rtetext"));
-		Thread.sleep(randInt(2500, 3500));
+		Thread.sleep(randInt(3000, 4000));
 //		bodyMail.clear();
 //		bodyMail.click();
 //		human.type(bodyMail, body);
+		logger.info("Waiting for button to be clickable");
+		wait.until(ExpectedConditions.elementToBeClickable(By.className("bottomToolbar")));
+		logger.info("Sending email reply");
 		driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")).click();
-		Thread.sleep(randInt(2500, 3500));
+		Thread.sleep(randInt(3000, 4000));
 	}
 
 	
