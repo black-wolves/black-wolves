@@ -21,14 +21,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class ModernYahooRunnable extends YahooRunnable {
 
-	public ModernYahooRunnable(WebDriver driver, String seed) {
-		super(driver, seed);
+	private static final Logger logger = LogManager.getLogger(ModernYahooRunnable.class.getName());
+	
+	public ModernYahooRunnable(WebDriver driver, String seed, Human human) {
+		super(driver, seed, human);
 	}
 
-	private static final Logger logger = LogManager.getLogger(ModernYahooRunnable.class.getName());
-
 	@Override
-	public void processInbox(WebDriver driver, String[] seed) throws InterruptedException {
+	public void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException {
 		checkWelcomeDialog(driver);
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		WebElement inboxFolder = null;
@@ -38,6 +38,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			inboxFolder = driver.findElement(By.className("empty-folder"));
 		} catch (Exception e) {
 			logger.info("Inbox Folder is not empty");
+			logger.error(e.getMessage(), e);
 		}
 
 		// Check if inbox is empty
@@ -50,40 +51,62 @@ public class ModernYahooRunnable extends YahooRunnable {
 			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 
 			if (driver.findElements(By.className("subj")).size() > 0) {
+				
 				logger.info("subj found");
 				List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
+				
 				logger.info("Percentage is " + PERCENTAGE);
 				int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
+				
 				for (int j = 0; j < percentage; j++) {
+					
 					logger.info((percentage - j) + " emails to go ");
-
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+					
 					if (driver.findElements(By.className("subj")).size() > 0) {
 						try {
 							mouse.moveByOffset(200 + randInt(0, 300), 300 + randInt(0, 400));
+							
+							logger.info("subj found");
+							inboxMsgs = driver.findElements(By.className("subj"));
+							
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
+							
 							logger.info("Clicking in Msg : " + currentMsg.getText());
 							currentMsg.click();
+							
 							humanizeMe();
+							
 							Thread.sleep(1000 + randInt(1000, 5000));
+							
 							humanizeMe();
+							
 							clickShowImages(driver, "show-text");
+							
+							replyToEmail(driver, wait, human);
+							
+							humanizeMe();
+							
+							clickRandomLink(driver);
 
-							// The first time works fine. Then it tries to go to
-							// the same link every time and breaks.
-							// clickRandomLinkForNewYahoo2(driver);
-
-							//logger.info("Going back to inbox");
-
-							// mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
-							//driver.findElement(By.className("inbox-label")).click();
+							logger.info("Going back to inbox");
+							mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+							driver.findElement(By.className("inbox-label")).click();
+							
+							Thread.sleep(randInt(1500, 2500));
+							
+							driver.navigate().refresh();
+							
+							Thread.sleep(randInt(1500, 2500));
 
 						}
 
 						catch (Exception exception) {
 							logger.info("Need to sync the thread...Going to inbox to keep going ");
 							driver.findElement(By.className("inbox-label")).click();
+							driver.navigate().refresh();
 						}
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
@@ -259,7 +282,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		if (div.findElements(By.tagName("a")).size() != 0) {
 			logger.info("Links found");
 			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-			int randomLinkNo = randInt(0, linksToGo.size());
+			int randomLinkNo = randInt(0, linksToGo.size()-1);
 			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
 			if (aUrl != null) {
 				if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
@@ -275,10 +298,36 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	@Override
+	public void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException {
+//		String body = human.generateRandomBody(driver, wait);
+		driver.findElement(By.className("icon-reply")).click();
+//		Thread.sleep(randInt(2500, 3500));
+//		WebElement bodyMail = driver.findElement(By.id("rtetext"));
+		Thread.sleep(randInt(2500, 3500));
+//		bodyMail.clear();
+//		bodyMail.click();
+//		human.type(bodyMail, body);
+		driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")).click();
+		Thread.sleep(randInt(2500, 3500));
+	}
+
+	
+	@Override
 	public void addToAddressBook(WebDriver driver) throws InterruptedException {
 		WebDriverWait wait = new WebDriverWait(driver, 30);
-		WebElement contactButton = driver.findElement(By.className("nav-item-contacts"));
-		contactButton.click();
+		logger.info("Going to contacts section");
+		driver.findElement(By.className("nav-item-contacts")).click();
+		
+		
+//		logger.info(driver.findElements(By.className("listnav-label primary-property-btn")).size());
+		logger.info(driver.findElements(By.className("listnav-label")).size());
+		logger.info(driver.findElements(By.className("primary-property-btn")).size());
+		
+//		logger.info(driver.findElements(By.className("icon icon-add-contact")).size());
+		logger.info(driver.findElements(By.className("icon")).size());
+		logger.info(driver.findElements(By.className("icon-add-contact")).size());
+		
+		logger.info(driver.findElements(By.className("add-contact-text")).size());
 		//wait.until(ExpectedConditions.elementT(By.id("legend")));
 		//driver.navigate().refresh();
 		Thread.sleep(randInt(1500, 2500));
@@ -294,5 +343,4 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 		
 	}
-
 }

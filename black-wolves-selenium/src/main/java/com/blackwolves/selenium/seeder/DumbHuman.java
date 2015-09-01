@@ -5,7 +5,6 @@ package com.blackwolves.selenium.seeder;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -19,8 +18,8 @@ public class DumbHuman extends Human {
 	}
 
 	@Override
-	public void type(WebElement input, String seed, WebDriver driver) throws InterruptedException {
-		char[] charArray = seed.toCharArray();
+	public void type(WebElement input, String string) throws InterruptedException {
+		char[] charArray = string.toCharArray();
 		for (int i = 0; i < charArray.length; i++) {
 
 			Character myCharacter = new Character(charArray[i]);

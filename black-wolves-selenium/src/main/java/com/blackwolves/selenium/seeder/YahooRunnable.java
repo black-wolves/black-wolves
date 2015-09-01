@@ -13,6 +13,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author danigrane
@@ -26,6 +27,8 @@ public abstract class YahooRunnable implements Runnable {
 	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.2) ;
 
 	private String seed = "";
+	
+	private Human human;
 
 	protected WebDriver driver;
 
@@ -33,26 +36,29 @@ public abstract class YahooRunnable implements Runnable {
 
 	protected JavascriptExecutor jse;
 
-	public YahooRunnable(WebDriver driver, String seed) {
+	public YahooRunnable(WebDriver driver, String seed, Human human) {
 		this.driver = driver;
 		this.seed = seed;
-		mouse = new Actions(driver);
-		jse = (JavascriptExecutor) driver;
+		this.mouse = new Actions(driver);
+		this.jse = (JavascriptExecutor) driver;
+		this.human = human;
 	}
 
-	public abstract void processInbox(WebDriver driver, String[] seed) throws InterruptedException;
+	public abstract void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException;
 
 	public abstract void processSpam(WebDriver driver, String[] seed) throws InterruptedException;
 
 	public abstract void clickRandomLink(WebDriver driver) throws InterruptedException;
 	
 	public abstract void addToAddressBook(WebDriver driver) throws InterruptedException;
-
+	
+	public abstract void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException;
+	
 	@Override
 	public void run() {
 		String[] seed = this.seed.split(",");
 		try {
-			processInbox(driver, seed);
+			processInbox(driver, seed, human);
 			if (!throwDice()) {
 				logger.info("Processing Spam....");
 				processSpam(driver, seed);
@@ -68,9 +74,10 @@ public abstract class YahooRunnable implements Runnable {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+		} finally{
+			driver.close();
+			logger.info("Thread should end now.");
 		}
-		driver.close();
-		logger.info("Thread should end now.");
 	}
 
 	public static int randInt(int min, int max) {
@@ -174,11 +181,11 @@ public abstract class YahooRunnable implements Runnable {
 	
 	
 	public static double generateDoubleRandom(double max, double min) {
-		   double r = Math.random();
-		   if (r < 0.5) {
-		      return ((1 - Math.random()) * (max - min) + min);
-		   }
-		   return (Math.random() * (max - min) + min);
+		double r = Math.random();
+		if (r < 0.5) {
+			return ((1 - Math.random()) * (max - min) + min);
 		}
+		return (Math.random() * (max - min) + min);
+	}
 
 }

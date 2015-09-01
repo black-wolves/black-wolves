@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author gaston.dapice
@@ -24,12 +25,11 @@ import org.openqa.selenium.support.ui.Select;
 public class OldYahooRunnable extends YahooRunnable{
 
 
-	public OldYahooRunnable(WebDriver driver, String seed) {
-		super(driver, seed);
-		// TODO Auto-generated constructor stub
-	}
-
 	private static final Logger logger = LogManager.getLogger(OldYahooRunnable.class.getName());
+	
+	public OldYahooRunnable(WebDriver driver, String seed, Human human) {
+		super(driver, seed, human);
+	}
 
 	/**
 	 * @param driver
@@ -38,7 +38,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processInbox(WebDriver driver, String[] seed) throws InterruptedException {
+	public void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException {
 		if (driver.findElements(By.id("inbox")).size() > 0) {
 
 			logger.info("Getting the Inbox Url");
@@ -160,29 +160,6 @@ public class OldYahooRunnable extends YahooRunnable{
 		}
 	}
 
-	private void clickRandomLinkForNewYahoo2(WebDriver driver) throws InterruptedException {
-		logger.info("Getting the content of the message");
-		WebElement div = driver.findElement(By.className("thread-body"));
-		logger.info("Looking for links inside the message");
-		if (div.findElements(By.tagName("a")).size() != 0) {
-			logger.info("Links found");
-			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-			int randomLinkNo = randInt(0, linksToGo.size());
-			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
-			if (aUrl != null) {
-				if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
-					logger.info("It is an Unsubscribe link!! - we are not clicking it");
-					logger.info(aUrl);
-				} else {
-					openInNewWindow(driver, linksToGo.get(randomLinkNo));
-				}
-			}
-		} else {
-			logger.info("**********   No links found or none available  **********");
-		}
-	}
-	
-
 	/**
 	 * @param driver
 	 */
@@ -258,7 +235,10 @@ public class OldYahooRunnable extends YahooRunnable{
 	}
 
 
-	
-
+	@Override
+	public void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

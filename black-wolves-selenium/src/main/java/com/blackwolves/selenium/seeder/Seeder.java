@@ -154,13 +154,15 @@ public class Seeder {
 		//getScreenShot(driver, "AT_LOGIN_PAGE");
 		logger.info("Introducing username: " + seed[0]);
 		WebElement accountInput = driver.findElement(By.id("login-username"));
-		human.type(accountInput,seed[0], driver);
+		accountInput.clear();
+		human.type(accountInput,seed[0]);
 		
 		getScreenShot(driver, "AFTER_LOGIN_NAME");
 
 		logger.info("Introducing password: " + seed[1]);
 		WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-		human.type(passwordInput, seed[1], driver);
+		passwordInput.clear();
+		human.type(passwordInput, seed[1]);
 		
 		logger.info("Clicking login button");
 		getScreenShot(driver, "before-click");
@@ -188,11 +190,11 @@ public class Seeder {
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
-				handler = new OldYahooRunnable(driver, seed);
+				handler = new OldYahooRunnable(driver, seed, human);
 
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
-				handler = new ModernYahooRunnable(driver, seed);
+				handler = new ModernYahooRunnable(driver, seed, human);
 				// SuscriberRunnable.writeToFile("new_yahoo_2_version.html",
 				// driver.getPageSource());
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {

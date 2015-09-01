@@ -3,7 +3,6 @@
  */
 package com.blackwolves.selenium.seeder;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -20,8 +19,8 @@ public class FastHuman extends Human {
 	}
 
 	@Override
-	public void type(WebElement input, String seed, WebDriver driver) throws InterruptedException {
-			input.sendKeys(seed);
+	public void type(WebElement input, String string) throws InterruptedException {
+			input.sendKeys(string);
 	}
 
 }
