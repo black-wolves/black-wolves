@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.selenium.seeder;
 
 import java.util.List;
@@ -29,22 +26,20 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	@Override
 	public void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException {
+		
+		logger.info("Processing inbox");
 		checkWelcomeDialog(driver);
+		
 		WebDriverWait wait = new WebDriverWait(driver, 30);
+		
 		WebElement inboxFolder = null;
-		try {
-			Seeder.getScreenShot(driver, "processNewYahoo2Inbox");
-			driver.findElement(By.className("inbox-label")).click();
-			inboxFolder = driver.findElement(By.className("empty-folder"));
-		} catch (Exception e) {
-			logger.info("Inbox Folder is not empty");
-			logger.error(e.getMessage(), e);
-		}
-
+		inboxFolder = validateInboxFolder(driver, inboxFolder);
+		
 		// Check if inbox is empty
 		if (inboxFolder != null && inboxFolder.isDisplayed()) {
 			logger.info("Inbox Folder is empty.");
 		}
+		
 		// If not empty, proceed
 		else {
 			Thread.sleep(1000 + randInt(0, 2000));
@@ -77,19 +72,17 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Clicking in Msg : " + currentMsg.getText());
 							currentMsg.click();
 							
-							humanizeMe();
-							
-							Thread.sleep(1000 + randInt(1000, 5000));
-							
-							humanizeMe();
+							Thread.sleep(1000 + randInt(2000, 3000));
 							
 							clickShowImages(driver, "show-text");
 							
-							replyToEmail(driver, wait, human);
+							if (throwDice()) {
+								replyToEmail(driver, wait, human);
+							}
 							
-							humanizeMe();
-							
-							clickRandomLink(driver);
+							if (throwDice()) {
+								clickRandomLink(driver);
+							}
 
 							logger.info("Going back to inbox");
 							mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
@@ -97,16 +90,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 							
 							Thread.sleep(randInt(1500, 2500));
 							
-							driver.navigate().refresh();
-							
-							Thread.sleep(randInt(1500, 2500));
+							checkForInboxReloadError(driver);
 
-						}
-
-						catch (Exception exception) {
+						}catch (Exception e) {
+							logger.error(e.getMessage(), e);
 							logger.info("Need to sync the thread...Going to inbox to keep going ");
 							driver.findElement(By.className("inbox-label")).click();
-							driver.navigate().refresh();
+							checkForInboxReloadError(driver);
 						}
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
@@ -116,6 +106,32 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("**********   No mlink found or no messages available   **********");
 			}
 		}
+	}
+
+	/**
+	 * @param driver
+	 */
+	private void checkForInboxReloadError(WebDriver driver) {
+		if(driver.findElements(By.id("loadingpane")).size() > 0){
+			if(driver.findElement(By.id("loadingpane")).findElements(By.className("default")).size() > 0){
+				driver.navigate().refresh();
+			}
+		}
+	}
+
+	/**
+	 * @param driver
+	 * @param inboxFolder
+	 * @return
+	 */
+	private WebElement validateInboxFolder(WebDriver driver, WebElement inboxFolder) {
+		if(driver.findElements(By.className("inbox-label")).size() > 0){
+			driver.findElement(By.className("inbox-label")).click();
+			if(driver.findElements(By.className("empty-folder")).size() > 0){
+				inboxFolder = driver.findElement(By.className("empty-folder"));
+			}
+		}
+		return inboxFolder;
 	}
 
 	private void humanizeMe() {
@@ -173,6 +189,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 */
 	@Override
 	public void processSpam(WebDriver driver, String[] seed) throws InterruptedException {
+		logger.info("Processing Spam....");
 		if (driver.findElements(By.id("spam-label")).size() > 0) {
 			WebDriverWait wait = new WebDriverWait(driver, 20);
 			WebElement spamFolder = null;

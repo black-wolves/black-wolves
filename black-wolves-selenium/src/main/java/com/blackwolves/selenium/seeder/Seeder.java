@@ -48,6 +48,7 @@ public class Seeder {
 
 	public static void main(String[] args) {
 		checkMail(args[0], args[1]);
+		logger.info("Finished checking mails");
 	}
 
 	/**
@@ -56,7 +57,6 @@ public class Seeder {
 	 * @param mySeed
 	 */
 	private static void checkMail(String myIp, String mySeed) {
-		final int THREADS = 1;
 		String[] seed = mySeed.split(",");
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
@@ -78,28 +78,11 @@ public class Seeder {
 		}
 
 		if (handler != null) {
-			ExecutorService pool = Executors.newFixedThreadPool(THREADS);
-			pool.execute(handler);
-
-			pool.shutdown(); // Disable new tasks from being submitted
-			try {
-				// Wait a while for existing tasks to terminate
-				if (!pool.awaitTermination(4, TimeUnit.MINUTES)) {
-					pool.shutdownNow(); // Cancel currently executing tasks
-					// Wait a while for tasks to respond to being cancelled
-					if (!pool.awaitTermination(60, TimeUnit.SECONDS))
-						logger.info("Pool did not terminate");
-				}
-			} catch (InterruptedException ie) {
-				// (Re-)Cancel if current thread also interrupted
-				pool.shutdownNow();
-				// Preserve interrupt status
-				Thread.currentThread().interrupt();
-			}
-
-		} else
+			handler.runProcess();
+		} else{
 			logger.info("New Interface detected.Exiting");
 			System.exit(0);
+		}
 	}
 
 	private static Human generateRandomHumanUser() {
@@ -166,7 +149,7 @@ public class Seeder {
 		
 		logger.info("Clicking login button");
 		getScreenShot(driver, "before-click");
-		SuscriberRunnable.writeToFile(IMAGES_PATH + "before-click.html", driver.getPageSource());
+//		SuscriberRunnable.writeToFile(IMAGES_PATH + "before-click.html", driver.getPageSource());
 
 		try {
 			driver.findElement(By.id("login-signin")).click();
@@ -219,8 +202,7 @@ public class Seeder {
 		try {
 			FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 	}
@@ -269,4 +251,57 @@ public class Seeder {
 		}
 		return seeds;
 	}
+	
+//	/**
+//	 * 
+//	 * @param myIp
+//	 * @param mySeed
+//	 */
+//	private static void checkMail(String myIp, String mySeed) {
+//		final int THREADS = 1;
+//		String[] seed = mySeed.split(",");
+//		DesiredCapabilities caps = new DesiredCapabilities();
+//		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+//		
+//		logger.info("Random Human generation started");
+//		human = generateRandomHumanUser();
+//		
+//		logger.info("Creating new driver");
+//		WebDriver driver = new FirefoxDriver(caps);
+//		String yahooUrl = YAHOO_MAIL_RO_URL;
+//		try {
+//			// Maximize Window
+//			driver.manage().window().maximize();
+//			logger.info("Trying to login in....");
+//			yahooLogin(yahooUrl, seed, driver);
+//			handler = validateYahooVersion(driver, mySeed);
+//		} catch (Exception e) {
+//			logger.error("Something went wrong at login");
+//		}
+//
+//		if (handler != null) {
+//			ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+//			pool.execute(handler);
+//
+//			pool.shutdown(); // Disable new tasks from being submitted
+//			try {
+//				// Wait a while for existing tasks to terminate
+//				if (!pool.awaitTermination(15, TimeUnit.MINUTES)) {
+//					pool.shutdownNow(); // Cancel currently executing tasks
+//					// Wait a while for tasks to respond to being cancelled
+//					if (!pool.awaitTermination(60, TimeUnit.SECONDS)){
+//						logger.info("Pool did not terminate");
+//					}
+//				}
+//			} catch (InterruptedException ie) {
+//				// (Re-)Cancel if current thread also interrupted
+//				pool.shutdownNow();
+//				// Preserve interrupt status
+//				Thread.currentThread().interrupt();
+//			}
+//
+//		} else
+//			logger.info("New Interface detected.Exiting");
+//			System.exit(0);
+//	}
 }

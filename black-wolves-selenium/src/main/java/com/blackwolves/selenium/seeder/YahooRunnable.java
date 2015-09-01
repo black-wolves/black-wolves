@@ -20,7 +20,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  *
  */
 
-public abstract class YahooRunnable implements Runnable {
+public abstract class YahooRunnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
@@ -54,25 +54,17 @@ public abstract class YahooRunnable implements Runnable {
 	
 	public abstract void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException;
 	
-	@Override
-	public void run() {
+	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
 			processInbox(driver, seed, human);
-			if (!throwDice()) {
-				logger.info("Processing Spam....");
+//			if (!throwDice()) {
 				processSpam(driver, seed);
-			}
-			
-			//Does not work yet
-			//addToAddressBook(driver);
-		
-			
+//			}
 			logger.info("Finished!!");
-		} catch (NoSuchElementException nse) {
-			logger.error(nse.getMessage(), nse);
-
-		} catch (Exception e) {
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} finally{
 			driver.close();
@@ -80,6 +72,12 @@ public abstract class YahooRunnable implements Runnable {
 		}
 	}
 
+	// Throw dices to get random results
+		public static boolean throwDice() {
+			int dice = randInt(1, 6);
+			return dice == 6;
+		}
+	
 	public static int randInt(int min, int max) {
 
 		// Usually this can be a field rather than a method variable
@@ -90,12 +88,6 @@ public abstract class YahooRunnable implements Runnable {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 
 		return randomNum;
-	}
-
-	// Throw dices to get random results
-	public static boolean throwDice() {
-		int dice = randInt(1, 6);
-		return dice == 6;
 	}
 
 	/**
