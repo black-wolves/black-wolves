@@ -18,4 +18,20 @@ public interface ISeedService {
 	 * @throws ServiceException
 	 */
 	void saveOrUpdate(Seed seed) throws ServiceException ;
+
+	/**
+	 * Searches for a seed in the database by the given email
+	 * @param email
+	 * @return {@link Seed}
+	 * @throws ServiceException
+	 */
+	Seed findByEmail(String email) throws ServiceException;
+
+	/**
+	 * Inserts the given seed into the database
+	 * @param seed
+	 * @return {@link Seed}
+	 * @throws ServiceException
+	 */
+	Seed insertSeedInDB(String[] seed) throws ServiceException;
 }

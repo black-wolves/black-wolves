@@ -37,8 +37,31 @@ public class SeedService implements ISeedService{
 		} catch (DaoException e) {
 			throw new ServiceException(e);
 		}
-		
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * @see com.blackwolves.service.ISeedService#findByEmail(java.lang.String)
+	 */
+	@Override
+	public Seed findByEmail(String email) throws ServiceException {
+		try {
+			return seedDao.findByEmail(email);
+		} catch (DaoException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.blackwolves.service.ISeedService#insertSeedInDB(java.lang.String[])
+	 */
+	@Override
+	public Seed insertSeedInDB(String[] seed) throws ServiceException {
+		try {
+			return seedDao.insertSeedInDB(seed);
+		} catch (DaoException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

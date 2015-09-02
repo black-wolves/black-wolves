@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
@@ -24,10 +23,18 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+import com.blackwolves.persistence.entity.Action;
+import com.blackwolves.persistence.entity.Seed;
+import com.blackwolves.persistence.entity.Session;
+import com.blackwolves.service.ISeedService;
+import com.blackwolves.service.exception.ServiceException;
 import com.google.common.collect.Lists;
 
 /**
@@ -41,13 +48,19 @@ public class Seeder {
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 	private static final String ROUTE = "/var/www/";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
+	
+	@Autowired
+	private ISeedService seedService;
 
 	private static YahooRunnable handler;
 	
 	private static Human human;
-
+	private static ApplicationContext context;
+	
 	public static void main(String[] args) {
-		checkMail(args[0], args[1]);
+		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
+		Seeder seeder = context.getBean(Seeder.class);
+		seeder.checkMail(args[0], args[1]);
 		logger.info("Finished checking mails");
 	}
 
@@ -56,26 +69,27 @@ public class Seeder {
 	 * @param myIp
 	 * @param mySeed
 	 */
-	private static void checkMail(String myIp, String mySeed) {
+	private void checkMail(String myIp, String mySeed) {
 		String[] seed = mySeed.split(",");
-		DesiredCapabilities caps = new DesiredCapabilities();
-		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
 		
-		logger.info("Random Human generation started");
+//		Seed dbSeed = getSeedFromDb(seed);
+		
+//		Session session = validateLastSession(dbSeed);
+//		
+//		if(session==null){
+//			logger.info("This seed can't continue the process");
+//			System.exit(0);
+//		}
+		
+		WebDriver driver = createWebDriver();
+		
 		human = generateRandomHumanUser();
 		
-		logger.info("Creating new driver");
-		WebDriver driver = new FirefoxDriver(caps);
-		String yahooUrl = YAHOO_MAIL_RO_URL;
-		try {
-			// Maximize Window
-			driver.manage().window().maximize();
-			logger.info("Trying to login in....");
-			yahooLogin(yahooUrl, seed, driver);
-			handler = validateYahooVersion(driver, mySeed);
-		} catch (Exception e) {
-			logger.error("Something went wrong at login");
-		}
+		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver);
+		
+//		addActionToSession(session, "login");
+		
+		handler = validateYahooVersion(driver, mySeed);
 
 		if (handler != null) {
 			handler.runProcess();
@@ -83,9 +97,76 @@ public class Seeder {
 			logger.info("New Interface detected.Exiting");
 			System.exit(0);
 		}
+//		try {
+//			seedService.saveOrUpdate(dbSeed);
+//		} catch (ServiceException e) {
+//			logger.error(e.getMessage(), e);
+//		}
+	}
+
+	/**
+	 * @return
+	 */
+	private WebDriver createWebDriver() {
+		logger.info("Creating the web driver");
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		WebDriver driver = new FirefoxDriver(caps);
+		driver.manage().window().maximize();
+		return driver;
+	}
+
+	/**
+	 * Adds the performed action to the session
+	 * @param session
+	 * @param actionName 
+	 */
+	private void addActionToSession(Session session, String actionName) {
+		Action action = new Action(actionName);
+		session.getActions().add(action);
+	}
+
+	/**
+	 * Validate if the seed has any session created.
+	 * If it doesn't have any it continues the process.
+	 * If it has at least one it validates the last date of the session
+	 * to see if the seed can continue the process
+	 * @param dbSeed
+	 * @return {@link Session}
+	 */
+	private Session validateLastSession(Seed dbSeed) {
+		//TODO finish the validation
+		Session session = null;
+		if(dbSeed.getSessions().isEmpty()){
+			session = new Session();
+		}
+		return session;
+	}
+
+	/**
+	 * @param seed
+	 * @return
+	 */
+	private Seed getSeedFromDb(String[] seed) {
+		Seed dbSeed = null;
+		try {
+			dbSeed = seedService.findByEmail(seed[0]);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		if(dbSeed==null){
+			try {
+				dbSeed = seedService.insertSeedInDB(seed);
+			} catch (ServiceException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return dbSeed;
 	}
 
 	private static Human generateRandomHumanUser() {
+		logger.info("Random Human generation started");
 		int number =  YahooRunnable.randInt(0, 10);
 		if(number <= 3)
 		{
@@ -130,35 +211,33 @@ public class Seeder {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver)
-			throws IOException, InterruptedException {
-		logger.info("Getting to the url: " + yahooUrl);
-		driver.get(yahooUrl);
-		//getScreenShot(driver, "AT_LOGIN_PAGE");
-		logger.info("Introducing username: " + seed[0]);
-		WebElement accountInput = driver.findElement(By.id("login-username"));
-		accountInput.clear();
-		human.type(accountInput,seed[0]);
-		
-		getScreenShot(driver, "AFTER_LOGIN_NAME");
-
-		logger.info("Introducing password: " + seed[1]);
-		WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-		passwordInput.clear();
-		human.type(passwordInput, seed[1]);
-		
-		logger.info("Clicking login button");
-		getScreenShot(driver, "before-click");
-//		SuscriberRunnable.writeToFile(IMAGES_PATH + "before-click.html", driver.getPageSource());
-
+	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
+		logger.info("Trying to login in....");
 		try {
-			driver.findElement(By.id("login-signin")).click();
-		} catch (Exception e) {
-			logger.info("Already logged in..Moving forward!");
-			// Thread.sleep(5000);
-			// driver.findElement(By.id("login-signin")).click();
-		}
+			logger.info("Getting to the url: " + yahooUrl);
+			driver.get(yahooUrl);
 
+			logger.info("Introducing username: " + seed[0]);
+			WebElement accountInput = driver.findElement(By.id("login-username"));
+			human.type(accountInput,seed[0]);
+			
+			logger.info("Introducing password: " + seed[1]);
+			WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+			human.type(passwordInput, seed[1]);
+			
+			logger.info("Clicking login button");
+			if(driver.findElements(By.id("login-signin")).size() > 0){
+				driver.findElement(By.id("login-signin")).click();
+			} else {
+				logger.info("Already logged in..Moving forward!");
+			}
+		}catch (InterruptedException e) {
+			logger.error("Thread was interrupted at login");
+			logger.error(e.getMessage(), e);
+		}catch (Exception e) {
+			logger.error("Something went wrong at login");
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -251,57 +330,4 @@ public class Seeder {
 		}
 		return seeds;
 	}
-	
-//	/**
-//	 * 
-//	 * @param myIp
-//	 * @param mySeed
-//	 */
-//	private static void checkMail(String myIp, String mySeed) {
-//		final int THREADS = 1;
-//		String[] seed = mySeed.split(",");
-//		DesiredCapabilities caps = new DesiredCapabilities();
-//		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
-//		
-//		logger.info("Random Human generation started");
-//		human = generateRandomHumanUser();
-//		
-//		logger.info("Creating new driver");
-//		WebDriver driver = new FirefoxDriver(caps);
-//		String yahooUrl = YAHOO_MAIL_RO_URL;
-//		try {
-//			// Maximize Window
-//			driver.manage().window().maximize();
-//			logger.info("Trying to login in....");
-//			yahooLogin(yahooUrl, seed, driver);
-//			handler = validateYahooVersion(driver, mySeed);
-//		} catch (Exception e) {
-//			logger.error("Something went wrong at login");
-//		}
-//
-//		if (handler != null) {
-//			ExecutorService pool = Executors.newFixedThreadPool(THREADS);
-//			pool.execute(handler);
-//
-//			pool.shutdown(); // Disable new tasks from being submitted
-//			try {
-//				// Wait a while for existing tasks to terminate
-//				if (!pool.awaitTermination(15, TimeUnit.MINUTES)) {
-//					pool.shutdownNow(); // Cancel currently executing tasks
-//					// Wait a while for tasks to respond to being cancelled
-//					if (!pool.awaitTermination(60, TimeUnit.SECONDS)){
-//						logger.info("Pool did not terminate");
-//					}
-//				}
-//			} catch (InterruptedException ie) {
-//				// (Re-)Cancel if current thread also interrupted
-//				pool.shutdownNow();
-//				// Preserve interrupt status
-//				Thread.currentThread().interrupt();
-//			}
-//
-//		} else
-//			logger.info("New Interface detected.Exiting");
-//			System.exit(0);
-//	}
 }

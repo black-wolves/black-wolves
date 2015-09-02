@@ -43,8 +43,8 @@
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close"
 			    p:driverClassName="${dataSource.driver}"
 			    p:url="${dataSource.url}"
-			    p:username="${dataSource.user}"
-			    p:password="${dataSource.password}"/>
+			    p:username="${dataSource.user}" />
+<!-- 			    p:password="${dataSource.password}"/> -->
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory" />

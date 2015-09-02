@@ -27,6 +27,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	@Override
 	public void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException {
 		logger.info("Processing inbox");
+		
 		checkWelcomeDialog(driver);
 		
 		WebDriverWait wait = new WebDriverWait(driver, 30);
@@ -163,7 +164,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	}
 
-	private void checkWelcomeDialog(WebDriver driver) {
+	private void checkWelcomeDialog(WebDriver driver) throws InterruptedException {
 		int retries = 2;
 		for (int i = 0; i < retries; i++) {
 			if(driver.findElements(By.className("ob-contactimport-btn-skip")).size() > 0){
@@ -172,7 +173,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 				WebElement welcomeDialog = dialogs.get(0);
 				welcomeDialog.click();
 			}else {
-				driver.manage().timeouts().implicitlyWait(3000 + randInt(500, 2000), TimeUnit.SECONDS);
+				logger.info("No Welcome Dialog was found.");
+				Thread.sleep(randInt(2500, 3500));
 			}
 		}
 	}
@@ -313,18 +315,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException {
 		logger.info("Replying to an email");
 //		String body = human.generateRandomBody(driver, wait);
-		driver.findElement(By.className("icon-reply")).click();
 //		Thread.sleep(randInt(2500, 3500));
-//		WebElement bodyMail = driver.findElement(By.id("rtetext"));
-		Thread.sleep(randInt(3000, 4000));
+		driver.findElement(By.className("icon-reply")).click();
+		Thread.sleep(randInt(2500, 3500));
+		WebElement bodyMail = driver.findElement(By.id("rtetext"));
 //		bodyMail.clear();
-//		bodyMail.click();
+		bodyMail.click();
 //		human.type(bodyMail, body);
 		logger.info("Waiting for button to be clickable");
-		wait.until(ExpectedConditions.elementToBeClickable(By.className("bottomToolbar")));
+		Thread.sleep(randInt(2500, 3500));
 		logger.info("Sending email reply");
-		driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")).click();
-		Thread.sleep(randInt(3000, 4000));
+		driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a")).click();
+		Thread.sleep(randInt(2500, 3500));
 	}
 
 	

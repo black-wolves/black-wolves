@@ -13,6 +13,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -136,7 +137,11 @@ public abstract class YahooRunnable {
 
 		logger.info("Cicking this link: " + a.getAttribute("href"));
 		Actions newTab = new Actions(driver);
-		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
+		try{
+			newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
+		} catch (MoveTargetOutOfBoundsException e){
+			logger.error(e.getMessage(), e);
+		}
 		Thread.sleep(5000);
 
 		// handle windows change
@@ -145,7 +150,11 @@ public abstract class YahooRunnable {
 
 		set.remove(base);
 		assert set.size() == 1;
-		driver.switchTo().window((String) set.toArray()[0]);
+		try{
+			driver.switchTo().window((String) set.toArray()[0]);
+		} catch (ArrayIndexOutOfBoundsException e){
+			logger.error(e.getMessage(), e);
+		}
 
 		// close the window
 		driver.close();

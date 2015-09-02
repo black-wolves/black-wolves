@@ -1,11 +1,13 @@
 package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,10 +32,10 @@ public class Seed implements Serializable {
 	@Column(name = "SEED_ID")
 	private Long id;
 
-	@Column(name = "SEED_FIRST_NAME", nullable = false)
+	@Column(name = "SEED_FIRST_NAME")
 	private String firstName;
 	
-	@Column(name = "SEED_LAST_NAME", nullable = false)
+	@Column(name = "SEED_LAST_NAME")
 	private String lastName;
 	
 	@Column(name = "SEED_EMAIL", nullable = false)
@@ -42,7 +44,7 @@ public class Seed implements Serializable {
 	@Column(name = "SEED_PASSWORD", nullable = false)
 	private String password;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SEED_SUBSCRIPTION"
 				, joinColumns = { @JoinColumn(name = "SDSB_SEED_ID"
 						, foreignKey = @ForeignKey(name = "FK_SEED_SUBSCRIPTION_01")) }
@@ -51,7 +53,7 @@ public class Seed implements Serializable {
 				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSB_SEED_ID", "SDSB_SUBS_ID" }) })
 	private Set<Subscription> subscriptions;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SEED_DOMAIN"
 				, joinColumns = { @JoinColumn(name = "SDDM_SEED_ID"
 						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_01")) }
@@ -60,14 +62,69 @@ public class Seed implements Serializable {
 				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDDM_SEED_ID", "SDDM_DOMN_ID" }) })
 	private Set<Domain> domains;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SEED_SESSION"
 				, joinColumns = { @JoinColumn(name = "SDSS_SEED_ID"
 						, foreignKey = @ForeignKey(name = "FK_SEED_SESSION_01")) }
 				, inverseJoinColumns = { @JoinColumn(name = "SDDM_SESS_ID"
 						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
 				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSS_SEED_ID", "SDDM_SESS_ID" }) })
-	private Set<Domain> sessions;
+	private Set<Session> sessions;
+
+	/**
+	 * Constructor
+	 */
+	public Seed(){
+		
+	}
+	
+	/**
+	 * Constructor
+	 * @param email
+	 * @param password
+	 */
+	public Seed(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
+	
+	/**
+	 * Constructor
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 */
+	public Seed(String firstName, String lastName, String email, String password) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+	}
+
+	/**
+	 * Constructor
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param subscriptions
+	 * @param domains
+	 * @param sessions
+	 */
+	public Seed(String firstName, String lastName, String email,
+			String password, Set<Subscription> subscriptions,
+			Set<Domain> domains, Set<Session> sessions) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.subscriptions = subscriptions;
+		this.domains = domains;
+		this.sessions = sessions;
+	}
 
 	/**
 	 * @return the id
@@ -143,6 +200,9 @@ public class Seed implements Serializable {
 	 * @return the subscriptions
 	 */
 	public Set<Subscription> getSubscriptions() {
+		if(subscriptions==null){
+			return new HashSet<Subscription>();
+		}
 		return subscriptions;
 	}
 
@@ -157,6 +217,9 @@ public class Seed implements Serializable {
 	 * @return the domains
 	 */
 	public Set<Domain> getDomains() {
+		if(domains==null){
+			return new HashSet<Domain>();
+		}
 		return domains;
 	}
 
@@ -170,14 +233,17 @@ public class Seed implements Serializable {
 	/**
 	 * @return the sessions
 	 */
-	public Set<Domain> getSessions() {
+	public Set<Session> getSessions() {
+		if(sessions==null){
+			return new HashSet<Session>();
+		}
 		return sessions;
 	}
 
 	/**
 	 * @param sessions the sessions to set
 	 */
-	public void setSessions(Set<Domain> sessions) {
+	public void setSessions(Set<Session> sessions) {
 		this.sessions = sessions;
 	}
 

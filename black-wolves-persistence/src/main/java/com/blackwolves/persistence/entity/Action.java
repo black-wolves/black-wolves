@@ -1,6 +1,7 @@
 package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "ACTION")
@@ -25,6 +28,25 @@ public class Action implements Serializable {
 	@Column(name = "ACTN_NAME", nullable = false)
 	private String name;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ACTN_LAST_DATE")
+    private Date lastDate;
+	
+	/**
+	 * Constructor
+	 */
+	public Action(){
+		
+	}
+	/**
+	 * Constructor
+	 * @param name
+	 */
+	public Action(String name) {
+		this.name = name;
+		this.lastDate = new Date();
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -54,6 +76,20 @@ public class Action implements Serializable {
 		this.name = name;
 	}
 
+	/**
+	 * @return the lastDate
+	 */
+	public Date getLastDate() {
+		return lastDate;
+	}
+	
+	/**
+	 * @param lastDate the lastDate to set
+	 */
+	public void setLastDate(Date lastDate) {
+		this.lastDate = lastDate;
+	}
+	
 	/**
 	 * 
 	 */

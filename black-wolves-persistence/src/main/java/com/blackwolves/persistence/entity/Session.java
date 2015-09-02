@@ -1,11 +1,14 @@
 package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +18,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -28,11 +33,12 @@ public class Session implements Serializable {
 	@SequenceGenerator(name = "session_gen", sequenceName = "SESSION_SEQ")
 	@Column(name = "SESS_ID")
 	private Long id;
-
-	@Column(name = "SESS_NAME", nullable = false)
-	private String name;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "SESS_LAST_DATE")
+    private Date lastDate;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SESSION_ACTION"
 				, joinColumns = { @JoinColumn(name = "SSAT_SESS_ID"
 						, foreignKey = @ForeignKey(name = "FK_SESSION_ACTION_01")) }
@@ -55,25 +61,27 @@ public class Session implements Serializable {
 		this.id = id;
 	}
 
-
 	/**
-	 * @return the name
+	 * @return the lastDate
 	 */
-	public String getName() {
-		return name;
+	public Date getLastDate() {
+		return lastDate;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param lastDate the lastDate to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setLastDate(Date lastDate) {
+		this.lastDate = lastDate;
 	}
 
 	/**
 	 * @return the actions
 	 */
 	public Set<Action> getActions() {
+		if(actions==null){
+			return new HashSet<Action>();
+		}
 		return actions;
 	}
 
