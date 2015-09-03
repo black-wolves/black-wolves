@@ -80,15 +80,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 							
 							clickShowImages("show-text");
 							
-//							if (throwDice()) {
+							if (throwDice()) {
 								replyToEmail(wait);
-//							}else if (throwDice()){
-//								replyToEmailFromSubList(wait);
-//							}
+							}else if (throwDice()){
+								replyToEmailFromSubList(wait);
+							}
 							
-//							if (throwDice()) {
-//								clickRandomLink();
-//							}
+							if (throwDice()) {
+								clickRandomLink();
+							}
 
 							logger.info("Going back to inbox");
 							mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
