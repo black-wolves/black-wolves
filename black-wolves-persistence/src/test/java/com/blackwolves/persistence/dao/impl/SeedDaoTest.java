@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.blackwolves.persistence.exception.DaoException;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:com/blackwolves/persistence/test-application-context-black-wolves-persistence.xml" })
+@Ignore
 public class SeedDaoTest {
 	
 	@Autowired
