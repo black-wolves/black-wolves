@@ -48,6 +48,28 @@ public class Session implements Serializable {
 	private Set<Action> actions;
 	
 	/**
+	 * Constructor
+	 */
+	public Session() {
+		this.lastDate = new Date();
+	}
+
+	/**
+	 * Constructor
+	 */
+	public Session(Date lastDate) {
+		this.lastDate = lastDate;
+	}
+
+	/**
+	 * Constructor
+	 */
+	public Session(Date lastDate, Set<Action> actions) {
+		this.lastDate = lastDate;
+		this.actions = actions;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public Long getId() {
