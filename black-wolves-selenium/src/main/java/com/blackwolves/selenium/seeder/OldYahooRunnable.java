@@ -38,7 +38,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException {
+	public void processInbox(String[] seed) throws InterruptedException {
 		if (driver.findElements(By.id("inbox")).size() > 0) {
 
 			logger.info("Getting the Inbox Url");
@@ -57,11 +57,11 @@ public class OldYahooRunnable extends YahooRunnable{
 						String href = inboxMsgs.get(randomPosition).getAttribute("href");
 						logger.info("Opening this inbox message: " + href);
 						driver.get(href);
-						clickShowImages(driver, "show-text");
+						clickShowImages("show-text");
 
-						scrollDownAndUp(driver);
+						scrollDownAndUp();
 
-						clickRandomLink(driver);
+						clickRandomLink();
 
 						logger.info("Going back to inbox");
 						driver.get(
@@ -88,7 +88,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processSpam(WebDriver driver, String[] seed) throws InterruptedException {
+	public void processSpam(String[] seed) throws InterruptedException {
 		if (driver.findElements(By.id("bulk")).size() > 0) {
 
 			logger.info("Getting the Bulk Url");
@@ -114,7 +114,7 @@ public class OldYahooRunnable extends YahooRunnable{
 						logger.info("Opening this spam message: " + href);
 						driver.get(href);
 
-						clickShowImages(driver, "spamwarning");
+						clickShowImages("spamwarning");
 
 						Select notSpam = new Select(driver.findElement(By.name("top_action_select")));
 						notSpam.selectByValue("msg.ham");
@@ -137,7 +137,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 * @param driver
 	 * @throws InterruptedException
 	 */
-	public void clickRandomLink(WebDriver driver) throws InterruptedException {
+	public void clickRandomLink() throws InterruptedException {
 		logger.info("Getting the content of the message");
 		WebElement div = driver.findElement(By.className("mailContent"));
 		logger.info("Looking for links inside the message");
@@ -152,7 +152,7 @@ public class OldYahooRunnable extends YahooRunnable{
 					logger.info("It is an Unsubscribe link!! - we are not clicking it");
 					logger.info(aUrl);
 				} else {
-					openInNewWindow(driver, linksToGo.get(randomLinkNo));
+					openInNewWindow(linksToGo.get(randomLinkNo));
 				}
 			}
 		} else {
@@ -163,7 +163,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	/**
 	 * @param driver
 	 */
-	private void scrollDownAndUp(WebDriver driver) {
+	private void scrollDownAndUp() {
 		// scroll down
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		// jse.executeScript("window.scrollBy(0,250)", "");
@@ -229,14 +229,21 @@ public class OldYahooRunnable extends YahooRunnable{
 
 
 	@Override
-	public void addToAddressBook(WebDriver driver) throws InterruptedException {
+	public void addToAddressBook() throws InterruptedException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException {
+	public void replyToEmail(WebDriverWait wait) throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void replyToEmailFromSubList(WebDriverWait wait)
+			throws InterruptedException {
 		// TODO Auto-generated method stub
 		
 	}

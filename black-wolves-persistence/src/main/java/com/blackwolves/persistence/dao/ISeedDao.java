@@ -20,10 +20,10 @@ public interface ISeedDao extends IGenericJpaDao<Seed, Long> {
 
 	/**
 	 * Inserts the given seed into the database
-	 * @param seed
+	 * @param entity
 	 * @return {@link Seed}
 	 * @throws DaoException 
 	 */
-	Seed insertSeedInDB(String[] seed) throws DaoException;
+	Seed insertSeedInDB(Seed entity) throws DaoException;
 
 }

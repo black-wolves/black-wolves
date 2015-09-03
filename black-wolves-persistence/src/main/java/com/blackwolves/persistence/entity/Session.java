@@ -102,7 +102,7 @@ public class Session implements Serializable {
 	 */
 	public Set<Action> getActions() {
 		if(actions==null){
-			return new HashSet<Action>();
+			actions =  new HashSet<Action>();
 		}
 		return actions;
 	}

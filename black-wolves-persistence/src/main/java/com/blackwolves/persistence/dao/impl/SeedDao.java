@@ -1,7 +1,5 @@
 package com.blackwolves.persistence.dao.impl;
 
-import javax.transaction.Transactional;
-
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +20,6 @@ public class SeedDao extends GenericJpaDao<Seed, Long> implements ISeedDao {
 	 * @see com.blackwolves.persistence.dao.ISeedDao#findByEmail(java.lang.String)
 	 */
 	@Override
-	@Transactional
 	public Seed findByEmail(String email) throws DaoException {
 		return (Seed) getSession().createCriteria(getClazz())
                 .add(Restrictions.eq("email", email))
@@ -30,9 +27,7 @@ public class SeedDao extends GenericJpaDao<Seed, Long> implements ISeedDao {
 	}
 
 	@Override
-	@Transactional
-	public Seed insertSeedInDB(String[] seed) throws DaoException {
-		Seed entity = new Seed(seed[0], seed[1]);
+	public Seed insertSeedInDB(Seed entity) throws DaoException {
 		persist(entity);
 		return entity;
 	}

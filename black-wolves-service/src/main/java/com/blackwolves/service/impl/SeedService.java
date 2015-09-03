@@ -3,10 +3,13 @@
  */
 package com.blackwolves.service.impl;
 
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.blackwolves.persistence.dao.ISeedDao;
+import com.blackwolves.persistence.entity.Profile;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.exception.DaoException;
 import com.blackwolves.service.ISeedService;
@@ -59,9 +62,34 @@ public class SeedService implements ISeedService{
 	@Override
 	public Seed insertSeedInDB(String[] seed) throws ServiceException {
 		try {
-			return seedDao.insertSeedInDB(seed);
+			Seed s = new Seed(seed[0], seed [1]);
+			Profile profile = new Profile(getRandomHoursForNextLogin());
+			s.setProfile(profile);
+			return seedDao.insertSeedInDB(s);
 		} catch (DaoException e) {
 			throw new ServiceException(e);
+		}
+	}
+
+	/**
+	 * Generates a random number
+	 * @return int
+	 */
+	private int getRandomHoursForNextLogin() {
+		Random rand = new Random();
+		int randomNum = rand.nextInt((6 - 1) + 1) + 1;
+		switch (randomNum) {
+        case 1:
+        case 4:
+            return 6;
+        case 2:
+        case 5:
+        	return 12;
+        case 3:
+        case 6:
+        	return 24;
+        default:
+            return 48;
 		}
 	}
 }

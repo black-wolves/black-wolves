@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -72,14 +73,14 @@ public class Seeder {
 	private void checkMail(String myIp, String mySeed) {
 		String[] seed = mySeed.split(",");
 		
-//		Seed dbSeed = getSeedFromDb(seed);
+		Seed dbSeed = getSeedFromDb(seed);
 		
-//		Session session = validateLastSession(dbSeed);
-//		
-//		if(session==null){
-//			logger.info("This seed can't continue the process");
-//			System.exit(0);
-//		}
+		Session session = validateLastSession(dbSeed);
+		
+		if(session==null){
+			logger.info("This seed can't continue the process");
+			return;
+		}
 		
 		WebDriver driver = createWebDriver();
 		
@@ -87,7 +88,7 @@ public class Seeder {
 		
 		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver);
 		
-//		addActionToSession(session, "login");
+		addActionToSession(session, "login");
 		
 		handler = validateYahooVersion(driver, mySeed);
 
@@ -95,13 +96,14 @@ public class Seeder {
 			handler.runProcess();
 		} else{
 			logger.info("New Interface detected.Exiting");
-			System.exit(0);
+			return;
 		}
-//		try {
-//			seedService.saveOrUpdate(dbSeed);
-//		} catch (ServiceException e) {
-//			logger.error(e.getMessage(), e);
-//		}
+		try {
+			dbSeed.getSessions().add(session);
+			seedService.saveOrUpdate(dbSeed);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -135,12 +137,30 @@ public class Seeder {
 	 * @return {@link Session}
 	 */
 	private Session validateLastSession(Seed dbSeed) {
-		//TODO finish the validation
-		Session session = null;
 		if(dbSeed.getSessions().isEmpty()){
-			session = new Session();
+			return new Session();
 		}
-		return session;
+		Session session = dbSeed.getSessions().iterator().next();
+		if(calculateDifferenceBetweenDates(session.getLastDate(), new Date()) <= dbSeed.getProfile().getHoursNextLogin()){
+			logger.info("Last time the seed was logged in was less than 24 hours");
+			return null;
+		}
+		return new Session();
+	}
+	
+	/**
+	 * Calculates the hours of difference between the two given dates
+	 * @param from
+	 * @param to
+	 * @return int
+	 */
+	private int calculateDifferenceBetweenDates(Date from, Date to){
+		long diff = to.getTime() - from.getTime();
+		int diffHours = (int) (diff / (60 * 60 * 1000));
+//		int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+//		int diffMin = (int) (diff / (60 * 1000));
+//		int diffSec = (int) (diff / (1000));
+		return diffHours;
 	}
 
 	/**
@@ -286,8 +306,7 @@ public class Seeder {
 
 	}
 	
-	public void getFingerPrint()
-	{
+	public void getFingerPrint() {
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
 		logger.info("Creating new driver");
@@ -296,7 +315,6 @@ public class Seeder {
 		driver.get(url);
 		WebElement clickMe =  driver.findElement(By.id("clicklink"));
 		clickMe.click();
-		
 	}
 
 	/**

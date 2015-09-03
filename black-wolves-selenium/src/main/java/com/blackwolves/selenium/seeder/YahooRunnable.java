@@ -37,6 +37,12 @@ public abstract class YahooRunnable {
 
 	protected JavascriptExecutor jse;
 
+	/**
+	 * Constructor
+	 * @param driver
+	 * @param seed
+	 * @param human
+	 */
 	public YahooRunnable(WebDriver driver, String seed, Human human) {
 		this.driver = driver;
 		this.seed = seed;
@@ -44,24 +50,42 @@ public abstract class YahooRunnable {
 		this.jse = (JavascriptExecutor) driver;
 		this.human = human;
 	}
+	/**
+	 * Generates a random value of type doulbe
+	 * @param max
+	 * @param min
+	 * @return double
+	 */
+	public static double generateDoubleRandom(double max, double min) {
+		double r = Math.random();
+		if (r < 0.5) {
+			return ((1 - Math.random()) * (max - min) + min);
+		}
+		return (Math.random() * (max - min) + min);
+	}
 
-	public abstract void processInbox(WebDriver driver, String[] seed, Human human) throws InterruptedException;
+	public abstract void processInbox(String[] seed) throws InterruptedException;
 
-	public abstract void processSpam(WebDriver driver, String[] seed) throws InterruptedException;
+	public abstract void processSpam(String[] seed) throws InterruptedException;
 
-	public abstract void clickRandomLink(WebDriver driver) throws InterruptedException;
+	public abstract void clickRandomLink() throws InterruptedException;
 	
-	public abstract void addToAddressBook(WebDriver driver) throws InterruptedException;
+	public abstract void addToAddressBook() throws InterruptedException;
 	
-	public abstract void replyToEmail(WebDriver driver, WebDriverWait wait, Human human) throws InterruptedException;
+	public abstract void replyToEmail(WebDriverWait wait) throws InterruptedException;
 	
+	public abstract void replyToEmailFromSubList(WebDriverWait wait) throws InterruptedException;
+	
+	/**
+	 * Starts the wolf seeder process
+	 */
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
-			processInbox(driver, seed, human);
-//			if (!throwDice()) {
-				processSpam(driver, seed);
-//			}
+			processInbox(seed);
+			if (!throwDice()) {
+				processSpam(seed);
+			}
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
 			logger.error(e.getMessage(), e);
@@ -73,27 +97,26 @@ public abstract class YahooRunnable {
 		}
 	}
 
-	// Throw dices to get random results
-		public static boolean throwDice() {
-			int dice = randInt(1, 6);
-			return dice == 6;
-		}
+	/**
+	 * Throw dices to get random results
+	 * @return boolean
+	 */
+	public static boolean throwDice() {
+		int dice = randInt(1, 6);
+		return dice == 6;
+	}
 	
 	public static int randInt(int min, int max) {
-
-		// Usually this can be a field rather than a method variable
 		Random rand = new Random();
-
-		// nextInt is normally exclusive of the top value,
-		// so add 1 to make it inclusive
+		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
 		int randomNum = rand.nextInt((max - min) + 1) + min;
-
 		return randomNum;
 	}
 
 	/**
+	 * 
 	 * @param msgs
-	 * @return
+	 * @return int
 	 */
 	protected int obtainRandomMsgsPosition(List<WebElement> msgs) {
 		Random randomNo = new Random();
@@ -103,12 +126,11 @@ public abstract class YahooRunnable {
 
 	/**
 	 * 
-	 * @param driver
 	 * @param className
 	 * @throws InterruptedException
 	 */
-	protected void clickShowImages(WebDriver driver, String className) throws InterruptedException {
-		if (validateInboxShowImagesButton(driver, className)) {
+	protected void clickShowImages(String className) throws InterruptedException {
+		if (validateInboxShowImagesButton(className)) {
 			if(driver.findElements(By.className("show-text")).size() > 0){
 				logger.info("Getting the show images div");
 				List<WebElement> divs = driver.findElements(By.className("show-text"));
@@ -126,14 +148,24 @@ public abstract class YahooRunnable {
 			logger.info("**********   No show images button found or there is none   **********");
 		}
 	}
+	
+	/**
+	 * 
+	 * @param className
+	 * @return
+	 * @throws InterruptedException
+	 */
+	private boolean validateInboxShowImagesButton(String className) throws InterruptedException {
+		Thread.sleep(3000 + randInt(1000, 4000));
+		return driver.findElements(By.className(className)).size() > 0;
+	}
 
 	/**
 	 * 
-	 * @param driver
 	 * @param a
 	 * @throws InterruptedException
 	 */
-	protected void openInNewWindow(WebDriver driver, WebElement a) throws InterruptedException {
+	protected void openInNewWindow(WebElement a) throws InterruptedException {
 
 		logger.info("Cicking this link: " + a.getAttribute("href"));
 		Actions newTab = new Actions(driver);
@@ -161,31 +193,114 @@ public abstract class YahooRunnable {
 		driver.switchTo().window(base);
 
 		// handle windows change and switch back to the main window
-		Thread.sleep(1500);
+		Thread.sleep(2500);
 		for (String winHandle : driver.getWindowHandles()) {
 			driver.switchTo().window(winHandle);
 		}
 	}
-
-	/**
-	 * 
-	 * @param driver
-	 * @param className
-	 * @return
-	 * @throws InterruptedException
-	 */
-	private boolean validateInboxShowImagesButton(WebDriver driver, String className) throws InterruptedException {
-		Thread.sleep(3000 + randInt(1000, 4000));
-		return driver.findElements(By.className(className)).size() > 0;
-	}
 	
+//	protected void openLinkInNewWindow(WebElement a) throws InterruptedException{
+//		Actions newTab = new Actions(driver);
+//		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
+//		Thread.sleep(5000);
+//		 
+//		//handle windows change
+//		String base = driver.getWindowHandle();
+//		Set<String> set = driver.getWindowHandles();
+//		 
+//		set.remove(base);
+//		assert set.size() == 1;
+//		driver.switchTo().window((String) set.toArray()[0]);
+//		 
+//		//close the window
+//		driver.close();
+//		driver.switchTo().window(base);
+//		 
+//		// handle windows change and switch back to the main window
+//		Thread.sleep(2500);
+//		for (String winHandle : driver.getWindowHandles()) {
+//			driver.switchTo().window(winHandle);
+//		}
+//	}
+//	
+//	protected void openLinkInNewTab(WebElement a) throws InterruptedException{
+//		Actions newTab = new Actions(driver);
+//		newTab.keyDown(Keys.CONTROL).keyDown(Keys.SHIFT).click(a).keyUp(Keys.CONTROL).keyUp(Keys.SHIFT).build().perform();
+//		Thread.sleep(5000);
+//		 
+//		//handle windows change
+//		String base = driver.getWindowHandle();
+//		Set<String> set = driver.getWindowHandles();
+//		 
+//		set.remove(base);
+//		assert set.size() == 1;
+//		driver.switchTo().window((String) set.toArray()[0]);
+//		 
+//		//close the window and switch back to the base tab
+//		driver.close();
+//		driver.switchTo().window(base);
+//	}
 	
-	public static double generateDoubleRandom(double max, double min) {
-		double r = Math.random();
-		if (r < 0.5) {
-			return ((1 - Math.random()) * (max - min) + min);
-		}
-		return (Math.random() * (max - min) + min);
-	}
+//	/**
+//	 * Executes a script on an element
+//	 * @note Really should only be used when the web driver is sucking at exposing
+//	 * functionality natively
+//	 * @param script The script to execute
+//	 * @param element The target of the script, referenced as arguments[0]
+//	 */
+//	public void trigger(String script, WebElement element) {
+//	    ((JavascriptExecutor)driver).executeScript(script, element);
+//	}
+//
+//	/** Executes a script
+//	 * @note Really should only be used when the web driver is sucking at exposing
+//	 * functionality natively
+//	 * @param script The script to execute
+//	 */
+//	public Object trigger(String script) {
+//	    return ((JavascriptExecutor)driver).executeScript(script);
+//	}
+//
+//	/**
+//	 * Opens a new tab for the given URL
+//	 * @param url The URL to 
+//	 * @throws JavaScriptException If unable to open tab
+//	 */
+//	public void openTab(String url) {
+//	    String script = "var d=document,a=d.createElement('a');a.target='_blank';a.href='%s';a.innerHTML='.';d.body.appendChild(a);return a";
+//	    Object element = trigger(String.format(script, url));
+//	    if (element instanceof WebElement) {
+//	        WebElement anchor = (WebElement) element; anchor.click();
+//	        trigger("var a=arguments[0];a.parentNode.removeChild(a);", anchor);
+//	    } else {
+//	        throw new JavaScriptException(element, "Unable to open tab", 1);
+//	    }       
+//	}
+//	
+//	/**
+//	 * Switches to the non-current window
+//	 * @throws InterruptedException 
+//	 */
+//	public void switchToNewWindow() throws NoSuchWindowException, NoSuchWindowException, InterruptedException {
+//	    Set<String> handles = driver.getWindowHandles();
+//	    String current = driver.getWindowHandle();
+//	    handles.remove(current);
+//	    String newTab = handles.iterator().next();
+//	    driver.switchTo().window(newTab);
+//	    Thread.sleep(randInt(5000, 10000));
+//	}
+//	
+//	/**
+//	 * Switches to the non-current window
+//	 * @throws InterruptedException 
+//	 */
+//	public void switchToPreviousWindow() throws NoSuchWindowException, NoSuchWindowException, InterruptedException {
+//		Set<String> handles = driver.getWindowHandles();
+//	    String current = driver.getWindowHandle();
+//	    handles.remove(current);
+//	    String newTab = handles.iterator().next();
+//	    driver.switchTo().window(newTab);
+//	    Thread.sleep(randInt(5000, 10000));
+//	}
 
 }

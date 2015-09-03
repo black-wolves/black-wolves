@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -43,6 +44,10 @@ public class Seed implements Serializable {
 	
 	@Column(name = "SEED_PASSWORD", nullable = false)
 	private String password;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "SEED_PROF_ID", nullable = false)
+    private Profile profile;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SEED_SUBSCRIPTION"
@@ -74,9 +79,7 @@ public class Seed implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Seed(){
-		
-	}
+	public Seed() {}
 	
 	/**
 	 * Constructor
@@ -102,6 +105,23 @@ public class Seed implements Serializable {
 		this.email = email;
 		this.password = password;
 	}
+	
+	/**
+	 * Constructor
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param profile
+	 */
+	public Seed(String firstName, String lastName, String email, String password, Profile profile) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.profile = profile;
+	}
 
 	/**
 	 * Constructor
@@ -109,18 +129,19 @@ public class Seed implements Serializable {
 	 * @param lastName
 	 * @param email
 	 * @param password
+	 * @param profile
 	 * @param subscriptions
 	 * @param domains
 	 * @param sessions
 	 */
 	public Seed(String firstName, String lastName, String email,
-			String password, Set<Subscription> subscriptions,
+			String password, Profile profile, Set<Subscription> subscriptions,
 			Set<Domain> domains, Set<Session> sessions) {
-		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
+		this.profile = profile;
 		this.subscriptions = subscriptions;
 		this.domains = domains;
 		this.sessions = sessions;
@@ -197,11 +218,25 @@ public class Seed implements Serializable {
 	}
 
 	/**
+	 * @return the profile
+	 */
+	public Profile getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile the profile to set
+	 */
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
+	/**
 	 * @return the subscriptions
 	 */
 	public Set<Subscription> getSubscriptions() {
 		if(subscriptions==null){
-			return new HashSet<Subscription>();
+			subscriptions = new HashSet<Subscription>();
 		}
 		return subscriptions;
 	}
@@ -218,7 +253,7 @@ public class Seed implements Serializable {
 	 */
 	public Set<Domain> getDomains() {
 		if(domains==null){
-			return new HashSet<Domain>();
+			domains = new HashSet<Domain>();
 		}
 		return domains;
 	}
@@ -235,7 +270,7 @@ public class Seed implements Serializable {
 	 */
 	public Set<Session> getSessions() {
 		if(sessions==null){
-			return new HashSet<Session>();
+			sessions = new HashSet<Session>();
 		}
 		return sessions;
 	}
