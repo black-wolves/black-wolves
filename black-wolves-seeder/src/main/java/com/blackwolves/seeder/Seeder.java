@@ -84,7 +84,12 @@ public class Seeder {
 		
 		WebDriver driver = createWebDriver();
 		
+		logger.info("Firefox Created");
+		
 		human = generateRandomHumanUser();
+		
+		logger.info("Human Generated");
+		Seeder.getScreenShot(driver, "Before.html");
 		
 		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver);
 		
