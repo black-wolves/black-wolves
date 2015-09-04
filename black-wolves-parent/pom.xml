@@ -7,7 +7,6 @@
 	<artifactId>black-wolves-parent</artifactId>
 	<version>CURRENT</version>
 	<packaging>pom</packaging>
-	<name>BlackWolves Parent</name>
 
 	<!-- Properties -->
 	<properties>
