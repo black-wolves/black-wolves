@@ -15,6 +15,6 @@ public class Main {
 private static ApplicationContext context;
 	
 	public static void main(String[] args) {
-		context = new ClassPathXmlApplicationContext("classpath:application-context-black-wolves-persistence.xml");
+		context = new ClassPathXmlApplicationContext("classpath:com/blackwolves/persistence/application-context-black-wolves-persistence.xml");
 	}
 }
