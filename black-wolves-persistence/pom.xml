@@ -17,7 +17,7 @@
 		<tomcat.jdbc.version>7.0.27</tomcat.jdbc.version>
 		<oracle.version>6</oracle.version>
 		<postgres.version>9.2-1003-jdbc4</postgres.version>
-		<mysql.version>5.1.30</mysql.version>
+		<mysql.version>5.1.36</mysql.version>
         <hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
         <commons.beanutils>1.8.3</commons.beanutils>
 	</properties>
