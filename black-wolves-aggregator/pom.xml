@@ -18,7 +18,6 @@
         <module>../black-wolves-persistence</module>
         <module>../black-wolves-service</module>
         <module>../black-wolves-selenium</module>
-		<module>cpc-batch</module>
   	</modules>
     
 	<build>
