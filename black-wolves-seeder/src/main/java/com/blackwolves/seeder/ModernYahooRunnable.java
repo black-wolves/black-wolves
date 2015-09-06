@@ -195,14 +195,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 					List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
 					logger.info("Percentage is " + PERCENTAGE);
 					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
-					for (int j = 0; j < percentage; j++) {
+					for (int j = 0; j < percentage; ) {
 						Thread.sleep(randInt(1000, 3000));
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
 						int chances =  randInt(0, 10);
-						if (chances <=6 ) {
-							normalNotSpam(wait);
+						boolean increment;
+						if (chances <= 6 ) {
+							increment = normalNotSpam(wait);
 						} else {
-							dragAndDropNotSpam(wait);
+							increment = dragAndDropNotSpam(wait);
+						}
+						if(increment){
+							j++;
 						}
 					}
 				} else {
@@ -212,44 +216,75 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	private void dragAndDropNotSpam(WebDriverWait wait) throws InterruptedException {
-		List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
+	private boolean dragAndDropNotSpam(WebDriverWait wait) throws InterruptedException {
+		List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
 		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 		Thread.sleep(randInt(1000, 2000));
 		logger.info("Selecting spam message");
 		WebElement msg = spamMsgs.get(randomPosition);
-		WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
-		logger.info("******** Dragging Message to inbox ***********");
-		(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
+		if(isWarmupDomain(true, msg)){
+			WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
+			logger.info("******** Dragging Message to inbox ***********");
+			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
+			return true;
+		}
+		return false;
 	}
 
-	private void normalNotSpam(WebDriverWait wait) {
-		List<WebElement> spamMsgs;
+	private boolean isWarmupDomain(boolean dragAndDrop, WebElement msg) {
+		String address = null;
+		if(dragAndDrop){
+			address = msg.findElement(By.className("from")).getAttribute("title");
+		}else{
+			address = driver.findElement(By.className("hcard")).getAttribute("data-address");
+		}
+		String[] s = address.split("@");
+		String domain = s[1];
+		List<String[]> domains = generateDomainsList();
+		for (String[] d : domains) {
+			if(domain.equals(d[0])){
+				logger.info("Is a warmup domain, we move forward :D");
+				return true;
+			}
+		}
+		logger.info("Is not a warmup domain, we go back to bulk");
+		return false;
+	}
+
+	private boolean normalNotSpam(WebDriverWait wait) {
 		try {
-			spamMsgs = driver.findElements(By.className("subj"));
+			List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
 			logger.info("Obtaining a random message position so it can be open");
 			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 			Thread.sleep(1000 + randInt(1000, 2000));
 			logger.info("Opening the spam message");
-			spamMsgs.get(randomPosition).click();
+			WebElement msg = spamMsgs.get(randomPosition);
+			msg.click();
 			Thread.sleep(1000 + randInt(1000, 2000));
-			clickShowImages("show-text");
-			wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
-
-			if (!throwDice()) {
-				logger.info("******** Clicking the not spam LIST button ***********");
-				notSpamFromSubList();
-			} else {
-				logger.info("******** Clicking the not spam MAIN button ***********");
-				driver.findElement(By.id("main-btn-spam")).click();
-				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-
+			if(isWarmupDomain(false, msg)){
+				clickShowImages("show-text");
+				wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
+	
+				if (!throwDice()) {
+					logger.info("******** Clicking the not spam LIST button ***********");
+					notSpamFromSubList();
+				} else {
+					logger.info("******** Clicking the not spam MAIN button ***********");
+					driver.findElement(By.id("main-btn-spam")).click();
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+				}
+				return true;
+			}else{
+				logger.info("Getting the Bulk Url");
+				driver.findElement(By.id("spam-label")).click();
+				Thread.sleep(randInt(1000, 3000));
+				return false;
 			}
-
 		} catch (Exception e) {
 			logger.info("Way too fast Usain Bolt...Let's go to spam folder and keep going");
 			logger.info("This is the error " + e.getMessage());
 			driver.findElement(By.id("spam-label")).click();
+			return false;
 		}
 	}
 

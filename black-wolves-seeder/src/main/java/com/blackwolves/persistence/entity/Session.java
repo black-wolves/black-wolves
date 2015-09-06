@@ -35,7 +35,7 @@ public class Session implements Serializable {
 	private Long id;
 	
 	@Column(name = "SESS_IP", nullable = false)
-	private Long ip;
+	private String ip;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SESS_LAST_DATE")
@@ -60,7 +60,7 @@ public class Session implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Session(Long ip) {
+	public Session(String ip) {
 		this.ip = ip;
 		this.lastDate = new Date();
 	}
@@ -75,7 +75,7 @@ public class Session implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Session(Long ip, Date lastDate, Set<Action> actions) {
+	public Session(String ip, Date lastDate, Set<Action> actions) {
 		this.ip = ip;
 		this.lastDate = lastDate;
 		this.actions = actions;
@@ -98,14 +98,14 @@ public class Session implements Serializable {
 	/**
 	 * @return the ip
 	 */
-	public Long getIp() {
+	public String getIp() {
 		return ip;
 	}
 
 	/**
 	 * @param ip the ip to set
 	 */
-	public void setIp(Long ip) {
+	public void setIp(String ip) {
 		this.ip = ip;
 	}
 

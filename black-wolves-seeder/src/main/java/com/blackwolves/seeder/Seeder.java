@@ -125,14 +125,14 @@ public class Seeder {
 	 */
 	private Session validateLastSession(String myIp, Seed dbSeed) {
 		if(dbSeed.getSessions().isEmpty()){
-			return new Session(Long.valueOf(myIp));
+			return new Session(myIp);
 		}
 		Session session = dbSeed.getSessions().iterator().next();
 		if(calculateDifferenceBetweenDates(session.getLastDate(), new Date()) <= dbSeed.getProfile().getHoursNextLogin()){
 			logger.info("Last time the seed was logged it was less than " + dbSeed.getProfile().getHoursNextLogin() + " hours");
 			return null;
 		}
-		return new Session(Long.valueOf(myIp));
+		return new Session(myIp);
 	}
 	
 	/**

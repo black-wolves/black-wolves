@@ -20,10 +20,10 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import au.com.bytecode.opencsv.CSVReader;
+
 import com.blackwolves.persistence.entity.Action;
 import com.blackwolves.persistence.entity.Session;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author danigrane
@@ -246,6 +246,22 @@ public abstract class YahooRunnable {
 			logger.error(e.getMessage(), e);
 		}
 		return seeds;
+	}
+	
+	/**
+	 * @return
+	 */
+	public static List<String[]> generateDomainsList() {
+		List<String[]> domains = new ArrayList<String[]>();
+		try {
+			CSVReader domainsReader = new CSVReader(new FileReader(ROUTE + "domains.txt"));
+			domains = domainsReader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return domains;
 	}
 	
 	/**
