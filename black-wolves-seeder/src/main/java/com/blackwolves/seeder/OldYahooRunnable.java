@@ -247,5 +247,24 @@ public class OldYahooRunnable extends YahooRunnable{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void forwardEmail(WebDriverWait wait) throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forwardEmailFromSubList(WebDriverWait wait)
+			throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendEmail() throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

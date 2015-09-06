@@ -1,5 +1,9 @@
 package com.blackwolves.seeder;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -16,6 +20,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.blackwolves.persistence.entity.Action;
+import com.blackwolves.persistence.entity.Session;
+
+import au.com.bytecode.opencsv.CSVReader;
+
 /**
  * @author danigrane
  *
@@ -26,10 +35,12 @@ public abstract class YahooRunnable {
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
 	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.35) ;
+	
+	private static final String ROUTE = "/var/www/";
 
 	private String seed = "";
 	
-	private Human human;
+	protected Human human;
 
 	protected WebDriver driver;
 
@@ -75,6 +86,12 @@ public abstract class YahooRunnable {
 	public abstract void replyToEmail(WebDriverWait wait) throws InterruptedException;
 	
 	public abstract void replyToEmailFromSubList(WebDriverWait wait) throws InterruptedException;
+	
+	public abstract void forwardEmail(WebDriverWait wait) throws InterruptedException;
+	
+	public abstract void forwardEmailFromSubList(WebDriverWait wait) throws InterruptedException;
+	
+	public abstract void sendEmail() throws InterruptedException;
 	
 	/**
 	 * Starts the wolf seeder process
@@ -197,6 +214,48 @@ public abstract class YahooRunnable {
 		for (String winHandle : driver.getWindowHandles()) {
 			driver.switchTo().window(winHandle);
 		}
+	}
+	
+	/**
+	 * @return
+	 */
+	public static List<String[]> generateIpsList() {
+		List<String[]> ips = new ArrayList<String[]>();
+		try {
+			CSVReader ipsReader = new CSVReader(new FileReader(ROUTE + "ip_curl.txt"));
+			ips = ipsReader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return ips;
+	}
+
+	/**
+	 * @return
+	 */
+	public static List<String[]> generateSeedsList() {
+		List<String[]> seeds = new ArrayList<String[]>();
+		try {
+			CSVReader seedsReader = new CSVReader(new FileReader(ROUTE + "seeds.csv"));
+			seeds = seedsReader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return seeds;
+	}
+	
+	/**
+	 * Adds the performed action to the session
+	 * @param session
+	 * @param actionName 
+	 */
+	public static void addActionToSession(Session session, String actionName) {
+		Action action = new Action(actionName);
+		session.getActions().add(action);
 	}
 	
 //	protected void openLinkInNewWindow(WebElement a) throws InterruptedException{

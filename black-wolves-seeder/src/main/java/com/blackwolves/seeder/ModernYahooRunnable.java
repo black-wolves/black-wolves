@@ -84,10 +84,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 								replyToEmail(wait);
 							}else if (throwDice()){
 								replyToEmailFromSubList(wait);
+							}else if (throwDice()){
+								forwardEmail(wait);
+							}else if (throwDice()){
+								forwardEmailFromSubList(wait);
 							}
 							
 							if (throwDice()) {
 								clickRandomLink();
+							}
+							
+							if (throwDice()) {
+								sendEmail();
 							}
 
 							logger.info("Going back to inbox");
@@ -295,7 +303,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		logger.info("Replying to an email");
 //		String body = human.generateRandomBody(driver, wait);
 //		Thread.sleep(randInt(2000, 3000));
-		validateIfElementIsVisible(driver.findElement(By.className("icon-reply")));
+		validateIfElementIsVisible(driver.findElement(By.id("btn-reply-sender")));
 		Thread.sleep(randInt(2000, 3000));
 		WebElement bodyMail = driver.findElement(By.id("rtetext"));
 		bodyMail.click();
@@ -308,6 +316,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 	
 	public void replyToEmailFromSubList(WebDriverWait wait) throws InterruptedException {
+		logger.info("Replying to an email");
 		if(driver.findElements(By.className("addconvtitle")).size() > 0){
 			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
 			validateIfElementIsVisible(elements.get(0));
@@ -318,6 +327,74 @@ public class ModernYahooRunnable extends YahooRunnable {
 			Thread.sleep(randInt(2000, 3000));
 		}
 		
+	}
+	
+	@Override
+	public void forwardEmail(WebDriverWait wait) throws InterruptedException {
+		logger.info("Forwarding an email");
+//		String body = human.generateRandomBody(driver, wait);
+//		Thread.sleep(randInt(2000, 3000));
+		validateIfElementIsVisible(driver.findElement(By.id("btn-forward")));
+		Thread.sleep(randInt(2000, 3000));
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		String[] seed = seeds.get(randInt(0, seeds.size()));
+		String to = seed[0];
+		WebElement toInput = driver.findElement(By.id("to-field"));
+		logger.info("Filling to field");
+		human.type(toInput,to);
+		WebElement bodyMail = driver.findElement(By.id("rtetext"));
+		bodyMail.click();
+//		human.type(bodyMail, body);
+		logger.info("Waiting for button to be clickable");
+		Thread.sleep(randInt(2000, 3000));
+		logger.info("Sending email forward");
+		validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
+		Thread.sleep(randInt(2000, 3000));
+	}
+	
+	@Override
+	public void forwardEmailFromSubList(WebDriverWait wait) throws InterruptedException {
+		logger.info("Forwarding an email");
+		if(driver.findElements(By.className("addconvtitle")).size() > 0){
+			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
+			validateIfElementIsVisible(elements.get(2));
+			logger.info("Waiting for button to be clickable");
+			Thread.sleep(randInt(2000, 3000));
+			List<String[]> seeds = YahooRunnable.generateSeedsList();
+			String[] seed = seeds.get(randInt(0, seeds.size()));
+			String to = seed[0];
+			WebElement toInput = driver.findElement(By.id("to-field"));
+			logger.info("Filling to field");
+			human.type(toInput,to);
+			logger.info("Sending email forward");
+			validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
+			Thread.sleep(randInt(2000, 3000));
+		}
+		
+	}
+	
+	@Override
+	public void sendEmail() throws InterruptedException {
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		String[] seed = seeds.get(randInt(0, seeds.size()));
+		String to = seed[0];
+		WebElement compose = driver.findElement(By.className("btn-compose"));
+		logger.info("Clicking compose button");
+		compose.click();
+		Thread.sleep(randInt(2000, 3000));
+		WebElement toInput = driver.findElement(By.id("to-field"));
+		logger.info("Filling to field");
+		human.type(toInput,to);
+		WebElement subjectInput = driver.findElement(By.id("subject-field"));
+		logger.info("Filling subject field");
+		human.type(subjectInput,"Need random subject");
+		WebElement bodyInput = driver.findElement(By.id("rtetext"));
+		logger.info("Filling body field");
+		human.type(bodyInput,"Need random body");
+		WebElement sendButton = driver.findElement(By.className("bottomToolbar")).findElement(By.tagName("span")).findElement(By.tagName("a"));
+		logger.info("Clicking send button");
+		sendButton.click();
+		Thread.sleep(randInt(2000, 3000));
 	}
 
 	/**
@@ -368,7 +445,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 //			}
 //		}
 	}
-	
+
 //	private void humanizeMe() {
 //		logger.info("Adding Human Behaviour");
 //

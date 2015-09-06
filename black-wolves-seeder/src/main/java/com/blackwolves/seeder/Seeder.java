@@ -4,10 +4,7 @@
 package com.blackwolves.seeder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -29,9 +26,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
-import au.com.bytecode.opencsv.CSVReader;
-
-import com.blackwolves.persistence.entity.Action;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.service.ISeedService;
@@ -47,7 +41,6 @@ public class Seeder {
 
 	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
-	private static final String ROUTE = "/var/www/";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
 	
 	@Autowired
@@ -75,7 +68,7 @@ public class Seeder {
 		
 		Seed dbSeed = getSeedFromDb(seed);
 		
-		Session session = validateLastSession(dbSeed);
+		Session session = validateLastSession(myIp, dbSeed);
 		
 		if(session==null){
 			logger.info("This seed can't continue the process");
@@ -91,9 +84,7 @@ public class Seeder {
 		logger.info("Human Generated");
 		Seeder.getScreenShot(driver, "Before.html");
 		
-		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver);
-		
-		addActionToSession(session, "login");
+		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
 		
 		handler = validateYahooVersion(driver, mySeed);
 
@@ -124,33 +115,24 @@ public class Seeder {
 	}
 
 	/**
-	 * Adds the performed action to the session
-	 * @param session
-	 * @param actionName 
-	 */
-	private void addActionToSession(Session session, String actionName) {
-		Action action = new Action(actionName);
-		session.getActions().add(action);
-	}
-
-	/**
 	 * Validate if the seed has any session created.
 	 * If it doesn't have any it continues the process.
 	 * If it has at least one it validates the last date of the session
 	 * to see if the seed can continue the process
+	 * @param myIp 
 	 * @param dbSeed
 	 * @return {@link Session}
 	 */
-	private Session validateLastSession(Seed dbSeed) {
+	private Session validateLastSession(String myIp, Seed dbSeed) {
 		if(dbSeed.getSessions().isEmpty()){
-			return new Session();
+			return new Session(Long.valueOf(myIp));
 		}
 		Session session = dbSeed.getSessions().iterator().next();
 		if(calculateDifferenceBetweenDates(session.getLastDate(), new Date()) <= dbSeed.getProfile().getHoursNextLogin()){
-			logger.info("Last time the seed was logged in was less than 24 hours");
+			logger.info("Last time the seed was logged it was less than " + dbSeed.getProfile().getHoursNextLogin() + " hours");
 			return null;
 		}
-		return new Session();
+		return new Session(Long.valueOf(myIp));
 	}
 	
 	/**
@@ -206,8 +188,8 @@ public class Seeder {
 	public void suscribeToNewsletters() {
 		final int THREADS = 1;
 
-		List<String[]> seeds = generateSeedsList();
-		List<String[]> ips = generateIpsList();
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		List<String[]> ips = YahooRunnable.generateIpsList();
 
 		List<List<String[]>> partitions = Lists.partition(seeds, 10);
 
@@ -233,10 +215,11 @@ public class Seeder {
 	 * @param yahooUrl
 	 * @param seed
 	 * @param driver
+	 * @param session 
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
+	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver, Session session) {
 		logger.info("Trying to login in....");
 		try {
 			logger.info("Getting to the url: " + yahooUrl);
@@ -263,6 +246,7 @@ public class Seeder {
 			logger.error("Something went wrong at login");
 			logger.error(e.getMessage(), e);
 		}
+		YahooRunnable.addActionToSession(session, "login");
 	}
 
 	/**
@@ -320,37 +304,5 @@ public class Seeder {
 		driver.get(url);
 		WebElement clickMe =  driver.findElement(By.id("clicklink"));
 		clickMe.click();
-	}
-
-	/**
-	 * @return
-	 */
-	private static List<String[]> generateIpsList() {
-		List<String[]> ips = new ArrayList<String[]>();
-		try {
-			CSVReader ipsReader = new CSVReader(new FileReader(ROUTE + "ip_curl.txt"));
-			ips = ipsReader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return ips;
-	}
-
-	/**
-	 * @return
-	 */
-	private static List<String[]> generateSeedsList() {
-		List<String[]> seeds = new ArrayList<String[]>();
-		try {
-			CSVReader seedsReader = new CSVReader(new FileReader(ROUTE + "seeds.csv"));
-			seeds = seedsReader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return seeds;
 	}
 }

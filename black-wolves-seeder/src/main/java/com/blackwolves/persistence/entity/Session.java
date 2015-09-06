@@ -34,6 +34,9 @@ public class Session implements Serializable {
 	@Column(name = "SESS_ID")
 	private Long id;
 	
+	@Column(name = "SESS_IP", nullable = false)
+	private Long ip;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SESS_LAST_DATE")
     private Date lastDate;
@@ -53,6 +56,14 @@ public class Session implements Serializable {
 	public Session() {
 		this.lastDate = new Date();
 	}
+	
+	/**
+	 * Constructor
+	 */
+	public Session(Long ip) {
+		this.ip = ip;
+		this.lastDate = new Date();
+	}
 
 	/**
 	 * Constructor
@@ -64,7 +75,8 @@ public class Session implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Session(Date lastDate, Set<Action> actions) {
+	public Session(Long ip, Date lastDate, Set<Action> actions) {
+		this.ip = ip;
 		this.lastDate = lastDate;
 		this.actions = actions;
 	}
@@ -81,6 +93,20 @@ public class Session implements Serializable {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the ip
+	 */
+	public Long getIp() {
+		return ip;
+	}
+
+	/**
+	 * @param ip the ip to set
+	 */
+	public void setIp(Long ip) {
+		this.ip = ip;
 	}
 
 	/**
@@ -130,18 +156,23 @@ public class Session implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		Session other = (Session) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null){
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)){
 			return false;
+		}
 		return true;
 	}
 

@@ -75,6 +75,15 @@ public class Seed implements Serializable {
 						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
 				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSS_SEED_ID", "SDDM_SESS_ID" }) })
 	private Set<Session> sessions;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "SEED_CONTACT"
+				, joinColumns = { @JoinColumn(name = "SDCT_SEED_ID"
+						, foreignKey = @ForeignKey(name = "FK_SEED_CONTACT_01")) }
+				, inverseJoinColumns = { @JoinColumn(name = "SDCT_CONT_ID"
+						, foreignKey = @ForeignKey(name = "FK_SEED_CONTACT_02")) }
+				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDCT_SEED_ID", "SDCT_CONT_ID" }) })
+	private Set<Contact> contacts;
 
 	/**
 	 * Constructor
@@ -136,7 +145,7 @@ public class Seed implements Serializable {
 	 */
 	public Seed(String firstName, String lastName, String email,
 			String password, Profile profile, Set<Subscription> subscriptions,
-			Set<Domain> domains, Set<Session> sessions) {
+			Set<Domain> domains, Set<Session> sessions, Set<Contact> contacts) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -145,6 +154,7 @@ public class Seed implements Serializable {
 		this.subscriptions = subscriptions;
 		this.domains = domains;
 		this.sessions = sessions;
+		this.contacts = contacts;
 	}
 
 	/**
@@ -283,6 +293,20 @@ public class Seed implements Serializable {
 	}
 
 	/**
+	 * @return the contacts
+	 */
+	public Set<Contact> getContacts() {
+		return contacts;
+	}
+
+	/**
+	 * @param contacts the contacts to set
+	 */
+	public void setContacts(Set<Contact> contacts) {
+		this.contacts = contacts;
+	}
+
+	/**
 	 * 
 	 */
 	@Override
@@ -298,18 +322,23 @@ public class Seed implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		Seed other = (Seed) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null){
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)){
 			return false;
+		}
 		return true;
 	}
 
