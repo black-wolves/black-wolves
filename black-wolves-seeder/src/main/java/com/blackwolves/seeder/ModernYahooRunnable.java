@@ -1,6 +1,5 @@
 package com.blackwolves.seeder;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.LogManager;
