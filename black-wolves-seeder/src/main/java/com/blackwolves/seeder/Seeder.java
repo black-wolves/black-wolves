@@ -52,6 +52,7 @@ public class Seeder {
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
 		logger.info("Finished checking mails");
+		return;
 	}
 
 	/**
