@@ -188,8 +188,8 @@
 	</dependencies>
 
 	<build>
-<!-- 		<finalName>seeder_wolf</finalName> -->
-		<finalName>subscriber_wolf</finalName>
+		<finalName>seeder_wolf</finalName>
+<!-- 		<finalName>subscriber_wolf</finalName> -->
 		
 		<plugins>
 			<plugin>
@@ -220,8 +220,8 @@
 							      <resource>META-INF/spring.schemas</resource>
 							    </transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-<!-- 									<mainClass>com.blackwolves.seeder.Seeder</mainClass> -->
-									<mainClass>com.blackwolves.subscriber.Subscriber</mainClass>
+									<mainClass>com.blackwolves.seeder.Seeder</mainClass>
+<!-- 									<mainClass>com.blackwolves.subscriber.Subscriber</mainClass> -->
 								</transformer>
 							</transformers>
 							<minimizeJar>true</minimizeJar>

@@ -6,10 +6,6 @@ package com.blackwolves.seeder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
@@ -30,7 +26,6 @@ import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
-import com.google.common.collect.Lists;
 
 /**
  * @author gaston.dapice
