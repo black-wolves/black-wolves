@@ -97,6 +97,7 @@ public class Seeder {
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 		}
+		return;
 	}
 
 	/**
@@ -216,15 +217,15 @@ public class Seeder {
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
 				handler = new ModernYahooRunnable(driver, seed, human);
-				// SuscriberRunnable.writeToFile("new_yahoo_2_version.html",
+				// SubscriberRunnable.writeToFile("new_yahoo_2_version.html",
 				// driver.getPageSource());
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
-				// SuscriberRunnable.writeToFile("new_yahoo_version.html",
+				// SubscriberRunnable.writeToFile("new_yahoo_version.html",
 				// driver.getPageSource());
 			} else {
 				logger.info("**********   There is a new yahoo version in town  **********");
-				// SuscriberRunnable.writeToFile("new_version_in_town.html",
+				// SubscriberRunnable.writeToFile("new_version_in_town.html",
 				// driver.getPageSource());
 			}
 		} catch (InterruptedException e) {

@@ -14,7 +14,6 @@ import com.blackwolves.persistence.dao.ISeedDao;
 import com.blackwolves.persistence.entity.Profile;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.exception.DaoException;
-import com.blackwolves.seeder.Seeder;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
 
@@ -37,6 +36,7 @@ public class SeedService implements ISeedService{
 	public Seed getSeedFromDb(String[] seed) {
 		Seed dbSeed = null;
 		try {
+			logger.info("Getting seed from DB");
 			dbSeed = findByEmail(seed[0]);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
@@ -44,6 +44,7 @@ public class SeedService implements ISeedService{
 		
 		if(dbSeed==null){
 			try {
+				logger.info("This seed is not in the DB we are goint to insert it");
 				dbSeed = insertSeedInDB(seed);
 			} catch (ServiceException e) {
 				logger.error(e.getMessage(), e);
@@ -60,8 +61,10 @@ public class SeedService implements ISeedService{
 	public void saveOrUpdate(Seed seed) throws ServiceException {
 		try {
 			if(seed.getId()!=null){
+				logger.info("Saving the seed");
 				seedDao.merge(seed);
 			}else {
+				logger.info("Persisting the seed");
 				seedDao.persist(seed);
 			}
 		} catch (DaoException e) {

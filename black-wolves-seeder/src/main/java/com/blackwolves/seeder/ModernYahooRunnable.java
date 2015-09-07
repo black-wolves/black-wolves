@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -470,7 +469,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 //		//wait.until(ExpectedConditions.elementT(By.id("legend")));
 //		//driver.navigate().refresh();
 //		Thread.sleep(randInt(1500, 2500));
-//	//	SuscriberRunnable.writeToFile("lalala.html", driver.getPageSource());
+//	//	SubscriberRunnable.writeToFile("lalala.html", driver.getPageSource());
 ////		driver.findElement(By.partialLinkText("Contact nou"));
 //		Thread.sleep(randInt(1500, 2500));
 //		List <WebElement> inputs = driver.findElements(By.tagName("input"));

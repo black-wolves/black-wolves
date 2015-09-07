@@ -22,8 +22,8 @@ public class Subscriber {
 	
 	public static void main(String[] args) {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-		SubscriberRunnable suscriberRunnable =    context.getBean(SubscriberRunnable.class);
-		suscriberRunnable.runProcess(args[0]);
+		SubscriberRunnable sr = context.getBean(SubscriberRunnable.class);
+		sr.runProcess(args[0]);
 		logger.info("Subscriber process finished");
 		return;
 	}

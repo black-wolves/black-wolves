@@ -77,7 +77,7 @@ public class OldYahooRunnable extends YahooRunnable{
 			}
 		} else {
 			logger.info("**********   No inbox Url found   **********");
-			// SuscriberRunnable.writeToFile("no_inbox_url.html",
+			// SubscriberRunnable.writeToFile("no_inbox_url.html",
 			// driver.getPageSource());
 		}
 	}

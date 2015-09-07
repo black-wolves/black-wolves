@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.blackwolves.seeder.Seeder;
 import com.blackwolves.up.Up;
 
 /**
@@ -51,9 +50,9 @@ public class TestSeeder {
 	}
 	@Ignore
 	@Test
-	public void testSuscriptions()
+	public void testSubscriptions()
 	{
-		///.suscribeToNewsletters("oioeeekkks@aasdasd.com,askdjalskdjalsjdiw");
+		///.subscribeToNewsletters("oioeeekkks@aasdasd.com,askdjalskdjalsjdiw");
 	}
 	@Test
 	@Ignore
