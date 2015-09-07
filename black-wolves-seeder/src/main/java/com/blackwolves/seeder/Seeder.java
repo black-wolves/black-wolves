@@ -9,6 +9,7 @@ import java.util.Date;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -73,8 +74,6 @@ public class Seeder {
 		logger.info("Firefox Created");
 		
 		human = generateRandomHumanUser();
-		
-		logger.info("Human Generated");
 		
 		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
 		
@@ -190,9 +189,9 @@ public class Seeder {
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
-		}catch (InterruptedException e) {
-			logger.error("Thread was interrupted at login");
-			logger.error(e.getMessage(), e);
+		}catch (NoSuchElementException e) {
+			logger.error("Enter was already pressed...Moving forward!");
+			//logger.error(e.getMessage(), e);
 		}catch (Exception e) {
 			logger.error("Something went wrong at login");
 			logger.error(e.getMessage(), e);
