@@ -34,7 +34,7 @@ public abstract class YahooRunnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.35) ;
+	protected static final double PERCENTAGE = generateDoubleRandom(0.6, 0.85) ;
 	
 	private static final String ROUTE = "/var/www/";
 
