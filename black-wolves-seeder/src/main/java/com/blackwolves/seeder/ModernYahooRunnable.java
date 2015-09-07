@@ -441,12 +441,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Element is visible");
 			element.click();
 		}else{
-			logger.info("Element is not visible, applying magic");
+			logger.info("Element is not visible, not doing anything, please review it");
 //			mouse.moveToElement(element).build().perform();
 //			String keysPressed =  Keys.chord(Keys.CONTROL, Keys.RETURN);
 //			element.sendKeys(keysPressed) ;
-			((JavascriptExecutor)driver).executeScript("arguments[0].checked = true;", element);
-			element.click();
+//			((JavascriptExecutor)driver).executeScript("arguments[0].checked = true;", element);
+//			element.click();
 		}
 	}
 
