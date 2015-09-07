@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:com/blackwolves/persistence/create-schema-context.xml")
+@ContextConfiguration("classpath:com/blackwolves/persistence/test-application-context-black-wolves-persistence.xml")
 //Test always ignored, un-ignore only to recreate the database.
 @Ignore
 public class CreateDBSchemaTest {

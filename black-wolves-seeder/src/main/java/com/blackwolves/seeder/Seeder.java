@@ -186,32 +186,7 @@ public class Seeder {
 		return new FastHuman();
 	}
 
-	public void suscribeToNewsletters() {
-		final int THREADS = 1;
-
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
-		List<String[]> ips = YahooRunnable.generateIpsList();
-
-		List<List<String[]>> partitions = Lists.partition(seeds, 10);
-
-		final Random ipRandomizer = new Random();
-
-		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
-		for (final List<String[]> partition : partitions) {
-
-			Runnable suscriber = new SuscriberRunnable(partition, ips, ipRandomizer);
-			executor.execute(suscriber);
-		}
-
-		executor.shutdownNow();
-		// Wait until all threads are finish
-		while (!executor.isTerminated()) {
-
-		}
-		logger.info("\nFinished all threads");
-
-	}
-
+	
 	/**
 	 * @param yahooUrl
 	 * @param seed

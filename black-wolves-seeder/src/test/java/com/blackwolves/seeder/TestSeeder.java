@@ -53,7 +53,7 @@ public class TestSeeder {
 	@Test
 	public void testSuscriptions()
 	{
-		seeder.suscribeToNewsletters();
+		///.suscribeToNewsletters("oioeeekkks@aasdasd.com,askdjalskdjalsjdiw");
 	}
 	@Test
 	@Ignore

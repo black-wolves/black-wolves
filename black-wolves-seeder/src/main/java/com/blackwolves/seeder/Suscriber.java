@@ -31,34 +31,14 @@ public class Suscriber {
 	private static final String ROUTE = "/var/www/";
 
 	public static void main(String[] args) {
-		suscribeToNewsletters();
+		suscribeToNewsletters(args[0]);
 	}
 
-	public static void suscribeToNewsletters() {
-		final int THREADS = 1;
+	public static void suscribeToNewsletters(String mySeed) {
+		SuscriberRunnable suscriberRunnable =  new SuscriberRunnable(mySeed);
+		suscriberRunnable.runProcess();
+		
 
-		List<String[]> seeds = generateSeedsList();
-		List<String[]> ips = generateIpsList();
-
-		List<List<String[]>> partitions = Lists.partition(seeds, 10);
-
-		final Random ipRandomizer = new Random();
-
-		ExecutorService executor = Executors.newFixedThreadPool(THREADS);
-		for (final List<String[]> partition : partitions) {
-
-			Runnable suscriber = new SuscriberRunnable(partition, ips, ipRandomizer);
-			executor.execute(suscriber);
-		}
-
-		executor.shutdown();
-		// Wait until all threads are finish
-		while (!executor.isTerminated()) {
-
-		}
-		logger.info("\nFinished all threads");
-
-		executor.shutdownNow();
 	}
 
 	/**
