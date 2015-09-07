@@ -263,7 +263,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			Thread.sleep(1000 + randInt(1000, 2000));
 			if(isWarmupDomain(false, msg)){
 				clickShowImages("show-text");
-				wait.until(ExpectedConditions.elementToBeClickable(By.id("main-btn-spam")));
+				Thread.sleep(randInt(3000, 5000));
 	
 				if (!throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
