@@ -123,6 +123,7 @@ public class Seeder {
 	 */
 	private Session validateLastSession(String myIp, Seed dbSeed) {
 		if(dbSeed.getSessions().isEmpty()){
+			logger.info("Creating new session with IP: " + myIp);
 			return new Session(myIp);
 		}
 		Session session = dbSeed.getSessions().iterator().next();
@@ -130,6 +131,7 @@ public class Seeder {
 			logger.info("Last time the seed was logged it was less than " + dbSeed.getProfile().getHoursNextLogin() + " hours");
 			return null;
 		}
+		logger.info("Creating new session with IP: " + myIp);
 		return new Session(myIp);
 	}
 	
