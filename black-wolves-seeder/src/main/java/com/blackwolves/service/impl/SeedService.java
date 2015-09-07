@@ -5,6 +5,8 @@ package com.blackwolves.service.impl;
 
 import java.util.Random;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import com.blackwolves.persistence.dao.ISeedDao;
 import com.blackwolves.persistence.entity.Profile;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.exception.DaoException;
+import com.blackwolves.seeder.Seeder;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
 
@@ -21,9 +24,33 @@ import com.blackwolves.service.exception.ServiceException;
  */
 @Service
 public class SeedService implements ISeedService{
+	
+	private static final Logger logger = LogManager.getLogger(SeedService.class.getName());
 
 	@Autowired
 	private ISeedDao seedDao;
+	
+	/**
+	 * @param seed
+	 * @return
+	 */
+	public Seed getSeedFromDb(String[] seed) {
+		Seed dbSeed = null;
+		try {
+			dbSeed = findByEmail(seed[0]);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		if(dbSeed==null){
+			try {
+				dbSeed = insertSeedInDB(seed);
+			} catch (ServiceException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return dbSeed;
+	}
 	
 	/*
 	 * (non-Javadoc)
@@ -81,15 +108,15 @@ public class SeedService implements ISeedService{
 		switch (randomNum) {
         case 1:
         case 4:
-            return 6;
+            return 1;
         case 2:
         case 5:
-        	return 12;
+        	return 2;
         case 3:
         case 6:
-        	return 24;
+        	return 3;
         default:
-            return 48;
+            return 4;
 		}
 	}
 }

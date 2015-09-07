@@ -36,6 +36,16 @@ public class Subscription implements Serializable {
 	private String url;
 
 	/**
+	 * Constructor
+	 * @param name
+	 * @param url
+	 */
+	public Subscription(String name, String url) {
+		this.name = name;
+		this.url = url;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public Long getId() {

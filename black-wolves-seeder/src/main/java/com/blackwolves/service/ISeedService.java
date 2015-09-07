@@ -11,6 +11,8 @@ import com.blackwolves.service.exception.ServiceException;
  *
  */
 public interface ISeedService {
+	
+	Seed getSeedFromDb(String[] seed);
 
 	/**
 	 * Saves or update the seed according to the id of the object.

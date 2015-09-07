@@ -10,25 +10,35 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.blackwolves.persistence.entity.Seed;
+import com.blackwolves.persistence.entity.Subscription;
+import com.blackwolves.service.ISeedService;
+import com.blackwolves.service.exception.ServiceException;
 
 /**
  * @author daniel.grane
  *
  */
+@Component
 public class SuscriberRunnable {
 
 	private static final String HTML_LOCATION = "/root/htmls/";
 
 	private static final Logger logger = LogManager.getLogger(SuscriberRunnable.class.getName());
 
-	private final String[] seed;
+	@Autowired
+	private ISeedService seedService;
 
-	public SuscriberRunnable(String mySeed) {
-		String[] seed = mySeed.split(",");
-		this.seed = seed;
+	public SuscriberRunnable() {
+		
 	}
 
-	public void runProcess() {
+	public void runProcess(String mySeed) {
+		String[] seed = mySeed.split(",");
+		Seed dbSeed = seedService.getSeedFromDb(seed);
 
 		logger.info("Creating the driver");
 		DesiredCapabilities caps = new DesiredCapabilities();
@@ -38,10 +48,10 @@ public class SuscriberRunnable {
 		try {
 
 			driver = new FirefoxDriver();
-			suscribeToSkimm(seed, driver);
-			suscribeToMatterMark(seed, driver);
-			suscribeFashionMagazine(seed, driver);
-			suscribeToDigg(seed, driver);
+			suscribeToSkimm(dbSeed, driver);
+//			suscribeToMatterMark(seed, driver);
+//			suscribeFashionMagazine(seed, driver);
+//			suscribeToDigg(seed, driver);
 			// suscribeToTheWeek(seed, driver);
 
 			driver.close();
@@ -83,12 +93,21 @@ public class SuscriberRunnable {
 	}
 
 	// Works! :)
-	private void suscribeToSkimm(String[] seed, WebDriver driver) throws InterruptedException {
-		driver.get("http://www.theskimm.com/");
+	private void suscribeToSkimm(Seed dbSeed, WebDriver driver) throws InterruptedException {
+		logger.info("Subscribing to The Skimm");
+		String url = "http://www.theskimm.com/";
+		driver.get(url);
 		driver.findElement(By.name("email")).clear();
-		;
-		driver.findElement(By.name("email")).sendKeys(seed[0]);
+		driver.findElement(By.name("email")).sendKeys(dbSeed.getEmail());
 		driver.findElement(By.name("email")).submit();
+		Subscription subscription = new Subscription("The Skimm", url);
+		dbSeed.getSubscriptions().add(subscription);
+		try {
+			seedService.saveOrUpdate(dbSeed);
+			logger.info("Successfully to The Skimm");
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+		}
 		Thread.sleep(1000);
 	}
 

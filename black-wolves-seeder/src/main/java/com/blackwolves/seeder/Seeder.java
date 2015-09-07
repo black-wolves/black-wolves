@@ -39,8 +39,9 @@ import com.google.common.collect.Lists;
 @Component
 public class Seeder {
 
-	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
+	
+	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
 	
 	@Autowired
@@ -66,7 +67,7 @@ public class Seeder {
 	private void checkMail(String myIp, String mySeed) {
 		String[] seed = mySeed.split(",");
 		
-		Seed dbSeed = getSeedFromDb(seed);
+		Seed dbSeed = seedService.getSeedFromDb(seed);
 		
 		Session session = validateLastSession(myIp, dbSeed);
 		
@@ -149,28 +150,6 @@ public class Seeder {
 //		int diffMin = (int) (diff / (60 * 1000));
 //		int diffSec = (int) (diff / (1000));
 		return diffHours;
-	}
-
-	/**
-	 * @param seed
-	 * @return
-	 */
-	private Seed getSeedFromDb(String[] seed) {
-		Seed dbSeed = null;
-		try {
-			dbSeed = seedService.findByEmail(seed[0]);
-		} catch (ServiceException e) {
-			logger.error(e.getMessage(), e);
-		}
-		
-		if(dbSeed==null){
-			try {
-				dbSeed = seedService.insertSeedInDB(seed);
-			} catch (ServiceException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return dbSeed;
 	}
 
 	private static Human generateRandomHumanUser() {
