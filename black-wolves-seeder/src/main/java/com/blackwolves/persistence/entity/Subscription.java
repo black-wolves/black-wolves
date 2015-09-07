@@ -45,6 +45,14 @@ public class Subscription implements Serializable {
 		this.url = url;
 	}
 
+	public Subscription(String url) {
+		this.url = url;
+	}
+	
+	public Subscription(){
+		
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -114,13 +122,22 @@ public class Subscription implements Serializable {
 		}
 		Subscription other = (Subscription) obj;
 		if (id == null) {
-			if (other.id != null){
+			if (other.id!= null){
 				return false;
 			}
 		} else if (!id.equals(other.id)){
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public boolean equalsByUrl(String url){
+		return (this.url).equals(url);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.blackwolves.seeder;
+package com.blackwolves.subscriber;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,16 +23,16 @@ import com.blackwolves.service.exception.ServiceException;
  *
  */
 @Component
-public class SuscriberRunnable {
+public class SubscriberRunnable {
 
 	private static final String HTML_LOCATION = "/root/htmls/";
 
-	private static final Logger logger = LogManager.getLogger(SuscriberRunnable.class.getName());
+	private static final Logger logger = LogManager.getLogger(SubscriberRunnable.class.getName());
 
 	@Autowired
 	private ISeedService seedService;
 
-	public SuscriberRunnable() {
+	public SubscriberRunnable() {
 		
 	}
 
@@ -46,8 +46,6 @@ public class SuscriberRunnable {
 		caps.setCapability("resolution", "1280x800");
 		WebDriver driver = new FirefoxDriver(caps);
 		try {
-
-			driver = new FirefoxDriver();
 			suscribeToSkimm(dbSeed, driver);
 //			suscribeToMatterMark(seed, driver);
 //			suscribeFashionMagazine(seed, driver);
@@ -94,8 +92,12 @@ public class SuscriberRunnable {
 
 	// Works! :)
 	private void suscribeToSkimm(Seed dbSeed, WebDriver driver) throws InterruptedException {
-		logger.info("Subscribing to The Skimm");
 		String url = "http://www.theskimm.com/";
+		if(isSubscribed(dbSeed, url)){
+			logger.info("This seed is already subscribe to: " + url);
+			return;
+		}
+		logger.info("Subscribing to The Skimm");
 		driver.get(url);
 		driver.findElement(By.name("email")).clear();
 		driver.findElement(By.name("email")).sendKeys(dbSeed.getEmail());
@@ -104,11 +106,26 @@ public class SuscriberRunnable {
 		dbSeed.getSubscriptions().add(subscription);
 		try {
 			seedService.saveOrUpdate(dbSeed);
-			logger.info("Successfully to The Skimm");
+			logger.info("Successfully subscribed to: " + url);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 		}
 		Thread.sleep(1000);
+	}
+
+	/**
+	 * 
+	 * @param dbSeed
+	 * @param url
+	 * @return
+	 */
+	private boolean isSubscribed(Seed dbSeed, String url) {
+		for (Subscription s : dbSeed.getSubscriptions()) {
+			if(s.equalsByUrl(url)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void suscribeToDigg(String[] seed, WebDriver driver) {

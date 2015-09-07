@@ -18,6 +18,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.blackwolves.subscriber.SubscriberRunnable;
+
 /**
  * @author gaston.dapice
  *
@@ -129,7 +131,7 @@ public class OldYahooRunnable extends YahooRunnable{
 			}
 		} else {
 			logger.info("**********   No bulk Url found   **********");
-			SuscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
+			SubscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
 		}
 	}
 
