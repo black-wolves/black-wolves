@@ -96,6 +96,7 @@ public class Seeder {
 		}
 		try {
 			dbSeed.getSessions().add(session);
+			logger.info("Saving seed session in the database");
 			seedService.saveOrUpdate(dbSeed);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
