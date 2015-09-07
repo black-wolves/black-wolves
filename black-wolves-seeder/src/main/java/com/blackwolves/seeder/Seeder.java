@@ -3,16 +3,12 @@
  */
 package com.blackwolves.seeder;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -79,7 +75,6 @@ public class Seeder {
 		human = generateRandomHumanUser();
 		
 		logger.info("Human Generated");
-		Seeder.getScreenShot(driver, "Before.html");
 		
 		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
 		
@@ -108,6 +103,8 @@ public class Seeder {
 		logger.info("Creating the web driver");
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		caps.setCapability("applicationCacheEnabled", false);
+		
 		WebDriver driver = new FirefoxDriver(caps);
 		driver.manage().window().maximize();
 		return driver;
@@ -211,7 +208,6 @@ public class Seeder {
 	private static YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 
 		try {
-			getScreenShot(driver, "AfterLogin");
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
@@ -236,18 +232,18 @@ public class Seeder {
 		}
 		return handler;
 	}
-
-	public static void getScreenShot(WebDriver driver, String name) {
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		// Now you can do whatever you need to do with it, for example copy
-		// somewhere
-		try {
-			FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-
-	}
+//
+//	public static void getScreenShot(WebDriver driver, String name) {
+//		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+//		// Now you can do whatever you need to do with it, for example copy
+//		// somewhere
+//		try {
+//			FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
+//		} catch (IOException e) {
+//			logger.error(e.getMessage(), e);
+//		}
+//
+//	}
 	
 	public void getFingerPrint() {
 		DesiredCapabilities caps = new DesiredCapabilities();
