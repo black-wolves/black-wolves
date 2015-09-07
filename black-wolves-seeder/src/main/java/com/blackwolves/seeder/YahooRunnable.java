@@ -93,6 +93,8 @@ public abstract class YahooRunnable {
 	
 	public abstract void sendEmail() throws InterruptedException;
 	
+	public abstract void clickSpam() throws InterruptedException;
+	
 	/**
 	 * Starts the wolf seeder process
 	 */

@@ -1,5 +1,6 @@
 package com.blackwolves.seeder;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.LogManager;
@@ -75,35 +76,42 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Clicking in Msg : " + currentMsg.getText());
 							currentMsg.click();
 							
-							Thread.sleep(1000 + randInt(2000, 3000));
-							
-							clickShowImages("show-text");
-							
-							if (throwDice()) {
-								replyToEmail(wait);
-							}else if (throwDice()){
-								replyToEmailFromSubList(wait);
-							}else if (throwDice()){
-								forwardEmail(wait);
-							}else if (throwDice()){
-								forwardEmailFromSubList(wait);
-							}
-							
-							if (throwDice()) {
-								clickRandomLink();
-							}
-							
-							if (throwDice()) {
-								sendEmail();
-							}
+							if(isWarmupDomain(false, currentMsg)){
+								Thread.sleep(1000 + randInt(2000, 3000));
+								
+								clickShowImages("show-text");
+								
+								if (throwDice()) {
+									replyToEmail(wait);
+								}else if (throwDice()){
+									replyToEmailFromSubList(wait);
+								}else if (throwDice()){
+									forwardEmail(wait);
+								}else if (throwDice()){
+									forwardEmailFromSubList(wait);
+								}
+								
+								if (throwDice()) {
+									clickRandomLink();
+								}
+								
+								if (throwDice()) {
+									sendEmail();
+								}
 
-							logger.info("Going back to inbox");
-							mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
-							driver.findElement(By.className("inbox-label")).click();
+								logger.info("Going back to inbox");
+								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+								driver.findElement(By.className("inbox-label")).click();
+								
+								Thread.sleep(randInt(1500, 2500));
+								
+								checkForInboxReloadError();
+							}else{
+								if (YahooRunnable.randInt(0,1) == 1) {
+									clickSpam();
+								}
+							}
 							
-							Thread.sleep(randInt(1500, 2500));
-							
-							checkForInboxReloadError();
 
 						}catch (Exception e) {
 							logger.error(e.getMessage(), e);
@@ -246,7 +254,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				return true;
 			}
 		}
-		logger.info("Is not a warmup domain, we go back to bulk");
+		logger.info("Is not a warmup domain!!!");
 		return false;
 	}
 
@@ -299,11 +307,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
 				Thread.sleep(randInt(1500, 2500));
 				WebElement notSpamMultare = submenuList.get(1);
+				logger.info("Clicking Not Spam!");
 				notSpamMultare.click();
-
 				Thread.sleep(randInt(1000, 2000));
 			}
-
 		}
 	}
 
@@ -429,6 +436,27 @@ public class ModernYahooRunnable extends YahooRunnable {
 		logger.info("Clicking send button");
 		sendButton.click();
 		Thread.sleep(randInt(2000, 3000));
+	}
+	
+	@Override
+	public void clickSpam() throws InterruptedException {
+		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
+		for (WebElement ahref : elements) {
+			if (ahref.isDisplayed()) {
+				logger.info("Clicking more from submenu");
+				jse.executeScript("arguments[0].scrollIntoView(true);", ahref);
+				mouse.moveToElement(ahref);
+				ahref.findElement(By.tagName("a")).click();
+				List<WebElement> myList = driver.findElements(By.className("spamactions"));
+				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
+				Thread.sleep(randInt(1500, 2500));
+				WebElement spam = submenuList.get(0);
+				logger.info("Clicking spam!");
+				spam.click();
+				Thread.sleep(randInt(1000, 2000));
+			}
+		}
+		
 	}
 
 	/**

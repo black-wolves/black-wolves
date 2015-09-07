@@ -269,4 +269,10 @@ public class OldYahooRunnable extends YahooRunnable{
 		
 	}
 
+	@Override
+	public void clickSpam() throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
