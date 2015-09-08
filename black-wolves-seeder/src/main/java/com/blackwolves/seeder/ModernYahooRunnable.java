@@ -44,12 +44,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 		// If not empty, proceed
 		else {
 			Thread.sleep(1000 + randInt(0, 2000));
-			wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+			wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
 
-			if (driver.findElements(By.className("subj")).size() > 0) {
+			if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
 				
-				logger.info("subj found");
-				List<WebElement> inboxMsgs = driver.findElements(By.className("subj"));
+				logger.info("list-view-item-container found");
+				List<WebElement> inboxMsgs = driver.findElements(By.className("list-view-item-container"));
 				
 				logger.info("Percentage is " + PERCENTAGE);
 				int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
@@ -57,14 +57,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 				for (int j = 0; j < percentage; j++) {
 					
 					logger.info((percentage - j) + " emails to go ");
-					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
 					
-					if (driver.findElements(By.className("subj")).size() > 0) {
+					if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
 						try {
 							mouse.moveByOffset(200 + randInt(0, 300), 300 + randInt(0, 400));
 							
-							logger.info("subj found");
-							inboxMsgs = driver.findElements(By.className("subj"));
+							logger.info("list-view-item-container found");
+							inboxMsgs = driver.findElements(By.className("list-view-item-container"));
 							
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
@@ -74,10 +74,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Getting the random message");
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
 							
-							logger.info("Clicking in Msg : " + currentMsg.getText());
-							currentMsg.click();
-							
-							if(true){
+							if(isWarmupDomain(currentMsg)){
+								
+								logger.info("Clicking in Msg : " + currentMsg.getText());
+								currentMsg.findElement(By.className("subj")).click();
+								
 								Thread.sleep(1000 + randInt(2000, 3000));
 								
 								clickShowImages("show-text");
@@ -109,6 +110,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 								checkForInboxReloadError();
 							}else{
 								if (YahooRunnable.randInt(0,1) == 1) {
+									
+									logger.info("Clicking in Msg : " + currentMsg.getText());
+									currentMsg.findElement(By.className("subj")).click();
+									
+									Thread.sleep(1000 + randInt(2000, 3000));
+									
 									clickSpam();
 								}
 							}
@@ -206,11 +213,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 			if (spamFolder != null && spamFolder.isDisplayed()) {
 				logger.info("Spam Folder is empty! UOHOOO!");
 			} else {
-				wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-				if (driver.findElements(By.className("subj")).size() > 0) {
-					logger.info("subj found");
-					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
-					List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
+				wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
+				if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
+					logger.info("list-view-item-container found");
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
+					List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
 					logger.info("Percentage is " + PERCENTAGE);
 					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 					for (int j = 0; j < percentage; ) {
@@ -218,7 +225,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
 						int chances =  randInt(0, 10);
 						boolean increment;
-						if (chances <= 6 ) {
+						if (chances <= 7 ) {
 							increment = normalNotSpam(wait);
 						} else {
 							increment = dragAndDropNotSpam(wait);
@@ -240,7 +247,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		Thread.sleep(randInt(1000, 2000));
 		logger.info("Selecting spam message");
 		WebElement msg = spamMsgs.get(randomPosition);
-		if(true){
+		if(isWarmupDomain(msg)){
 			WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 			logger.info("******** Dragging Message to inbox ***********");
 			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
@@ -249,13 +256,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 		return false;
 	}
 
-	private boolean isWarmupDomain(boolean dragAndDrop, WebElement msg) {
-		String address = null;
-		if(dragAndDrop){
-			address = msg.findElement(By.className("from")).getAttribute("title");
-		}else{
-			address = driver.findElement(By.className("hcard")).getAttribute("data-address");
-		}
+	
+	private boolean isWarmupDomain(WebElement msg) {
+		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
 		String[] s = address.split("@");
 		String domain = s[1];
 		List<String[]> domains = generateDomainsList();
@@ -271,25 +274,28 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	private boolean normalNotSpam(WebDriverWait wait) {
 		try {
-			List<WebElement> spamMsgs = driver.findElements(By.className("subj"));
+			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
 			logger.info("Obtaining a random message position so it can be open");
 			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 			Thread.sleep(1000 + randInt(1000, 2000));
-			logger.info("Opening the spam message");
+			
 			WebElement msg = spamMsgs.get(randomPosition);
-			msg.click();
-			Thread.sleep(1000 + randInt(1000, 2000));
-			if(true){
+			
+			if(isWarmupDomain(msg)){
+				logger.info("Opening the spam message");
+				msg.findElement(By.className("subj")).click();
+				Thread.sleep(1000 + randInt(1000, 2000));
+				
 				clickShowImages("show-text");
 				Thread.sleep(randInt(3000, 5000));
 	
-				if (!throwDice()) {
+				if (throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
 					notSpamFromSubList();
 				} else {
 					logger.info("******** Clicking the not spam MAIN button ***********");
 					driver.findElement(By.id("main-btn-spam")).click();
-					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
 				}
 				return true;
 			}else{

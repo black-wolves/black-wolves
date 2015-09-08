@@ -34,7 +34,7 @@ public abstract class YahooRunnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0.6, 0.85) ;
+	protected static final double PERCENTAGE = generateDoubleRandom(0.7, 0.9) ;
 	
 	private static final String ROUTE = "/var/www/";
 
@@ -102,7 +102,7 @@ public abstract class YahooRunnable {
 		String[] seed = this.seed.split(",");
 		try {
 			processInbox(seed);
-			if (!throwDice()) {
+			if (true) {
 				processSpam(seed);
 			}
 			logger.info("Finished!!");
