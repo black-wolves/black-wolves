@@ -17,7 +17,6 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Component;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.service.ISeedService;
-import com.blackwolves.service.exception.ServiceException;
 
 /**
  * @author gaston.dapice
