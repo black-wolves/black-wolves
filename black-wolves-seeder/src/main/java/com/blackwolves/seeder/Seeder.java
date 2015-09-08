@@ -84,7 +84,7 @@ public class Seeder {
 		  File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
           //The below method will save the screen shot in d drive with name "screenshot.png"
              try {
-				FileUtils.copyFile(scrFile, new File("/Users/danigrane/Desktop/screenshot.jpg"));
+				FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot.jpg"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
