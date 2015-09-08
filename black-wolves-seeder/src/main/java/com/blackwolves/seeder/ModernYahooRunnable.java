@@ -259,8 +259,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 	
 	private boolean isWarmupDomain(WebElement msg) {
 		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
+		logger.info("Address from message is: " + address);
 		String[] s = address.split("@");
 		String domain = s[1];
+		logger.info("Domain to validate: " + domain);
 		List<String[]> domains = generateDomainsList();
 		for (String[] d : domains) {
 			if(domain.equals(d[0])){
