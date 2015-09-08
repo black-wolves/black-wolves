@@ -16,8 +16,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Component;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.service.ISeedService;
+//github.com/black-wolves/black-wolves.git
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * @author gaston.dapice
@@ -123,7 +126,9 @@ public class Seeder {
 	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
 		DesiredCapabilities caps = new DesiredCapabilities();
-		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		FirefoxProfile ffp = new FirefoxProfile();
+		ffp.setPreference("general.useragent.override", "Mozilla/5.0 (Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+		FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/wires-0.3.0-linux64"));
 		caps.setCapability("applicationCacheEnabled", false);
 //		String PROXY = "192.168.1.111:8888";
 //		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
@@ -131,7 +136,7 @@ public class Seeder {
 //		     .setFtpProxy(PROXY)
 //		     .setSslProxy(PROXY);
 //		caps.setCapability(CapabilityType.PROXY, proxy);
-		WebDriver driver = new FirefoxDriver(caps);
+		WebDriver driver = new FirefoxDriver(binary,ffp,caps);
 		driver.manage().window().maximize();
 		return driver;
 	}
