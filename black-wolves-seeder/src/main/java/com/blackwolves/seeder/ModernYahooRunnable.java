@@ -28,14 +28,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		logger.info("Processing inbox");
 		
 		checkWelcomeDialog();
+		validateOkayModal();
 		
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		
 		WebElement inboxFolder = null;
 		inboxFolder = validateInboxFolder(inboxFolder);
 		//Close validate Modal
-		Thread.sleep(randInt(1000, 2000));
-		validateOkayModal();
 		
 		// Check if inbox is empty
 		if (inboxFolder != null && inboxFolder.isDisplayed()) {
