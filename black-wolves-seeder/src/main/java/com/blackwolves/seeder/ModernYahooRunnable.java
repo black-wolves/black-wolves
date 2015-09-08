@@ -102,7 +102,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								}
 
 								logger.info("Going back to inbox");
-								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
+//								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
 								driver.findElement(By.className("inbox-label")).click();
 								
 								Thread.sleep(randInt(1500, 2500));
