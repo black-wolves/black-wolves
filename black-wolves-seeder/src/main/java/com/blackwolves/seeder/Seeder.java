@@ -16,6 +16,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -38,18 +39,18 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 public class Seeder {
 
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
-	
+
 	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
-	
+
 	@Autowired
 	private ISeedService seedService;
 
 	private static YahooRunnable handler;
-	
+
 	private static Human human;
 	private static ApplicationContext context;
-	
+
 	public static void main(String[] args) {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
@@ -64,60 +65,61 @@ public class Seeder {
 	 * @param mySeed
 	 */
 	private void checkMail(String myIp, String mySeed) {
-		
+
 		WebDriver driver = createWebDriver();
-		
+
 		logger.info("Firefox Created");
-		
+
 		human = generateRandomHumanUser();
-		
+
 		driver.get("http://www.useragentstring.com/");
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-//		The below method will save the screen shot in d drive with name "screenshot.png"
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		// The below method will save the screen shot in d drive with name
+		// "screenshot.png"
 		try {
-			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot.jpg"));
+			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot_1.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-//		String[] seed = mySeed.split(",");
-//		
-//		Seed dbSeed = seedService.getSeedFromDb(seed);
-//		
-//		Session session = validateLastSession(myIp, dbSeed);
-//		
-//		if(session==null){
-//			logger.info("This seed can't continue the process");
-//			return;
-//		}else{
-//			WebDriver driver = createWebDriver();
-//			
-//			logger.info("Firefox Created");
-//			
-//			human = generateRandomHumanUser();
-//			
-//			yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
-//			
-//			handler = validateYahooVersion(driver, mySeed);
-//
-//			if (handler != null) {
-//				handler.runProcess();
-//				try {
-//					dbSeed.getSessions().add(session);
-//					logger.info("Saving seed session in the database");
-//					seedService.saveOrUpdate(dbSeed);
-//				} catch (ServiceException e) {
-//					logger.error(e.getMessage(), e);
-//				} finally{
-//					driver.quit();
-//					logger.info("Thread should end now.");
-//				}
-//			} else{
-//				logger.info("New Interface detected.Exiting");
-//				driver.quit();
-//				return;
-//			}
-//		}
+
+		// String[] seed = mySeed.split(",");
+		//
+		// Seed dbSeed = seedService.getSeedFromDb(seed);
+		//
+		// Session session = validateLastSession(myIp, dbSeed);
+		//
+		// if(session==null){
+		// logger.info("This seed can't continue the process");
+		// return;
+		// }else{
+		// WebDriver driver = createWebDriver();
+		//
+		// logger.info("Firefox Created");
+		//
+		// human = generateRandomHumanUser();
+		//
+		// yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
+		//
+		// handler = validateYahooVersion(driver, mySeed);
+		//
+		// if (handler != null) {
+		// handler.runProcess();
+		// try {
+		// dbSeed.getSessions().add(session);
+		// logger.info("Saving seed session in the database");
+		// seedService.saveOrUpdate(dbSeed);
+		// } catch (ServiceException e) {
+		// logger.error(e.getMessage(), e);
+		// } finally{
+		// driver.quit();
+		// logger.info("Thread should end now.");
+		// }
+		// } else{
+		// logger.info("New Interface detected.Exiting");
+		// driver.quit();
+		// return;
+		// }
+		// }
 	}
 
 	/**
@@ -125,79 +127,100 @@ public class Seeder {
 	 */
 	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
-		DesiredCapabilities caps = new DesiredCapabilities();
-		FirefoxProfile ffp = new FirefoxProfile();
-		ffp.setPreference("general.useragent.override", "Mozilla/5.0 (Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
-//		FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/wires-0.3.0-linux64"));
-//		caps.setCapability("applicationCacheEnabled", false);
-//		String PROXY = "192.168.1.111:8888";
-//		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
-//		proxy.setHttpProxy(PROXY)
-//		     .setFtpProxy(PROXY)
-//		     .setSslProxy(PROXY);
-//		caps.setCapability(CapabilityType.PROXY, proxy);
-		WebDriver driver = new FirefoxDriver(ffp);
+		
+		
+		 FirefoxProfile profile = new FirefoxProfile();
+		  File modifyHeaders = new File("modify_headers.xpi");
+		  profile.setEnableNativeEvents(false); 
+		  try {
+		    profile.addExtension(modifyHeaders); 
+		  } catch (IOException e) {
+		    e.printStackTrace(); 
+		  }
+		  profile.setPreference("modifyheaders.headers.count", 1);
+		   profile.setPreference("modifyheaders.headers.action0", "Add");
+		   profile.setPreference("modifyheaders.headers.name0", "sox");
+		   profile.setPreference("modifyheaders.headers.value0", "305471");
+		   profile.setPreference("modifyheaders.headers.enabled0", true);
+		   profile.setPreference("modifyheaders.config.active", true);
+		   profile.setPreference("modifyheaders.config.alwaysOn", true);
+		   profile.setPreference("general.useragent.override", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+
+		DesiredCapabilities capabilities = new DesiredCapabilities();
+		capabilities.setBrowserName("Graneeeeeeekk");
+		capabilities.setPlatform(org.openqa.selenium.Platform.ANY);
+		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
+
+		// caps.setCapability("applicationCacheEnabled", false);
+		// String PROXY = "192.168.1.111:8888";
+		// org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
+		// proxy.setHttpProxy(PROXY)
+		// .setFtpProxy(PROXY)
+		// .setSslProxy(PROXY);
+		// caps.setCapability(CapabilityType.PROXY, proxy);
+		WebDriver driver = new FirefoxDriver(capabilities);
+
 		driver.manage().window().maximize();
 		return driver;
 	}
 
 	/**
-	 * Validate if the seed has any session created.
-	 * If it doesn't have any it continues the process.
-	 * If it has at least one it validates the last date of the session
-	 * to see if the seed can continue the process
-	 * @param myIp 
+	 * Validate if the seed has any session created. If it doesn't have any it
+	 * continues the process. If it has at least one it validates the last date
+	 * of the session to see if the seed can continue the process
+	 * 
+	 * @param myIp
 	 * @param dbSeed
 	 * @return {@link Session}
 	 */
 	private Session validateLastSession(String myIp, Seed dbSeed) {
-		if(dbSeed.getSessions().isEmpty()){
+		if (dbSeed.getSessions().isEmpty()) {
 			logger.info("Creating new session with IP: " + myIp);
 			return new Session(myIp);
 		}
 		Session session = dbSeed.getSessions().iterator().next();
-		if(calculateDifferenceBetweenDates(session.getLastDate(), new Date()) <= dbSeed.getProfile().getHoursNextLogin()){
-			logger.info("Last time the seed was logged it was less than " + dbSeed.getProfile().getHoursNextLogin() + " hours");
+		if (calculateDifferenceBetweenDates(session.getLastDate(), new Date()) <= dbSeed.getProfile()
+				.getHoursNextLogin()) {
+			logger.info("Last time the seed was logged it was less than " + dbSeed.getProfile().getHoursNextLogin()
+					+ " hours");
 			return null;
 		}
 		logger.info("Creating new session with IP: " + myIp);
 		return new Session(myIp);
 	}
-	
+
 	/**
 	 * Calculates the hours of difference between the two given dates
+	 * 
 	 * @param from
 	 * @param to
 	 * @return int
 	 */
-	private int calculateDifferenceBetweenDates(Date from, Date to){
+	private int calculateDifferenceBetweenDates(Date from, Date to) {
 		long diff = to.getTime() - from.getTime();
 		int diffHours = (int) (diff / (60 * 60 * 1000));
-//		int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-//		int diffMin = (int) (diff / (60 * 1000));
-//		int diffSec = (int) (diff / (1000));
+		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		// int diffMin = (int) (diff / (60 * 1000));
+		// int diffSec = (int) (diff / (1000));
 		return diffHours;
 	}
 
 	private static Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
-		int number =  YahooRunnable.randInt(0, 10);
-		if(number <= 3)
-		{
+		int number = YahooRunnable.randInt(0, 10);
+		if (number <= 3) {
 			return new DumbHuman();
-		}
-		else if (number >=4  && number <= 8) {
+		} else if (number >= 4 && number <= 8) {
 			return new AverageHuman();
 		}
 		return new FastHuman();
 	}
 
-	
 	/**
 	 * @param yahooUrl
 	 * @param seed
 	 * @param driver
-	 * @param session 
+	 * @param session
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
@@ -209,22 +232,22 @@ public class Seeder {
 
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
-			human.type(accountInput,seed[0]);
-			
+			human.type(accountInput, seed[0]);
+
 			logger.info("Introducing password: " + seed[1]);
 			WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 			human.type(passwordInput, seed[1]);
-			
+
 			logger.info("Clicking login button");
-			if(driver.findElements(By.id("login-signin")).size() > 0){
+			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
-		}catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			logger.error("Enter was already pressed...Moving forward!");
-			//logger.error(e.getMessage(), e);
-		}catch (Exception e) {
+			// logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error("Something went wrong at login");
 			logger.error(e.getMessage(), e);
 		}
@@ -263,19 +286,20 @@ public class Seeder {
 		}
 		return handler;
 	}
-//
-//	public static void getScreenShot(WebDriver driver, String name) {
-//		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-//		// Now you can do whatever you need to do with it, for example copy
-//		// somewhere
-//		try {
-//			FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
-//		} catch (IOException e) {
-//			logger.error(e.getMessage(), e);
-//		}
-//
-//	}
-	
+	//
+	// public static void getScreenShot(WebDriver driver, String name) {
+	// File scrFile = ((TakesScreenshot)
+	// driver).getScreenshotAs(OutputType.FILE);
+	// // Now you can do whatever you need to do with it, for example copy
+	// // somewhere
+	// try {
+	// FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
+	// } catch (IOException e) {
+	// logger.error(e.getMessage(), e);
+	// }
+	//
+	// }
+
 	public void getFingerPrint() {
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
@@ -283,7 +307,7 @@ public class Seeder {
 		WebDriver driver = new FirefoxDriver(caps);
 		String url = "https://panopticlick.eff.org/";
 		driver.get(url);
-		WebElement clickMe =  driver.findElement(By.id("clicklink"));
+		WebElement clickMe = driver.findElement(By.id("clicklink"));
 		clickMe.click();
 	}
 }
