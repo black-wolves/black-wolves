@@ -287,6 +287,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				if (!throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
 					defaultNotSpam = notSpamFromSubList();
+					logger.info("boolean "+defaultNotSpam);
 				} 
 				if (defaultNotSpam){
 					logger.info("******** Clicking the not spam MAIN button ***********");
@@ -331,7 +332,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 				return true;
 			}
 		}
-		return false;
+		logger.info("There are no submenus returning true to click in Spam main button");
+		return true;
 	}
 
 	public void clickRandomLink() throws InterruptedException {
