@@ -101,10 +101,11 @@ public abstract class YahooRunnable {
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
+			processSpam(seed);
 			processInbox(seed);
-			if (true) {
-				processSpam(seed);
-			}
+//			if (true) {
+//				processSpam(seed);
+//			}
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
 			logger.error(e.getMessage(), e);
