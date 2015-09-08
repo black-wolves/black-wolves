@@ -287,7 +287,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 				if (!throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
 					defaultNotSpam = notSpamFromSubList();
-				} else if (defaultNotSpam){
+				} 
+				if (defaultNotSpam){
 					logger.info("******** Clicking the not spam MAIN button ***********");
 					driver.findElement(By.id("main-btn-spam")).click();
 					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
