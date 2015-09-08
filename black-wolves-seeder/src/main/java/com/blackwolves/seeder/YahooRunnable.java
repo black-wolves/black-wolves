@@ -103,17 +103,11 @@ public abstract class YahooRunnable {
 		try {
 			processSpam(seed);
 			processInbox(seed);
-//			if (true) {
-//				processSpam(seed);
-//			}
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
 			logger.error(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
-		} finally{
-			driver.close();
-			logger.info("Thread should end now.");
 		}
 	}
 

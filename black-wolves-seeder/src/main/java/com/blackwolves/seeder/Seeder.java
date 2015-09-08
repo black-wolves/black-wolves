@@ -19,8 +19,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -29,7 +27,8 @@ import org.springframework.stereotype.Component;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.service.ISeedService;
-import com.blackwolves.service.exception.ServiceException;
+//github.com/black-wolves/black-wolves.git
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * @author gaston.dapice
@@ -65,16 +64,6 @@ public class Seeder {
 	 * @param mySeed
 	 */
 	private void checkMail(String myIp, String mySeed) {
-		String[] seed = mySeed.split(",");
-		
-		Seed dbSeed = seedService.getSeedFromDb(seed);
-		
-		Session session = validateLastSession(myIp, dbSeed);
-		
-		if(session==null){
-			logger.info("This seed can't continue the process");
-			return;
-		}
 		
 		WebDriver driver = createWebDriver();
 		
@@ -83,33 +72,52 @@ public class Seeder {
 		human = generateRandomHumanUser();
 		
 		driver.get("http://www.useragentstring.com/");
-		  File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-          //The below method will save the screen shot in d drive with name "screenshot.png"
-             try {
-				FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot.jpg"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+//		The below method will save the screen shot in d drive with name "screenshot.png"
+		try {
+			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-//		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
+//		String[] seed = mySeed.split(",");
 //		
-//		handler = validateYahooVersion(driver, mySeed);
-//
-//		if (handler != null) {
-//			handler.runProcess();
-//		} else{
-//			logger.info("New Interface detected.Exiting");
+//		Seed dbSeed = seedService.getSeedFromDb(seed);
+//		
+//		Session session = validateLastSession(myIp, dbSeed);
+//		
+//		if(session==null){
+//			logger.info("This seed can't continue the process");
 //			return;
+//		}else{
+//			WebDriver driver = createWebDriver();
+//			
+//			logger.info("Firefox Created");
+//			
+//			human = generateRandomHumanUser();
+//			
+//			yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
+//			
+//			handler = validateYahooVersion(driver, mySeed);
+//
+//			if (handler != null) {
+//				handler.runProcess();
+//				try {
+//					dbSeed.getSessions().add(session);
+//					logger.info("Saving seed session in the database");
+//					seedService.saveOrUpdate(dbSeed);
+//				} catch (ServiceException e) {
+//					logger.error(e.getMessage(), e);
+//				} finally{
+//					driver.quit();
+//					logger.info("Thread should end now.");
+//				}
+//			} else{
+//				logger.info("New Interface detected.Exiting");
+//				driver.quit();
+//				return;
+//			}
 //		}
-//		try {
-//			dbSeed.getSessions().add(session);
-//			logger.info("Saving seed session in the database");
-//			seedService.saveOrUpdate(dbSeed);
-//		} catch (ServiceException e) {
-//			logger.error(e.getMessage(), e);
-//		}
-		return;
 	}
 
 	/**
