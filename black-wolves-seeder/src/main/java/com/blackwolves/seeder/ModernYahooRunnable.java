@@ -78,7 +78,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Clicking in Msg : " + currentMsg.getText());
 							currentMsg.click();
 							
-							if(isWarmupDomain(false, currentMsg)){
+							if(true){
 								Thread.sleep(1000 + randInt(2000, 3000));
 								
 								clickShowImages("show-text");
@@ -241,7 +241,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		Thread.sleep(randInt(1000, 2000));
 		logger.info("Selecting spam message");
 		WebElement msg = spamMsgs.get(randomPosition);
-		if(isWarmupDomain(true, msg)){
+		if(true){
 			WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 			logger.info("******** Dragging Message to inbox ***********");
 			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
@@ -280,7 +280,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement msg = spamMsgs.get(randomPosition);
 			msg.click();
 			Thread.sleep(1000 + randInt(1000, 2000));
-			if(isWarmupDomain(false, msg)){
+			if(true){
 				clickShowImages("show-text");
 				Thread.sleep(randInt(3000, 5000));
 	
