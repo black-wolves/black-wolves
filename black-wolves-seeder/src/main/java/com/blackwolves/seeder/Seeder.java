@@ -130,7 +130,7 @@ public class Seeder {
 		
 		
 		 FirefoxProfile profile = new FirefoxProfile();
-		  File modifyHeaders = new File("modify_headers.xpi");
+		  File modifyHeaders = new File("/home/blackwolves/git/black-wolves/black-wolves-seeder/modify_headers.xpi");
 		  profile.setEnableNativeEvents(false); 
 		  try {
 		    profile.addExtension(modifyHeaders); 
