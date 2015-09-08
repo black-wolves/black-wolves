@@ -283,22 +283,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				clickShowImages("show-text");
 				Thread.sleep(randInt(3000, 5000));
 	
-				boolean defaultNotSpam = true;
 				if (!throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
-					defaultNotSpam = notSpamFromSubList();
-					logger.info("boolean "+defaultNotSpam);
-				} 
-				if (defaultNotSpam){
+					notSpamFromSubList();
+				} else {
 					logger.info("******** Clicking the not spam MAIN button ***********");
 					driver.findElement(By.id("main-btn-spam")).click();
 					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
 				}
 				return true;
 			}else{
-				logger.info("Getting the Bulk Url");
-				driver.findElement(By.id("spam-label")).click();
-				Thread.sleep(randInt(1000, 3000));
+//				logger.info("Getting the Bulk Url");
+//				driver.findElement(By.id("spam-label")).click();
+//				Thread.sleep(randInt(1000, 3000));
 				return false;
 			}
 		} catch (Exception e) {
@@ -309,7 +306,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	private boolean notSpamFromSubList() throws InterruptedException {
+	private void notSpamFromSubList() throws InterruptedException {
 		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
 		logger.info("Clicking not spam from submenu");
 		for (WebElement ahref : elements) {
@@ -325,15 +322,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("Clicking Not Spam!");
 				notSpamMultare.click();
 				Thread.sleep(randInt(1000, 2000));
-				return false;
 			}
 			else {
-				logger.info("sublist is not visible");
-				return true;
+				logger.info("sublist is not visible. Going back to bulk");
+				driver.findElement(By.id("spam-label")).click();
+				Thread.sleep(randInt(1000, 3000));
 			}
 		}
-		logger.info("There are no submenus returning true to click in Spam main button");
-		return true;
 	}
 
 	public void clickRandomLink() throws InterruptedException {
