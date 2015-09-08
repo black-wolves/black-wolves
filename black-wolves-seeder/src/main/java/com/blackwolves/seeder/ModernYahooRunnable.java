@@ -33,6 +33,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 		
 		WebElement inboxFolder = null;
 		inboxFolder = validateInboxFolder(inboxFolder);
+		//Close validate Modal
+		Thread.sleep(randInt(1000, 2000));
+		validateOkayModal();
 		
 		// Check if inbox is empty
 		if (inboxFolder != null && inboxFolder.isDisplayed()) {
@@ -125,6 +128,16 @@ public class ModernYahooRunnable extends YahooRunnable {
 			} else {
 				logger.info("**********   No mlink found or no messages available   **********");
 			}
+		}
+	}
+
+	private void validateOkayModal() {
+		List <WebElement> okayModals = driver.findElements(By.id("okayModalOverlay"));
+		if(okayModals.size()>0)
+		{
+			logger.info("OkayModal Found. Closing it");
+			okayModals.get(0).findElement(By.tagName("a")).click();
+			
 		}
 	}
 
