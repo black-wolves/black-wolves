@@ -16,6 +16,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
@@ -119,8 +120,7 @@ public class Seeder {
 		DesiredCapabilities caps = new DesiredCapabilities();
 		FirefoxProfile ffp = new FirefoxProfile();
 		ffp.setPreference("general.useragent.override", "Mozilla/5.0 (Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
-
-		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
+		FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/wires-0.3.0-linux64"));
 		caps.setCapability("applicationCacheEnabled", false);
 //		String PROXY = "192.168.1.111:8888";
 //		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
@@ -128,7 +128,7 @@ public class Seeder {
 //		     .setFtpProxy(PROXY)
 //		     .setSslProxy(PROXY);
 //		caps.setCapability(CapabilityType.PROXY, proxy);
-		WebDriver driver = new FirefoxDriver(caps);
+		WebDriver driver = new FirefoxDriver(binary,ffp,caps);
 		driver.manage().window().maximize();
 		return driver;
 	}
