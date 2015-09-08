@@ -3,16 +3,21 @@
  */
 package com.blackwolves.seeder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -75,23 +80,33 @@ public class Seeder {
 		
 		human = generateRandomHumanUser();
 		
-		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
+		driver.get("http://www.useragentstring.com/");
+		  File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+          //The below method will save the screen shot in d drive with name "screenshot.png"
+             try {
+				FileUtils.copyFile(scrFile, new File("/Users/danigrane/Desktop/screenshot.jpg"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
-		handler = validateYahooVersion(driver, mySeed);
-
-		if (handler != null) {
-			handler.runProcess();
-		} else{
-			logger.info("New Interface detected.Exiting");
-			return;
-		}
-		try {
-			dbSeed.getSessions().add(session);
-			logger.info("Saving seed session in the database");
-			seedService.saveOrUpdate(dbSeed);
-		} catch (ServiceException e) {
-			logger.error(e.getMessage(), e);
-		}
+//		yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
+//		
+//		handler = validateYahooVersion(driver, mySeed);
+//
+//		if (handler != null) {
+//			handler.runProcess();
+//		} else{
+//			logger.info("New Interface detected.Exiting");
+//			return;
+//		}
+//		try {
+//			dbSeed.getSessions().add(session);
+//			logger.info("Saving seed session in the database");
+//			seedService.saveOrUpdate(dbSeed);
+//		} catch (ServiceException e) {
+//			logger.error(e.getMessage(), e);
+//		}
 		return;
 	}
 
@@ -100,10 +115,15 @@ public class Seeder {
 	 */
 	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
-		DesiredCapabilities caps = new DesiredCapabilities();
+		DesiredCapabilities caps = DesiredCapabilities.firefox();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
 		caps.setCapability("applicationCacheEnabled", false);
-		
+//		String PROXY = "192.168.1.111:8888";
+//		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
+//		proxy.setHttpProxy(PROXY)
+//		     .setFtpProxy(PROXY)
+//		     .setSslProxy(PROXY);
+//		caps.setCapability(CapabilityType.PROXY, proxy);
 		WebDriver driver = new FirefoxDriver(caps);
 		driver.manage().window().maximize();
 		return driver;
