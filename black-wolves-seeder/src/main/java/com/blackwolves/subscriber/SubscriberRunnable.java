@@ -55,16 +55,14 @@ public class SubscriberRunnable {
 			subscribeFashionMagazine(dbSeed, driver);
 			subscribeToDigg(dbSeed, driver);
 			subscribeToTheWeek(dbSeed, driver);
-
-			driver.close();
 		}
 
 		catch (NoSuchElementException e) {
 			logger.error(e.getMessage(), e);
-			driver.close();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			driver.close();
+		}finally{
+			driver.quit();
 		}
 	}
 	

@@ -256,7 +256,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		return false;
 	}
 
-	
 	private boolean isWarmupDomain(WebElement msg) {
 		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
 		logger.info("Address from message is: " + address);
