@@ -83,23 +83,23 @@ public class ModernYahooRunnable extends YahooRunnable {
 								
 								clickShowImages("show-text");
 								
-								if (throwDice()) {
-									replyToEmail(wait);
-								}else if (throwDice()){
-									replyToEmailFromSubList(wait);
-								}else if (throwDice()){
-									forwardEmail(wait);
-								}else if (throwDice()){
-									forwardEmailFromSubList(wait);
-								}
-								
-								if (throwDice()) {
-									clickRandomLink();
-								}
-								
-								if (throwDice()) {
-									sendEmail();
-								}
+//								if (throwDice()) {
+//									replyToEmail(wait);
+//								}else if (throwDice()){
+//									replyToEmailFromSubList(wait);
+//								}else if (throwDice()){
+//									forwardEmail(wait);
+//								}else if (throwDice()){
+//									forwardEmailFromSubList(wait);
+//								}
+//								
+//								if (throwDice()) {
+//									clickRandomLink();
+//								}
+//								
+//								if (throwDice()) {
+//									sendEmail();
+//								}
 
 								logger.info("Going back to inbox");
 //								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
@@ -230,7 +230,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 						} else {
 							increment = dragAndDropNotSpam(wait);
 						}
-						if(increment){
+//						if(increment){
+						if(true){
 							j++;
 						}
 					}
@@ -251,6 +252,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 			logger.info("******** Dragging Message to inbox ***********");
 			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
+			driver.navigate().refresh();
 			return true;
 		}
 		return false;

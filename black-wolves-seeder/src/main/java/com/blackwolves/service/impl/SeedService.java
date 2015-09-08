@@ -122,4 +122,13 @@ public class SeedService implements ISeedService{
             return 4;
 		}
 	}
+
+	@Override
+	public Seed getTurn(Seed dbSeed) throws ServiceException {
+		try {
+			return seedDao.refresh(dbSeed);
+		} catch (DaoException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

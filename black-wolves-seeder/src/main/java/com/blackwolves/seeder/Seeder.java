@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
@@ -69,14 +70,13 @@ public class Seeder {
 	private void checkMail(String myIp, String mySeed) {
 
 		String[] seed = mySeed.split(",");
-
+		
 		Seed dbSeed = seedService.getSeedFromDb(seed);
 
 		Session session = validateLastSession(myIp, dbSeed);
 
 		if (session == null) {
 			logger.info("This seed can't continue the process");
-			return;
 		} else {
 			WebDriver driver = createWebDriver();
 
@@ -89,21 +89,40 @@ public class Seeder {
 			handler = validateYahooVersion(driver, mySeed);
 
 			if (handler != null) {
-				handler.runProcess();
 				try {
 					dbSeed.getSessions().add(session);
 					logger.info("Saving seed session in the database");
 					seedService.saveOrUpdate(dbSeed);
 				} catch (ServiceException e) {
 					logger.error(e.getMessage(), e);
-				} finally {
-					driver.quit();
-					logger.info("Thread should end now.");
 				}
+				while(true)
+				{
+					try {
+						dbSeed = seedService.getTurn(dbSeed);
+					} catch (ServiceException e) {
+						logger.error(e.getMessage(), e);
+					}
+					if (dbSeed.isMyTurn()) {
+						handler.runProcess();
+						dbSeed.setMyTurn(false);
+						dbSeed.setWakeUp(DateUtils.addSeconds(new Date(), 20));
+						try {
+							seedService.saveOrUpdate(dbSeed);
+						} catch (ServiceException e) {
+							logger.error(e.getMessage(), e);
+						}
+					} else {
+						try {
+							Thread.sleep(20000);
+						} catch (InterruptedException e) {
+							logger.error(e.getMessage(), e);
+						}
+					}
+				}
+				
 			} else {
 				logger.info("New Interface detected.Exiting");
-				driver.quit();
-				return;
 			}
 		}
 	}

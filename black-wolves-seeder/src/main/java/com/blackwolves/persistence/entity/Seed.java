@@ -1,6 +1,7 @@
 package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -45,10 +48,20 @@ public class Seed implements Serializable {
 	@Column(name = "SEED_PASSWORD", nullable = false)
 	private String password;
 	
+	@Column(name = "SEED_MY_TURN", nullable = false)
+	private boolean myTurn = true;
+	
+	@Column(name = "SEED_PID")
+	private int pid;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "SEED_WAKE_UP")
+	private Date wakeUp;
+	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "SEED_PROF_ID", nullable = false)
     private Profile profile;
-
+	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SEED_SUBSCRIPTION"
 				, joinColumns = { @JoinColumn(name = "SDSB_SEED_ID"
@@ -225,6 +238,48 @@ public class Seed implements Serializable {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	/**
+	 * @return the myTurn
+	 */
+	public boolean isMyTurn() {
+		return myTurn;
+	}
+
+	/**
+	 * @param myTurn the myTurn to set
+	 */
+	public void setMyTurn(boolean myTurn) {
+		this.myTurn = myTurn;
+	}
+	
+	/**
+	 * @return the pid
+	 */
+	public int getPid() {
+		return pid;
+	}
+
+	/**
+	 * @param pid the pid to set
+	 */
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+
+	/**
+	 * @return the wakeUp
+	 */
+	public Date getWakeUp() {
+		return wakeUp;
+	}
+
+	/**
+	 * @param wakeUp the wakeUp to set
+	 */
+	public void setWakeUp(Date wakeUp) {
+		this.wakeUp = wakeUp;
 	}
 
 	/**
