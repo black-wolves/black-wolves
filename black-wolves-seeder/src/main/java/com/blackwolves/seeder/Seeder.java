@@ -115,7 +115,7 @@ public class Seeder {
 	 */
 	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
-		DesiredCapabilities caps = DesiredCapabilities.firefox();
+		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
 		caps.setCapability("applicationCacheEnabled", false);
 //		String PROXY = "192.168.1.111:8888";
