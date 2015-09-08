@@ -120,15 +120,15 @@ public class Seeder {
 		DesiredCapabilities caps = new DesiredCapabilities();
 		FirefoxProfile ffp = new FirefoxProfile();
 		ffp.setPreference("general.useragent.override", "Mozilla/5.0 (Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
-		FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/wires-0.3.0-linux64"));
-		caps.setCapability("applicationCacheEnabled", false);
+//		FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/wires-0.3.0-linux64"));
+//		caps.setCapability("applicationCacheEnabled", false);
 //		String PROXY = "192.168.1.111:8888";
 //		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
 //		proxy.setHttpProxy(PROXY)
 //		     .setFtpProxy(PROXY)
 //		     .setSslProxy(PROXY);
 //		caps.setCapability(CapabilityType.PROXY, proxy);
-		WebDriver driver = new FirefoxDriver(binary,ffp,caps);
+		WebDriver driver = new FirefoxDriver(ffp);
 		driver.manage().window().maximize();
 		return driver;
 	}
