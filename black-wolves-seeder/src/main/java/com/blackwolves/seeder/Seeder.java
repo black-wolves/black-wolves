@@ -3,8 +3,10 @@
  */
 package com.blackwolves.seeder;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -16,10 +18,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+//github.com/black-wolves/black-wolves.git
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,8 +30,6 @@ import org.springframework.stereotype.Component;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.service.ISeedService;
-//github.com/black-wolves/black-wolves.git
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * @author gaston.dapice
@@ -130,8 +130,8 @@ public class Seeder {
 		
 		
 		 FirefoxProfile profile = new FirefoxProfile();
-		  File modifyHeaders = new File("/home/blackwolves/git/black-wolves/black-wolves-seeder/modify_headers.xpi");
-		  profile.setEnableNativeEvents(false); 
+		 File modifyHeaders = new File(ClassLoader.getSystemResource("modify_headers.xpi").getFile()); 
+		 profile.setEnableNativeEvents(false); 
 		  try {
 		    profile.addExtension(modifyHeaders); 
 		  } catch (IOException e) {
@@ -147,7 +147,6 @@ public class Seeder {
 		   profile.setPreference("general.useragent.override", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setBrowserName("Graneeeeeeekk");
 		capabilities.setPlatform(org.openqa.selenium.Platform.ANY);
 		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 
