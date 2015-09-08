@@ -283,10 +283,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 				clickShowImages("show-text");
 				Thread.sleep(randInt(3000, 5000));
 	
+				boolean defaultNotSpam = true;
 				if (!throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
-					notSpamFromSubList();
-				} else {
+					defaultNotSpam = notSpamFromSubList();
+				} else if (defaultNotSpam){
 					logger.info("******** Clicking the not spam MAIN button ***********");
 					driver.findElement(By.id("main-btn-spam")).click();
 					wait.until(ExpectedConditions.elementToBeClickable(By.className("subj")));
@@ -306,11 +307,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	private void notSpamFromSubList() throws InterruptedException {
+	private boolean notSpamFromSubList() throws InterruptedException {
 		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
+		logger.info("Clicking not spam from submenu");
 		for (WebElement ahref : elements) {
 			if (ahref.isDisplayed()) {
-				logger.info("Clicking not spam from submenu");
+				logger.info("sublist is visible");
 				jse.executeScript("arguments[0].scrollIntoView(true);", ahref);
 				mouse.moveToElement(ahref);
 				ahref.findElement(By.tagName("a")).click();
@@ -321,8 +323,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("Clicking Not Spam!");
 				notSpamMultare.click();
 				Thread.sleep(randInt(1000, 2000));
+				return false;
+			}
+			else {
+				logger.info("sublist is not visible");
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public void clickRandomLink() throws InterruptedException {
