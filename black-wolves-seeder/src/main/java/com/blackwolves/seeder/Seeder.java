@@ -6,6 +6,7 @@ package com.blackwolves.seeder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.entity.Session;
+import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
 
@@ -39,9 +41,6 @@ import com.blackwolves.service.exception.ServiceException;
 public class Seeder {
 
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
-
-	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
-	private static String IMAGES_PATH = "/var/www/screenshots/";
 
 	@Autowired
 	private ISeedService seedService;
@@ -84,7 +83,7 @@ public class Seeder {
 
 			human = generateRandomHumanUser();
 
-			yahooLogin(YAHOO_MAIL_RO_URL, seed, driver, session);
+			yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver, session);
 
 			handler = validateYahooVersion(driver, mySeed);
 
@@ -113,11 +112,7 @@ public class Seeder {
 							logger.error(e.getMessage(), e);
 						}
 					} else {
-						try {
-							Thread.sleep(20000);
-						} catch (InterruptedException e) {
-							logger.error(e.getMessage(), e);
-						}
+						driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 					}
 				}
 				
@@ -286,29 +281,24 @@ public class Seeder {
 	 * @param seed
 	 */
 	private static YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
+			logger.info("**********   Old yahoo version   **********");
+			handler = new OldYahooRunnable(driver, seed, human);
 
-		try {
-			Thread.sleep(10000);
-			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
-				logger.info("**********   Old yahoo version   **********");
-				handler = new OldYahooRunnable(driver, seed, human);
-
-			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
-				logger.info("**********   New yahoo 2 version   **********");
-				handler = new ModernYahooRunnable(driver, seed, human);
-				// SubscriberRunnable.writeToFile("new_yahoo_2_version.html",
-				// driver.getPageSource());
-			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
-				logger.info("**********   New yahoo version   **********");
-				// SubscriberRunnable.writeToFile("new_yahoo_version.html",
-				// driver.getPageSource());
-			} else {
-				logger.info("**********   There is a new yahoo version in town  **********");
-				// SubscriberRunnable.writeToFile("new_version_in_town.html",
-				// driver.getPageSource());
-			}
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+		} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
+			logger.info("**********   New yahoo 2 version   **********");
+			handler = new ModernYahooRunnable(driver, seed, human);
+			// SubscriberRunnable.writeToFile("new_yahoo_2_version.html",
+			// driver.getPageSource());
+		} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
+			logger.info("**********   New yahoo version   **********");
+			// SubscriberRunnable.writeToFile("new_yahoo_version.html",
+			// driver.getPageSource());
+		} else {
+			logger.info("**********   There is a new yahoo version in town  **********");
+			// SubscriberRunnable.writeToFile("new_version_in_town.html",
+			// driver.getPageSource());
 		}
 		return handler;
 	}

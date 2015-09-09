@@ -123,6 +123,10 @@ public class SeedService implements ISeedService{
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.blackwolves.service.ISeedService#getTurn(com.blackwolves.persistence.entity.Seed)
+	 */
 	@Override
 	public Seed getTurn(Seed dbSeed) throws ServiceException {
 		try {

@@ -37,5 +37,11 @@ public interface ISeedService {
 	 */
 	Seed insertSeedInDB(String[] seed) throws ServiceException;
 
+	/**
+	 * 
+	 * @param dbSeed
+	 * @return
+	 * @throws ServiceException
+	 */
 	Seed getTurn(Seed dbSeed) throws ServiceException;
 }

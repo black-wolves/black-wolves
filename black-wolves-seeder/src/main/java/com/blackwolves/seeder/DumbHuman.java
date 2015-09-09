@@ -18,20 +18,25 @@ public class DumbHuman extends Human {
 	}
 
 	@Override
-	public void type(WebElement input, String string) throws InterruptedException {
+	public void type(WebElement input, String string) {
 		char[] charArray = string.toCharArray();
 		for (int i = 0; i < charArray.length; i++) {
 
-			Character myCharacter = new Character(charArray[i]);
-			if (YahooRunnable.throwDice()) {
-				logger.info("Human make mistakes");
-				String typo = RandomStringUtils.random(1, "abcdefghijklmnopqrstuvwxyz");
-				input.sendKeys(typo);
-				Thread.sleep(YahooRunnable.randInt(500, 2500));
-				input.sendKeys(Keys.BACK_SPACE);
+			try {
+				Character myCharacter = new Character(charArray[i]);
+				if (YahooRunnable.throwDice()) {
+					logger.info("Human make mistakes");
+					String typo = RandomStringUtils.random(1, "abcdefghijklmnopqrstuvwxyz");
+					input.sendKeys(typo);
+					Thread.sleep(YahooRunnable.randInt(500, 2500));
+					input.sendKeys(Keys.BACK_SPACE);
+				}
+				input.sendKeys(myCharacter.toString());
+			
+				Thread.sleep(YahooRunnable.randInt(50, 300));
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
 			}
-			input.sendKeys(myCharacter.toString());
-			Thread.sleep(YahooRunnable.randInt(50, 300));
 		}
 	}
 

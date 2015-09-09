@@ -1,6 +1,7 @@
 package com.blackwolves.seeder;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -24,7 +25,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	@Override
-	public void processInbox(String[] seed) throws InterruptedException {
+	public void processInbox(String[] seed) {
 		logger.info("Processing inbox");
 		
 		checkWelcomeDialog();
@@ -43,7 +44,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		
 		// If not empty, proceed
 		else {
-			Thread.sleep(1000 + randInt(0, 2000));
+			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
 
 			if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
@@ -69,7 +70,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 							
-							Thread.sleep(1000 + randInt(2000, 3000));
+							driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 							
 							logger.info("Getting the random message");
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
@@ -79,12 +80,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 								logger.info("Clicking in Msg : " + currentMsg.getText());
 								currentMsg.findElement(By.className("subj")).click();
 								
-								Thread.sleep(1000 + randInt(2000, 3000));
+								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 								
 								clickShowImages("show-text");
 								
 //								if (throwDice()) {
-//									replyToEmail(wait);
+//									replyToEmail();
 //								}else if (throwDice()){
 //									replyToEmailFromSubList(wait);
 //								}else if (throwDice()){
@@ -105,22 +106,20 @@ public class ModernYahooRunnable extends YahooRunnable {
 //								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
 								driver.findElement(By.className("inbox-label")).click();
 								
-								Thread.sleep(randInt(1500, 2500));
+								driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 								
-								checkForInboxReloadError();
+//								checkForInboxReloadError();
 							}else{
 								if (YahooRunnable.randInt(0,1) == 1) {
 									
 									logger.info("Clicking in Msg : " + currentMsg.getText());
 									currentMsg.findElement(By.className("subj")).click();
 									
-									Thread.sleep(1000 + randInt(2000, 3000));
+									driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 									
 									clickSpam();
 								}
 							}
-							
-
 						}catch (Exception e) {
 							logger.error(e.getMessage(), e);
 							logger.info("Need to sync the thread...Going to inbox to keep going ");
@@ -173,7 +172,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		return inboxFolder;
 	}
 
-	private void checkWelcomeDialog() throws InterruptedException {
+	private void checkWelcomeDialog() {
 		int retries = 2;
 		for (int i = 0; i < retries; i++) {
 			if(driver.findElements(By.className("ob-contactimport-btn-skip")).size() > 0){
@@ -183,7 +182,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				welcomeDialog.click();
 			}else {
 				logger.info("No Welcome Dialog was found.");
-				Thread.sleep(randInt(2500, 3500));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			}
 		}
 	}
@@ -195,7 +194,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 * selenium.WebDriver, java.lang.String[])
 	 */
 	@Override
-	public void processSpam(String[] seed) throws InterruptedException {
+	public void processSpam(String[] seed) {
 		logger.info("Processing Spam....");
 		if (driver.findElements(By.id("spam-label")).size() > 0) {
 			WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -203,7 +202,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			try {
 				logger.info("Getting the Bulk Url");
 				driver.findElement(By.id("spam-label")).click();
-				Thread.sleep(randInt(1000, 3000));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 				spamFolder = driver.findElement(By.className("empty-folder"));
 			} catch (Exception e) {
 				logger.info("There are msgs in the spam folder, go get them Tiger!");
@@ -221,7 +220,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 					logger.info("Percentage is " + PERCENTAGE);
 					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 					for (int j = 0; j < percentage; ) {
-						Thread.sleep(randInt(1000, 3000));
+						driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
 						int chances =  randInt(0, 10);
 						boolean increment;
@@ -242,10 +241,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	private boolean dragAndDropNotSpam(WebDriverWait wait) throws InterruptedException {
+	private boolean dragAndDropNotSpam(WebDriverWait wait) {
 		List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
 		int randomPosition = obtainRandomMsgsPosition(spamMsgs);
-		Thread.sleep(randInt(1000, 2000));
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		logger.info("Selecting spam message");
 		WebElement msg = spamMsgs.get(randomPosition);
 		if(isWarmupDomain(msg)){
@@ -262,7 +261,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
 		logger.info("Address from message is: " + address);
 		String[] s = address.split("@");
-		String domain = s[1];
+		String domain = s.length > 1 ? s[1] : s[0];
 		logger.info("Domain to validate: " + domain);
 		List<String[]> domains = generateDomainsList();
 		for (String[] d : domains) {
@@ -280,17 +279,17 @@ public class ModernYahooRunnable extends YahooRunnable {
 			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
 			logger.info("Obtaining a random message position so it can be open");
 			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
-			Thread.sleep(1000 + randInt(1000, 2000));
+			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			
 			WebElement msg = spamMsgs.get(randomPosition);
 			
 			if(isWarmupDomain(msg)){
 				logger.info("Opening the spam message");
 				msg.findElement(By.className("subj")).click();
-				Thread.sleep(1000 + randInt(1000, 2000));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 				
 				clickShowImages("show-text");
-				Thread.sleep(randInt(3000, 5000));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	
 				if (throwDice()) {
 					logger.info("******** Clicking the not spam LIST button ***********");
@@ -315,7 +314,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	private void notSpamFromSubList() throws InterruptedException {
+	private void notSpamFromSubList() {
 		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
 		logger.info("Clicking not spam from submenu");
 		for (WebElement ahref : elements) {
@@ -326,21 +325,21 @@ public class ModernYahooRunnable extends YahooRunnable {
 				ahref.findElement(By.tagName("a")).click();
 				List<WebElement> myList = driver.findElements(By.className("spamactions"));
 				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
-				Thread.sleep(randInt(1500, 2500));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 				WebElement notSpamMultare = submenuList.get(1);
 				logger.info("Clicking Not Spam!");
 				notSpamMultare.click();
-				Thread.sleep(randInt(1000, 2000));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			}
 			else {
 				logger.info("sublist is not visible. Going back to bulk");
 				driver.findElement(By.id("spam-label")).click();
-				Thread.sleep(randInt(1000, 3000));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			}
 		}
 	}
 
-	public void clickRandomLink() throws InterruptedException {
+	public void clickRandomLink() {
 		logger.info("Getting the content of the message");
 		WebElement div = driver.findElement(By.className("thread-body"));
 		logger.info("Looking for links inside the message");
@@ -366,67 +365,76 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 	
 	@Override
-	public void replyToEmail(WebDriverWait wait) throws InterruptedException {
-		logger.info("Replying to an email");
+	public void replyToEmail() {
+		logger.info("Clicking the reply button");
 //		String body = human.generateRandomBody(driver, wait);
-//		Thread.sleep(randInt(2000, 3000));
-		validateIfElementIsVisible(driver.findElement(By.id("btn-reply-sender")));
-		Thread.sleep(randInt(2000, 3000));
-		WebElement bodyMail = driver.findElement(By.id("rtetext"));
+//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		
+		WebElement reply = driver.findElement(By.id("btn-reply-sender"));
+		reply.click();
+		
+		WebElement quickReply = driver.findElement(By.className("quickReply"));
+		
+		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
 		bodyMail.click();
 //		human.type(bodyMail, body);
-		logger.info("Waiting for button to be clickable");
-		Thread.sleep(randInt(2000, 3000));
-		logger.info("Sending email reply");
-		validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
-		Thread.sleep(randInt(2000, 3000));
+		
+		logger.info("Replying the email");
+		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+		send.click();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
 	
-	public void replyToEmailFromSubList(WebDriverWait wait) throws InterruptedException {
-		logger.info("Replying to an email");
+	public void replyToEmailFromSubList(WebDriverWait wait) {
+		logger.info("Clicking the reply button from sublist");
 		if(driver.findElements(By.className("addconvtitle")).size() > 0){
 			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
 			validateIfElementIsVisible(elements.get(0));
 			logger.info("Waiting for button to be clickable");
-			Thread.sleep(randInt(2000, 3000));
-			logger.info("Sending email reply");
+			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+			logger.info("Replying the email from sublist");
 			validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
-			Thread.sleep(randInt(2000, 3000));
+			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		}
 		
 	}
 	
 	@Override
-	public void forwardEmail(WebDriverWait wait) throws InterruptedException {
-		logger.info("Forwarding an email");
+	public void forwardEmail(WebDriverWait wait) {
+		logger.info("Clicking the forward button");
 //		String body = human.generateRandomBody(driver, wait);
-//		Thread.sleep(randInt(2000, 3000));
-		validateIfElementIsVisible(driver.findElement(By.id("btn-forward")));
-		Thread.sleep(randInt(2000, 3000));
+//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		
+		WebElement forward = driver.findElement(By.id("btn-forward"));
+		forward.click();
+		
 		List<String[]> seeds = YahooRunnable.generateSeedsList();
 		String[] seed = seeds.get(randInt(0, seeds.size()));
 		String to = seed[0];
-		WebElement toInput = driver.findElement(By.id("to-field"));
+		
+		WebElement quickReply = driver.findElement(By.className("quickReply"));
+		WebElement toInput = quickReply.findElement(By.id("to-field"));
 		logger.info("Filling to field");
 		human.type(toInput,to);
-		WebElement bodyMail = driver.findElement(By.id("rtetext"));
+		
+		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
 		bodyMail.click();
 //		human.type(bodyMail, body);
-		logger.info("Waiting for button to be clickable");
-		Thread.sleep(randInt(2000, 3000));
-		logger.info("Sending email forward");
-		validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
-		Thread.sleep(randInt(2000, 3000));
+		
+		logger.info("Forwarding the email");
+		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+		send.click();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
 	
 	@Override
-	public void forwardEmailFromSubList(WebDriverWait wait) throws InterruptedException {
+	public void forwardEmailFromSubList(WebDriverWait wait) {
 		logger.info("Forwarding an email");
 		if(driver.findElements(By.className("addconvtitle")).size() > 0){
 			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
 			validateIfElementIsVisible(elements.get(2));
 			logger.info("Waiting for button to be clickable");
-			Thread.sleep(randInt(2000, 3000));
+			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			List<String[]> seeds = YahooRunnable.generateSeedsList();
 			String[] seed = seeds.get(randInt(0, seeds.size()));
 			String to = seed[0];
@@ -435,20 +443,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 			human.type(toInput,to);
 			logger.info("Sending email forward");
 			validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
-			Thread.sleep(randInt(2000, 3000));
+			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		}
-		
 	}
 	
 	@Override
-	public void sendEmail() throws InterruptedException {
+	public void sendEmail() {
 		List<String[]> seeds = YahooRunnable.generateSeedsList();
 		String[] seed = seeds.get(randInt(0, seeds.size()));
 		String to = seed[0];
 		WebElement compose = driver.findElement(By.className("btn-compose"));
 		logger.info("Clicking compose button");
 		compose.click();
-		Thread.sleep(randInt(2000, 3000));
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement toInput = driver.findElement(By.id("to-field"));
 		logger.info("Filling to field");
 		human.type(toInput,to);
@@ -461,11 +468,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 		WebElement sendButton = driver.findElement(By.className("bottomToolbar")).findElement(By.tagName("span")).findElement(By.tagName("a"));
 		logger.info("Clicking send button");
 		sendButton.click();
-		Thread.sleep(randInt(2000, 3000));
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
 	
 	@Override
-	public void clickSpam() throws InterruptedException {
+	public void clickSpam() {
 		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
 		for (WebElement ahref : elements) {
 			if (ahref.isDisplayed()) {
@@ -475,11 +482,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 				ahref.findElement(By.tagName("a")).click();
 				List<WebElement> myList = driver.findElements(By.className("spamactions"));
 				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
-				Thread.sleep(randInt(1500, 2500));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 				WebElement spam = submenuList.get(0);
 				logger.info("Clicking spam!");
 				spam.click();
-				Thread.sleep(randInt(1000, 2000));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 			}
 		}
 		
@@ -505,7 +512,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	
 	@Override
-	public void addToAddressBook() throws InterruptedException {
+	public void addToAddressBook() {
 //		WebDriverWait wait = new WebDriverWait(driver, 30);
 //		logger.info("Going to contacts section");
 //		driver.findElement(By.className("nav-item-contacts")).click();

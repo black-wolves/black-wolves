@@ -5,6 +5,7 @@ package com.blackwolves.seeder;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,14 +24,14 @@ public abstract class Human {
 	
 	protected static final Logger logger = LogManager.getLogger(Human.class.getName());
 
-	public abstract void type(WebElement input, String string) throws InterruptedException;
+	public abstract void type(WebElement input, String string);
 	
-	public String generateRandomBody(WebDriver driver, WebDriverWait wait) throws InterruptedException{
+	public String generateRandomBody(WebDriver driver, WebDriverWait wait) {
 		WebElement a = driver.findElement(By.id("yucs-home_link"));
 		logger.info("Cicking this link: " + a.getAttribute("href"));
 		Actions newTab = new Actions(driver);
 		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
-		Thread.sleep(YahooRunnable.randInt(7000,10000));
+		driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
 		
 		// handle windows change
 		String base = driver.getWindowHandle();
@@ -45,7 +46,7 @@ public abstract class Human {
 		logger.info("Clicking link");
 		a.click();
 		logger.info("Waiting");
-		Thread.sleep(YahooRunnable.randInt(7000,10000));
+		driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
 		logger.info("Getting elements p");
 		elements = driver.findElements(By.tagName("p"));
 		logger.info("Random p");
@@ -62,7 +63,7 @@ public abstract class Human {
 		driver.switchTo().window(base);
 
 		// handle windows change and switch back to the main window
-		Thread.sleep(YahooRunnable.randInt(1500, 2500));
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		for (String winHandle : driver.getWindowHandles()) {
 			driver.switchTo().window(winHandle);
 		}

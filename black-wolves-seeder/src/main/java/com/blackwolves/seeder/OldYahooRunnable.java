@@ -40,7 +40,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processInbox(String[] seed) throws InterruptedException {
+	public void processInbox(String[] seed) {
 		if (driver.findElements(By.id("inbox")).size() > 0) {
 
 			logger.info("Getting the Inbox Url");
@@ -90,7 +90,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processSpam(String[] seed) throws InterruptedException {
+	public void processSpam(String[] seed) {
 		if (driver.findElements(By.id("bulk")).size() > 0) {
 
 			logger.info("Getting the Bulk Url");
@@ -139,7 +139,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 * @param driver
 	 * @throws InterruptedException
 	 */
-	public void clickRandomLink() throws InterruptedException {
+	public void clickRandomLink() {
 		logger.info("Getting the content of the message");
 		WebElement div = driver.findElement(By.className("mailContent"));
 		logger.info("Looking for links inside the message");
@@ -177,23 +177,23 @@ public class OldYahooRunnable extends YahooRunnable{
 		jse.executeScript("scroll(0, -250);");
 	}
 
-	/**
-	 * @param driver
-	 */
-	private void clickNotSpamForAllMessages(WebDriver driver) {
-		// Select all spams and move them to inbox
-		if (driver.findElements(By.id("select_all")).size() > 0) {
-
-			logger.info("Clicking Select all checkbox");
-			driver.findElement(By.id("select_all")).click();
-
-			if (driver.findElements(By.id("top_ham")).size() > 0) {
-
-				logger.info("Clicking Not spam button");
-				driver.findElement(By.id("top_ham")).click();
-			}
-		}
-	}
+//	/**
+//	 * @param driver
+//	 */
+//	private void clickNotSpamForAllMessages(WebDriver driver) {
+//		// Select all spams and move them to inbox
+//		if (driver.findElements(By.id("select_all")).size() > 0) {
+//
+//			logger.info("Clicking Select all checkbox");
+//			driver.findElement(By.id("select_all")).click();
+//
+//			if (driver.findElements(By.id("top_ham")).size() > 0) {
+//
+//				logger.info("Clicking Not spam button");
+//				driver.findElement(By.id("top_ham")).click();
+//			}
+//		}
+//	}
 
 	
 
@@ -231,46 +231,46 @@ public class OldYahooRunnable extends YahooRunnable{
 
 
 	@Override
-	public void addToAddressBook() throws InterruptedException {
+	public void addToAddressBook() {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void replyToEmail(WebDriverWait wait) throws InterruptedException {
+	public void replyToEmail() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void replyToEmailFromSubList(WebDriverWait wait)
-			throws InterruptedException {
+			{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	public void forwardEmail(WebDriverWait wait) throws InterruptedException {
+	public void forwardEmail(WebDriverWait wait) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void forwardEmailFromSubList(WebDriverWait wait)
-			throws InterruptedException {
+			{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void sendEmail() throws InterruptedException {
+	public void sendEmail() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void clickSpam() throws InterruptedException {
+	public void clickSpam() {
 		// TODO Auto-generated method stub
 		
 	}

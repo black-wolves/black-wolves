@@ -16,13 +16,17 @@ public class AverageHuman extends Human {
 	}
 
 	@Override
-	public void type(WebElement input, String string) throws InterruptedException {
+	public void type(WebElement input, String string) {
 		char[] charArray = string.toCharArray();
 		for (int i = 0; i < charArray.length; i++) {
 		
 			Character myCharacter =  new Character(charArray[i]);
 			input.sendKeys(myCharacter.toString());
-			Thread.sleep(YahooRunnable.randInt(50, 300));
+			try {
+				Thread.sleep(YahooRunnable.randInt(50, 300));
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 

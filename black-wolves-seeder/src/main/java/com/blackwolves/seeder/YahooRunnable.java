@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.persistence.entity.Action;
 import com.blackwolves.persistence.entity.Session;
+import com.blackwolves.persistence.util.Constant;
 
 /**
  * @author danigrane
@@ -34,10 +36,8 @@ public abstract class YahooRunnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.11) ;
+	protected static final double PERCENTAGE = generateDoubleRandom(1, 1) ;
 	
-	private static final String ROUTE = "/var/www/";
-
 	private String seed = "";
 	
 	protected Human human;
@@ -61,52 +61,17 @@ public abstract class YahooRunnable {
 		this.jse = (JavascriptExecutor) driver;
 		this.human = human;
 	}
-	/**
-	 * Generates a random value of type doulbe
-	 * @param max
-	 * @param min
-	 * @return double
-	 */
-	public static double generateDoubleRandom(double max, double min) {
-		double r = Math.random();
-		if (r < 0.5) {
-			return ((1 - Math.random()) * (max - min) + min);
-		}
-		return (Math.random() * (max - min) + min);
-	}
 
-	public abstract void processInbox(String[] seed) throws InterruptedException;
-
-	public abstract void processSpam(String[] seed) throws InterruptedException;
-
-	public abstract void clickRandomLink() throws InterruptedException;
-	
-	public abstract void addToAddressBook() throws InterruptedException;
-	
-	public abstract void replyToEmail(WebDriverWait wait) throws InterruptedException;
-	
-	public abstract void replyToEmailFromSubList(WebDriverWait wait) throws InterruptedException;
-	
-	public abstract void forwardEmail(WebDriverWait wait) throws InterruptedException;
-	
-	public abstract void forwardEmailFromSubList(WebDriverWait wait) throws InterruptedException;
-	
-	public abstract void sendEmail() throws InterruptedException;
-	
-	public abstract void clickSpam() throws InterruptedException;
-	
 	/**
 	 * Starts the wolf seeder process
 	 */
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
-			processSpam(seed);
+//			processSpam(seed);
 			processInbox(seed);
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
-		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -143,7 +108,7 @@ public abstract class YahooRunnable {
 	 * @param className
 	 * @throws InterruptedException
 	 */
-	protected void clickShowImages(String className) throws InterruptedException {
+	protected void clickShowImages(String className) {
 		if (validateInboxShowImagesButton(className)) {
 			if(driver.findElements(By.className("show-text")).size() > 0){
 				logger.info("Getting the show images div");
@@ -154,7 +119,7 @@ public abstract class YahooRunnable {
 				logger.info("Clicking the show images button");
 				a.click();
 				logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
-				Thread.sleep(3000 + randInt(1000, 4000));
+				driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			}else{
 				logger.info("No Images to click");
 			}
@@ -169,8 +134,8 @@ public abstract class YahooRunnable {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private boolean validateInboxShowImagesButton(String className) throws InterruptedException {
-		Thread.sleep(3000 + randInt(1000, 4000));
+	private boolean validateInboxShowImagesButton(String className) {
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		return driver.findElements(By.className(className)).size() > 0;
 	}
 
@@ -179,7 +144,7 @@ public abstract class YahooRunnable {
 	 * @param a
 	 * @throws InterruptedException
 	 */
-	protected void openInNewWindow(WebElement a) throws InterruptedException {
+	protected void openInNewWindow(WebElement a) {
 
 		logger.info("Cicking this link: " + a.getAttribute("href"));
 		Actions newTab = new Actions(driver);
@@ -188,7 +153,7 @@ public abstract class YahooRunnable {
 		} catch (MoveTargetOutOfBoundsException e){
 			logger.error(e.getMessage(), e);
 		}
-		Thread.sleep(5000);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 		// handle windows change
 		String base = driver.getWindowHandle();
@@ -207,7 +172,7 @@ public abstract class YahooRunnable {
 		driver.switchTo().window(base);
 
 		// handle windows change and switch back to the main window
-		Thread.sleep(2500);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		for (String winHandle : driver.getWindowHandles()) {
 			driver.switchTo().window(winHandle);
 		}
@@ -219,7 +184,7 @@ public abstract class YahooRunnable {
 	public static List<String[]> generateIpsList() {
 		List<String[]> ips = new ArrayList<String[]>();
 		try {
-			CSVReader ipsReader = new CSVReader(new FileReader(ROUTE + "ip_curl.txt"));
+			CSVReader ipsReader = new CSVReader(new FileReader(Constant.ROUTE + "ip_curl.txt"));
 			ips = ipsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
@@ -235,7 +200,7 @@ public abstract class YahooRunnable {
 	public static List<String[]> generateSeedsList() {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-			CSVReader seedsReader = new CSVReader(new FileReader(ROUTE + "seeds.csv"));
+			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + "seeds.csv"));
 			seeds = seedsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
@@ -251,7 +216,7 @@ public abstract class YahooRunnable {
 	public static List<String[]> generateDomainsList() {
 		List<String[]> domains = new ArrayList<String[]>();
 		try {
-			CSVReader domainsReader = new CSVReader(new FileReader(ROUTE + "domains.txt"));
+			CSVReader domainsReader = new CSVReader(new FileReader(Constant.ROUTE + "domains.txt"));
 			domains = domainsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
@@ -270,6 +235,40 @@ public abstract class YahooRunnable {
 		Action action = new Action(actionName);
 		session.getActions().add(action);
 	}
+	
+	/**
+	 * Generates a random value of type doulbe
+	 * @param max
+	 * @param min
+	 * @return double
+	 */
+	public static double generateDoubleRandom(double max, double min) {
+		double r = Math.random();
+		if (r < 0.5) {
+			return ((1 - Math.random()) * (max - min) + min);
+		}
+		return (Math.random() * (max - min) + min);
+	}
+	
+	public abstract void processInbox(String[] seed);
+
+	public abstract void processSpam(String[] seed);
+
+	public abstract void clickRandomLink();
+	
+	public abstract void addToAddressBook();
+	
+	public abstract void replyToEmail();
+	
+	public abstract void replyToEmailFromSubList(WebDriverWait wait);
+	
+	public abstract void forwardEmail(WebDriverWait wait);
+	
+	public abstract void forwardEmailFromSubList(WebDriverWait wait);
+	
+	public abstract void sendEmail();
+	
+	public abstract void clickSpam();
 	
 //	protected void openLinkInNewWindow(WebElement a) throws InterruptedException{
 //		Actions newTab = new Actions(driver);
