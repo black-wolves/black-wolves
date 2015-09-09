@@ -12,7 +12,7 @@ import com.blackwolves.service.exception.ServiceException;
  */
 public interface ISeedService {
 	
-	Seed getSeedFromDb(String[] seed);
+	Seed getSeedFromDb(String[] seed, String myIp);
 
 	/**
 	 * Saves or update the seed according to the id of the object.
@@ -32,10 +32,11 @@ public interface ISeedService {
 	/**
 	 * Inserts the given seed into the database
 	 * @param seed
+	 * @param ip
 	 * @return {@link Seed}
 	 * @throws ServiceException
 	 */
-	Seed insertSeedInDB(String[] seed) throws ServiceException;
+	Seed insertSeedInDB(String[] seed, String ip) throws ServiceException;
 
 	/**
 	 * 

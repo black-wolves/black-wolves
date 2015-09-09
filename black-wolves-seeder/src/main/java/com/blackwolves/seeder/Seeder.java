@@ -69,7 +69,7 @@ public class Seeder {
 
 		String[] seed = mySeed.split(",");
 
-		Seed dbSeed = seedService.getSeedFromDb(seed);
+		Seed dbSeed = seedService.getSeedFromDb(seed,myIp);
 		while (dbSeed.getPid() == 0) {
 			try {
 				logger.info("PID has not been set. Waiting 5 seconds and retrying");
@@ -78,7 +78,8 @@ public class Seeder {
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
-		}
+		}  
+		
 
 		WebDriver driver = createWebDriver();
 
@@ -97,6 +98,7 @@ public class Seeder {
 			createNewFolder(driver);
 			
 			while (true) {
+				logger.info("Waiting for my Turn");
 				try {
 					dbSeed = seedService.refresh(dbSeed);
 				} catch (ServiceException e) {
@@ -230,7 +232,7 @@ public class Seeder {
 		try {
 			logger.info("SCREENSHOT");
 
-			// getScreenShot(driver, "quepasa");
+			getScreenShot(driver, "quepasa");
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
 
