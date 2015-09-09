@@ -36,7 +36,7 @@
 		<property name="driverClassName" value="${dataSource.driver}" />
 		<property name="url" value="${dataSource.url}" />
 		<property name="username" value="${dataSource.user}" />
-		<property name="password" value="${dataSource.password}" />
+<!-- 		<property name="password" value="${dataSource.password}" /> -->
 	</bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

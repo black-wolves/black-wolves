@@ -250,7 +250,7 @@ public class Seeder {
 		try {
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
-
+			getScreenShot(driver, "quepasa");
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
@@ -302,19 +302,18 @@ public class Seeder {
 		}
 		return handler;
 	}
-	//
-	// public static void getScreenShot(WebDriver driver, String name) {
-	// File scrFile = ((TakesScreenshot)
-	// driver).getScreenshotAs(OutputType.FILE);
-	// // Now you can do whatever you need to do with it, for example copy
-	// // somewhere
-	// try {
-	// FileUtils.copyFile(scrFile, new File(IMAGES_PATH + name + ".jpg"));
-	// } catch (IOException e) {
-	// logger.error(e.getMessage(), e);
-	// }
-	//
-	// }
+	
+	public static void getScreenShot(WebDriver driver, String name) {
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		// Now you can do whatever you need to do with it, for example copy
+		// somewhere
+		try {
+			FileUtils.copyFile(scrFile, new File("/var/www/"+ name + ".jpg"));
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+
+	}
 
 	public void getFingerPrint() {
 		DesiredCapabilities caps = new DesiredCapabilities();
