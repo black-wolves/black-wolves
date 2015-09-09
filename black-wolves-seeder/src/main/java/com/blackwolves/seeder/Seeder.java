@@ -3,6 +3,7 @@ package com.blackwolves.seeder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
@@ -10,13 +11,16 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,10 +28,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.blackwolves.persistence.entity.Seed;
-import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
  * @author gaston.dapice
@@ -88,6 +92,10 @@ public class Seeder {
 
 		if (handler != null) {
 
+			addToAddressBook(driver);
+			
+			createNewFolder(driver);
+			
 			while (true) {
 				logger.info("Waiting for my Turn");
 				try {
@@ -95,6 +103,7 @@ public class Seeder {
 				} catch (ServiceException e) {
 					logger.error(e.getMessage(), e);
 				}
+				
 				if (dbSeed.isMyTurn()) {
 					handler.runProcess();
 					dbSeed.setMyTurn(false);
@@ -104,6 +113,7 @@ public class Seeder {
 					} catch (ServiceException e) {
 						logger.error(e.getMessage(), e);
 					}
+				
 				} else {
 					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 				}
@@ -251,26 +261,139 @@ public class Seeder {
 	 * @param seed
 	 */
 	private static YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
-			logger.info("**********   Old yahoo version   **********");
-			handler = new OldYahooRunnable(driver, seed, human);
-
-		} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
-			logger.info("**********   New yahoo 2 version   **********");
-			handler = new ModernYahooRunnable(driver, seed, human);
-			// SubscriberRunnable.writeToFile("new_yahoo_2_version.html",
-			// driver.getPageSource());
-		} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
-			logger.info("**********   New yahoo version   **********");
-			// SubscriberRunnable.writeToFile("new_yahoo_version.html",
-			// driver.getPageSource());
-		} else {
-			logger.info("**********   There is a new yahoo version in town  **********");
-			// SubscriberRunnable.writeToFile("new_version_in_town.html",
-			// driver.getPageSource());
+		try{
+			Thread.sleep(10000);
+			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
+				logger.info("**********   Old yahoo version   **********");
+				handler = new OldYahooRunnable(driver, seed, human);
+			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
+				logger.info("**********   New yahoo 2 version   **********");
+				handler = new ModernYahooRunnable(driver, seed, human);
+			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
+				logger.info("**********   New yahoo version   **********");
+			} else {
+				logger.info("**********   There is a new yahoo version in town  **********");
+			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
 		}
 		return handler;
+	}
+	
+	/**
+	 * 
+	 */
+	public void addToAddressBook(WebDriver driver) {
+		logger.info("Adding domains to address book");
+		List<String[]> domains = YahooRunnable.generateDomainsList();
+		WebElement element;
+		for (String[] d : domains) {
+			try {
+				element = driver.findElement(By.className("list-view-item-container")).findElement(By.className("first"));
+				rightClick(driver, element);
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				WebElement menu = driver.findElement(By.id("menu-msglist"));
+				
+				List<WebElement> li = menu.findElements(By.className("onemsg"));
+				WebElement addContact = li.get(3);
+				addContact.click();
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				
+				WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
+				
+				WebElement givenName = modal.findElement(By.id("givenName"));
+				givenName.clear();
+				human.type(givenName, d[0]);
+				WebElement middleName = modal.findElement(By.id("middleName"));
+				middleName.clear();
+				WebElement familyName = modal.findElement(By.id("familyName"));
+				familyName.clear();
+				WebElement email = modal.findElement(By.className("field-lg"));
+				email.clear();
+				human.type(email, "newsletter@"+d[0]);
+				WebElement save = modal.findElement(By.id("saveModalOverlay"));
+				save.click();
+				if(driver.findElements(By.className("error")).size() > 0){
+					WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
+					cancel.click();
+					logger.info("Contact was not added: " + d[0]);
+					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				}else{
+					WebElement done = driver.findElement(By.id("doneModalOverlay"));
+					done.click();
+					logger.info("Contact added: " + d[0]);
+					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				}
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+			} catch (NoSuchElementException e) {
+				logger.error(e.getMessage(), e);
+			} catch (StaleElementReferenceException e) {
+				logger.error(e.getMessage(), e);
+			} catch (ElementNotVisibleException e) {
+				logger.error(e.getMessage(), e);
+			} catch (ElementNotFoundException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+	}
+	
+	private void createNewFolder(WebDriver driver) {
+		try{
+			logger.info("Creating new folder");
+			WebElement newFolder = driver.findElement(By.id("btn-newfolder"));
+			newFolder.click();
+			Thread.sleep(YahooRunnable.randInt(1500, 2500));
+			WebElement newFolderInput = driver.findElement(By.id("newFolder"));
+			human.type(newFolderInput, "All");
+			WebElement ok = driver.findElement(By.id("okayModalOverlay"));
+			ok.click();
+			if(driver.findElements(By.id("newFolderErr")).size() > 0){
+				logger.info("Folder already exists");
+				WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
+				cancel.click();
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+			}else{
+				logger.info("Folder created");
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param element
+	 */
+	public void rightClick(WebDriver driver, WebElement element) {
+		try {
+			Actions action = new Actions(driver).contextClick(element);
+			action.build().perform();
+			logger.info("Sucessfully Right clicked on the element");
+		} catch (StaleElementReferenceException e) {
+			logger.error("Element is not attached to the page document " + e.getStackTrace());
+		} catch (NoSuchElementException e) {
+			logger.error("Element " + element + " was not found in DOM " + e.getStackTrace());
+		} catch (Exception e) {
+			logger.error("Element " + element + " was not clickable " + e.getStackTrace());
+		}
 	}
 
 	public static void getScreenShot(WebDriver driver, String name) {

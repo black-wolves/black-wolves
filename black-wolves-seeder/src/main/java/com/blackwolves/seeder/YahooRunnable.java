@@ -12,9 +12,11 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -25,6 +27,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.blackwolves.persistence.entity.Action;
 import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.persistence.util.Constant;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
  * @author danigrane
@@ -67,7 +70,7 @@ public abstract class YahooRunnable {
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
-//			processSpam(seed);
+			processSpam(seed);
 			processInbox(seed);
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
@@ -108,22 +111,34 @@ public abstract class YahooRunnable {
 	 * @throws InterruptedException
 	 */
 	protected void clickShowImages(String className) {
-		if (validateInboxShowImagesButton(className)) {
-			if(driver.findElements(By.className("show-text")).size() > 0){
-				logger.info("Getting the show images div");
-				List<WebElement> divs = driver.findElements(By.className("show-text"));
-				WebElement showImage = divs.get(0);
-				WebElement a = showImage.findElement(By.tagName("a"));
-				mouse.moveToElement(a);
-				logger.info("Clicking the show images button");
-				a.click();
-				logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
-				driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-			}else{
-				logger.info("No Images to click");
+		try{
+			if (validateInboxShowImagesButton(className)) {
+				if(driver.findElements(By.className("show-text")).size() > 0){
+					logger.info("Getting the show images div");
+					List<WebElement> divs = driver.findElements(By.className("show-text"));
+					WebElement showImage = divs.get(0);
+					WebElement a = showImage.findElement(By.tagName("a"));
+					mouse.moveToElement(a);
+					logger.info("Clicking the show images button");
+					a.click();
+					logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
+					Thread.sleep(randInt(3000, 5000));
+				}else{
+					logger.info("No Images to click");
+				}
+			} else {
+				logger.info("**********   No show images button found or there is none   **********");
 			}
-		} else {
-			logger.info("**********   No show images button found or there is none   **********");
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -134,7 +149,11 @@ public abstract class YahooRunnable {
 	 * @throws InterruptedException
 	 */
 	private boolean validateInboxShowImagesButton(String className) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		try {
+			Thread.sleep(randInt(3000, 5000));
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
 		return driver.findElements(By.className(className)).size() > 0;
 	}
 
@@ -253,21 +272,21 @@ public abstract class YahooRunnable {
 
 	public abstract void processSpam(String[] seed);
 
-	public abstract void clickRandomLink();
-	
-	public abstract void addToAddressBook();
-	
 	public abstract void replyToEmail();
-	
-	public abstract void replyToEmailFromSubList();
 	
 	public abstract void forwardEmail();
 	
-	public abstract void forwardEmailFromSubList();
-	
 	public abstract void sendEmail();
 	
+	public abstract void moveMessageToAllFolder();
+	
 	public abstract void clickSpam();
+	
+	public abstract void clickRandomLink();
+	
+	public abstract void replyToEmailFromSubList();
+	
+	public abstract void forwardEmailFromSubList();
 	
 //	protected void openLinkInNewWindow(WebElement a) throws InterruptedException{
 //		Actions newTab = new Actions(driver);
