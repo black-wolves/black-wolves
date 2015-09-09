@@ -90,21 +90,17 @@ public class ModernYahooRunnable extends YahooRunnable {
 								logger.info("Clicking in Msg : " + currentMsg.getText());
 								currentMsg.findElement(By.className("subj")).click();
 								
-								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
 								clickShowImages("show-text");
 								
 								if (throwDice()) {
 									replyToEmail();
 								}else if (throwDice()){
 									forwardEmail();
+								}else if(throwDice()){
+//									clickRandomLink();
 								}
 								
-//								if (throwDice()) {
-//									clickRandomLink();
-//								}
-								
-								moveMessageToAllFolder();
+//								moveMessageToAllFolder();
 								
 								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 								logger.info("Going back to inbox");
@@ -601,27 +597,40 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	public void clickRandomLink() {
-		logger.info("Getting the content of the message");
-		WebElement div = driver.findElement(By.className("thread-body"));
-		logger.info("Looking for links inside the message");
-		if (div.findElements(By.tagName("a")).size() != 0) {
-			logger.info("Links found");
-			List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-			int randomLinkNo = randInt(0, linksToGo.size()-1);
-			String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
-			if (aUrl != null) {
-				if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
-					logger.info("It is an Unsubscribe link!! - we are not clicking it");
-					logger.info(aUrl);
-				} else {
-					openInNewWindow(linksToGo.get(randomLinkNo));
-//					openTab(aUrl);
-//					switchToNewWindow();
-//					switchToPreviousWindow();
+		try{
+			logger.info("Getting the content of the message");
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
+			WebElement div = driver.findElement(By.className("thread-body"));
+			logger.info("Looking for links inside the message");
+			if (div.findElements(By.tagName("a")).size() != 0) {
+				logger.info("Links found");
+				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
+				int randomLinkNo = randInt(0, linksToGo.size()-1);
+				String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
+				if (aUrl != null) {
+					if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
+						logger.info("It is an Unsubscribe link!! - we are not clicking it");
+						logger.info(aUrl);
+					} else {
+						openInNewWindow(linksToGo.get(randomLinkNo));
+//						openTab(aUrl);
+//						switchToNewWindow();
+//						switchToPreviousWindow();
+					}
 				}
+			} else {
+				logger.info("**********   No links found or none available  **********");
 			}
-		} else {
-			logger.info("**********   No links found or none available  **********");
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 	

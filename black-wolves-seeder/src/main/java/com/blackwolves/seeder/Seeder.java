@@ -229,11 +229,13 @@ public class Seeder {
 	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
 		logger.info("Trying to login in....");
 		try {
-			logger.info("SCREENSHOT");
 
-			getScreenShot(driver, "quepasa");
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
+			
+			logger.info("SCREENSHOT");
+			getScreenShot(driver, "quepasa");
 
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
@@ -249,14 +251,17 @@ public class Seeder {
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error("Enter was already pressed...Moving forward!");
-			// logger.error(e.getMessage(), e);
-		} catch (Exception e) {
-			logger.error("Something went wrong at login");
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		}
-		// YahooRunnable.addActionToSession(session, "login");
 	}
 
 	/**
