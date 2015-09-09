@@ -85,23 +85,20 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 								clickShowImages("show-text");
 								
-								if (throwDice()) {
-									replyToEmail();
+//								if (throwDice()) {
+//									replyToEmail();
 //								}else if (throwDice()){
-//									replyToEmailFromSubList();
-								}else if (throwDice()){
-									forwardEmail();
-//								}else if (throwDice()){
-//									forwardEmailFromSubList();
-								}
-//								
+//									forwardEmail();
+//								}
+								
 //								if (throwDice()) {
 //									clickRandomLink();
 //								}
-//								
+								
 //								if (throwDice()) {
 //									sendEmail();
 //								}
+								
 								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 								logger.info("Going back to inbox");
 //								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
@@ -391,20 +388,16 @@ public class ModernYahooRunnable extends YahooRunnable {
 		send.click();
 	}
 	
+//	NOT WORKING
 	@Override
 	public void replyToEmailFromSubList() {
 		logger.info("Clicking the reply button from sublist");
+//		String body = human.generateRandomBody(driver, wait);
+//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		WebElement item = driver.findElement(By.className("thread-item"));
-		
-//		List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
-//		WebElement reply = driver.findElement(By.className("thread-footer")).findElement(By.tagName("a"));
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		WebElement footer = item.findElement(By.className("thread-footer"));
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		WebElement reply = footer.findElement(By.tagName("a"));
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
+		WebElement reply = elements.get(2);
 		reply.click();
 		
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
@@ -433,7 +426,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		forward.click();
 		
 		List<String[]> seeds = YahooRunnable.generateSeedsList();
-		String[] seed = seeds.get(randInt(0, seeds.size()));
+		String[] seed = seeds.get(randInt(0, seeds.size()-1));
 		String to = seed[0];
 		
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
@@ -459,34 +452,56 @@ public class ModernYahooRunnable extends YahooRunnable {
 		send.click();
 	}
 	
+//	NOT WORKING
 	@Override
 	public void forwardEmailFromSubList() {
-		logger.info("Forwarding an email");
-		if(driver.findElements(By.className("addconvtitle")).size() > 0){
-			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
-			validateIfElementIsVisible(elements.get(2));
-			logger.info("Waiting for button to be clickable");
-			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-			List<String[]> seeds = YahooRunnable.generateSeedsList();
-			String[] seed = seeds.get(randInt(0, seeds.size()));
-			String to = seed[0];
-			WebElement toInput = driver.findElement(By.id("to-field"));
-			logger.info("Filling to field");
-			human.type(toInput,to);
-			logger.info("Sending email forward");
-			validateIfElementIsVisible(driver.findElement(By.className("bottomToolbar")).findElement(By.className("default")));
-			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		}
+		logger.info("Clicking the forward button from sublist");
+//		String body = human.generateRandomBody(driver, wait);
+//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
+		WebElement forward = elements.get(2);
+		forward.click();
+		
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		String[] seed = seeds.get(randInt(0, seeds.size()-1));
+		String to = seed[0];
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement quickReply = driver.findElement(By.className("quickReply"));
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement toInput = quickReply.findElement(By.id("to-field"));
+		
+		logger.info("Filling to field");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		human.type(toInput,to);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		toInput.sendKeys(Keys.TAB);
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
+		bodyMail.click();
+//		human.type(bodyMail, body);
+		
+		logger.info("Forwarding the email from sublist");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+		send.click();
 	}
 	
 	@Override
 	public void sendEmail() {
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
-		String[] seed = seeds.get(randInt(0, seeds.size()));
-		String to = seed[0];
-		WebElement compose = driver.findElement(By.className("btn-compose"));
 		logger.info("Clicking compose button");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement compose = driver.findElement(By.className("btn-compose"));
 		compose.click();
+		
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		String[] seed = seeds.get(randInt(0, seeds.size()-1));
+		String to = seed[0];
+		
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement toInput = driver.findElement(By.id("to-field"));
 		logger.info("Filling to field");
@@ -523,25 +538,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 		
 	}
-
-	/**
-	 * @param element
-	 */
-	private void validateIfElementIsVisible(WebElement element) {
-		logger.info("Validating element visibility");
-		if(element.isDisplayed()){
-			logger.info("Element is visible");
-			element.click();
-		}else{
-			logger.info("Element is not visible, not doing anything, please review it");
-//			mouse.moveToElement(element).build().perform();
-//			String keysPressed =  Keys.chord(Keys.CONTROL, Keys.RETURN);
-//			element.sendKeys(keysPressed) ;
-//			((JavascriptExecutor)driver).executeScript("arguments[0].checked = true;", element);
-//			element.click();
-		}
-	}
-
 	
 	@Override
 	public void addToAddressBook() {
