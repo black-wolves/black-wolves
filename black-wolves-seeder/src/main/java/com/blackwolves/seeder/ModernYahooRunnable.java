@@ -493,6 +493,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	
 	@Override
 	public void sendEmail() {
+//		full-compose
 		logger.info("Clicking compose button");
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement compose = driver.findElement(By.className("btn-compose"));
@@ -505,7 +506,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement toInput = driver.findElement(By.id("to-field"));
 		logger.info("Filling to field");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		human.type(toInput,to);
+		
 		WebElement subjectInput = driver.findElement(By.id("subject-field"));
 		logger.info("Filling subject field");
 		human.type(subjectInput,"Need random subject");
