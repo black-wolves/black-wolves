@@ -85,7 +85,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Getting the random message");
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
 							
-							if(isWarmupDomain(currentMsg)){
+							if(isWarmupDomain(true, currentMsg)){
 								
 								logger.info("Clicking in Msg : " + currentMsg.getText());
 								currentMsg.findElement(By.className("subj")).click();
@@ -328,7 +328,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		
 	}
 	
-	private boolean isWarmupDomain(WebElement msg) {
+	private boolean isWarmupDomain(boolean inbox, WebElement msg) {
 		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
 		logger.info("Address from message is: " + address);
 		String[] s = address.split("@");
@@ -340,6 +340,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("Is a warmup domain, we move forward :D");
 				return true;
 			}
+		}
+		if(inbox && (domain.endsWith("yahoo.com") || domain.endsWith(".ro"))){
+			logger.info("Is a yahoo or a .ro domain, we move forward :D");
+			return true;
 		}
 		logger.info("Is not a warmup domain!!!");
 		return false;
@@ -493,7 +497,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			Thread.sleep(randInt(2000, 3000));
 			logger.info("Selecting spam message");
 			WebElement msg = spamMsgs.get(randomPosition);
-			if(isWarmupDomain(msg)){
+			if(isWarmupDomain(false, msg)){
 				WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 				logger.info("******** Dragging Message to inbox ***********");
 				(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
@@ -524,7 +528,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			
 			WebElement msg = spamMsgs.get(randomPosition);
 			
-			if(isWarmupDomain(msg)){
+			if(isWarmupDomain(false, msg)){
 				logger.info("Opening the spam message");
 				msg.findElement(By.className("subj")).click();
 				Thread.sleep(randInt(2000, 3000));
