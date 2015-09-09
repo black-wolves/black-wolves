@@ -53,7 +53,8 @@ public class Seeder {
 	public static void main(String[] args) {
 		
 //		testPurposes();
-		
+		logger.info("INITTTTTTT!!!!!!!!!!!!!!!!!");
+
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
@@ -307,7 +308,7 @@ public class Seeder {
 	
 	public static void getScreenShot(WebDriver driver, String name) {
 		logger.info("****************TAKING SCREENSHOT!*****************");
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE ); 
 		// Now you can do whatever you need to do with it, for example copy
 		// somewhere
 		try {
