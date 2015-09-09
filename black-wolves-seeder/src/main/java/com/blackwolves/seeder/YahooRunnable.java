@@ -19,7 +19,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -260,11 +259,11 @@ public abstract class YahooRunnable {
 	
 	public abstract void replyToEmail();
 	
-	public abstract void replyToEmailFromSubList(WebDriverWait wait);
+	public abstract void replyToEmailFromSubList();
 	
-	public abstract void forwardEmail(WebDriverWait wait);
+	public abstract void forwardEmail();
 	
-	public abstract void forwardEmailFromSubList(WebDriverWait wait);
+	public abstract void forwardEmailFromSubList();
 	
 	public abstract void sendEmail();
 	

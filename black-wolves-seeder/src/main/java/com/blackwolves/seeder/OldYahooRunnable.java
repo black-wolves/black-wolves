@@ -244,20 +244,20 @@ public class OldYahooRunnable extends YahooRunnable{
 	}
 
 	@Override
-	public void replyToEmailFromSubList(WebDriverWait wait)
+	public void replyToEmailFromSubList()
 			{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	public void forwardEmail(WebDriverWait wait) {
+	public void forwardEmail() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void forwardEmailFromSubList(WebDriverWait wait)
+	public void forwardEmailFromSubList()
 			{
 		// TODO Auto-generated method stub
 		
