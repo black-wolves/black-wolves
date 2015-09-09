@@ -361,6 +361,7 @@ public class Seeder {
 			human.type(newFolderInput, "All");
 			WebElement ok = driver.findElement(By.id("okayModalOverlay"));
 			ok.click();
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			if(driver.findElements(By.id("newFolderErr")).size() > 0){
 				logger.info("Folder already exists");
 				WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
