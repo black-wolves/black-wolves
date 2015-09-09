@@ -53,8 +53,6 @@ public class Seeder {
 	public static void main(String[] args) {
 		
 //		testPurposes();
-		logger.info("INITTTTTTT!!!!!!!!!!!!!!!!!");
-
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
@@ -249,11 +247,12 @@ public class Seeder {
 	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver, Session session) {
 		logger.info("Trying to login in....");
 		try {
-			logger.info("Getting to the url: " + yahooUrl);
-			driver.get(yahooUrl);
 			logger.info("SCREENSHOT");
 			
-			getScreenShot(driver, "quepasa");
+	//		getScreenShot(driver, "quepasa");
+			logger.info("Getting to the url: " + yahooUrl);
+			driver.get(yahooUrl);
+			
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
