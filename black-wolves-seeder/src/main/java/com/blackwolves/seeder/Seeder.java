@@ -250,6 +250,8 @@ public class Seeder {
 		try {
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
+			logger.info("SCREENSHOT");
+			
 			getScreenShot(driver, "quepasa");
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
