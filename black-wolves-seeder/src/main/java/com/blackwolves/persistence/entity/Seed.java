@@ -54,9 +54,24 @@ public class Seed implements Serializable {
 	@Column(name = "SEED_PID")
 	private int pid;
 	
+	@Column(name = "SEED_IP")
+	private String ip;
+	
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SEED_WAKE_UP")
 	private Date wakeUp;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_SESSION" )
+	private Date lastSession;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "SEED_PROF_ID", nullable = false)
@@ -80,14 +95,7 @@ public class Seed implements Serializable {
 				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDDM_SEED_ID", "SDDM_DOMN_ID" }) })
 	private Set<Domain> domains;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "SEED_SESSION"
-				, joinColumns = { @JoinColumn(name = "SDSS_SEED_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_SESSION_01")) }
-				, inverseJoinColumns = { @JoinColumn(name = "SDDM_SESS_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
-				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSS_SEED_ID", "SDDM_SESS_ID" }) })
-	private Set<Session> sessions;
+	
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "SEED_CONTACT"
@@ -158,7 +166,7 @@ public class Seed implements Serializable {
 	 */
 	public Seed(String firstName, String lastName, String email,
 			String password, Profile profile, Set<Subscription> subscriptions,
-			Set<Domain> domains, Set<Session> sessions, Set<Contact> contacts) {
+			Set<Domain> domains, Set<Contact> contacts) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -166,7 +174,6 @@ public class Seed implements Serializable {
 		this.profile = profile;
 		this.subscriptions = subscriptions;
 		this.domains = domains;
-		this.sessions = sessions;
 		this.contacts = contacts;
 	}
 
@@ -330,22 +337,6 @@ public class Seed implements Serializable {
 		this.domains = domains;
 	}
 
-	/**
-	 * @return the sessions
-	 */
-	public Set<Session> getSessions() {
-		if(sessions==null){
-			sessions = new HashSet<Session>();
-		}
-		return sessions;
-	}
-
-	/**
-	 * @param sessions the sessions to set
-	 */
-	public void setSessions(Set<Session> sessions) {
-		this.sessions = sessions;
-	}
 
 	/**
 	 * @return the contacts
@@ -395,6 +386,14 @@ public class Seed implements Serializable {
 			return false;
 		}
 		return true;
+	}
+
+	public Date getLastSession() {
+		return lastSession;
+	}
+
+	public void setLastSession(Date lastSession) {
+		this.lastSession = lastSession;
 	}
 
 }

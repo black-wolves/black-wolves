@@ -43,5 +43,5 @@ public interface ISeedService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	Seed getTurn(Seed dbSeed) throws ServiceException;
+	Seed refresh(Seed dbSeed) throws ServiceException;
 }
