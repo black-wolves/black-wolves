@@ -40,6 +40,7 @@ public class TestSeeder {
 	 */
 	@Test
 	public void testCheckMail() {
+//		String[] args = {"10.10.1.1", "yaninadefays02@yahoo.com,wolf2015.2"};
 //		String[] args = {"10.10.1.1", "danielsaulino03@yahoo.com,wolf2015.1"};
 		String[] args = {"10.10.1.1", "danielsaulino04@yahoo.com,wolf2015.1"};
 //		String[] args = {"10.10.1.1", "eonhmxb@yahoo.com,Sx4z3daYKrxeE5&"};
