@@ -16,7 +16,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.blackwolves.subscriber.SubscriberRunnable;
 
@@ -229,14 +228,6 @@ public class OldYahooRunnable extends YahooRunnable{
 		return capability;
 	}
 
-
-	@Override
-	public void addToAddressBook() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	@Override
 	public void replyToEmail() {
 		// TODO Auto-generated method stub
@@ -244,12 +235,11 @@ public class OldYahooRunnable extends YahooRunnable{
 	}
 
 	@Override
-	public void replyToEmailFromSubList()
-			{
+	public void replyToEmailFromSubList() {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 	@Override
 	public void forwardEmail() {
 		// TODO Auto-generated method stub
@@ -257,8 +247,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	}
 
 	@Override
-	public void forwardEmailFromSubList()
-			{
+	public void forwardEmailFromSubList() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -271,6 +260,12 @@ public class OldYahooRunnable extends YahooRunnable{
 
 	@Override
 	public void clickSpam() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveMessageToAllFolder() {
 		// TODO Auto-generated method stub
 		
 	}
