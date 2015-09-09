@@ -78,7 +78,8 @@ public class Seeder {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		}  
+		
 
 		WebDriver driver = createWebDriver();
 
