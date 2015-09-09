@@ -128,7 +128,7 @@ public class SeedService implements ISeedService{
 	 * @see com.blackwolves.service.ISeedService#getTurn(com.blackwolves.persistence.entity.Seed)
 	 */
 	@Override
-	public Seed getTurn(Seed dbSeed) throws ServiceException {
+	public Seed refresh(Seed dbSeed) throws ServiceException {
 		try {
 			return seedDao.refresh(dbSeed);
 		} catch (DaoException e) {

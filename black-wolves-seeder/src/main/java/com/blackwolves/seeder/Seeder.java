@@ -47,8 +47,8 @@ public class Seeder {
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
-		
-//		testPurposes();
+
+		// testPurposes();
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
@@ -64,56 +64,52 @@ public class Seeder {
 	private void checkMail(String myIp, String mySeed) {
 
 		String[] seed = mySeed.split(",");
-		
+
 		Seed dbSeed = seedService.getSeedFromDb(seed);
+		while (dbSeed.getPid() == 0) {
+			try {
+				logger.info("PID has not been set. Waiting 5 seconds and retrying");
+				Thread.sleep(5000);
+				dbSeed = seedService.refresh(dbSeed);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-		Session session = validateLastSession(myIp, dbSeed);
+		WebDriver driver = createWebDriver();
 
-		if (session == null) {
-			logger.info("This seed can't continue the process");
-		} else {
-			WebDriver driver = createWebDriver();
+		logger.info("Firefox Created");
 
-			logger.info("Firefox Created");
+		human = generateRandomHumanUser();
 
-			human = generateRandomHumanUser();
+		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
 
-			yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver, session);
+		handler = validateYahooVersion(driver, mySeed);
 
-			handler = validateYahooVersion(driver, mySeed);
+		if (handler != null) {
 
-			if (handler != null) {
+			while (true) {
 				try {
-					dbSeed.getSessions().add(session);
-					logger.info("Saving seed session in the database");
-					seedService.saveOrUpdate(dbSeed);
+					dbSeed = seedService.refresh(dbSeed);
 				} catch (ServiceException e) {
 					logger.error(e.getMessage(), e);
 				}
-				while(true)
-				{
+				if (dbSeed.isMyTurn()) {
+					handler.runProcess();
+					dbSeed.setMyTurn(false);
+					dbSeed.setWakeUp(DateUtils.addSeconds(new Date(), 20));
 					try {
-						dbSeed = seedService.getTurn(dbSeed);
+						seedService.saveOrUpdate(dbSeed);
 					} catch (ServiceException e) {
 						logger.error(e.getMessage(), e);
 					}
-					if (dbSeed.isMyTurn()) {
-						handler.runProcess();
-						dbSeed.setMyTurn(false);
-						dbSeed.setWakeUp(DateUtils.addSeconds(new Date(), 20));
-						try {
-							seedService.saveOrUpdate(dbSeed);
-						} catch (ServiceException e) {
-							logger.error(e.getMessage(), e);
-						}
-					} else {
-						driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-					}
+				} else {
+					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 				}
-				
-			} else {
-				logger.info("New Interface detected.Exiting");
 			}
+
+		} else {
+			logger.info("New Interface detected.Exiting");
 		}
 	}
 
@@ -143,27 +139,27 @@ public class Seeder {
 	 */
 	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
-		
-		
-		 FirefoxProfile profile = new FirefoxProfile();
-		  File modifyHeaders = new File("/var/www/modify_headers.xpi");
-		  profile.setEnableNativeEvents(false); 
-		  try {
-		    profile.addExtension(modifyHeaders); 
-		  } catch (IOException e) {
-		    e.printStackTrace(); 
-		  }
-		  profile.setPreference("modifyheaders.headers.count", 1);
-		   profile.setPreference("modifyheaders.headers.action0", "Add");
-		   profile.setPreference("modifyheaders.headers.name0", "sox");
-		   profile.setPreference("modifyheaders.headers.value0", "305471");
-		   profile.setPreference("modifyheaders.headers.enabled0", true);
-		   profile.setPreference("modifyheaders.config.active", true);
-		   profile.setPreference("modifyheaders.config.alwaysOn", true);
-		   profile.setPreference("general.useragent.override", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+
+		FirefoxProfile profile = new FirefoxProfile();
+		File modifyHeaders = new File("/var/www/modify_headers.xpi");
+		profile.setEnableNativeEvents(false);
+		try {
+			profile.addExtension(modifyHeaders);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		profile.setPreference("modifyheaders.headers.count", 1);
+		profile.setPreference("modifyheaders.headers.action0", "Add");
+		profile.setPreference("modifyheaders.headers.name0", "sox");
+		profile.setPreference("modifyheaders.headers.value0", "305471");
+		profile.setPreference("modifyheaders.headers.enabled0", true);
+		profile.setPreference("modifyheaders.config.active", true);
+		profile.setPreference("modifyheaders.config.alwaysOn", true);
+		profile.setPreference("general.useragent.override",
+				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		//capabilities.setBrowserName("Graneeeeeeekk");
+		// capabilities.setBrowserName("Graneeeeeeekk");
 		capabilities.setPlatform(org.openqa.selenium.Platform.ANY);
 		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 
@@ -178,31 +174,6 @@ public class Seeder {
 
 		driver.manage().window().maximize();
 		return driver;
-	}
-
-	/**
-	 * Validate if the seed has any session created. If it doesn't have any it
-	 * continues the process. If it has at least one it validates the last date
-	 * of the session to see if the seed can continue the process
-	 * 
-	 * @param myIp
-	 * @param dbSeed
-	 * @return {@link Session}
-	 */
-	private Session validateLastSession(String myIp, Seed dbSeed) {
-		if (dbSeed.getSessions().isEmpty()) {
-			logger.info("Creating new session with IP: " + myIp);
-			return new Session(myIp);
-		}
-		Session session = dbSeed.getSessions().iterator().next();
-		if (calculateDifferenceBetweenDates(session.getLastDate(), new Date()) <= dbSeed.getProfile()
-				.getHoursNextLogin()) {
-			logger.info("Last time the seed was logged it was less than " + dbSeed.getProfile().getHoursNextLogin()
-					+ " hours");
-			return null;
-		}
-		logger.info("Creating new session with IP: " + myIp);
-		return new Session(myIp);
 	}
 
 	/**
@@ -240,15 +211,15 @@ public class Seeder {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver, Session session) {
+	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
 		logger.info("Trying to login in....");
 		try {
 			logger.info("SCREENSHOT");
-			
-	//		getScreenShot(driver, "quepasa");
+
+			// getScreenShot(driver, "quepasa");
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
-			
+
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
@@ -270,7 +241,7 @@ public class Seeder {
 			logger.error("Something went wrong at login");
 			logger.error(e.getMessage(), e);
 		}
-		YahooRunnable.addActionToSession(session, "login");
+		// YahooRunnable.addActionToSession(session, "login");
 	}
 
 	/**
@@ -300,14 +271,14 @@ public class Seeder {
 		}
 		return handler;
 	}
-	
+
 	public static void getScreenShot(WebDriver driver, String name) {
 		logger.info("****************TAKING SCREENSHOT!*****************");
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE ); 
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// Now you can do whatever you need to do with it, for example copy
 		// somewhere
 		try {
-			FileUtils.copyFile(scrFile, new File("/var/www/"+ name + ".jpg"));
+			FileUtils.copyFile(scrFile, new File("/var/www/" + name + ".jpg"));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}

@@ -22,8 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-@Entity
-@Table(name = "SESSION")
+
 public class Session implements Serializable {
 
 	private static final long serialVersionUID = -16612492652696753L;
