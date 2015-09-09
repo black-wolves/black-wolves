@@ -180,7 +180,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		try{
 			logger.info("Clicking the forward button");
 //			String body = human.generateRandomBody(driver, wait);
-//			driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+//			Thread.sleep(randInt(2000, 3000));
 			
 			Thread.sleep(randInt(2000, 3000));
 			WebElement forward = driver.findElement(By.id("btn-forward"));
@@ -433,48 +433,56 @@ public class ModernYahooRunnable extends YahooRunnable {
 	@Override
 	public void processSpam(String[] seed) {
 		logger.info("Processing Spam....");
-		if (driver.findElements(By.id("spam-label")).size() > 0) {
-			WebDriverWait wait = new WebDriverWait(driver, 20);
-			WebElement spamFolder = null;
-			try {
-				logger.info("Getting the Bulk Url");
-				driver.findElement(By.id("spam-label")).click();
-				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-				spamFolder = driver.findElement(By.className("empty-folder"));
-			} catch (Exception e) {
-				logger.info("There are msgs in the spam folder, go get them Tiger!");
-			}
-
-			// Check if the spam folder is empty
-			if (spamFolder != null && spamFolder.isDisplayed()) {
-				logger.info("Spam Folder is empty! UOHOOO!");
-			} else {
-				wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
-				if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
-					logger.info("list-view-item-container found");
+		try{
+			if (driver.findElements(By.id("spam-label")).size() > 0) {
+				WebElement spam = driver.findElement(By.id("spam-label"));
+				spam.click();
+				Thread.sleep(randInt(2000, 3000));
+				if(driver.findElements(By.className("empty-folder")).size() > 0){
+					logger.info("Spam Folder is empty! UOHOOO!");
+				}else{
+					logger.info("There are msgs in the spam folder, go get them Tiger!");
+					
+					WebDriverWait wait = new WebDriverWait(driver, 20);
 					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
-					List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
-					logger.info("Percentage is " + PERCENTAGE);
-					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
-					for (int j = 0; j < percentage; ) {
-						driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
-						int chances =  randInt(0, 10);
-						boolean increment;
-						if (chances <= 7 ) {
-							increment = normalNotSpam(wait);
-						} else {
-							increment = dragAndDropNotSpam(wait);
+					if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
+						logger.info("list-view-item-container found");
+						wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
+						List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
+						logger.info("Percentage is " + PERCENTAGE);
+						int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+						for (int j = 0; j < percentage; ) {
+							driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+							logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
+							int chances =  randInt(0, 10);
+							boolean increment;
+							if (chances <= 7 ) {
+								increment = normalNotSpam(wait);
+							} else {
+								increment = dragAndDropNotSpam(wait);
+							}
+//							if(increment){
+							if(true){
+								j++;
+							}
 						}
-//						if(increment){
-						if(true){
-							j++;
-						}
+					} else {
+						logger.info("**********   No list-view-item-container found or no messages available   **********");
 					}
-				} else {
-					logger.info("**********   No mlink found or no messages available   **********");
 				}
+			}else{
+				logger.info("**********   spam-label is not available   **********");
 			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 

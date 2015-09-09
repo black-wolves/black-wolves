@@ -76,7 +76,7 @@ public class Seeder {
 				Thread.sleep(5000);
 				dbSeed = seedService.refresh(dbSeed);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -114,7 +114,11 @@ public class Seeder {
 					}
 				
 				} else {
-					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+					try {
+						Thread.sleep(20000);
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage(), e);
+					}
 				}
 			}
 
@@ -140,7 +144,7 @@ public class Seeder {
 		try {
 			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot_1.jpg"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -156,7 +160,7 @@ public class Seeder {
 		try {
 			profile.addExtension(modifyHeaders);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		profile.setPreference("modifyheaders.headers.count", 1);
 		profile.setPreference("modifyheaders.headers.action0", "Add");
@@ -320,6 +324,7 @@ public class Seeder {
 				human.type(email, "newsletter@"+d[0]);
 				WebElement save = modal.findElement(By.id("saveModalOverlay"));
 				save.click();
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 				if(driver.findElements(By.className("error")).size() > 0){
 					WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
 					cancel.click();
