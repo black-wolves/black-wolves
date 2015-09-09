@@ -58,6 +58,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 				
 				for (int j = 0; j < percentage; j++) {
 					
+					if (throwDice()) {
+						sendEmail();
+					}
+					
 					logger.info((percentage - j) + " emails to go ");
 					driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 					
@@ -85,18 +89,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 								clickShowImages("show-text");
 								
-//								if (throwDice()) {
-//									replyToEmail();
-//								}else if (throwDice()){
-//									forwardEmail();
-//								}
+								if (throwDice()) {
+									replyToEmail();
+								}else if (throwDice()){
+									forwardEmail();
+								}
 								
 //								if (throwDice()) {
 //									clickRandomLink();
-//								}
-								
-//								if (throwDice()) {
-//									sendEmail();
 //								}
 								
 								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -130,6 +130,145 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("**********   No mlink found or no messages available   **********");
 			}
 		}
+	}
+	
+	@Override
+	public void replyToEmail() {
+		logger.info("Clicking the reply button");
+//		String body = human.generateRandomBody(driver, wait);
+//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement reply = driver.findElement(By.id("btn-reply-sender"));
+		reply.click();
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement quickReply = driver.findElement(By.className("quickReply"));
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
+		bodyMail.click();
+//		human.type(bodyMail, body);
+		
+		logger.info("Replying the email");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+		send.click();
+	}
+	
+	@Override
+	public void forwardEmail() {
+		logger.info("Clicking the forward button");
+//		String body = human.generateRandomBody(driver, wait);
+//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement forward = driver.findElement(By.id("btn-forward"));
+		forward.click();
+		
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		String[] seed = seeds.get(randInt(0, seeds.size()-1));
+		String to = seed[0];
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement quickReply = driver.findElement(By.className("quickReply"));
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement toInput = quickReply.findElement(By.id("to-field"));
+		
+		logger.info("Filling to field");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		human.type(toInput,to);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		toInput.sendKeys(Keys.TAB);
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
+		bodyMail.click();
+//		human.type(bodyMail, body);
+		
+		logger.info("Forwarding the email");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+		send.click();
+	}
+	
+	@Override
+	public void sendEmail() {
+		logger.info("Clicking compose button");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement compose = driver.findElement(By.className("btn-compose"));
+		compose.click();
+		
+		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		String[] seed = seeds.get(randInt(0, seeds.size()-1));
+		String to = seed[0];
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement fullCompose = driver.findElement(By.className("full-compose"));
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement toInput = fullCompose.findElement(By.id("to-field"));
+		logger.info("Filling to field");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		human.type(toInput,to);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		toInput.sendKeys(Keys.TAB);
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement subjectInput = fullCompose.findElement(By.id("subject-field"));
+		logger.info("Filling subject field");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		human.type(subjectInput,"Need random subject");
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement bodyInput = fullCompose.findElement(By.id("rtetext"));
+		logger.info("Filling body field");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		human.type(bodyInput,"Need random body");
+		
+		logger.info("Sending the email");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		WebElement send = fullCompose.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+		send.click();
+	}
+	
+	@Override
+	public void clickSpam() {
+		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
+		for (WebElement ahref : elements) {
+			if (ahref.isDisplayed()) {
+				logger.info("Clicking more from submenu");
+				jse.executeScript("arguments[0].scrollIntoView(true);", ahref);
+				mouse.moveToElement(ahref);
+				ahref.findElement(By.tagName("a")).click();
+				List<WebElement> myList = driver.findElements(By.className("spamactions"));
+				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+				WebElement spam = submenuList.get(0);
+				logger.info("Clicking spam!");
+				spam.click();
+				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+			}
+		}
+		
+	}
+	
+	private boolean isWarmupDomain(WebElement msg) {
+		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
+		logger.info("Address from message is: " + address);
+		String[] s = address.split("@");
+		String domain = s.length > 1 ? s[1] : s[0];
+		logger.info("Domain to validate: " + domain);
+		List<String[]> domains = generateDomainsList();
+		for (String[] d : domains) {
+			if(domain.equals(d[0])){
+				logger.info("Is a warmup domain, we move forward :D");
+				return true;
+			}
+		}
+		logger.info("Is not a warmup domain!!!");
+		return false;
 	}
 
 	private void validateOkayModal() {
@@ -257,23 +396,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		return false;
 	}
 
-	private boolean isWarmupDomain(WebElement msg) {
-		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
-		logger.info("Address from message is: " + address);
-		String[] s = address.split("@");
-		String domain = s.length > 1 ? s[1] : s[0];
-		logger.info("Domain to validate: " + domain);
-		List<String[]> domains = generateDomainsList();
-		for (String[] d : domains) {
-			if(domain.equals(d[0])){
-				logger.info("Is a warmup domain, we move forward :D");
-				return true;
-			}
-		}
-		logger.info("Is not a warmup domain!!!");
-		return false;
-	}
-
 	private boolean normalNotSpam(WebDriverWait wait) {
 		try {
 			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
@@ -365,29 +487,35 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 	
 	@Override
-	public void replyToEmail() {
-		logger.info("Clicking the reply button");
-//		String body = human.generateRandomBody(driver, wait);
-//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement reply = driver.findElement(By.id("btn-reply-sender"));
-		reply.click();
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement quickReply = driver.findElement(By.className("quickReply"));
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-		bodyMail.click();
-//		human.type(bodyMail, body);
-		
-		logger.info("Replying the email");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
-		send.click();
+	public void addToAddressBook() {
+//		WebDriverWait wait = new WebDriverWait(driver, 30);
+//		logger.info("Going to contacts section");
+//		driver.findElement(By.className("nav-item-contacts")).click();
+//		
+//		
+////		logger.info(driver.findElements(By.className("listnav-label primary-property-btn")).size());
+//		logger.info(driver.findElements(By.className("listnav-label")).size());
+//		logger.info(driver.findElements(By.className("primary-property-btn")).size());
+//		
+////		logger.info(driver.findElements(By.className("icon icon-add-contact")).size());
+//		logger.info(driver.findElements(By.className("icon")).size());
+//		logger.info(driver.findElements(By.className("icon-add-contact")).size());
+//		
+//		logger.info(driver.findElements(By.className("add-contact-text")).size());
+//		//wait.until(ExpectedConditions.elementT(By.id("legend")));
+//		//driver.navigate().refresh();
+//		Thread.sleep(randInt(1500, 2500));
+//	//	SubscriberRunnable.writeToFile("lalala.html", driver.getPageSource());
+////		driver.findElement(By.partialLinkText("Contact nou"));
+//		Thread.sleep(randInt(1500, 2500));
+//		List <WebElement> inputs = driver.findElements(By.tagName("input"));
+//		for (WebElement webElement : inputs) {
+//			if (webElement.isDisplayed() && webElement.isEnabled()) {
+//				webElement.sendKeys("asdasdasd");
+//			}
+//		}
 	}
-	
+
 //	NOT WORKING
 	@Override
 	public void replyToEmailFromSubList() {
@@ -409,44 +537,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 //		human.type(bodyMail, body);
 		
 		logger.info("Replying the email from sublist");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
-		send.click();
-		
-	}
-	
-	@Override
-	public void forwardEmail() {
-		logger.info("Clicking the forward button");
-//		String body = human.generateRandomBody(driver, wait);
-//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement forward = driver.findElement(By.id("btn-forward"));
-		forward.click();
-		
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
-		String[] seed = seeds.get(randInt(0, seeds.size()-1));
-		String to = seed[0];
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement quickReply = driver.findElement(By.className("quickReply"));
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement toInput = quickReply.findElement(By.id("to-field"));
-		
-		logger.info("Filling to field");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		human.type(toInput,to);
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		toInput.sendKeys(Keys.TAB);
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-		bodyMail.click();
-//		human.type(bodyMail, body);
-		
-		logger.info("Forwarding the email");
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 		send.click();
@@ -489,87 +579,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 		send.click();
-	}
-	
-	@Override
-	public void sendEmail() {
-//		full-compose
-		logger.info("Clicking compose button");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement compose = driver.findElement(By.className("btn-compose"));
-		compose.click();
-		
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
-		String[] seed = seeds.get(randInt(0, seeds.size()-1));
-		String to = seed[0];
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement toInput = driver.findElement(By.id("to-field"));
-		logger.info("Filling to field");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		human.type(toInput,to);
-		
-		WebElement subjectInput = driver.findElement(By.id("subject-field"));
-		logger.info("Filling subject field");
-		human.type(subjectInput,"Need random subject");
-		WebElement bodyInput = driver.findElement(By.id("rtetext"));
-		logger.info("Filling body field");
-		human.type(bodyInput,"Need random body");
-		WebElement sendButton = driver.findElement(By.className("bottomToolbar")).findElement(By.tagName("span")).findElement(By.tagName("a"));
-		logger.info("Clicking send button");
-		sendButton.click();
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-	}
-	
-	@Override
-	public void clickSpam() {
-		List<WebElement> elements = driver.findElements(By.className("card-actions-menu"));
-		for (WebElement ahref : elements) {
-			if (ahref.isDisplayed()) {
-				logger.info("Clicking more from submenu");
-				jse.executeScript("arguments[0].scrollIntoView(true);", ahref);
-				mouse.moveToElement(ahref);
-				ahref.findElement(By.tagName("a")).click();
-				List<WebElement> myList = driver.findElements(By.className("spamactions"));
-				List<WebElement> submenuList = myList.get(0).findElements(By.tagName("li"));
-				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-				WebElement spam = submenuList.get(0);
-				logger.info("Clicking spam!");
-				spam.click();
-				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-			}
-		}
-		
-	}
-	
-	@Override
-	public void addToAddressBook() {
-//		WebDriverWait wait = new WebDriverWait(driver, 30);
-//		logger.info("Going to contacts section");
-//		driver.findElement(By.className("nav-item-contacts")).click();
-//		
-//		
-////		logger.info(driver.findElements(By.className("listnav-label primary-property-btn")).size());
-//		logger.info(driver.findElements(By.className("listnav-label")).size());
-//		logger.info(driver.findElements(By.className("primary-property-btn")).size());
-//		
-////		logger.info(driver.findElements(By.className("icon icon-add-contact")).size());
-//		logger.info(driver.findElements(By.className("icon")).size());
-//		logger.info(driver.findElements(By.className("icon-add-contact")).size());
-//		
-//		logger.info(driver.findElements(By.className("add-contact-text")).size());
-//		//wait.until(ExpectedConditions.elementT(By.id("legend")));
-//		//driver.navigate().refresh();
-//		Thread.sleep(randInt(1500, 2500));
-//	//	SubscriberRunnable.writeToFile("lalala.html", driver.getPageSource());
-////		driver.findElement(By.partialLinkText("Contact nou"));
-//		Thread.sleep(randInt(1500, 2500));
-//		List <WebElement> inputs = driver.findElements(By.tagName("input"));
-//		for (WebElement webElement : inputs) {
-//			if (webElement.isDisplayed() && webElement.isEnabled()) {
-//				webElement.sendKeys("asdasdasd");
-//			}
-//		}
 	}
 
 //	private void humanizeMe() {

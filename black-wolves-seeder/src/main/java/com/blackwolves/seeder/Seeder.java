@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.seeder;
 
 import java.io.File;
@@ -20,7 +17,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-//github.com/black-wolves/black-wolves.git
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
