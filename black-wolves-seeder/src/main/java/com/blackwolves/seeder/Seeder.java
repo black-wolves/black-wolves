@@ -53,7 +53,8 @@ public class Seeder {
 	public static void main(String[] args) {
 		
 //		testPurposes();
-		
+		logger.info("INITTTTTTT!!!!!!!!!!!!!!!!!");
+
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
