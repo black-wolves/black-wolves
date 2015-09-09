@@ -28,7 +28,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.blackwolves.persistence.entity.Seed;
-import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
