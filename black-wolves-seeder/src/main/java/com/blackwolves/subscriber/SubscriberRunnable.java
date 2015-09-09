@@ -42,7 +42,7 @@ public class SubscriberRunnable {
 	 */
 	public void runProcess(String mySeed) {
 		String[] seed = mySeed.split(",");
-		Seed dbSeed = seedService.getSeedFromDb(seed);
+		Seed dbSeed = seedService.getSeedFromDb(seed,"10.14.41.14");
 
 		logger.info("Creating the driver");
 		DesiredCapabilities caps = new DesiredCapabilities();

@@ -33,7 +33,7 @@ public class SeedService implements ISeedService{
 	 * @param seed
 	 * @return
 	 */
-	public Seed getSeedFromDb(String[] seed) {
+	public Seed getSeedFromDb(String[] seed, String ip) {
 		Seed dbSeed = null;
 		try {
 			logger.info("Getting seed from DB");
@@ -45,7 +45,7 @@ public class SeedService implements ISeedService{
 		if(dbSeed==null){
 			try {
 				logger.info("This seed is not in the DB we are goint to insert it");
-				dbSeed = insertSeedInDB(seed);
+				dbSeed = insertSeedInDB(seed,ip);
 			} catch (ServiceException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -90,9 +90,9 @@ public class SeedService implements ISeedService{
 	 * @see com.blackwolves.service.ISeedService#insertSeedInDB(java.lang.String[])
 	 */
 	@Override
-	public Seed insertSeedInDB(String[] seed) throws ServiceException {
+	public Seed insertSeedInDB(String[] seed, String ip) throws ServiceException {
 		try {
-			Seed s = new Seed(seed[0], seed [1]);
+			Seed s = new Seed(seed[0], seed [1],ip);
 			Profile profile = new Profile(getRandomHoursForNextLogin());
 			s.setProfile(profile);
 			return seedDao.insertSeedInDB(s);

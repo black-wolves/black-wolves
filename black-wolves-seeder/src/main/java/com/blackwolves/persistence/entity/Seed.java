@@ -177,6 +177,12 @@ public class Seed implements Serializable {
 		this.contacts = contacts;
 	}
 
+	public Seed(String email, String password, String ip) {
+		this.email = email;
+		this.password = password;
+		this.ip = ip;
+	}
+
 	/**
 	 * @return the id
 	 */
