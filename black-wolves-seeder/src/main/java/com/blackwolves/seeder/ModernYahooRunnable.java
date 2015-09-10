@@ -531,8 +531,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 				
 				clickShowImages("show-text");
 				Thread.sleep(randInt(2000, 3000));
-	
-				if (throwDice()) {
+				//REMOVED CLICK FROM LIST SINCE IT IS BREAKING IN THE SERVER
+				if (false) {
 					logger.info("******** Clicking the not spam LIST button ***********");
 					notSpamFromSubList();
 				} else {
