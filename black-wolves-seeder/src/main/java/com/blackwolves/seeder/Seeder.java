@@ -50,7 +50,7 @@ public class Seeder {
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
-
+		logger.info("TESTINGGGG");
 		 testPurposes();
 //		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 //		Seeder seeder = context.getBean(Seeder.class);
