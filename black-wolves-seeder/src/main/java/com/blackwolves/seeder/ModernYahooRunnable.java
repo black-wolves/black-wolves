@@ -90,6 +90,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 								logger.info("Clicking in Msg : " + currentMsg.getText());
 								currentMsg.findElement(By.className("subj")).click();
 								
+								clickRandomLink();
+								
 								clickShowImages("show-text");
 								
 								if (throwDice()) {
@@ -531,8 +533,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 				
 				clickShowImages("show-text");
 				Thread.sleep(randInt(2000, 3000));
-	
-				if (throwDice()) {
+				//REMOVED CLICK FROM LIST SINCE IT IS BREAKING IN THE SERVER
+				if (false) {
 					logger.info("******** Clicking the not spam LIST button ***********");
 					notSpamFromSubList();
 				} else {
@@ -602,7 +604,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			WebElement div = driver.findElement(By.className("thread-body"));
 			logger.info("Looking for links inside the message");
-			if (div.findElements(By.tagName("a")).size() != 0) {
+			if (div.findElements(By.tagName("a")).size() > 0) {
 				logger.info("Links found");
 				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
 				int randomLinkNo = randInt(0, linksToGo.size()-1);

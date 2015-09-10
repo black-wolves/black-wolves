@@ -50,8 +50,7 @@ public class Seeder {
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
-
-		// testPurposes();
+//		 testPurposes();
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
@@ -92,9 +91,9 @@ public class Seeder {
 
 		if (handler != null) {
 
-			addToAddressBook(driver);
+//			addToAddressBook(driver);
 			
-			createNewFolder(driver);
+//			createNewFolder(driver);
 			
 			while (true) {
 				logger.info("Waiting for my Turn");
@@ -131,19 +130,13 @@ public class Seeder {
 	/**
 	 * 
 	 */
-	private void testPurposes() {
+	private static void testPurposes() {
 		WebDriver driver = createWebDriver();
-
 		logger.info("Firefox Created");
-
-		human = generateRandomHumanUser();
-
 		driver.get("http://www.useragentstring.com/");
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		// The below method will save the screen shot in d drive with name
-		// "screenshot.png"
 		try {
-			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot_1.jpg"));
+			FileUtils.copyFile(scrFile, new File("/var/www/test_driver.jpg"));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -152,7 +145,7 @@ public class Seeder {
 	/**
 	 * @return
 	 */
-	private WebDriver createWebDriver() {
+	private static WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
 
 		FirefoxProfile profile = new FirefoxProfile();
@@ -210,7 +203,7 @@ public class Seeder {
 	private static Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
-		if (number <= 3) {
+		if (number <= 2) {
 			return new DumbHuman();
 		} else if (number >= 4 && number <= 8) {
 			return new AverageHuman();
