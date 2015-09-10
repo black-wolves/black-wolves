@@ -91,9 +91,9 @@ public class Seeder {
 
 		if (handler != null) {
 
-//			addToAddressBook(driver);
+			addToAddressBook(driver);
 			
-//			createNewFolder(driver);
+			createNewFolder(driver);
 			
 			while (true) {
 				logger.info("Waiting for my Turn");

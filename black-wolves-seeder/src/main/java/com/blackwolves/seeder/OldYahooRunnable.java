@@ -135,8 +135,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	}
 
 	/**
-	 * @param driver
-	 * @throws InterruptedException
+	 * 
 	 */
 	public void clickRandomLink() {
 		logger.info("Getting the content of the message");
@@ -153,7 +152,9 @@ public class OldYahooRunnable extends YahooRunnable{
 					logger.info("It is an Unsubscribe link!! - we are not clicking it");
 					logger.info(aUrl);
 				} else {
-					openInNewWindow(linksToGo.get(randomLinkNo));
+					openTab(aUrl);
+					switchToNewWindow();
+					switchToPreviousWindow();
 				}
 			}
 		} else {

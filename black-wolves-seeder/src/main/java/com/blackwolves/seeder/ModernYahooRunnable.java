@@ -90,8 +90,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 								logger.info("Clicking in Msg : " + currentMsg.getText());
 								currentMsg.findElement(By.className("subj")).click();
 								
-								clickRandomLink();
-								
 								clickShowImages("show-text");
 								
 								if (throwDice()) {
@@ -99,14 +97,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 								}else if (throwDice()){
 									forwardEmail();
 								}else if(throwDice()){
-//									clickRandomLink();
+									clickRandomLink();
 								}
 								
-//								moveMessageToAllFolder();
+								moveMessageToAllFolder();
 								
 								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 								logger.info("Going back to inbox");
-//								mouse.moveToElement(driver.findElement(By.className("inbox-label"))).build().perform();
 								driver.findElement(By.className("inbox-label")).click();
 								
 								checkForInboxReloadError();
@@ -238,28 +235,28 @@ public class ModernYahooRunnable extends YahooRunnable {
 			Thread.sleep(randInt(2000, 3000));
 			WebElement fullCompose = driver.findElement(By.className("full-compose"));
 			
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement toInput = fullCompose.findElement(By.id("to-field"));
 			logger.info("Filling to field");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			human.type(toInput,to);
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			toInput.sendKeys(Keys.TAB);
 			
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement subjectInput = fullCompose.findElement(By.id("subject-field"));
 			logger.info("Filling subject field");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			human.type(subjectInput,"Need random subject");
 			
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement bodyInput = fullCompose.findElement(By.id("rtetext"));
 			logger.info("Filling body field");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			human.type(bodyInput,"Need random body");
 			
 			logger.info("Sending the email");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement send = fullCompose.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
@@ -276,8 +273,54 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 	
 	@Override
+	public void clickRandomLink() {
+		try{
+			logger.info("Getting the content of the message");
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
+			WebElement div = driver.findElement(By.className("thread-body"));
+			logger.info("Looking for links inside the message");
+			Thread.sleep(YahooRunnable.randInt(1500, 2500));
+			if (div.findElements(By.tagName("a")).size() > 0) {
+				logger.info("Links found");
+				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
+				int randomLinkNo = randInt(0, linksToGo.size()-1);
+				String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
+				if (aUrl != null) {
+					if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
+						logger.info("It is an Unsubscribe link!! - we are not clicking it" + aUrl);
+					} else {
+						logger.info("It's a good link, click it!! " + aUrl);
+						openTab(aUrl);
+						switchToNewWindow();
+						switchToPreviousWindow();
+					}
+				}
+			} else {
+				logger.info("**********   No links found or none available  **********");
+			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	@Override
 	public void moveMessageToAllFolder() {
 		try{
+			logger.info("Clicking move button");
+			Thread.sleep(randInt(1000, 2000));
+			driver.findElement(By.id("btn-move")).click();
+			logger.info("Moving message to All folder");
+			Thread.sleep(randInt(1500, 2500));
+			driver.findElement(By.id("menu-move")).findElement(By.id("menu-move-folder")).findElement(By.tagName("li")).click();
+			logger.info("Message moved!!");
 			Thread.sleep(randInt(2000, 3000));
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -598,44 +641,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	public void clickRandomLink() {
-		try{
-			logger.info("Getting the content of the message");
-			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			WebElement div = driver.findElement(By.className("thread-body"));
-			logger.info("Looking for links inside the message");
-			if (div.findElements(By.tagName("a")).size() > 0) {
-				logger.info("Links found");
-				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-				int randomLinkNo = randInt(0, linksToGo.size()-1);
-				String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
-				if (aUrl != null) {
-					if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
-						logger.info("It is an Unsubscribe link!! - we are not clicking it");
-						logger.info(aUrl);
-					} else {
-						openInNewWindow(linksToGo.get(randomLinkNo));
-//						openTab(aUrl);
-//						switchToNewWindow();
-//						switchToPreviousWindow();
-					}
-				}
-			} else {
-				logger.info("**********   No links found or none available  **********");
-			}
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
-		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
-		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
-		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
-		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-	
 //	NOT WORKING
 	@Override
 	public void replyToEmailFromSubList() {
