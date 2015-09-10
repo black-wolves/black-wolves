@@ -50,13 +50,12 @@ public class Seeder {
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
-		logger.info("TESTINGGGG");
-		 testPurposes();
-//		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-//		Seeder seeder = context.getBean(Seeder.class);
-//		seeder.checkMail(args[0], args[1]);
-//		logger.info("Finished checking mails");
-//		return;
+//		 testPurposes();
+		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
+		Seeder seeder = context.getBean(Seeder.class);
+		seeder.checkMail(args[0], args[1]);
+		logger.info("Finished checking mails");
+		return;
 	}
 
 	/**
@@ -133,15 +132,9 @@ public class Seeder {
 	 */
 	private static void testPurposes() {
 		WebDriver driver = createWebDriver();
-
 		logger.info("Firefox Created");
-
-		human = generateRandomHumanUser();
-
 		driver.get("http://www.useragentstring.com/");
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		// The below method will save the screen shot in d drive with name
-		// "screenshot.png"
 		try {
 			FileUtils.copyFile(scrFile, new File("/var/www/test_driver.jpg"));
 		} catch (IOException e) {
@@ -210,7 +203,7 @@ public class Seeder {
 	private static Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
-		if (number <= 3) {
+		if (number <= 2) {
 			return new DumbHuman();
 		} else if (number >= 4 && number <= 8) {
 			return new AverageHuman();
