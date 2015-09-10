@@ -51,7 +51,7 @@ public class Seed implements Serializable {
 	@Column(name = "SEED_MY_TURN", nullable = false)
 	private boolean myTurn = true;
 	
-	@Column(name = "SEED_PID")
+	@Column(name = "SEED_PID", updatable=false )
 	private int pid;
 	
 	@Column(name = "SEED_IP")
