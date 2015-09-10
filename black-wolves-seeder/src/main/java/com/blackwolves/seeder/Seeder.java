@@ -51,12 +51,12 @@ public class Seeder {
 
 	public static void main(String[] args) {
 
-		// testPurposes();
-		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-		Seeder seeder = context.getBean(Seeder.class);
-		seeder.checkMail(args[0], args[1]);
-		logger.info("Finished checking mails");
-		return;
+		 testPurposes();
+//		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
+//		Seeder seeder = context.getBean(Seeder.class);
+//		seeder.checkMail(args[0], args[1]);
+//		logger.info("Finished checking mails");
+//		return;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class Seeder {
 	/**
 	 * 
 	 */
-	private void testPurposes() {
+	private static void testPurposes() {
 		WebDriver driver = createWebDriver();
 
 		logger.info("Firefox Created");
@@ -143,7 +143,7 @@ public class Seeder {
 		// The below method will save the screen shot in d drive with name
 		// "screenshot.png"
 		try {
-			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot_1.jpg"));
+			FileUtils.copyFile(scrFile, new File("/var/www/test_driver.jpg"));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -152,7 +152,7 @@ public class Seeder {
 	/**
 	 * @return
 	 */
-	private WebDriver createWebDriver() {
+	private static WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
 
 		FirefoxProfile profile = new FirefoxProfile();
