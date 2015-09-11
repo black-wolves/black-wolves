@@ -37,6 +37,15 @@ public interface ISeedService {
 	 * @throws ServiceException
 	 */
 	Seed insertSeedInDB(String[] seed, String ip) throws ServiceException;
+	
+	/**
+	 * Inserts the given seed into the database without any ip
+	 * @param seed
+	 * @param ip
+	 * @return {@link Seed}
+	 * @throws ServiceException
+	 */
+	 Seed insertSeedInDB(Seed seed) throws ServiceException;
 
 	/**
 	 * 

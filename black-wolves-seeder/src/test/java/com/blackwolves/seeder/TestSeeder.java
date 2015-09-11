@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.blackwolves.persistence.util.CsvReader;
 import com.blackwolves.up.Up;
 
 /**
@@ -39,6 +40,7 @@ public class TestSeeder {
 	 * Checks mails
 	 */
 	@Test
+	@Ignore
 	public void testCheckMail() {
 //		String[] args = {"10.10.1.1", "yaninadefays02@yahoo.com,wolf2015.2"};
 //		String[] args = {"10.10.1.1", "danielsaulino03@yahoo.com,wolf2015.2"};
@@ -60,5 +62,12 @@ public class TestSeeder {
 	public void testFingerPrint()
 	{
 		seeder.getFingerPrint();
+	}
+	
+	@Test
+	@Ignore
+	public void testCsvReader()
+	{
+		CsvReader.getSeedsFromFile();
 	}
 }

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -37,7 +40,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  *
  */
 @Component
-public class Seeder {
+public class Seeder implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 
@@ -48,9 +51,24 @@ public class Seeder {
 
 	private static Human human;
 	private static ApplicationContext context;
+	
+	private Seed dbSeed ;
+
+	public void run() {
+		// task to run goes here
+		int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
+		logger.info("Waiting for the Date to reactivate. Time to wait : "+diff+ " minutes");
+		if (diff >= 0) {
+			handler.runProcess();
+			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
+
+		}
+	}
+
+	
 
 	public static void main(String[] args) {
-//		 testPurposes();
+		// testPurposes();
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
 		seeder.checkMail(args[0], args[1]);
@@ -67,17 +85,16 @@ public class Seeder {
 
 		String[] seed = mySeed.split(",");
 
-		Seed dbSeed = seedService.getSeedFromDb(seed,myIp);
+		dbSeed = seedService.getSeedFromDb(seed, myIp);
 		while (dbSeed.getPid() == 0) {
 			try {
-				logger.info("PID has not been set. Waiting 5 seconds and retrying");
-				Thread.sleep(5000);
+				logger.info("PID has not been set. Waiting 10 seconds and retrying");
+				Thread.sleep(10000);
 				dbSeed = seedService.refresh(dbSeed);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
-		}  
-		
+		}
 
 		WebDriver driver = createWebDriver();
 
@@ -92,34 +109,25 @@ public class Seeder {
 		if (handler != null) {
 
 			addToAddressBook(driver);
-			
+
 			createNewFolder(driver);
+
+			try {
+				dbSeed = seedService.refresh(dbSeed);
+			} catch (ServiceException e) {
+				logger.error(e.getMessage(), e);
+			}
+
+			handler.runProcess();
+			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			
-			while (true) {
-				logger.info("Waiting for my Turn");
-				try {
-					dbSeed = seedService.refresh(dbSeed);
-				} catch (ServiceException e) {
-					logger.error(e.getMessage(), e);
-				}
-				
-				if (dbSeed.isMyTurn()) {
-					handler.runProcess();
-					dbSeed.setMyTurn(false);
-					dbSeed.setWakeUp(DateUtils.addSeconds(new Date(), 20));
-					try {
-						seedService.saveOrUpdate(dbSeed);
-					} catch (ServiceException e) {
-						logger.error(e.getMessage(), e);
-					}
-				
-				} else {
-					try {
-						Thread.sleep(20000);
-					} catch (InterruptedException e) {
-						logger.error(e.getMessage(), e);
-					}
-				}
+			try {
+				seedService.saveOrUpdate(dbSeed);
+				ScheduledExecutorService service = Executors
+	                    .newSingleThreadScheduledExecutor();
+	    service.scheduleAtFixedRate(this, 1, 30, TimeUnit.SECONDS);
+			} catch (ServiceException e) {
+				logger.error(e.getMessage(), e);
 			}
 
 		} else {
@@ -200,6 +208,14 @@ public class Seeder {
 		return diffHours;
 	}
 
+	private static int calculateDifferenceBetweenDatesInMinutes(Date from, Date to) {
+		long diff = to.getTime() - from.getTime();
+		//int diffHours = (int) (diff / (60 * 60 * 1000));
+		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		 int diffMin = (int) (diff / (60 * 1000));
+		// int diffSec = (int) (diff / (1000));
+		return diffMin;
+	}
 	private static Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
@@ -226,7 +242,7 @@ public class Seeder {
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
-			
+
 			logger.info("SCREENSHOT");
 			getScreenShot(driver, "quepasa");
 
@@ -263,7 +279,7 @@ public class Seeder {
 	 * @param seed
 	 */
 	private static YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
-		try{
+		try {
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
@@ -289,7 +305,7 @@ public class Seeder {
 		}
 		return handler;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -299,18 +315,19 @@ public class Seeder {
 		WebElement element;
 		for (String[] d : domains) {
 			try {
-				element = driver.findElement(By.className("list-view-item-container")).findElement(By.className("first"));
+				element = driver.findElement(By.className("list-view-item-container"))
+						.findElement(By.className("first"));
 				rightClick(driver, element);
 				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 				WebElement menu = driver.findElement(By.id("menu-msglist"));
-				
+
 				List<WebElement> li = menu.findElements(By.className("onemsg"));
 				WebElement addContact = li.get(3);
 				addContact.click();
 				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				
+
 				WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
-				
+
 				WebElement givenName = modal.findElement(By.id("givenName"));
 				givenName.clear();
 				human.type(givenName, d[0]);
@@ -320,16 +337,16 @@ public class Seeder {
 				familyName.clear();
 				WebElement email = modal.findElement(By.className("field-lg"));
 				email.clear();
-				human.type(email, "newsletter@"+d[0]);
+				human.type(email, "newsletter@" + d[0]);
 				WebElement save = modal.findElement(By.id("saveModalOverlay"));
 				save.click();
 				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				if(driver.findElements(By.className("error")).size() > 0){
+				if (driver.findElements(By.className("error")).size() > 0) {
 					WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
 					cancel.click();
 					logger.info("Contact was not added: " + d[0]);
 					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				}else{
+				} else {
 					WebElement done = driver.findElement(By.id("doneModalOverlay"));
 					done.click();
 					logger.info("Contact added: " + d[0]);
@@ -348,9 +365,9 @@ public class Seeder {
 			}
 		}
 	}
-	
+
 	private void createNewFolder(WebDriver driver) {
-		try{
+		try {
 			logger.info("Creating new folder");
 			WebElement newFolder = driver.findElement(By.id("btn-newfolder"));
 			newFolder.click();
@@ -360,12 +377,12 @@ public class Seeder {
 			WebElement ok = driver.findElement(By.id("okayModalOverlay"));
 			ok.click();
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			if(driver.findElements(By.id("newFolderErr")).size() > 0){
+			if (driver.findElements(By.id("newFolderErr")).size() > 0) {
 				logger.info("Folder already exists");
 				WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
 				cancel.click();
 				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			}else{
+			} else {
 				logger.info("Folder created");
 				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			}
@@ -381,7 +398,7 @@ public class Seeder {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param element
