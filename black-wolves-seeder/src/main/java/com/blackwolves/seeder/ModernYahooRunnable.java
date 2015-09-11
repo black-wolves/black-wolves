@@ -139,20 +139,22 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public void replyToEmail() {
 		try{
 			logger.info("Clicking the reply button");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement reply = driver.findElement(By.id("btn-reply-sender"));
 			reply.click();
 			
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement quickReply = driver.findElement(By.className("quickReply"));
 			
-			Thread.sleep(randInt(2000, 3000));
-			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-			bodyMail.click();
-			human.type(bodyMail, human.generateRandomBody());
+			Thread.sleep(randInt(1500, 2500));
+			JavascriptExecutor jse = (JavascriptExecutor)driver;
+			String body = human.generateRandomBody();
+			jse.executeScript("document.getElementById('rtetext').getElementsByTagName('p')[0].outerHTML = \" " + body + " \";");
+			logger.info("Filling body field");
+			Thread.sleep(randInt(1500, 2500));
 			
 			logger.info("Replying the email");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1500, 2500));
 			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
@@ -172,9 +174,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public void forwardEmail() {
 		try{
 			logger.info("Clicking the forward button");
-//			String body = human.generateRandomBody(driver, wait);
-//			Thread.sleep(randInt(2000, 3000));
-			
 			Thread.sleep(randInt(2000, 3000));
 			WebElement forward = driver.findElement(By.id("btn-forward"));
 			forward.click();
@@ -192,11 +191,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 			human.type(toInput,to);
 			Thread.sleep(randInt(2000, 3000));
 			toInput.sendKeys(Keys.TAB);
-			
-			Thread.sleep(randInt(2000, 3000));
-			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-			bodyMail.click();
-//			human.type(bodyMail, body);
 			
 			logger.info("Forwarding the email");
 			Thread.sleep(randInt(2000, 3000));
