@@ -28,11 +28,11 @@
 			<artifactId>xml-apis</artifactId>
 			<version>1.4.01</version>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.0.6</version>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>4.2.1</version>
 		</dependency>
         
         <!-- Logging -->
@@ -218,7 +218,6 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<finalName>seeder_wolf</finalName>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 							      <resource>META-INF/spring.handlers</resource>
@@ -232,16 +231,6 @@
 								</transformer>
 							</transformers>
 							<minimizeJar>true</minimizeJar>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-					         </filters>
 						</configuration>
 					</execution>
 				</executions>
