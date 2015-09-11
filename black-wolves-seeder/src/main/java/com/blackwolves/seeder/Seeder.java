@@ -308,47 +308,50 @@ public class Seeder implements Runnable {
 	 * 
 	 */
 	public void addToAddressBook(WebDriver driver) {
-		logger.info("Adding domains to address book");
 		List<String[]> domains = YahooRunnable.generateDomainsList();
 		WebElement element;
 		for (String[] d : domains) {
 			try {
-				element = driver.findElement(By.className("list-view-item-container"))
-						.findElement(By.className("first"));
-				rightClick(driver, element);
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				WebElement menu = driver.findElement(By.id("menu-msglist"));
-
-				List<WebElement> li = menu.findElements(By.className("onemsg"));
-				WebElement addContact = li.get(3);
-				addContact.click();
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-
-				WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
-
-				WebElement givenName = modal.findElement(By.id("givenName"));
-				givenName.clear();
-				human.type(givenName, d[0]);
-				WebElement middleName = modal.findElement(By.id("middleName"));
-				middleName.clear();
-				WebElement familyName = modal.findElement(By.id("familyName"));
-				familyName.clear();
-				WebElement email = modal.findElement(By.className("field-lg"));
-				email.clear();
-				human.type(email, "newsletter@" + d[0]);
-				WebElement save = modal.findElement(By.id("saveModalOverlay"));
-				save.click();
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				if (driver.findElements(By.className("error")).size() > 0) {
-					WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
-					cancel.click();
-					logger.info("Contact was not added: " + d[0]);
+				if(driver.findElements(By.className("list-view-item-container")).size() > 0){
+					logger.info("Adding domains to address book");
+					element = driver.findElement(By.className("list-view-item-container")).findElement(By.className("first"));
+					rightClick(driver, element);
 					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				} else {
-					WebElement done = driver.findElement(By.id("doneModalOverlay"));
-					done.click();
-					logger.info("Contact added: " + d[0]);
+					WebElement menu = driver.findElement(By.id("menu-msglist"));
+	
+					List<WebElement> li = menu.findElements(By.className("onemsg"));
+					WebElement addContact = li.get(3);
+					addContact.click();
 					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+	
+					WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
+	
+					WebElement givenName = modal.findElement(By.id("givenName"));
+					givenName.clear();
+					human.type(givenName, d[0]);
+					WebElement middleName = modal.findElement(By.id("middleName"));
+					middleName.clear();
+					WebElement familyName = modal.findElement(By.id("familyName"));
+					familyName.clear();
+					WebElement email = modal.findElement(By.className("field-lg"));
+					email.clear();
+					human.type(email, "newsletter@" + d[0]);
+					WebElement save = modal.findElement(By.id("saveModalOverlay"));
+					save.click();
+					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+					if (driver.findElements(By.className("error")).size() > 0) {
+						WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
+						cancel.click();
+						logger.info("Contact was not added: " + d[0]);
+						Thread.sleep(YahooRunnable.randInt(2500, 3500));
+					} else {
+						WebElement done = driver.findElement(By.id("doneModalOverlay"));
+						done.click();
+						logger.info("Contact added: " + d[0]);
+						Thread.sleep(YahooRunnable.randInt(2500, 3500));
+					}
+				}else{
+					logger.info("No emails in inbox, we can't add the domains to the address book");
 				}
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage(), e);
