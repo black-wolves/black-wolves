@@ -65,8 +65,6 @@ public class Seeder implements Runnable {
 		}
 	}
 
-	
-
 	public static void main(String[] args) {
 		// testPurposes();
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");

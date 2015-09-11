@@ -7,6 +7,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -138,9 +139,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public void replyToEmail() {
 		try{
 			logger.info("Clicking the reply button");
-//			String body = human.generateRandomBody(driver, wait);
-//			Thread.sleep(randInt(2000, 3000));
-			
 			Thread.sleep(randInt(2000, 3000));
 			WebElement reply = driver.findElement(By.id("btn-reply-sender"));
 			reply.click();
@@ -151,7 +149,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			Thread.sleep(randInt(2000, 3000));
 			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
 			bodyMail.click();
-//			human.type(bodyMail, body);
+			human.type(bodyMail, human.generateRandomBody());
 			
 			logger.info("Replying the email");
 			Thread.sleep(randInt(2000, 3000));
@@ -181,9 +179,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement forward = driver.findElement(By.id("btn-forward"));
 			forward.click();
 			
-			List<String[]> seeds = YahooRunnable.generateSeedsList();
-			String[] seed = seeds.get(randInt(0, seeds.size()-1));
-			String to = seed[0];
+			String to = human.generateRandomTo(seed);
 			
 			Thread.sleep(randInt(2000, 3000));
 			WebElement quickReply = driver.findElement(By.className("quickReply"));
@@ -228,9 +224,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement compose = driver.findElement(By.className("btn-compose"));
 			compose.click();
 			
-			List<String[]> seeds = YahooRunnable.generateSeedsList();
-			String[] seed = seeds.get(randInt(0, seeds.size()-1));
-			String to = seed[0];
+			String to = human.generateRandomTo(seed);
 			
 			Thread.sleep(randInt(2000, 3000));
 			WebElement fullCompose = driver.findElement(By.className("full-compose"));
@@ -247,13 +241,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement subjectInput = fullCompose.findElement(By.id("subject-field"));
 			logger.info("Filling subject field");
 			Thread.sleep(randInt(1500, 2500));
-			human.type(subjectInput,"Need random subject");
+			human.type(subjectInput, human.generateRandomSubject());
 			
 			Thread.sleep(randInt(1500, 2500));
-			WebElement bodyInput = fullCompose.findElement(By.id("rtetext"));
+			JavascriptExecutor jse = (JavascriptExecutor)driver;
+			String body = human.generateRandomBody();
+			jse.executeScript("document.getElementById('rtetext').getElementsByTagName('p')[0].outerHTML = \" " + body + " \";");
 			logger.info("Filling body field");
 			Thread.sleep(randInt(1500, 2500));
-			human.type(bodyInput,"Need random body");
 			
 			logger.info("Sending the email");
 			Thread.sleep(randInt(1500, 2500));
@@ -271,7 +266,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
 	public void clickRandomLink() {
 		try{
@@ -679,9 +674,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		WebElement forward = elements.get(2);
 		forward.click();
 		
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
-		String[] seed = seeds.get(randInt(0, seeds.size()-1));
-		String to = seed[0];
+		String to = human.generateRandomTo(seed);
 		
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		WebElement quickReply = driver.findElement(By.className("quickReply"));

@@ -3,6 +3,8 @@
  */
 package com.blackwolves.seeder;
 
+import java.io.IOException;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.persistence.util.CsvReader;
 import com.blackwolves.up.Up;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 /**
  * @author gaston.dapice
@@ -48,9 +53,9 @@ public class TestSeeder {
 //		String[] args = {"10.10.1.1", "eonhmxb@yahoo.com,Sx4z3daYKrxeE5&"};
 //		String[] args = {"10.10.1.1", "azuwqaglw@yahoo.com,Bs%wfXf29qJj#$x"};
 //		String[] args = {"10.10.1.1", "jepvhfn@yahoo.com,T9&Gsa95ky3PQgc"};
-		
 		Seeder.main(args);
 	}
+	
 	@Ignore
 	@Test
 	public void testSubscriptions()

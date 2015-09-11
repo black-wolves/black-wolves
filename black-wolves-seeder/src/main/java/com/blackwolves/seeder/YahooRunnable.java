@@ -40,7 +40,7 @@ public abstract class YahooRunnable {
 
 	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.2);
 	
-	private String seed = "";
+	protected String seed = "";
 	
 	protected Human human;
 
