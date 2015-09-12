@@ -423,9 +423,23 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 */
 	private WebElement validateInboxFolder(WebElement inboxFolder) {
 		if(driver.findElements(By.className("inbox-label")).size() > 0){
-			driver.findElement(By.className("inbox-label")).click();
-			if(driver.findElements(By.className("empty-folder")).size() > 0){
-				inboxFolder = driver.findElement(By.className("empty-folder"));
+			try{
+				WebElement inbox = driver.findElement(By.className("inbox-label"));
+				inbox.click();
+				Thread.sleep(randInt(2000, 3000));
+				if(inbox.findElements(By.className("empty-folder")).size() > 0){
+					inboxFolder = driver.findElement(By.className("empty-folder"));
+				}
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+			} catch (NoSuchElementException e) {
+				logger.error(e.getMessage(), e);
+			} catch (StaleElementReferenceException e) {
+				logger.error(e.getMessage(), e);
+			} catch (ElementNotVisibleException e) {
+				logger.error(e.getMessage(), e);
+			} catch (ElementNotFoundException e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return inboxFolder;
@@ -472,7 +486,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				WebElement spam = driver.findElement(By.id("spam-label"));
 				spam.click();
 				Thread.sleep(randInt(2000, 3000));
-				if(driver.findElements(By.className("empty-folder")).size() > 0){
+				if(spam.findElements(By.className("empty-folder")).size() > 0){
 					logger.info("Spam Folder is empty! UOHOOO!");
 				}else{
 					logger.info("There are msgs in the spam folder, go get them Tiger!");
