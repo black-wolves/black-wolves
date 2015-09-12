@@ -1,7 +1,6 @@
 package com.blackwolves.seeder;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -42,15 +41,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 		
 		WebElement inboxFolder = null;
 		inboxFolder = validateInboxFolder(inboxFolder);
-		//Close validate Modal
 		
 		// Check if inbox is empty
 		if (inboxFolder != null && inboxFolder.isDisplayed()) {
 			logger.info("Inbox Folder is empty.");
-		}
-		
-		// If not empty, proceed
-		else {
+		}else {	// If not empty, proceed
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
 
@@ -64,15 +59,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 				
 				for (int j = 0; j < percentage; j++) {
 					
-					if (throwDice()) {
-						sendEmail();
-					}
-					
-					logger.info((percentage - j) + " emails to go ");
-					driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-					
-					if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
-						try {
+					try {
+						if (throwDice()) {
+							sendEmail();
+						}
+						
+						logger.info((percentage - j) + " emails to go ");
+						Thread.sleep(randInt(2500, 3500));
+						
+						if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
 							mouse.moveByOffset(200 + randInt(0, 300), 300 + randInt(0, 400));
 							
 							logger.info("list-view-item-container found");
@@ -81,7 +76,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 							
-							driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+							Thread.sleep(randInt(2500, 3500));
 							
 							logger.info("Getting the random message");
 							WebElement currentMsg = inboxMsgs.get(randomPosition);
@@ -103,7 +98,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								
 								moveMessageToAllFolder();
 								
-								driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+								Thread.sleep(randInt(2500, 3500));
 								logger.info("Going back to inbox");
 								driver.findElement(By.className("inbox-label")).click();
 								
@@ -114,19 +109,34 @@ public class ModernYahooRunnable extends YahooRunnable {
 									logger.info("Clicking in Msg : " + currentMsg.getText());
 									currentMsg.findElement(By.className("subj")).click();
 									
-									driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+									Thread.sleep(randInt(2500, 3500));
 									
 									clickSpam();
 								}
 							}
-						}catch (Exception e) {
-							logger.error(e.getMessage(), e);
-							logger.info("Need to sync the thread...Going to inbox to keep going ");
-							driver.findElement(By.className("inbox-label")).click();
-							checkForInboxReloadError();
+						} else {
+							logger.info("**********   No mlink found or no messages available   **********");
 						}
-					} else {
-						logger.info("**********   No mlink found or no messages available   **********");
+					}catch (InterruptedException e) {
+						logger.error(e.getMessage(), e);
+						driver.findElement(By.className("inbox-label")).click();
+						checkForInboxReloadError();
+					} catch (NoSuchElementException e) {
+						logger.error(e.getMessage(), e);
+						driver.findElement(By.className("inbox-label")).click();
+						checkForInboxReloadError();
+					} catch (StaleElementReferenceException e) {
+						logger.error(e.getMessage(), e);
+						driver.findElement(By.className("inbox-label")).click();
+						checkForInboxReloadError();
+					} catch (ElementNotVisibleException e) {
+						logger.error(e.getMessage(), e);
+						driver.findElement(By.className("inbox-label")).click();
+						checkForInboxReloadError();
+					} catch (ElementNotFoundException e) {
+						logger.error(e.getMessage(), e);
+						driver.findElement(By.className("inbox-label")).click();
+						checkForInboxReloadError();
 					}
 				}
 			} else {
@@ -482,44 +492,42 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public void processSpam(String[] seed) {
 		logger.info("Processing Spam....");
 		try{
-			if (driver.findElements(By.id("spam-label")).size() > 0) {
-				WebElement spam = driver.findElement(By.id("spam-label"));
-				spam.click();
-				Thread.sleep(randInt(2000, 3000));
-				if(spam.findElements(By.className("empty-folder")).size() > 0){
-					logger.info("Spam Folder is empty! UOHOOO!");
-				}else{
-					logger.info("There are msgs in the spam folder, go get them Tiger!");
-					
-					WebDriverWait wait = new WebDriverWait(driver, 20);
-					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
-					if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
-						logger.info("list-view-item-container found");
-						wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
-						List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
-						logger.info("Percentage is " + PERCENTAGE);
-						int percentage = (int) (spamMsgs.size() * PERCENTAGE);
-						for (int j = 0; j < percentage; ) {
-							driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-							logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
-							int chances =  randInt(0, 10);
-							boolean increment;
-							if (chances <= 7 ) {
-								increment = normalNotSpam(wait);
-							} else {
-								increment = dragAndDropNotSpam(wait);
-							}
-//							if(increment){
-							if(true){
-								j++;
-							}
-						}
-					} else {
-						logger.info("**********   No list-view-item-container found or no messages available   **********");
-					}
-				}
+				
+			WebElement spamFolder = null;
+			spamFolder = validateSpamFolder(spamFolder);
+				
+			// Check if spam is empty
+			if (spamFolder != null && spamFolder.isDisplayed()) {
+				logger.info("Spam Folder is empty! UOHOOO!");
 			}else{
-				logger.info("**********   spam-label is not available   **********");
+				logger.info("There are msgs in the spam folder, go get them Tiger!");
+				
+				WebDriverWait wait = new WebDriverWait(driver, 20);
+				wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
+				if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
+					logger.info("list-view-item-container found");
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
+					List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
+					logger.info("Percentage is " + PERCENTAGE);
+					int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+					for (int j = 0; j < percentage; ) {
+						Thread.sleep(randInt(2000, 3000));
+						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
+						int chances =  randInt(0, 10);
+						boolean increment;
+						if (chances <= 7 ) {
+							increment = normalNotSpam(wait);
+						} else {
+							increment = dragAndDropNotSpam(wait);
+						}
+//							if(increment){
+						if(true){
+							j++;
+						}
+					}
+				} else {
+					logger.info("**********   No list-view-item-container found or no messages available   **********");
+				}
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -532,6 +540,35 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (ElementNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * @param driver
+	 * @param spamFolder
+	 * @return
+	 */
+	private WebElement validateSpamFolder(WebElement spamFolder) {
+		if (driver.findElements(By.id("spam-label")).size() > 0) {
+			try{
+				WebElement spam = driver.findElement(By.id("spam-label"));
+				spam.click();
+				Thread.sleep(randInt(2000, 3000));
+				if(spam.findElements(By.className("empty-folder")).size() > 0){
+					spamFolder = driver.findElement(By.className("empty-folder"));
+				}
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+			} catch (NoSuchElementException e) {
+				logger.error(e.getMessage(), e);
+			} catch (StaleElementReferenceException e) {
+				logger.error(e.getMessage(), e);
+			} catch (ElementNotVisibleException e) {
+				logger.error(e.getMessage(), e);
+			} catch (ElementNotFoundException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return spamFolder;
 	}
 
 	private boolean dragAndDropNotSpam(WebDriverWait wait) {
@@ -586,7 +623,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				} else {
 					logger.info("******** Clicking the not spam MAIN button ***********");
 					driver.findElement(By.id("main-btn-spam")).click();
-					wait.until(ExpectedConditions.elementToBeClickable(By.className("list-view-item-container")));
+					Thread.sleep(randInt(2500, 3500));
 				}
 				return true;
 			}else{
@@ -648,63 +685,88 @@ public class ModernYahooRunnable extends YahooRunnable {
 	@Override
 	public void replyToEmailFromSubList() {
 		logger.info("Clicking the reply button from sublist");
-//		String body = human.generateRandomBody(driver, wait);
-//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
-		WebElement reply = elements.get(2);
-		reply.click();
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement quickReply = driver.findElement(By.className("quickReply"));
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-		bodyMail.click();
-//		human.type(bodyMail, body);
-		
-		logger.info("Replying the email from sublist");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
-		send.click();
+		try{
+//			String body = human.generateRandomBody(driver, wait);
+//			Thread.sleep(randInt(2000, 3000));
+			
+			Thread.sleep(randInt(2000, 3000));
+			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
+			WebElement reply = elements.get(2);
+			reply.click();
+			
+			Thread.sleep(randInt(2000, 3000));
+			WebElement quickReply = driver.findElement(By.className("quickReply"));
+			
+			Thread.sleep(randInt(2000, 3000));
+			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
+			bodyMail.click();
+//			human.type(bodyMail, body);
+			
+			logger.info("Replying the email from sublist");
+			Thread.sleep(randInt(2000, 3000));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+			send.click();
+		}catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
+		
 	
 //	NOT WORKING
 	@Override
 	public void forwardEmailFromSubList() {
 		logger.info("Clicking the forward button from sublist");
-//		String body = human.generateRandomBody(driver, wait);
-//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		try{
+//			String body = human.generateRandomBody(driver, wait);
+//			Thread.sleep(randInt(2000, 3000));
 		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
-		WebElement forward = elements.get(2);
-		forward.click();
-		
-		String to = human.generateRandomTo(seed);
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement quickReply = driver.findElement(By.className("quickReply"));
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement toInput = quickReply.findElement(By.id("to-field"));
-		
-		logger.info("Filling to field");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		human.type(toInput,to);
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		toInput.sendKeys(Keys.TAB);
-		
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-		bodyMail.click();
-//		human.type(bodyMail, body);
-		
-		logger.info("Forwarding the email from sublist");
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
-		send.click();
+			Thread.sleep(randInt(2000, 3000));
+			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
+			WebElement forward = elements.get(2);
+			forward.click();
+			
+			String to = human.generateRandomTo(seed);
+			
+			Thread.sleep(randInt(2000, 3000));
+			WebElement quickReply = driver.findElement(By.className("quickReply"));
+			
+			Thread.sleep(randInt(2000, 3000));
+			WebElement toInput = quickReply.findElement(By.id("to-field"));
+			
+			logger.info("Filling to field");
+			Thread.sleep(randInt(2000, 3000));
+			human.type(toInput,to);
+			Thread.sleep(randInt(2000, 3000));
+			toInput.sendKeys(Keys.TAB);
+			
+			Thread.sleep(randInt(2000, 3000));
+			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
+			bodyMail.click();
+//			human.type(bodyMail, body);
+			
+			logger.info("Forwarding the email from sublist");
+			Thread.sleep(randInt(2000, 3000));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+			send.click();
+		}catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 //	private void humanizeMe() {
@@ -715,7 +777,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 //		logger.info("Starting to move mouse randomly. ");
 //		for (int i = randInt(10, 150); i > 0; i--) {
 //			mouse.moveByOffset(goToX + i, goToY + i);
-//			driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+//			Thread.sleep(randInt(2000, 3000));
 //		}
 //		logger.info("Ended mouse simulation. ");
 //
@@ -724,13 +786,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 //
 //		if (true) {
 //			jse.executeScript("window.scrollBy(0,250)", "");
-//			driver.manage().timeouts().implicitlyWait(randInt(2, 5), TimeUnit.SECONDS);
+//			Thread.sleep(randInt(2000, 3000));
 //		}
 //
 //		if (throwDice()) {
 //			jse.executeScript("scroll(0, -250);");
 //			// Reading email
-//			driver.manage().timeouts().implicitlyWait(randInt(2, 5), TimeUnit.SECONDS);
+//			Thread.sleep(randInt(2000, 3000));
 //		}
 //
 //	}
