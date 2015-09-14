@@ -27,7 +27,6 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "SEED")
 public class Seed implements Serializable {
 
-
 	private static final long serialVersionUID = 5426661713841147777L;
 
 	@Id

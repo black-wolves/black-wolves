@@ -1,7 +1,10 @@
 package com.blackwolves.seeder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -29,6 +32,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import au.com.bytecode.opencsv.CSVReader;
+
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.service.ISeedService;
@@ -44,8 +49,8 @@ public class Seeder implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 
-	@Autowired
-	private ISeedService seedService;
+//	@Autowired
+//	private ISeedService seedService;
 
 	private static YahooRunnable handler;
 
@@ -83,17 +88,22 @@ public class Seeder implements Runnable {
 
 		String[] seed = mySeed.split(",");
 
-		dbSeed = seedService.getSeedFromDb(seed, myIp);
-		while (dbSeed.getPid() == 0) {
-			try {
-				logger.info("PID has not been set. Waiting 10 seconds and retrying");
-				Thread.sleep(10000);
-				dbSeed = seedService.refresh(dbSeed);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-
+//		dbSeed = seedService.getSeedFromDb(seed, myIp);
+//		while (dbSeed.getPid() == 0) {
+//			try {
+//				logger.info("PID has not been set. Waiting 10 seconds and retrying");
+//				Thread.sleep(10000);
+//				dbSeed = seedService.refresh(dbSeed);
+//			} catch (Exception e) {
+//				logger.error(e.getMessage(), e);
+//			}
+//		}
+		do {
+			dbSeed = new Seed(myIp, seed[0], seed[1]);
+			dbSeed.setPid(getPidFromFile(seed[0]));
+			
+		} while (dbSeed.getPid() == 0);
+		
 		WebDriver driver = createWebDriver();
 
 		logger.info("Firefox Created");
@@ -110,27 +120,44 @@ public class Seeder implements Runnable {
 
 			createNewFolder(driver);
 
-			try {
-				dbSeed = seedService.refresh(dbSeed);
-			} catch (ServiceException e) {
-				logger.error(e.getMessage(), e);
-			}
+//			try {
+//				dbSeed = seedService.refresh(dbSeed);
+//			} catch (ServiceException e) {
+//				logger.error(e.getMessage(), e);
+//			}
 
 			handler.runProcess();
 			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			
-			try {
-				seedService.saveOrUpdate(dbSeed);
-				ScheduledExecutorService service = Executors
-	                    .newSingleThreadScheduledExecutor();
-	    service.scheduleAtFixedRate(this, 1, 30, TimeUnit.SECONDS);
-			} catch (ServiceException e) {
-				logger.error(e.getMessage(), e);
-			}
+//			try {
+//				seedService.saveOrUpdate(dbSeed);
+			ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+			service.scheduleAtFixedRate(this, 1, 30, TimeUnit.SECONDS);
+//			} catch (ServiceException e) {
+//				logger.error(e.getMessage(), e);
+//			}
 
 		} else {
 			logger.info("New Interface detected.Exiting");
 		}
+	}
+
+	private int getPidFromFile(String myEmail) {
+		List<String[]> pids = new ArrayList<String[]>();
+		try {
+			CSVReader pidsReader = new CSVReader(new FileReader(Constant.ROUTE + "pids.txt"));
+			pids = pidsReader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		for (String[] s : pids) {
+			if(s[0].equals(myEmail)){
+				return Integer.valueOf(s[1]);
+			}
+		}
+		return 0;
 	}
 
 	/**

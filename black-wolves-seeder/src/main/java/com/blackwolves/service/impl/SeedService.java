@@ -5,7 +5,6 @@ package com.blackwolves.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.LogManager;
@@ -18,7 +17,6 @@ import com.blackwolves.persistence.entity.Profile;
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.exception.DaoException;
 import com.blackwolves.persistence.util.CsvReader;
-import com.blackwolves.seeder.Seeder;
 import com.blackwolves.seeder.YahooRunnable;
 import com.blackwolves.service.ISeedService;
 import com.blackwolves.service.exception.ServiceException;
