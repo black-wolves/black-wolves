@@ -11,4 +11,5 @@ public interface Constant {
 	public static final int MAX_SUBJECT_WORDS = 30;
 	public static final int MIN_BODY_WORDS = 150;
 	public static final int MAX_BODY_WORDS = 300;
+	public static final String ALL = "All";
 }

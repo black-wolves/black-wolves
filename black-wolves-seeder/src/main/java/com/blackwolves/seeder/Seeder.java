@@ -17,6 +17,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -353,6 +354,7 @@ public class Seeder implements Runnable {
 					WebElement givenName = modal.findElement(By.id("givenName"));
 					givenName.clear();
 					human.type(givenName, d[0]);
+					givenName.sendKeys(Keys.TAB);
 					WebElement middleName = modal.findElement(By.id("middleName"));
 					middleName.clear();
 					WebElement familyName = modal.findElement(By.id("familyName"));
@@ -360,6 +362,8 @@ public class Seeder implements Runnable {
 					WebElement email = modal.findElement(By.className("field-lg"));
 					email.clear();
 					human.type(email, "newsletter@" + d[0]);
+					email.sendKeys(Keys.TAB);
+					Thread.sleep(YahooRunnable.randInt(2500, 3500));
 					WebElement save = modal.findElement(By.id("saveModalOverlay"));
 					save.click();
 					Thread.sleep(YahooRunnable.randInt(2500, 3500));
@@ -393,24 +397,27 @@ public class Seeder implements Runnable {
 
 	private void createNewFolder(WebDriver driver) {
 		try {
-//			driver.findElement(By.id("Folders"));
-			logger.info("Creating new folder");
-			WebElement newFolder = driver.findElement(By.id("btn-newfolder"));
-			newFolder.click();
-			Thread.sleep(YahooRunnable.randInt(1500, 2500));
-			WebElement newFolderInput = driver.findElement(By.id("newFolder"));
-			human.type(newFolderInput, "All");
-			WebElement ok = driver.findElement(By.id("okayModalOverlay"));
-			ok.click();
-			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			if (driver.findElements(By.id("newFolderErr")).size() > 0) {
+			if(validateIfFolderExists(driver)){
 				logger.info("Folder already exists");
-				WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
-				cancel.click();
+			}else{
+				logger.info("Creating new folder");
+				WebElement newFolder = driver.findElement(By.id("btn-newfolder"));
+				newFolder.click();
+				Thread.sleep(YahooRunnable.randInt(1500, 2500));
+				WebElement newFolderInput = driver.findElement(By.id("newFolder"));
+				human.type(newFolderInput, Constant.ALL);
+				WebElement ok = driver.findElement(By.id("okayModalOverlay"));
+				ok.click();
 				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			} else {
-				logger.info("Folder created");
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				if (driver.findElements(By.id("newFolderErr")).size() > 0) {
+					logger.info("Folder already exists");
+					WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
+					cancel.click();
+					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				} else {
+					logger.info("Folder created");
+					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				}
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -423,6 +430,20 @@ public class Seeder implements Runnable {
 		} catch (ElementNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * @param driver
+	 * @return
+	 */
+	private boolean validateIfFolderExists(WebDriver driver) {
+		if(driver.findElements(By.id("Folders")).size() > 0){
+			if(driver.findElement(By.id("Folders")).findElements(By.className("foldername")).size() > 0){
+				return driver.findElement(By.id("Folders")).findElement(By.className("foldername")).getText().equals(Constant.ALL);
+			}
+			
+		}
+		return false;
 	}
 
 	/**
