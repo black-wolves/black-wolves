@@ -23,7 +23,7 @@ public class SeederThreadPool {
 	
 	private static final Logger logger = LogManager.getLogger(SeederThreadPool.class.getName());
 	
-	private static final int SEEDS_TO_PROCESS = 3;
+	private static final int SEEDS_TO_PROCESS = 4;
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
@@ -36,9 +36,10 @@ public class SeederThreadPool {
         
 		for (int i = 0; i < SEEDS_TO_PROCESS; i++) {
         	String[] seed = seeds.get(YahooRunnable.randInt(0, seeds.size()-1));
+        	
         	Seeder seeder = new Seeder(seed);
             Runnable worker = seeder;
-            logger.info("Executing thread: " + i);
+            logger.info("Executing thread: " + i + "with seed :" +seed);
             executor.execute(worker);
           }
 		
