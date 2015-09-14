@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -28,8 +25,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -47,59 +42,37 @@ public class Seeder implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 
-//	@Autowired
-//	private ISeedService seedService;
-
 	private static YahooRunnable handler;
 
 	private static Human human;
-	private static ApplicationContext context;
 	
 	private Seed dbSeed ;
-
-	public void run() {
-		// task to run goes here
-		int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
-		logger.info("Waiting for the Date to reactivate. Time to wait : "+diff+ " minutes");
-		if (diff >= 0) {
-			handler.runProcess();
-			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-
-		}
+	
+	private String[] seed;
+	
+	public Seeder() {
+	}
+	
+	public Seeder(String[] seed) {
+		this.seed = seed;
 	}
 
-	public static void main(String[] args) {
-		// testPurposes();
-		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-		Seeder seeder = context.getBean(Seeder.class);
-		seeder.checkMail(args[0], args[1]);
-		logger.info("Finished checking mails");
-		return;
+	public void run() {
+		checkMail();
 	}
 
 	/**
-	 * 
-	 * @param myIp
-	 * @param mySeed
 	 */
-	private void checkMail(String myIp, String mySeed) {
+	private void checkMail() {
 
-		String[] seed = mySeed.split(",");
-
-//		dbSeed = seedService.getSeedFromDb(seed, myIp);
-//		while (dbSeed.getPid() == 0) {
-//			try {
-//				logger.info("PID has not been set. Waiting 10 seconds and retrying");
-//				Thread.sleep(10000);
-//				dbSeed = seedService.refresh(dbSeed);
-//			} catch (Exception e) {
-//				logger.error(e.getMessage(), e);
-//			}
-//		}
 		do {
-			dbSeed = new Seed(myIp, seed[0], seed[1]);
+			dbSeed = new Seed(seed[0], seed[1]);
 			dbSeed.setPid(getPidFromFile(seed[0]));
-			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+			}
 		} while (dbSeed.getPid() == 0);
 		
 		WebDriver driver = createWebDriver();
@@ -110,30 +83,35 @@ public class Seeder implements Runnable {
 
 		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
 
-		handler = validateYahooVersion(driver, mySeed);
+		handler = validateYahooVersion(driver, seed[0]+","+seed[1]);
 
 		if (handler != null) {
 
-			addToAddressBook(driver);
+//			addToAddressBook(driver);
 
-			createNewFolder(driver);
-
-//			try {
-//				dbSeed = seedService.refresh(dbSeed);
-//			} catch (ServiceException e) {
-//				logger.error(e.getMessage(), e);
-//			}
+//			createNewFolder(driver);
 
 			handler.runProcess();
+			
 			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			
-//			try {
-//				seedService.saveOrUpdate(dbSeed);
-			ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-			service.scheduleAtFixedRate(this, 1, 30, TimeUnit.SECONDS);
-//			} catch (ServiceException e) {
-//				logger.error(e.getMessage(), e);
-//			}
+			while(true){
+				
+				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
+				if (diff >= 0) {
+					logger.info("Running the process");
+					handler.runProcess();
+					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
+				}else{
+					logger.info("Waiting for the Date to reactivate. Time to wait : "+diff+ " minutes");
+					try {
+						Thread.sleep(60000);
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+			
 
 		} else {
 			logger.info("New Interface detected.Exiting");
@@ -486,5 +464,19 @@ public class Seeder implements Runnable {
 		driver.get(url);
 		WebElement clickMe = driver.findElement(By.id("clicklink"));
 		clickMe.click();
+	}
+
+	/**
+	 * @return the seed
+	 */
+	public String[] getSeed() {
+		return seed;
+	}
+
+	/**
+	 * @param seed the seed to set
+	 */
+	public void setSeed(String[] seed) {
+		this.seed = seed;
 	}
 }

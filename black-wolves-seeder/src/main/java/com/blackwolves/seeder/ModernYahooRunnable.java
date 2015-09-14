@@ -38,7 +38,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		if (validateInboxFolder()) {
 			
 			logger.info("There are msgs in the inbox folder, start working!!");
-			List<WebElement> inboxMsgs = driver.findElements(By.className("list-view-item-container"));
+			List<WebElement> inboxMsgs = driver.findElements(By.className("list-view-item"));
 			
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
@@ -46,18 +46,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 			for (int j = 0; j < percentage; j++) {
 				
 				try {
-					if (throwDice()) {
-						sendEmail();
-					}
+//					if (throwDice()) {
+//						sendEmail();
+//					}
 					
 					logger.info((percentage - j) + " emails to go ");
 					Thread.sleep(randInt(2500, 3500));
 					
-					if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
+					if (driver.findElements(By.className("list-view-item")).size() > 0) {
 						mouse.moveByOffset(200 + randInt(0, 300), 300 + randInt(0, 400));
 						
-						logger.info("list-view-item-container found");
-						inboxMsgs = driver.findElements(By.className("list-view-item-container"));
+						logger.info("list-view-item found");
+						inboxMsgs = driver.findElements(By.className("list-view-item"));
 						
 						logger.info("Obtaining a random message position so it can be open");
 						int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
@@ -74,15 +74,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 							
 							clickShowImages("show-text");
 							
-							if (throwDice()) {
-								replyToEmail();
-							}else if (throwDice()){
-								forwardEmail();
-							}else if(throwDice()){
-								clickRandomLink();
-							}
-							
-							moveMessageToAllFolder();
+//							if (throwDice()) {
+//								replyToEmail();
+//							}else if (throwDice()){
+//								forwardEmail();
+//							}else if(throwDice()){
+//								clickRandomLink();
+//							}
+//							
+//							moveMessageToAllFolder();
 							
 							Thread.sleep(randInt(2500, 3500));
 							logger.info("Going back to inbox");
@@ -423,7 +423,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				WebElement inbox = driver.findElement(By.className("inbox-label"));
 				inbox.click();
 				Thread.sleep(randInt(2000, 3000));
-				if(driver.findElements(By.className("list-view-item-container")).size() > 0){
+				if(driver.findElements(By.className("list-view-item")).size() > 0){
 					return true;
 				}
 			}
@@ -481,7 +481,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
 			
-			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
+			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 			
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (spamMsgs.size() * PERCENTAGE);
@@ -527,10 +527,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 	private boolean validateSpamFolder() {
 		try{
 			if(driver.findElements(By.id("spam-label")).size() > 0){
-				WebElement inbox = driver.findElement(By.id("spam-label"));
-				inbox.click();
+				WebElement spam = driver.findElement(By.id("spam-label"));
+				spam.click();
 				Thread.sleep(randInt(2000, 3000));
-				if(driver.findElements(By.className("list-view-item-container")).size() > 0){
+				if(driver.findElements(By.className("list-view-item")).size() > 0){
 					return true;
 				}
 			}
@@ -550,7 +550,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	private boolean dragAndDropNotSpam() {
 		try{
-			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
+			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 			Thread.sleep(randInt(2000, 3000));
 			logger.info("Selecting spam message");
@@ -579,7 +579,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	private boolean normalNotSpam() {
 		try {
-			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item-container"));
+			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 			logger.info("Obtaining a random message position so it can be open");
 			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 			Thread.sleep(randInt(2000, 3000));
