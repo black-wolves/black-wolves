@@ -27,7 +27,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
@@ -36,8 +35,6 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.util.Constant;
-import com.blackwolves.service.ISeedService;
-import com.blackwolves.service.exception.ServiceException;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**

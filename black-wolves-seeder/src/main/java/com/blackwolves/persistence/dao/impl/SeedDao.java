@@ -1,7 +1,6 @@
 package com.blackwolves.persistence.dao.impl;
 
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blackwolves.persistence.dao.ISeedDao;
@@ -13,7 +12,7 @@ import com.blackwolves.persistence.exception.DaoException;
  * @author gastondapice
  *
  */
-@Repository
+//@Repository
 public class SeedDao extends GenericJpaDao<Seed, Long> implements ISeedDao {
 
 	/*

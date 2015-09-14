@@ -10,7 +10,6 @@ import java.util.Random;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.blackwolves.persistence.dao.ISeedDao;
 import com.blackwolves.persistence.entity.Profile;
@@ -25,7 +24,7 @@ import com.blackwolves.service.exception.ServiceException;
  * @author gastondapice
  *
  */
-@Service
+//@Service
 public class SeedService implements ISeedService {
 
 	private static final Logger logger = LogManager.getLogger(SeedService.class.getName());

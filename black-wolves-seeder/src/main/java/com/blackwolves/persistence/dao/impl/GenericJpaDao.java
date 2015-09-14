@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +74,7 @@ public class GenericJpaDao<T extends Serializable, K extends Serializable> imple
 	/**
 	 * @param entityManager the entityManager to set
 	 */
-	@PersistenceContext(type=PersistenceContextType.EXTENDED)
+//	@PersistenceContext(type=PersistenceContextType.EXTENDED)
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}

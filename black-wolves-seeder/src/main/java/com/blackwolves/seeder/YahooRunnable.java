@@ -24,8 +24,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.blackwolves.persistence.entity.Action;
-import com.blackwolves.persistence.entity.Session;
 import com.blackwolves.persistence.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
@@ -203,16 +201,6 @@ public abstract class YahooRunnable {
 			logger.error(e.getMessage(), e);
 		}
 		return driver.findElements(By.className(className)).size() > 0;
-	}
-	
-	/**
-	 * Adds the performed action to the session
-	 * @param session
-	 * @param actionName 
-	 */
-	public static void addActionToSession(Session session, String actionName) {
-		Action action = new Action(actionName);
-		session.getActions().add(action);
 	}
 	
 	/**
