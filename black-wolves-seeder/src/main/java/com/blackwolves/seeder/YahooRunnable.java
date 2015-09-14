@@ -36,7 +36,7 @@ public abstract class YahooRunnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.2);
+	protected static final double PERCENTAGE = generateDoubleRandom(0.4, 0.5);
 	
 	protected String seed = "";
 	
