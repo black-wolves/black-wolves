@@ -43,7 +43,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		inboxFolder = validateInboxFolder(inboxFolder);
 		
 		// Check if inbox is empty
-		if (inboxFolder != null && inboxFolder.isDisplayed()) {
+		if (inboxFolder == null) {
 			logger.info("Inbox Folder is empty.");
 		}else {	// If not empty, proceed
 			
@@ -497,7 +497,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			spamFolder = validateSpamFolder(spamFolder);
 				
 			// Check if spam is empty
-			if (spamFolder != null && spamFolder.isDisplayed()) {
+			if (spamFolder == null) {
 				logger.info("Spam Folder is empty! UOHOOO!");
 			}else{
 				logger.info("There are msgs in the spam folder, go get them Tiger!");

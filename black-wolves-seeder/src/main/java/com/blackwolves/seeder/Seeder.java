@@ -393,6 +393,7 @@ public class Seeder implements Runnable {
 
 	private void createNewFolder(WebDriver driver) {
 		try {
+//			driver.findElement(By.id("Folders"));
 			logger.info("Creating new folder");
 			WebElement newFolder = driver.findElement(By.id("btn-newfolder"));
 			newFolder.click();
