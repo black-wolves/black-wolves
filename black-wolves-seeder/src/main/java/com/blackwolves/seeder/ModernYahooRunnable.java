@@ -557,12 +557,20 @@ public class ModernYahooRunnable extends YahooRunnable {
 			int randomPosition = obtainRandomMsgsPosition(spamMsgs);
 			Thread.sleep(randInt(2000, 3000));
 			logger.info("Selecting spam message");
-			WebElement msg = spamMsgs.get(randomPosition);
+			WebElement msg = null;
+			try {
+				 msg = spamMsgs.get(randomPosition);
+				 
+			} catch (ArrayIndexOutOfBoundsException e) {
+				logger.error("dragAndDropNotSpam: ArrayIndexOutOfBoundsException");
+				return false;
+			}
+			
 			if (isWarmupDomain(false, msg)) {
 				WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 				logger.info("******** Dragging Message to inbox ***********");
 				(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
-				driver.navigate().refresh();
+		//		driver.navigate().refresh();
 				return true;
 			}
 			return false;
@@ -577,9 +585,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
 		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
-		}
+		
 		return false;
 	}
 
