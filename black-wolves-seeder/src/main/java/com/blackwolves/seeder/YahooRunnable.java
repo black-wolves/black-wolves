@@ -148,6 +148,7 @@ public abstract class YahooRunnable {
 	 * @return int
 	 */
 	protected int obtainRandomMsgsPosition(List<WebElement> msgs) {
+		logger.info("*****************msgs.size() : " + msgs.size());
 		int randomPosition = randInt(0, msgs.size()>= 50?49:msgs.size()==0?0:msgs.size()-1);		
 		logger.info("*****************obtainRandomMsgsPosition : " + randomPosition);
 		return randomPosition;
