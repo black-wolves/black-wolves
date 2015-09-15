@@ -14,37 +14,6 @@
 	 
 	<context:component-scan base-package="com.blackwolves.*"/>
 	
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="applicationContextProvider">
-        <property name="dataSource" ref="dataSource" />
-        <property name="packagesToScan" value="com.blackwolves.persistence.entity" />
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-        </property>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-                <prop key="hibernate.check_nullability">${hibernate.check_nullability}</prop>
-            </props>
-        </property>
-    </bean>
-
-	<!--	Data Source Declaration  -->
-
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${dataSource.driver}" />
-		<property name="url" value="${dataSource.url}" />
-		<property name="username" value="${dataSource.user}" />
-		<property name="password" value="${dataSource.password}" />
-	</bean>
-
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-    </bean>
-
-    <tx:annotation-driven transaction-manager="transactionManager" />
-    
     <context:annotation-config/>
 
 <!-- 	<bean id="upJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
