@@ -51,7 +51,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 					Thread.sleep(randInt(2500, 3500));
 
 					if (driver.findElements(By.className("list-view-item")).size() > 0) {
-						mouse.moveByOffset(200 + randInt(0, 300), 300 + randInt(0, 400));
 
 						logger.info("list-view-item found");
 						inboxMsgs = driver.findElements(By.className("list-view-item"));
@@ -755,33 +754,5 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.error(e.getMessage(), e);
 		}
 	}
-
-	// private void humanizeMe() {
-	// logger.info("Adding Human Behaviour");
-	//
-	// int goToX = randInt(0, 100);
-	// int goToY = randInt(0, 100);
-	// logger.info("Starting to move mouse randomly. ");
-	// for (int i = randInt(10, 150); i > 0; i--) {
-	// mouse.moveByOffset(goToX + i, goToY + i);
-	// Thread.sleep(randInt(2000, 3000));
-	// }
-	// logger.info("Ended mouse simulation. ");
-	//
-	// // WebElement searchBar = driver.findElement(By.id("UHSearchProperty"));
-	// // mouse.moveToElement(searchBar).build().perform();
-	//
-	// if (true) {
-	// jse.executeScript("window.scrollBy(0,250)", "");
-	// Thread.sleep(randInt(2000, 3000));
-	// }
-	//
-	// if (throwDice()) {
-	// jse.executeScript("scroll(0, -250);");
-	// // Reading email
-	// Thread.sleep(randInt(2000, 3000));
-	// }
-	//
-	// }
 
 }
