@@ -41,11 +41,11 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 @Component
 public class Seeder implements Runnable {
 
-	static Logger logger = LoggerFactory.getLogger(Seeder.class);
+	Logger logger = LoggerFactory.getLogger(Seeder.class);
 
-	private static YahooRunnable handler;
+	private YahooRunnable handler;
 
-	private static Human human;
+	private Human human;
 	
 	private Seed dbSeed ;
 	
@@ -94,7 +94,7 @@ public class Seeder implements Runnable {
 
 			createNewFolder(driver);
 
-			handler.runProcess(logger);
+			handler.runProcess();
 			
 			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			
@@ -103,7 +103,7 @@ public class Seeder implements Runnable {
 				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
 				if (diff >= 0) {
 					logger.info("Running the process");
-					handler.runProcess(logger);
+					handler.runProcess();
 					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 				}else{
 					logger.info("Waiting for the Date to reactivate. Time to wait : "+diff+ " minutes");
@@ -143,7 +143,7 @@ public class Seeder implements Runnable {
 	/**
 	 * 
 	 */
-	private static void testPurposes() {
+	private void testPurposes() {
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
 		driver.get("http://www.useragentstring.com/");
@@ -158,7 +158,7 @@ public class Seeder implements Runnable {
 	/**
 	 * @return
 	 */
-	private static WebDriver createWebDriver() {
+	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
 
 		FirefoxProfile profile = new FirefoxProfile();
@@ -213,7 +213,7 @@ public class Seeder implements Runnable {
 		return diffHours;
 	}
 
-	private static int calculateDifferenceBetweenDatesInMinutes(Date from, Date to) {
+	private int calculateDifferenceBetweenDatesInMinutes(Date from, Date to) {
 		long diff = to.getTime() - from.getTime();
 		//int diffHours = (int) (diff / (60 * 60 * 1000));
 		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
@@ -221,7 +221,7 @@ public class Seeder implements Runnable {
 		// int diffSec = (int) (diff / (1000));
 		return diffMin;
 	}
-	private static Human generateRandomHumanUser() {
+	private Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
 		if (number <= 2) {
@@ -240,7 +240,7 @@ public class Seeder implements Runnable {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
+	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
 		logger.info("Trying to login in....");
 		try {
 
@@ -283,7 +283,7 @@ public class Seeder implements Runnable {
 	 * @param driver
 	 * @param seed
 	 */
-	private static YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
+	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 		try {
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
@@ -446,7 +446,7 @@ public class Seeder implements Runnable {
 		}
 	}
 
-	public static void getScreenShot(WebDriver driver, String name) {
+	public void getScreenShot(WebDriver driver, String name) {
 		logger.info("****************TAKING SCREENSHOT!*****************");
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// Now you can do whatever you need to do with it, for example copy

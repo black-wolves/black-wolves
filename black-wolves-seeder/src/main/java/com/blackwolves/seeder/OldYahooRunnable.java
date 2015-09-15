@@ -197,7 +197,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 * @param ip
 	 * @return
 	 */
-	public static DesiredCapabilities addProxyCapabilities(String ip) {
+	public DesiredCapabilities addProxyCapabilities(String ip) {
 
 		logger.info("Using ip: " + ip);
 

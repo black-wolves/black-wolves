@@ -35,7 +35,7 @@ public abstract class YahooRunnable {
 
 	protected static Logger logger;
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0.4, 0.5);
+	protected final double PERCENTAGE = generateDoubleRandom(0.4, 0.5);
 	
 	protected String seed = "";
 	
@@ -67,7 +67,7 @@ public abstract class YahooRunnable {
 	 * Starts the wolf seeder process
 	 * @param logger 
 	 */
-	public void runProcess(Logger logger) {
+	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
 			processSpam(seed);
@@ -212,7 +212,7 @@ public abstract class YahooRunnable {
 	 * @param min
 	 * @return double
 	 */
-	public static double generateDoubleRandom(double max, double min) {
+	public double generateDoubleRandom(double max, double min) {
 		double r = Math.random();
 		if (r < 0.5) {
 			return ((1 - Math.random()) * (max - min) + min);
