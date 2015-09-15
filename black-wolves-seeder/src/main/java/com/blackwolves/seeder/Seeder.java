@@ -60,7 +60,7 @@ public class Seeder implements Runnable {
 	}
 
 	public void run() {
-		MDC.put("userid", seed[0]);
+		MDC.put("logFileName", seed[0]);
 		checkMail();
 	}
 

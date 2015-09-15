@@ -37,6 +37,7 @@ public class SeederThreadPool {
             Seeder seeder = new Seeder(seed, logger);
             Runnable worker = seeder;
             logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " +seed[1]);
+            MDC.remove("logFileName");
             executor.execute(worker);
           }
 		
