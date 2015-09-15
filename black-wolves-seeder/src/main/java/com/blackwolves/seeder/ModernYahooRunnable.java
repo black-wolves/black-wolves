@@ -577,6 +577,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (ElementNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
+		}
 		return false;
 	}
 
