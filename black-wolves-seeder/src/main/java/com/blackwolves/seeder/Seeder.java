@@ -123,6 +123,7 @@ public class Seeder implements Runnable {
 		try {
 			CSVReader pidsReader = new CSVReader(new FileReader(Constant.ROUTE + "pids.txt"));
 			pids = pidsReader.readAll();
+			pidsReader.close();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {

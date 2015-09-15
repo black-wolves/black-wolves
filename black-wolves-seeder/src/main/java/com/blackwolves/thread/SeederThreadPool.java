@@ -3,6 +3,7 @@
  */
 package com.blackwolves.thread;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,22 +24,22 @@ public class SeederThreadPool {
 	
 	private static final Logger logger = LogManager.getLogger(SeederThreadPool.class.getName());
 	
-	private static final int SEEDS_TO_PROCESS = 1;
+	private static final int SEEDS_TO_PROCESS = 4;
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
 		logger.info("Starting SeederThreadPool");
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-		
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
 		
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		List<String[]> seeds = new ArrayList<String[]>();
         
-		for (int i = 0; i < SEEDS_TO_PROCESS; i++) {
-        	String[] seed = seeds.get(YahooRunnable.randInt(0, seeds.size()-1));
+		
+		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
+        	String[] seed = args[i].split(",");
         	Seeder seeder = new Seeder(seed);
             Runnable worker = seeder;
-            logger.info("Executing thread: " + i);
+            logger.info("Executing thread: " + i + "with seed :" +seed[0] + " "+seed[1]);
             executor.execute(worker);
           }
 		
