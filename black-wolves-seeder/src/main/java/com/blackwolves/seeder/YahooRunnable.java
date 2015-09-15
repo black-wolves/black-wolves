@@ -68,7 +68,7 @@ public abstract class YahooRunnable {
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
-//			processSpam(seed);
+			processSpam(seed);
 			processInbox(seed);
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {

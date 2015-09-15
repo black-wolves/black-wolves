@@ -46,9 +46,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 			for (int j = 0; j < percentage; j++) {
 				
 				try {
-//					if (throwDice()) {
+					if (throwDice()) {
 						sendEmail();
-//					}
+					}
 					
 					logger.info((percentage - j) + " emails to go ");
 					Thread.sleep(randInt(2500, 3500));
@@ -74,13 +74,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 							
 							clickShowImages("show-text");
 							
-//							if (throwDice()) {
+							if (throwDice()) {
 								replyToEmail();
-//							}else if (throwDice()){
+							}else if (throwDice()){
 								forwardEmail();
-//							}else if(throwDice()){
+							}else if(throwDice()){
 								clickRandomLink();
-//							}
+							}
 							
 							moveMessageToAllFolder();
 							
@@ -140,7 +140,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			reply.click();
 			
 			Thread.sleep(randInt(1500, 2500));
-			WebElement fullCompose = driver.findElement(By.className("full-compose"));
+			WebElement quickReply = driver.findElement(By.className("quickReply"));
 			
 			Thread.sleep(randInt(1500, 2500));
 			JavascriptExecutor jse = (JavascriptExecutor)driver;
@@ -151,7 +151,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			
 			logger.info("Replying the email");
 			Thread.sleep(randInt(1500, 2500));
-			WebElement send = fullCompose.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -177,10 +177,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 			String to = human.generateRandomTo(seed);
 			
 			Thread.sleep(randInt(2000, 3000));
-			WebElement fullCompose = driver.findElement(By.className("full-compose"));
+			WebElement quickReply = driver.findElement(By.className("quickReply"));
 			
 			Thread.sleep(randInt(2000, 3000));
-			WebElement toInput = fullCompose.findElement(By.id("to-field"));
+			WebElement toInput = quickReply.findElement(By.id("to-field"));
 			
 			logger.info("Filling to field");
 			Thread.sleep(randInt(2000, 3000));
@@ -190,7 +190,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			
 			logger.info("Forwarding the email");
 			Thread.sleep(randInt(2000, 3000));
-			WebElement send = fullCompose.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -232,6 +232,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Filling subject field");
 			Thread.sleep(randInt(1500, 2500));
 			human.type(subjectInput, human.generateRandomSubject());
+			Thread.sleep(randInt(1500, 2500));
+			subjectInput.sendKeys(Keys.TAB);
 			
 			Thread.sleep(randInt(1500, 2500));
 			JavascriptExecutor jse = (JavascriptExecutor)driver;

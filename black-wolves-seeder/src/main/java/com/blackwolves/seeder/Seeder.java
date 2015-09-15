@@ -87,9 +87,9 @@ public class Seeder implements Runnable {
 
 		if (handler != null) {
 
-//			addToAddressBook(driver);
+			addToAddressBook(driver);
 
-//			createNewFolder(driver);
+			createNewFolder(driver);
 
 			handler.runProcess();
 			
