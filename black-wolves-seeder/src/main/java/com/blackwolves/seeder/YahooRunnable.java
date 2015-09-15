@@ -147,7 +147,7 @@ public abstract class YahooRunnable {
 	 */
 	protected int obtainRandomMsgsPosition(List<WebElement> msgs) {
 		Random randomNo = new Random();
-		int randomPosition = randomNo.nextInt(msgs.size() >= 50 ? 50 : msgs.size());
+		int randomPosition = randomNo.nextInt(msgs.size() >= 50 ? 50 : msgs.size()-1);
 		return randomPosition;
 	}
 
