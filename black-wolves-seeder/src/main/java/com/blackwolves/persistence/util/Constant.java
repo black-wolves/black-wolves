@@ -12,4 +12,5 @@ public interface Constant {
 	public static final int MIN_BODY_WORDS = 150;
 	public static final int MAX_BODY_WORDS = 300;
 	public static final String ALL = "All";
+	public static final String HOME_BLACKWOLVES_LOGS = "/home/blackwolves/logs/";
 }
