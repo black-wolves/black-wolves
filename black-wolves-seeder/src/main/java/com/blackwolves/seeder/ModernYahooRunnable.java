@@ -2,7 +2,6 @@ package com.blackwolves.seeder;
 
 import java.util.List;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -22,10 +21,9 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  */
 public class ModernYahooRunnable extends YahooRunnable {
 
-	private static final Logger logger = LogManager.getLogger(ModernYahooRunnable.class.getName());
 	
-	public ModernYahooRunnable(WebDriver driver, String seed, Human human) {
-		super(driver, seed, human);
+	public ModernYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
+		super(driver, seed, human, logger);
 	}
 
 	@Override

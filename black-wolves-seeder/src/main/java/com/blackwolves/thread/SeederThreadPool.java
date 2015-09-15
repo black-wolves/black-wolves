@@ -35,14 +35,15 @@ public class SeederThreadPool {
 		
 		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
         	String[] seed = args[i].split(",");
-        	Seeder seeder = new Seeder(seed);
-            Runnable worker = seeder;
             logger.removeAllAppenders();
             try {
-				logger.addAppender(new FileAppender(new SimpleLayout(), Constant.HOME_BLACKWOLVES_LOGS + seed[0] + ".log", true));
+//				logger.addAppender(new FileAppender(new SimpleLayout(), Constant.HOME_BLACKWOLVES_LOGS + seed[0] + ".log", true));
+				logger.addAppender(new FileAppender(new SimpleLayout(), "/var/www/logs/" + seed[0] + ".log", true));
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
+            Seeder seeder = new Seeder(seed, logger);
+            Runnable worker = seeder;
             logger.info("Executing thread: " + i + "with seed :" +seed[0] + " "+seed[1]);
             executor.execute(worker);
           }

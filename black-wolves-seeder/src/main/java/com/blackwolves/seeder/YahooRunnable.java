@@ -10,7 +10,6 @@ import java.util.Set;
 
 import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -34,7 +33,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 public abstract class YahooRunnable {
 
-	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
+	protected static Logger logger;
 
 	protected static final double PERCENTAGE = generateDoubleRandom(0.4, 0.5);
 	
@@ -53,19 +52,22 @@ public abstract class YahooRunnable {
 	 * @param driver
 	 * @param seed
 	 * @param human
+	 * @param logger2 
 	 */
-	public YahooRunnable(WebDriver driver, String seed, Human human) {
+	public YahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
 		this.driver = driver;
 		this.seed = seed;
 		this.mouse = new Actions(driver);
 		this.jse = (JavascriptExecutor) driver;
 		this.human = human;
+		this.logger = logger;
 	}
 
 	/**
 	 * Starts the wolf seeder process
+	 * @param logger 
 	 */
-	public void runProcess() {
+	public void runProcess(Logger logger) {
 		String[] seed = this.seed.split(",");
 		try {
 			processSpam(seed);

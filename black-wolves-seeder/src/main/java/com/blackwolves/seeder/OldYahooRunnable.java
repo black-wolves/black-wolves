@@ -26,8 +26,8 @@ public class OldYahooRunnable extends YahooRunnable{
 
 	private static final Logger logger = LogManager.getLogger(OldYahooRunnable.class.getName());
 	
-	public OldYahooRunnable(WebDriver driver, String seed, Human human) {
-		super(driver, seed, human);
+	public OldYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
+		super(driver, seed, human, logger);
 	}
 
 	/**

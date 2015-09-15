@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -40,7 +39,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 @Component
 public class Seeder implements Runnable {
 
-	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
+	private static Logger logger;
 
 	private static YahooRunnable handler;
 
@@ -53,8 +52,9 @@ public class Seeder implements Runnable {
 	public Seeder() {
 	}
 	
-	public Seeder(String[] seed) {
+	public Seeder(String[] seed, Logger logger) {
 		this.seed = seed;
+		this.logger = logger;
 	}
 
 	public void run() {
@@ -91,7 +91,7 @@ public class Seeder implements Runnable {
 
 			createNewFolder(driver);
 
-			handler.runProcess();
+			handler.runProcess(logger);
 			
 			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			
@@ -100,7 +100,7 @@ public class Seeder implements Runnable {
 				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
 				if (diff >= 0) {
 					logger.info("Running the process");
-					handler.runProcess();
+					handler.runProcess(logger);
 					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 				}else{
 					logger.info("Waiting for the Date to reactivate. Time to wait : "+diff+ " minutes");
@@ -285,10 +285,10 @@ public class Seeder implements Runnable {
 			Thread.sleep(10000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
-				handler = new OldYahooRunnable(driver, seed, human);
+				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
-				handler = new ModernYahooRunnable(driver, seed, human);
+				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
 			} else {
