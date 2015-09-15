@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="USER_HOME" value="/home/blackwolves/logs" />
+	<property name="USER_HOME" value="/var/www/logs" />
 
 	<appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
 
@@ -56,7 +56,7 @@
 		<appender-ref ref="FILE-THREAD" />
 		<appender-ref ref="STDOUT" />
 	</logger>
-
+	
 	<root level="error">
 		<appender-ref ref="STDOUT" />
 	</root>

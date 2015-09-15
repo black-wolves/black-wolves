@@ -100,23 +100,23 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
 				} catch (InterruptedException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("InterruptedException");
 					driver.findElement(By.className("inbox-label")).click();
 					checkForInboxReloadError();
 				} catch (NoSuchElementException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("NoSuchElementException");
 					driver.findElement(By.className("inbox-label")).click();
 					checkForInboxReloadError();
 				} catch (StaleElementReferenceException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("StaleElementReferenceException");
 					driver.findElement(By.className("inbox-label")).click();
 					checkForInboxReloadError();
 				} catch (ElementNotVisibleException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("ElementNotVisibleException");
 					driver.findElement(By.className("inbox-label")).click();
 					checkForInboxReloadError();
 				} catch (ElementNotFoundException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("ElementNotFoundException");
 					driver.findElement(By.className("inbox-label")).click();
 					checkForInboxReloadError();
 				}
@@ -154,13 +154,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 	}
 
@@ -194,13 +194,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 
 	}
@@ -250,13 +250,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 	}
 
@@ -289,13 +289,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 	}
 
@@ -314,13 +314,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 
 	}
@@ -347,13 +347,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 
 	}
@@ -405,13 +405,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 	}
 
@@ -433,13 +433,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 		return false;
 	}
@@ -460,13 +460,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage(), e);
 			} catch (NoSuchElementException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("NoSuchelementException");
 			} catch (StaleElementReferenceException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("StaleElementReferenceException");
 			} catch (ElementNotVisibleException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("ElementNotVisibleException");
 			} catch (ElementNotFoundException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("ElementNotFoundException");
 			}
 		}
 	}
@@ -508,13 +508,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 				} catch (InterruptedException e) {
 					logger.error(e.getMessage(), e);
 				} catch (NoSuchElementException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("NoSuchelementException");
 				} catch (StaleElementReferenceException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("StaleElementReferenceException");
 				} catch (ElementNotVisibleException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("ElementNotVisibleException");
 				} catch (ElementNotFoundException e) {
-					logger.error(e.getMessage(), e);
+					logger.error("ElementNotFoundException");
 				}
 			}
 		} else {
@@ -540,13 +540,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 		return false;
 	}
@@ -569,13 +569,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
 			logger.error(e.getMessage(), e);
@@ -616,13 +616,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		} catch (IndexOutOfBoundsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -655,13 +655,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage(), e);
 			} catch (NoSuchElementException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("NoSuchelementException");
 			} catch (StaleElementReferenceException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("StaleElementReferenceException");
 			} catch (ElementNotVisibleException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("ElementNotVisibleException");
 			} catch (ElementNotFoundException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("ElementNotFoundException");
 			}
 		}
 	}

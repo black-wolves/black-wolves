@@ -20,13 +20,12 @@ import com.blackwolves.seeder.Seeder;
  */
 public class SeederThreadPool {
 	
-	static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
+	private static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 	
 	private static final int SEEDS_TO_PROCESS = 4;
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
-		Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 		logger.info("Starting SeederThreadPool");
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
@@ -34,7 +33,6 @@ public class SeederThreadPool {
 		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
 			
         	String[] seed = args[i].split(",");
-        	MDC.put("userid", seed[0]);
         	MDC.put("logFileName", seed[0]);
             Seeder seeder = new Seeder(seed, logger);
             Runnable worker = seeder;

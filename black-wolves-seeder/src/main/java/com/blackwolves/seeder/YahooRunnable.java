@@ -74,7 +74,7 @@ public abstract class YahooRunnable {
 			processInbox(seed);
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchElementException");
 		}
 	}
 
@@ -181,13 +181,13 @@ public abstract class YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
 		}
 	}
 	
