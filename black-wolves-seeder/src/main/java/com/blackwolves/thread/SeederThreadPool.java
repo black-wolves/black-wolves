@@ -14,6 +14,7 @@ import org.apache.log4j.SimpleLayout;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.seeder.Seeder;
 
 /**
@@ -38,7 +39,7 @@ public class SeederThreadPool {
             Runnable worker = seeder;
             logger.removeAllAppenders();
             try {
-				logger.addAppender(new FileAppender(new SimpleLayout(), seed[0] + ".log", true));
+				logger.addAppender(new FileAppender(new SimpleLayout(), Constant.HOME_BLACKWOLVES_LOGS + seed[0] + ".log", true));
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
