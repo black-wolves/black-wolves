@@ -3,18 +3,18 @@
  */
 package com.blackwolves.thread;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.blackwolves.seeder.Seeder;
-import com.blackwolves.seeder.YahooRunnable;
 
 /**
  * @author gastondapice
@@ -32,13 +32,16 @@ public class SeederThreadPool {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
 		
-		List<String[]> seeds = new ArrayList<String[]>();
-        
-		
 		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
         	String[] seed = args[i].split(",");
         	Seeder seeder = new Seeder(seed);
             Runnable worker = seeder;
+            logger.removeAllAppenders();
+            try {
+				logger.addAppender(new FileAppender(new SimpleLayout(), seed[0] + ".log", true));
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
             logger.info("Executing thread: " + i + "with seed :" +seed[0] + " "+seed[1]);
             executor.execute(worker);
           }
