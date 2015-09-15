@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
@@ -24,6 +23,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -39,7 +41,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 @Component
 public class Seeder implements Runnable {
 
-	private static Logger logger;
+	static Logger logger = LoggerFactory.getLogger(Seeder.class);
 
 	private static YahooRunnable handler;
 
@@ -58,6 +60,7 @@ public class Seeder implements Runnable {
 	}
 
 	public void run() {
+		MDC.put("userid", seed[0]);
 		checkMail();
 	}
 

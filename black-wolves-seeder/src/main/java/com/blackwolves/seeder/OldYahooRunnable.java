@@ -6,8 +6,6 @@ package com.blackwolves.seeder;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
@@ -16,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
 
 /**
  * @author gaston.dapice
@@ -23,8 +22,6 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class OldYahooRunnable extends YahooRunnable{
 
-
-	private static final Logger logger = LogManager.getLogger(OldYahooRunnable.class.getName());
 	
 	public OldYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
 		super(driver, seed, human, logger);

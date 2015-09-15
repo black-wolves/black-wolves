@@ -5,11 +5,11 @@ package com.blackwolves.up;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Up {
 	
-	private static final Logger logger = LogManager.getLogger(Up.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(Up.class);
 	
 	@Value("${up.url}")
 	private String upUrl;

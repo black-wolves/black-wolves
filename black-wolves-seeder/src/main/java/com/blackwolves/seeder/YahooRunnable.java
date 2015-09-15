@@ -10,7 +10,6 @@ import java.util.Set;
 
 import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
 
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -20,6 +19,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.slf4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
 
