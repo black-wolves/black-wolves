@@ -23,7 +23,7 @@ public class SeederThreadPool {
 	
 	private static final Logger logger = LogManager.getLogger(SeederThreadPool.class.getName());
 	
-	private static final int SEEDS_TO_PROCESS = 3;
+	private static final int SEEDS_TO_PROCESS = 1;
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
