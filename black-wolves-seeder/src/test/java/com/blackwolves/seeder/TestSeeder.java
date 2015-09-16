@@ -43,14 +43,14 @@ public class TestSeeder {
 	@Ignore
 	public void testCheckMail() {
 //		String[] args = {"10.10.1.1", "yaninadefays02@yahoo.com,wolf2015.2"};
-//		String[] args = {"10.10.1.1", "danielsaulino03@yahoo.com,wolf2015.2"};
+//		String[] args = {"10.10.1.1", "danielsaulino03@yahoo.com,wolf2015.3"};
 //		String[] args = {"10.10.1.1", "danielsaulino04@yahoo.com,wolf2015.1"};
 //		String[] args = {"10.10.1.1", "eonhmxb@yahoo.com,Sx4z3daYKrxeE5&"};
 //		String[] args = {"10.10.1.1", "azuwqaglw@yahoo.com,Bs%wfXf29qJj#$x"};
 //		String[] args = {"10.10.1.1", "jepvhfn@yahoo.com,T9&Gsa95ky3PQgc"};
 //		String[] args = {"10.10.1.1", "vugbvdr@yahoo.com,r7p4n28cdEW&d$8"};
-		String[] args = {"10.10.1.1", "bnkcyolrcom@yahoo.com,HT%8Dy!Ua?Q95Tt"};
-
+//		String[] args = {"10.10.1.1", "bnkcyolrcom@yahoo.com,HT%8Dy!Ua?Q95Tt"};
+//
 //		Seeder.main(args);
 	}
 	

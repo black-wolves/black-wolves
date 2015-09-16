@@ -30,16 +30,10 @@ public class SeederThreadPool {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
 		
-		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
-			
-        	String[] seed = args[i].split(",");
-        	MDC.put("logFileName", seed[0]);
-            Seeder seeder = new Seeder(seed, logger);
-            Runnable worker = seeder;
-            logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " +seed[1]);
-            MDC.remove("logFileName");
-            executor.execute(worker);
-          }
+		iterateSeeds(args, executor);
+		
+//		UNCOMMENT THIS FOR TEST ONLY AND COMMENT THE ONE ABOVE
+//		__________________________________________testIterateSeeds(args, executor);
 		
         executor.shutdown();
         
@@ -47,5 +41,36 @@ public class SeederThreadPool {
         	
         }
         System.out.println("Finished all threads");
+	}
+	
+	/**
+	 * @param args
+	 * @param executor
+	 */
+	private static void iterateSeeds(String[] args, ExecutorService executor) {
+		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
+			String[] seed = args[i].split(",");
+			MDC.put("logFileName", seed[0]);
+			Seeder seeder = new Seeder(seed, logger);
+			Runnable worker = seeder;
+			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
+			MDC.remove("logFileName");
+			executor.execute(worker);
+		}
+	}
+
+	/**
+	 * 
+	 * @param args
+	 * @param executor
+	 */
+	private static void __________________________________________testIterateSeeds(String[] args, ExecutorService executor) {
+    	String[] seed = args[0].split(",");
+    	MDC.put("logFileName", seed[0]);
+        Seeder seeder = new Seeder(seed, logger);
+        Runnable worker = seeder;
+        logger.info("Executing thread: with seed: " + seed[0] + " " +seed[1]);
+        MDC.remove("logFileName");
+        executor.execute(worker);
 	}
 }

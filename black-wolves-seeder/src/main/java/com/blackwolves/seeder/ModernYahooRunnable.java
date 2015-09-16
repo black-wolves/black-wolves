@@ -597,11 +597,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(2000, 3000));
 
-			WebElement msg = spamMsgs.get(randomPosition);
+			WebElement currentMsg = spamMsgs.get(randomPosition);
 
-			if (isWarmupDomain(false, msg)) {
+			if (isWarmupDomain(false, currentMsg)) {
 				logger.info("Opening the spam message");
-				msg.findElement(By.className("subj")).click();
+				currentMsg.findElement(By.className("subj")).click();
 				Thread.sleep(randInt(2000, 3000));
 
 				clickShowImages("show-text");
