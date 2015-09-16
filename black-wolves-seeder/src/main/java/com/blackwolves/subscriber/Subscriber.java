@@ -3,11 +3,16 @@
  */
 package com.blackwolves.subscriber;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+
+import com.blackwolves.persistence.entity.Seed;
+import com.blackwolves.persistence.util.CsvReader;
 
 /**
  * @author gaston.dapice
@@ -22,8 +27,12 @@ public class Subscriber {
 	
 	public static void main(String[] args) {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-//		SubscriberRunnable sr = context.getBean(SubscriberRunnable.class);
-		//sr.runProcess(args[0]);
+		SubscriberRunnable sr = context.getBean(SubscriberRunnable.class);
+		CsvReader csvReader = new CsvReader();
+		ArrayList<Seed> seeds = csvReader.getSeedsFromFile();
+		for (Seed seed : seeds) {
+			sr.runProcess(seed);
+		}
 		logger.info("Subscriber process finished");
 		return;
 	}
