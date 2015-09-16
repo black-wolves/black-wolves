@@ -24,8 +24,6 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -41,7 +39,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 @Component
 public class Seeder implements Runnable {
 
-	Logger logger = LoggerFactory.getLogger(Seeder.class);
+	private Logger logger;
 
 	private YahooRunnable handler;
 
@@ -60,7 +58,6 @@ public class Seeder implements Runnable {
 	}
 
 	public void run() {
-		MDC.put("logFileName", seed[0]);
 		checkMail();
 	}
 
