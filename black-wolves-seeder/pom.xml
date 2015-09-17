@@ -10,13 +10,7 @@
 	<properties>
 		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<junit.version>4.11</junit.version>
-		<spring.version>4.0.6.RELEASE</spring.version>
-		<hibernate.version>4.3.6.Final</hibernate.version>
-		<mysql.version>5.1.36</mysql.version>
-        <commons.beanutils>1.8.3</commons.beanutils>
 		<selenium.version>2.45.0</selenium.version>
-		<quartz.version>2.2.1</quartz.version>
 		<logback.version>1.1.3</logback.version>
 		<jcl.slf4j.version>1.7.12</jcl.slf4j.version>
 	</properties>
@@ -36,90 +30,13 @@
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
-	
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
-		</dependency>
+
+		<!-- itext -->
 
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>4.2.1</version>
-		</dependency>
-        
-		<!-- Spring dependencies -->
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<!-- Hibernate dependencies -->
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
-		<dependency>
-			 <groupId>org.hibernate</groupId>
-			 <artifactId>hibernate-envers</artifactId>
-			 <version>${hibernate.version}</version>
-		</dependency>
-				
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		
-		<!-- MySQL Java Connector library -->
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.version}</version>
-		</dependency>
-
-		<!-- Apache Bean Utils -->
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>${commons.beanutils}</version>
 		</dependency>
 
 		<!-- Open CSV -->
@@ -138,48 +55,6 @@
 			<version>${selenium.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-htmlunit-driver</artifactId>
-			<version>${selenium.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-chrome-driver</artifactId>
-			<version>${selenium.version}</version>
-		</dependency>
-
-		<!-- Quartz framework -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>${quartz.version}</version>
-		</dependency>
-		
-		<!-- Test -->
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
 	</dependencies>
 
 	<build>
@@ -208,12 +83,12 @@
 						</goals>
 						<configuration>
 							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-							      <resource>META-INF/spring.handlers</resource>
-							    </transformer>
-							    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-							      <resource>META-INF/spring.schemas</resource>
-							    </transformer>
+<!-- 								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> -->
+<!-- 							      <resource>META-INF/spring.handlers</resource> -->
+<!-- 							    </transformer> -->
+<!-- 							    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> -->
+<!-- 							      <resource>META-INF/spring.schemas</resource> -->
+<!-- 							    </transformer> -->
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>com.blackwolves.thread.SeederThreadPool</mainClass>
 <!-- 									<mainClass>com.blackwolves.subscriber.Subscriber</mainClass> -->

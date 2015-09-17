@@ -24,7 +24,6 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
-import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -36,7 +35,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  * @author gaston.dapice
  *
  */
-@Component
+//@Component
 public class Seeder implements Runnable {
 
 	private Logger logger;

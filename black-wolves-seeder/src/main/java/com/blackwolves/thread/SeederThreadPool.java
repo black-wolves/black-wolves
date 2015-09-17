@@ -9,8 +9,6 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.blackwolves.seeder.Seeder;
 
@@ -23,11 +21,9 @@ public class SeederThreadPool {
 	private static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 	
 	private static final int SEEDS_TO_PROCESS = 4;
-	private static ApplicationContext context;
 
 	public static void main(String[] args) {
 		logger.info("Starting SeederThreadPool");
-		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
 		
 		iterateSeeds(args, executor);
@@ -40,7 +36,7 @@ public class SeederThreadPool {
         while (!executor.isTerminated()) {
         	
         }
-        System.out.println("Finished all threads");
+        logger.info("Finished all threads");
 	}
 	
 	/**
