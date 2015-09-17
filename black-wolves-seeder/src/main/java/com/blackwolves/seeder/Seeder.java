@@ -52,18 +52,20 @@ public class Seeder implements Runnable {
 	}
 	
 	public Seeder(String[] seed, Logger logger) {
+		logger.info("Seeder constructor");
 		this.seed = seed;
 		this.logger = logger;
 	}
 
 	public void run() {
+		logger.info("Calling checkMail()");
 		checkMail();
 	}
 
 	/**
 	 */
 	private void checkMail() {
-
+		logger.info("Entering first do while");
 		do {
 			dbSeed = new Seed(seed[0], seed[1]);
 			logger.info("Searching for seed PID");
