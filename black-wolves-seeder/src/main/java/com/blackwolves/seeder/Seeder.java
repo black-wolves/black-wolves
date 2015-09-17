@@ -35,7 +35,6 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  * @author gaston.dapice
  *
  */
-//@Component
 public class Seeder implements Runnable {
 
 	private Logger logger;

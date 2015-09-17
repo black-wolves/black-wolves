@@ -26,10 +26,10 @@ public class SeederThreadPool {
 		logger.info("Starting SeederThreadPool");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
 		
-		iterateSeeds(args, executor);
+//		iterateSeeds(args, executor);
 		
 //		UNCOMMENT THIS FOR TEST ONLY AND COMMENT THE ONE ABOVE
-//		__________________________________________testIterateSeeds(args, executor);
+		__________________________________________testIterateSeeds(args, executor);
 		
         executor.shutdown();
         
@@ -50,7 +50,6 @@ public class SeederThreadPool {
 			Seeder seeder = new Seeder(seed, logger);
 			Runnable worker = seeder;
 			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
-			MDC.remove("logFileName");
 			executor.execute(worker);
 		}
 	}
@@ -66,7 +65,6 @@ public class SeederThreadPool {
         Seeder seeder = new Seeder(seed, logger);
         Runnable worker = seeder;
         logger.info("Executing thread: with seed: " + seed[0] + " " +seed[1]);
-        MDC.remove("logFileName");
         executor.execute(worker);
 	}
 }
