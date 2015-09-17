@@ -66,6 +66,7 @@ public class Seeder implements Runnable {
 
 		do {
 			dbSeed = new Seed(seed[0], seed[1]);
+			logger.info("Searching for seed PID");
 			dbSeed.setPid(getPidFromFile(seed[0]));
 			try {
 				Thread.sleep(1000);
