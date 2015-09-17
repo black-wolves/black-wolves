@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.blackwolves.subscriber.Subscriber;
 import com.blackwolves.up.Up;
 
 /**
@@ -53,11 +54,14 @@ public class TestSeeder {
 //		Seeder.main(args);
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testSubscriptions()
 	{
-		///.subscribeToNewsletters("oioeeekkks@aasdasd.com,askdjalskdjalsjdiw");
+		String[] args = {"10.10.1.1", "bnkcyolrcom@yahoo.com,HT%8Dy!Ua?Q95Tt"};
+
+		Subscriber  subscriber = new Subscriber();
+		subscriber.main(args);
 	}
 	@Test
 	@Ignore
