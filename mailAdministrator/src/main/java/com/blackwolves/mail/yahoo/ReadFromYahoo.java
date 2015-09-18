@@ -1,34 +1,42 @@
 package com.blackwolves.mail.yahoo;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
-import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import au.com.bytecode.opencsv.CSVReader;
+
+import com.blackwolves.mail.util.Constant;
+
+/**
+ * 
+ * @author gastondapice
+ *
+ */
 public class ReadFromYahoo {
 
-	private static final Logger logger = LogManager
-			.getLogger(ReadFromYahoo.class.getName());
-
-	private static final String IMAP_YAHOO = "imap.mail.yahoo.com";
-	private static final String ROUTE = "/var/www/";
-	private static final String INBOX = "Inbox";
-	private static final String SPAM = "Bulk Mail";
+	private static Logger logger = LoggerFactory.getLogger(ReadFromYahoo.class);
 
 	public static void main(String[] args) {
 		Properties props = System.getProperties();
@@ -37,21 +45,38 @@ public class ReadFromYahoo {
 		try {
 			Store store = session.getStore("imaps");
 			// IMAP host for yahoo.
-			store.connect(IMAP_YAHOO, "yaninadefays02@yahoo.com", "wolf2015.2");
-			Folder inbox = store.getFolder(INBOX);
+			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays02@yahoo.com", "wolf2015.2");
+			Folder inbox = store.getFolder(Constant.Yahoo.INBOX);
 			inbox.open(Folder.READ_ONLY);
 			Message msg[] = inbox.getMessages();
+			StringBuilder mail = new StringBuilder();
+			List<String[]> contacts = generateList("/var/www/1641/", "Final_supresat_shuf_Clicks_Yahoo_20150416.1641.noseed.noca");
+			int count = 1;
+			int i = 2100;
+			int max = 12100;
 			for (Message message : msg) {
-
-				Enumeration headers = message.getAllHeaders();
-				while (headers.hasMoreElements()) {
-					Header h = (Header) headers.nextElement();
-					System.out.println(h.getName() + ": " + h.getValue());
+				String vmta = "awu9";
+				for (; i < max; i++) {
+					int radomBody =  randInt(0, msg.length-1);
+					message = msg[radomBody];
+					mail = new StringBuilder();
+					mail.append("x-virtual-mta: " + vmta);
+					String[] contact = contacts.get(i);
+					String[] c = contact[0].split("\\|");
+					addExtraHeader(mail, c[0]);
+					iterateHeaders(message, mail);
+					mail.append("\n");
+					mail.append("\n");
+					mail.append(getStringFromInputStream(message.getInputStream()));
+					PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + count+".txt");
+					out.println(mail);
+					out.close();
+					count++;
 				}
-
-//				System.out.println(message.getContent());
-				System.out.println(getStringFromInputStream(message.getInputStream()));
+				
 			}
+			//max =+ 300;
+
 			inbox.close(true);
 			store.close();
 		} catch (NoSuchProviderException e) {
@@ -61,6 +86,44 @@ public class ReadFromYahoo {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	private static void addExtraHeader(StringBuilder mail, String contact) {
+		mail.append("\n");
+		mail.append("x-receiver: " + contact);
+	}
+	
+	/**
+	 * @param message
+	 * @param mail 
+	 * @throws MessagingException
+	 */
+	private static void iterateHeaders(Message message, StringBuilder mail)
+			throws MessagingException {
+		Enumeration headers = message.getAllHeaders();
+		while (headers.hasMoreElements()) {
+			Header h = (Header) headers.nextElement();
+			if(validateHeaders(h)){
+				mail.append("\n");
+				mail.append(h.getName() + ": " + h.getValue());
+			}
+		}
+	}
+
+	/**
+	 * @param h
+	 * @return
+	 */
+	private static boolean validateHeaders(Header h) {
+		if(h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
+				|| h.getName().equals("Received-SPF") || h.getName().equals("X-YMailISG")
+				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
+				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
+				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
+				|| h.getName().equals("Content-Length")){
+			return false;
+		}
+		return true;
 	}
 	
 	private static String getStringFromInputStream(InputStream is) {
@@ -91,44 +154,27 @@ public class ReadFromYahoo {
 		return sb.toString();
 
 	}
-
-	private static String getText(Part p) throws MessagingException, IOException {
-		if (p.isMimeType("text/*")) {
-			String s = (String) p.getContent();
-			boolean textIsHtml = p.isMimeType("text/html");
-			if(p.isMimeType("text/html")){
-				return s;
-			}
+	
+	/**
+	 * @return
+	 */
+	private static List<String[]> generateList(String route, String file) {
+		List<String[]> list = new ArrayList<String[]>();
+		try {
+			CSVReader reader = new CSVReader(new FileReader(route + file));
+			list = reader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
 		}
-
-		if (p.isMimeType("multipart/alternative")) {
-			// prefer html text over plain text
-			Multipart mp = (Multipart) p.getContent();
-			String text = null;
-			for (int i = 0; i < mp.getCount(); i++) {
-				Part bp = mp.getBodyPart(i);
-				if (bp.isMimeType("text/plain")) {
-					if (text == null)
-						text = getText(bp);
-					continue;
-				} else if (bp.isMimeType("text/html")) {
-					String s = getText(bp);
-					if (s != null)
-						return s;
-				} else {
-					return getText(bp);
-				}
-			}
-			return text;
-		} else if (p.isMimeType("multipart/*")) {
-			Multipart mp = (Multipart) p.getContent();
-			for (int i = 0; i < mp.getCount(); i++) {
-				String s = getText(mp.getBodyPart(i));
-				if (s != null)
-					return s;
-			}
-		}
-
-		return null;
+		return list;
+	}
+	
+	public static int randInt(int min, int max) {
+		Random rand = new Random();
+		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+		return randomNum;
 	}
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.mail;
 
 import java.io.FileNotFoundException;
@@ -23,18 +20,20 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.search.FlagTerm;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
+
+import com.blackwolves.mail.yahoo.ReadFromYahoo;
 
 /**
  * @author gaston.dapice
  *
  */
-public class EmailReader {
+public class Calculator {
 
-	private static final Logger logger = LogManager.getLogger(EmailReader.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(ReadFromYahoo.class);
 	
 	private static final String IMAP_YAHOO = "imap.mail.yahoo.com";
 	private static final String ROUTE = "/var/www/";
