@@ -85,6 +85,9 @@ public class ReadFromYahoo {
 	private static void addExtraHeader(StringBuilder mail, String contact) {
 		mail.append("\n");
 		mail.append("x-receiver: " + contact);
+		if(randInt(0, 10) <=5){
+			mail.append("x-receiver: tatigrane@yahoo.com");
+		}
 	}
 	
 	/**
