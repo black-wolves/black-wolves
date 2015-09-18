@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -25,9 +24,9 @@ import javax.mail.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 import com.blackwolves.mail.util.Constant;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * 
@@ -39,6 +38,11 @@ public class ReadFromYahoo {
 	private static Logger logger = LoggerFactory.getLogger(ReadFromYahoo.class);
 
 	public static void main(String[] args) {
+		String offerFolder = args[0];
+		String supName = args[1];
+		String offer = args[2];
+		int from = Integer.valueOf(args[3]);
+		int to = Integer.valueOf(args[4]);
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);
@@ -46,38 +50,30 @@ public class ReadFromYahoo {
 			Store store = session.getStore("imaps");
 			// IMAP host for yahoo.
 			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays02@yahoo.com", "wolf2015.2");
-			Folder inbox = store.getFolder(Constant.Yahoo.INBOX);
-			inbox.open(Folder.READ_ONLY);
-			Message msg[] = inbox.getMessages();
+			Folder bodiesFolder = store.getFolder(offer);
+			bodiesFolder.open(Folder.READ_ONLY);
+			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
-			List<String[]> contacts = generateList("/var/www/1641/", "Final_supresat_shuf_Clicks_Yahoo_20150416.1641.noseed.noca");
-			int count = 1;
-			int i = 2100;
-			int max = 12100;
-			for (Message message : msg) {
-				String vmta = "awu9";
-				for (; i < max; i++) {
-					int radomBody =  randInt(0, msg.length-1);
-					message = msg[radomBody];
-					mail = new StringBuilder();
-					mail.append("x-virtual-mta: " + vmta);
-					String[] contact = contacts.get(i);
-					String[] c = contact[0].split("\\|");
-					addExtraHeader(mail, c[0]);
-					iterateHeaders(message, mail);
-					mail.append("\n");
-					mail.append("\n");
-					mail.append(getStringFromInputStream(message.getInputStream()));
-					PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + count+".txt");
-					out.println(mail);
-					out.close();
-					count++;
-				}
-				
+			List<String[]> contacts = generateList(offerFolder, supName);
+			String vmta = "awu9";
+//			for (String[] contact : contacts) {
+			for (; from < to; from++) {
+				String[] contact = contacts.get(from);
+				String[] c = contact[0].split("\\|");
+				mail = new StringBuilder();
+				mail.append("x-virtual-mta: " + vmta);
+				addExtraHeader(mail, c[0]);
+				int radomBody =  randInt(0, msg.length-1);
+				Message message = msg[radomBody];
+				iterateHeaders(message, mail);
+				mail.append("\n");
+				mail.append("\n");
+				mail.append(getStringFromInputStream(message.getInputStream()));
+				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + c[0]);
+				out.println(mail);
+				out.close();
 			}
-			//max =+ 300;
-
-			inbox.close(true);
+			bodiesFolder.close(true);
 			store.close();
 		} catch (NoSuchProviderException e) {
 			logger.error(e.getMessage(), e);
