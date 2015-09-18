@@ -38,11 +38,9 @@ public class ReadFromYahoo {
 	private static Logger logger = LoggerFactory.getLogger(ReadFromYahoo.class);
 
 	public static void main(String[] args) {
-		String offerFolder = args[0];
-		String supName = args[1];
-		String offer = args[2];
-		int from = Integer.valueOf(args[3]);
-		int to = Integer.valueOf(args[4]);
+		String offer = args[0];
+		int from = Integer.valueOf(args[1]);
+		int to = Integer.valueOf(args[2]);
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);
@@ -54,7 +52,7 @@ public class ReadFromYahoo {
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
-			List<String[]> contacts = generateList(offerFolder, supName);
+			List<String[]> contacts = generateList(offer);
 			String vmta = "awu9";
 //			for (String[] contact : contacts) {
 			for (; from < to; from++) {
@@ -154,10 +152,10 @@ public class ReadFromYahoo {
 	/**
 	 * @return
 	 */
-	private static List<String[]> generateList(String route, String file) {
+	private static List<String[]> generateList(String offer) {
 		List<String[]> list = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(new FileReader(route + file));
+			CSVReader reader = new CSVReader(new FileReader("/root/blackwolves/lists/" + offer + "/sup"));
 			list = reader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
