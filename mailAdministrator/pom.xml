@@ -105,7 +105,8 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.blackwolves.mail.EmailReader</mainClass>
+<!-- 							<mainClass>com.blackwolves.mail.EmailReader</mainClass> -->
+							<mainClass>com.blackwolves.mail.SendEmail</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
