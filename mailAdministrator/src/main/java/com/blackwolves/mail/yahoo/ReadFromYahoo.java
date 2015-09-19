@@ -68,7 +68,7 @@ public class ReadFromYahoo {
 				mail.append("\n");
 				mail.append(getStringFromInputStream(message.getInputStream()));
 				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + c[0]);
-				Thread.sleep(1000);
+				//Thread.sleep(1000);
 				out.println(mail);
 				out.close();
 			}
