@@ -89,6 +89,7 @@ public class ReadFromYahoo {
 		if(randInt(0, 10) <=5){
 			mail.append("\n");
 			mail.append("x-receiver: tatigrane@yahoo.com");
+			mail.append("x-receiver: danielsaulino03@yahoo.com");
 		}
 	}
 	

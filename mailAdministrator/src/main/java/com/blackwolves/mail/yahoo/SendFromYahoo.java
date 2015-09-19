@@ -26,7 +26,6 @@ public class SendFromYahoo {
 	private static SendFromYahoo instance = null;
 
 	protected SendFromYahoo() {
-		// Exists only to defeat instantiation.
 	}
 
 	public static SendFromYahoo getInstance() {
@@ -70,6 +69,18 @@ public class SendFromYahoo {
 			message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
 			
 			message.setHeader( "Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
+//			message.setHeader( "Message-ID", Constant.EMPTY_STRING);
+//			message.setHeader( "Message-Id", Constant.EMPTY_STRING);
+//			message.setHeader( "message-id", Constant.EMPTY_STRING);
+//			message.setHeader( "MESSAGE-ID", Constant.EMPTY_STRING);
+			message.setHeader("X-Priority", "1");
+//			message.setHeader("Priority", "Urgent");
+//			message.setHeader("Importance", "High");
+			
+//			message.removeHeader( "Message-ID");
+//			message.removeHeader( "Message-Id");
+//			message.removeHeader( "message-id");
+//			message.removeHeader( "MESSAGE-ID");
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
