@@ -52,9 +52,7 @@ public class WarmupWolfYahoo extends WolfYahoo {
 			String vmta = "awu9";
 			List<String[]> contacts;
 			contacts = generateList(Constant.ROUTE , "seeds.csv");
-//			for (String[] contact : contacts) {
-			for (; from < to; from++) {
-				String[] contact = contacts.get(from);
+			for (String[] contact : contacts) {
 				String[] c = contact[0].split("\\|");
 				mail = new StringBuilder();
 				mail.append("x-virtual-mta: " + vmta);
