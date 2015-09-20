@@ -49,7 +49,7 @@ public class WarmupWolfYahoo extends WolfYahoo {
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
-			String vmta = "awu9";
+			String vmta = "awu2";
 			List<String[]> contacts;
 			contacts = generateList(Constant.ROUTE , "seeds.csv");
 			for (String[] contact : contacts) {

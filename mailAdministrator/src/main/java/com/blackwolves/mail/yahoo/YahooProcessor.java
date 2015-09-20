@@ -119,9 +119,9 @@ public class YahooProcessor {
 			 * THIS IS PRODUCTION
 			 */
 			WolfYahoo handler = new ProductionWolfYahoo();
-			for (int i = 0; i < users.length-1; i++) {
-				for(int j = 0; j < offerFroms.length-1; j ++){
-					for(int k = 0; k < subjects.length-1; k ++){
+			for (int i = 0; i < users.length; i++) {
+				for(int j = 0; j < offerFroms.length; j ++){
+					for(int k = 0; k < subjects.length; k ++){
 						handler.generateAndSendMail(users[i], pass, offerFroms[j], to, subjects[k], body);
 					}
 				}
