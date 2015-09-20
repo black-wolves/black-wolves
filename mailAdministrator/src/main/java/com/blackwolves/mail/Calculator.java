@@ -25,15 +25,13 @@ import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.blackwolves.mail.yahoo.ReadFromYahoo;
-
 /**
  * @author gaston.dapice
  *
  */
 public class Calculator {
 
-	private static Logger logger = LoggerFactory.getLogger(ReadFromYahoo.class);
+	private static Logger logger = LoggerFactory.getLogger(Calculator.class);
 	
 	private static final String IMAP_YAHOO = "imap.mail.yahoo.com";
 	private static final String ROUTE = "/var/www/";

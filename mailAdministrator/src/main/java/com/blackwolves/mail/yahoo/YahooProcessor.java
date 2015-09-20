@@ -3,17 +3,8 @@
  */
 package com.blackwolves.mail.yahoo;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author gastondapice
@@ -39,12 +30,20 @@ public class YahooProcessor {
 	 */
 	private static void readAndTuneBodies(boolean test, boolean warmup, String[] args) {
 		if(test){
-			ReadFromYahoo.getInstance().readEmailsAndGenerateBodies(test, warmup, null, 0, 0);
+			WolfYahoo handler = new TestWolfYahoo();
+			handler.readEmailsAndGenerateBodies(null, 0, 0);
+		}else if(warmup){
+			String offer = args[0];
+			int from = Integer.valueOf(args[1]);
+			int to = Integer.valueOf(args[2]);
+			WolfYahoo handler = new WarmupWolfYahoo();
+			handler.readEmailsAndGenerateBodies(offer, from, to);
 		}else{
 			String offer = args[0];
 			int from = Integer.valueOf(args[1]);
 			int to = Integer.valueOf(args[2]);
-			ReadFromYahoo.getInstance().readEmailsAndGenerateBodies(test, warmup, offer, from, to);
+			WolfYahoo handler = new ProductionWolfYahoo();
+			handler.readEmailsAndGenerateBodies(offer, from, to);
 		}
 		
 	}
@@ -95,78 +94,35 @@ public class YahooProcessor {
 //						"</body></html>";
 		
 		String body = "<html>" +
-"<body bgcolor=\"#FFFFFF\"><br />" +
-"<h1><center><a target=\"_blank\" href=\"http://eeyouagainwhenseee.info/c1d5d3402176da7391fe5ed4bca4eed692a297ced8ab9821206beb48106deb3cef19ff8dbb06380eee846b94858afc65ca5f2cfa0bb633293767b93eb0d22afe\"><font color=\"#FF0000\"></font></a></center></h1><br />" +
-"<map name=\"aulez\"><area shape=\"rect\" coords=\"0,1,2671,2768\" target=\"_blank\" href=\"http://eeyouagainwhenseee.info/c1d5d3402176da7391fe5ed4bca4eed692a297ced8ab9821206beb48106deb3cef19ff8dbb06380eee846b94858afc65ca5f2cfa0bb633293767b93eb0d22afe\"></map>" +
-"<map name=\"ytmus\"><area shape=\"rect\" coords=\"4,4,2060,2948\" target=\"_blank\" href=\"http://eeyouagainwhenseee.info/963eab6bbd98309675957dc8dc52b8e64117f141a214e993610a53ed173f276ae894c5cf2001f2b5403f65af7b932d3b59ac130af85f20fcc70719feaed746ad\"></map>" +
-"<table height=\"392\" width=\"420\" align=\"center\" border=\"0\" bgcolor=\"#2E9AFE\" cellspacing=\"0\" cellpadding=\"0\">" +
-"<tr><td bgcolor=\"#FFFFFF\" align=\"center\" ><p>Please click the \"Show Images\" button above if you cannot see the content.</p></td></tr>" +
-"<tr><td align=\"center\"><img style=\"display:block\" alt=\"content\" title=\"content\" src=\"http://eeyouagainwhenseee.info/272c6df07eee0830dfc9f3be146cd62d03390fab7c001ec75aee7129af34e0eb4f140897d6d0f2fa3e94f473ad61725ecc911f1fccd0385fa89ae02760ba1b0a\" usemap=\"#aulez\"></td></tr>" +
-"<tr><td align=\"center\"><img style=\"display:block\" alt=\"optout\" title=\"optout\" src=\"http://eeyouagainwhenseee.info/1cc52a86671cfc43c9b06f266bd484a31da92b56905b6f5d60ad150f306657288530a7b6a963d3aac3f67f00cf8eb45fb94c8a79ccdf62ae3d331f74b69e4f04\" usemap=\"#ytmus\"></td></tr></table><br />" +
-"</body>" +
-"</html>";
+						"<body bgcolor=\"#FFFFFF\"><br />" +
+						"<h1><center><a target=\"_blank\" href=\"http://eeyouagainwhenseee.info/c1d5d3402176da7391fe5ed4bca4eed692a297ced8ab9821206beb48106deb3cef19ff8dbb06380eee846b94858afc65ca5f2cfa0bb633293767b93eb0d22afe\"><font color=\"#FF0000\"></font></a></center></h1><br />" +
+						"<map name=\"aulez\"><area shape=\"rect\" coords=\"0,1,2671,2768\" target=\"_blank\" href=\"http://eeyouagainwhenseee.info/c1d5d3402176da7391fe5ed4bca4eed692a297ced8ab9821206beb48106deb3cef19ff8dbb06380eee846b94858afc65ca5f2cfa0bb633293767b93eb0d22afe\"></map>" +
+						"<map name=\"ytmus\"><area shape=\"rect\" coords=\"4,4,2060,2948\" target=\"_blank\" href=\"http://eeyouagainwhenseee.info/963eab6bbd98309675957dc8dc52b8e64117f141a214e993610a53ed173f276ae894c5cf2001f2b5403f65af7b932d3b59ac130af85f20fcc70719feaed746ad\"></map>" +
+						"<table height=\"392\" width=\"420\" align=\"center\" border=\"0\" bgcolor=\"#2E9AFE\" cellspacing=\"0\" cellpadding=\"0\">" +
+						"<tr><td bgcolor=\"#FFFFFF\" align=\"center\" ><p>Please click the \"Show Images\" button above if you cannot see the content.</p></td></tr>" +
+						"<tr><td align=\"center\"><img style=\"display:block\" alt=\"content\" title=\"content\" src=\"http://eeyouagainwhenseee.info/272c6df07eee0830dfc9f3be146cd62d03390fab7c001ec75aee7129af34e0eb4f140897d6d0f2fa3e94f473ad61725ecc911f1fccd0385fa89ae02760ba1b0a\" usemap=\"#aulez\"></td></tr>" +
+						"<tr><td align=\"center\"><img style=\"display:block\" alt=\"optout\" title=\"optout\" src=\"http://eeyouagainwhenseee.info/1cc52a86671cfc43c9b06f266bd484a31da92b56905b6f5d60ad150f306657288530a7b6a963d3aac3f67f00cf8eb45fb94c8a79ccdf62ae3d331f74b69e4f04\" usemap=\"#ytmus\"></td></tr></table><br />" +
+						"</body>" +
+						"</html>";
 		
 		if(test){
 			/*
 			 * THIS IS ONLY FOR TEST
 			 */
-			SendFromYahoo.getInstance().generateAndSendMail(users[randInt(0, users.length-1)], pass, offerFroms[randInt(0, offerFroms.length-1)], to, subjects[randInt(0, subjects.length-1)], body);
+			WolfYahoo handler = new TestWolfYahoo();
+			handler.generateAndSendMail(users[WolfYahoo.randInt(0, users.length-1)], pass, offerFroms[WolfYahoo.randInt(0, offerFroms.length-1)], to, subjects[WolfYahoo.randInt(0, subjects.length-1)], body);
 		}else{
 			/*
 			 * THIS IS PRODUCTION
 			 */
+			WolfYahoo handler = new ProductionWolfYahoo();
 			for (int i = 0; i < users.length; i++) {
 				for(int j = 0; j < subjects.length; j ++){
 					for(int k = 0; k < subjects.length; k ++){
-						SendFromYahoo.getInstance().generateAndSendMail(users[i], pass, offerFroms[j], to, subjects[k], body);
+						handler.generateAndSendMail(users[i], pass, offerFroms[j], to, subjects[k], body);
 					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * @return
-	 */
-	public static List<String[]> generateList(String route, String file) {
-		List<String[]> list = new ArrayList<String[]>();
-		try {
-			CSVReader reader = new CSVReader(new FileReader(route + file));
-			list = reader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return list;
-	}
-	
-	/**
-	 * @return
-	 */
-	private static List<String[]> generateList(String offer) {
-		List<String[]> list = new ArrayList<String[]>();
-		try {
-			CSVReader reader = new CSVReader(new FileReader("/root/blackwolves/lists/" + offer + "/sup"));
-			list = reader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return list;
-	}
-	
-	/**
-	 * 
-	 * @param min
-	 * @param max
-	 * @return
-	 */
-	public static int randInt(int min, int max) {
-		Random rand = new Random();
-		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-		return randomNum;
 	}
 }
