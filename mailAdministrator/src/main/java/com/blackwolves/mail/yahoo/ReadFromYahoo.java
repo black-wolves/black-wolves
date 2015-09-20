@@ -1,17 +1,10 @@
 package com.blackwolves.mail.yahoo;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.Random;
+import java.util.UUID;
 
 import javax.mail.Folder;
 import javax.mail.Header;
@@ -26,8 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.blackwolves.mail.util.Constant;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 /**
  * 
  * @author gastondapice
@@ -36,11 +27,20 @@ import au.com.bytecode.opencsv.CSVReader;
 public class ReadFromYahoo {
 
 	private static Logger logger = LoggerFactory.getLogger(ReadFromYahoo.class);
+	
+	private static ReadFromYahoo instance = null;
 
-	public static void main(String[] args) {
-		String offer = args[0];
-		int from = Integer.valueOf(args[1]);
-		int to = Integer.valueOf(args[2]);
+	protected ReadFromYahoo() {
+	}
+
+	public static ReadFromYahoo getInstance() {
+		if (instance == null) {
+			instance = new ReadFromYahoo();
+		}
+		return instance;
+	}
+
+	public void readEmailsAndGenerateBodies(boolean test, boolean warmup, String offer, int from, int to) {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);
@@ -48,29 +48,59 @@ public class ReadFromYahoo {
 			Store store = session.getStore("imaps");
 			// IMAP host for yahoo.
 			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays02@yahoo.com", "wolf2015.2");
-			Folder bodiesFolder = store.getFolder(offer);
+			Folder bodiesFolder = store.getFolder(Constant.Yahoo.INBOX);
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
-			List<String[]> contacts = generateList(offer);
 			String vmta = "awu9";
-//			for (String[] contact : contacts) {
-			for (; from < to; from++) {
-				String[] contact = contacts.get(from);
-				String[] c = contact[0].split("\\|");
+			if(test){
+				/*
+				 * THIS IS ONLY FOR TEST
+				 */
 				mail = new StringBuilder();
 				mail.append("x-virtual-mta: " + vmta);
-				addExtraHeader(mail, c[0]);
-				int radomBody =  randInt(0, msg.length-1);
+				mail.append("\n");
+				mail.append("x-receiver: tatigrane@yahoo.com");
+				mail.append("\n");
+				mail.append("x-receiver: yaninadefays02@yahoo.com");
+				mail.append("\n");
+				mail.append("x-receiver: danielsaulino03@yahoo.com");
+				int radomBody =  YahooProcessor.randInt(0, msg.length-1);
 				Message message = msg[radomBody];
 				iterateHeaders(message, mail);
 				mail.append("\n");
 				mail.append("\n");
-				mail.append(getStringFromInputStream(message.getInputStream()));
-				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + c[0]);
-				//Thread.sleep(1000);
+				mail.append(message.getContent());
+				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + "test"+ UUID.randomUUID());
 				out.println(mail);
 				out.close();
+			}else{
+				/*
+				 * THIS IS PRODUCTION
+				 */
+				List<String[]> contacts;
+				if(warmup){
+					contacts = YahooProcessor.generateList(Constant.ROUTE , "seeds.csv");
+				}else{
+					contacts = YahooProcessor.generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
+				}
+//				for (String[] contact : contacts) {
+				for (; from < to; from++) {
+					String[] contact = contacts.get(from);
+					String[] c = contact[0].split("\\|");
+					mail = new StringBuilder();
+					mail.append("x-virtual-mta: " + vmta);
+					addExtraHeader(mail, c[0]);
+					int radomBody =  YahooProcessor.randInt(0, msg.length-1);
+					Message message = msg[radomBody];
+					iterateHeaders(message, mail);
+					mail.append("\n");
+					mail.append("\n");
+					mail.append(message.getContent());
+					PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + c[0]);
+					out.println(mail);
+					out.close();
+				}
 			}
 			bodiesFolder.close(true);
 			store.close();
@@ -86,10 +116,11 @@ public class ReadFromYahoo {
 	private static void addExtraHeader(StringBuilder mail, String contact) {
 		mail.append("\n");
 		mail.append("x-receiver: " + contact);
-		if(randInt(0, 10) <=5){
+		if(YahooProcessor.randInt(0, 10) <=5){
 			mail.append("\n");
 			mail.append("x-receiver: tatigrane@yahoo.com");
-			mail.append("x-receiver: danielsaulino03@yahoo.com");
+			mail.append("\n");
+			mail.append("x-receiver: yaninadefays02@yahoo.com");
 		}
 	}
 	
@@ -126,55 +157,4 @@ public class ReadFromYahoo {
 		return true;
 	}
 	
-	private static String getStringFromInputStream(InputStream is) {
-
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
-
-		String line;
-		try {
-
-			br = new BufferedReader(new InputStreamReader(is));
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return sb.toString();
-
-	}
-	
-	/**
-	 * @return
-	 */
-	private static List<String[]> generateList(String offer) {
-		List<String[]> list = new ArrayList<String[]>();
-		try {
-			CSVReader reader = new CSVReader(new FileReader("/root/blackwolves/lists/" + offer + "/sup"));
-			list = reader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return list;
-	}
-	
-	public static int randInt(int min, int max) {
-		Random rand = new Random();
-		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-		return randomNum;
-	}
 }
