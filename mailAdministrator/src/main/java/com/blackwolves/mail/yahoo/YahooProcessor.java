@@ -67,24 +67,24 @@ public class YahooProcessor {
 	private static void generateDropBodies(boolean test, String list) {
 		String pass = "wolf2015.2";
 		
-		String[] users = { "gaston@thewolvesareback.info",
-				"peaches@thewolvesareback.info",
-				"riquelme@thewolvesareback.info",
-				"palermo@thewolvesareback.info",
-				"guillermo@thewolvesareback.info",
-				"alberto@thewolvesareback.info",
-				"sales1@thewolvesareback.info", "sales2@thewolvesareback.info",
-				"sales3@thewolvesareback.info", "sales4@thewolvesareback.info",
-				"sales5@thewolvesareback.info", "sales6@thewolvesareback.info",
-				"sales7@thewolvesareback.info", "sales8@thewolvesareback.info",
-				"sales9@thewolvesareback.info", "sales10@thewolvesareback.info",
-				"sales11@thewolvesareback.info", "sales12@thewolvesareback.info",
-				"sales13@thewolvesareback.info", "sales14@thewolvesareback.info",
-				"sales15@thewolvesareback.info", "sales16@thewolvesareback.info",
-				"sales17@thewolvesareback.info", "sales18@thewolvesareback.info",
-				"sales19@thewolvesareback.info", "sales20@thewolvesareback.info",};
+//		String[] users = { "gaston@thewolvesareback.info",
+//				"peaches@thewolvesareback.info",
+//				"riquelme@thewolvesareback.info",
+//				"palermo@thewolvesareback.info",
+//				"guillermo@thewolvesareback.info",
+//				"alberto@thewolvesareback.info",
+//				"sales1@thewolvesareback.info", "sales2@thewolvesareback.info",
+//				"sales3@thewolvesareback.info", "sales4@thewolvesareback.info",
+//				"sales5@thewolvesareback.info", "sales6@thewolvesareback.info",
+//				"sales7@thewolvesareback.info", "sales8@thewolvesareback.info",
+//				"sales9@thewolvesareback.info", "sales10@thewolvesareback.info",
+//				"sales11@thewolvesareback.info", "sales12@thewolvesareback.info",
+//				"sales13@thewolvesareback.info", "sales14@thewolvesareback.info",
+//				"sales15@thewolvesareback.info", "sales16@thewolvesareback.info",
+//				"sales17@thewolvesareback.info", "sales18@thewolvesareback.info",
+//				"sales19@thewolvesareback.info", "sales20@thewolvesareback.info",};
 		
-		
+		String[] users = { "yaninadefays02@yahoo.com"};		
 		List<String[]> contacts;
 		contacts = WolfYahoo.generateList("/root/blackwolves/lists/1641/" , list);
 		
