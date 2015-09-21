@@ -33,15 +33,20 @@ public class YahooProcessor {
 	 */
 	private static void readAndTuneBodies(boolean test, boolean warmup, String[] args) {
 		if(test){
+			logger.info("TEST MODE");
+
 			WolfYahoo handler = new TestWolfYahoo();
 			handler.readEmailsAndGenerateBodies(null, 0, 0);
 		}else if(warmup){
+			logger.info("WARMUP MODE");
 			String offer = args[0];
 			int from = Integer.valueOf(args[1]);
 			int to = Integer.valueOf(args[2]);
 			WolfYahoo handler = new WarmupWolfYahoo();
 			handler.readEmailsAndGenerateBodies(offer, from, to);
 		}else{
+			logger.info("ELSE MODE");
+
 			String offer = args[0];
 			int from = Integer.valueOf(args[1]);
 			int to = Integer.valueOf(args[2]);
