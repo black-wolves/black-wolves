@@ -25,12 +25,12 @@ public class WarmupWolfYahoo extends WolfYahoo {
 	/* (non-Javadoc)
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#generateAndSendMail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	@Override
-	public void generateAndSendMail(String user, String pass, String offerFrom,
-			String to, String subject, String body) {
-		super.generateAndSendMail(user, pass, offerFrom, to, subject, body);
+//	@Override
+//	public void generateAndSendMail(String user, String pass, String offerFrom,
+//			String to, String subject, String body) {
+//		super.generateAndSendMail(user, pass, offerFrom, to, subject, body);
 
-	}
+//	}
 
 	/*
 	 * (non-Javadoc)

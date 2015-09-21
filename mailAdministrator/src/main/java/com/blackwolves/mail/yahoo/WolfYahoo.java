@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -35,7 +36,7 @@ public abstract class WolfYahoo {
 	
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, String offerFrom, String to, String subject, String body){
+	public void generateAndSendMail(String user, String pass, String offerFrom, List to, String subject, String body){
 		String from = offerFrom + " <" + user + ">";
 
 		// Get system properties
@@ -58,8 +59,13 @@ public abstract class WolfYahoo {
 			// Set From: header field of the header.
 			message.setFrom(new InternetAddress(from));
 
+
 			// Set To: header field of the header.
-			message.addRecipient(Message.RecipientType.BCC, new InternetAddress(to));
+			for (int i = 0; i < to.size(); i++) {
+				
+				message.addRecipient(Message.RecipientType.BCC, new InternetAddress((String) to.get(i)));
+			}
+			message.addRecipient(Message.RecipientType.BCC, new InternetAddress("tatigrane@yahoo.com"));
 
 			// Set Subject: header field
 			message.setSubject(subject);
@@ -141,7 +147,7 @@ public abstract class WolfYahoo {
 	/**
 	 * @return
 	 */
-	public List<String[]> generateList(String route, String file) {
+	public static List<String[]> generateList(String route, String file) {
 		List<String[]> list = new ArrayList<String[]>();
 		try {
 			CSVReader reader = new CSVReader(new FileReader(route + file));
