@@ -86,7 +86,7 @@ public class YahooProcessor {
 		
 		
 		List<String[]> contacts;
-		contacts = WolfYahoo.generateList("/root/blackwolves/lists/" , list);
+		contacts = WolfYahoo.generateList("/root/blackwolves/lists/1641" , list);
 		
 		
 		String[] offerFroms = {"ADT Authorized Company","Secure Your Home","SecureYourHome","ADT Authorized Co","SYH - ADT Auth Co"};
