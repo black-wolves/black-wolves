@@ -15,7 +15,7 @@ public interface Constant {
 		public static final String INBOX = "Inbox";
 		public static final String BODIES = "Bodies";
 
-		public static final String HOST = "smtp.bizmail.yahoo.com";
+		public static final String HOST = "smtp.mail.yahoo.com";
 		public static final String PORT = "587";
 		public static final String CONTENT_TYPE = "text/html; charset=utf-8";
 		public static final String CONTENT_TRANSFER_ENCODING = "7bit";
