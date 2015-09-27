@@ -78,8 +78,9 @@ public class YahooProcessor {
 		// contacts = WolfYahoo.generateList("/root/blackwolves/lists/" ,
 		// listname);
 
-		String[] offerFroms = {
-				"=?ISO-8859-15?q?ADT Authorized Company?=?ISO-8859-15?B?|pedrodelfino@yahoo.com|?=<postmaster@betoacostadalefuncionanamelamily.ro>" };
+//		String[] offerFroms = {
+//				"=?ISO-8859-15?q?ADT Authorized Company?=?ISO-8859-15?B?|pedrodelfino@yahoo.com|?=<postmaster@betoacostadalefuncionanamelamily.ro>" };
+		String[] offerFroms = {"=?ISO-8859-15?q?Limited Time get ADT and 1 Video Camera with $0 offer?ISO-8859-15?B?|pedrodelfino@yahoo.com|?=" +"<postmaster@betoacostadalefuncionanamelamily.ro>"};
 
 		String[] subjects = { "Get ADT Protection and Video for $0 Offer",
 				"Limited Time get ADT and 1 Video Camera with $0 offer",
@@ -112,7 +113,7 @@ public class YahooProcessor {
 			List<String> contactGroup = new ArrayList<String>();
 			// String[]contact = contacts.get(i);
 			// String[] c = contact[0].split("\\|");
-			contactGroup.add("pedrodelfino@yahoo.com");
+			//contactGroup.add("pedrodelfino@yahoo.com");
 			try {
 				logger.info("Sender: " + user);
 				handler.generateAndSendMail(user, pass, offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)],

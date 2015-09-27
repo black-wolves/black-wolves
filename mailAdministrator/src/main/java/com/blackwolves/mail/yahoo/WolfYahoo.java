@@ -38,7 +38,7 @@ public abstract class WolfYahoo {
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
 	public void generateAndSendMail(String user, String pass, String offerFrom, List to, String subject, String body) {
-		String from = offerFrom + " <" + user + ">";
+		final String from = offerFrom;
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -58,7 +58,7 @@ public abstract class WolfYahoo {
 			MimeMessage message = new MimeMessage(session);
 
 			// Set From: header field of the header.
-			// message.setFrom(new InternetAddress(from));
+			//message.setFrom(new InternetAddress(from));
 			message.setFrom(new Address() {
 
 				/**
@@ -70,7 +70,7 @@ public abstract class WolfYahoo {
 				public String toString() {
 					// TODO Auto-generated method stub
 
-					return "postmaster@betoacostadalefuncionanamelamily.ro";
+					return from;
 				}
 
 				@Override
