@@ -25,12 +25,12 @@ public class WarmupWolfYahoo extends WolfYahoo {
 	/* (non-Javadoc)
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#generateAndSendMail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	@Override
-	public void generateAndSendMail(String user, String pass, String offerFrom,
-			String to, String subject, String body) {
-		super.generateAndSendMail(user, pass, offerFrom, to, subject, body);
+//	@Override
+//	public void generateAndSendMail(String user, String pass, String offerFrom,
+//			String to, String subject, String body) {
+//		super.generateAndSendMail(user, pass, offerFrom, to, subject, body);
 
-	}
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -49,7 +49,7 @@ public class WarmupWolfYahoo extends WolfYahoo {
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
-			String vmta = "awu9";
+			String vmta = "awu2";
 			List<String[]> contacts;
 			contacts = generateList(Constant.ROUTE , "seeds.csv");
 			for (String[] contact : contacts) {

@@ -8,10 +8,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import javax.mail.Address;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -32,11 +34,11 @@ import com.blackwolves.mail.util.Constant;
  *
  */
 public abstract class WolfYahoo {
-	
+
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, String offerFrom, String to, String subject, String body){
-		String from = offerFrom + " <" + user + ">";
+	public void generateAndSendMail(String user, String pass, String offerFrom, List to, String subject, String body) {
+		final String from = offerFrom;
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -56,30 +58,62 @@ public abstract class WolfYahoo {
 			MimeMessage message = new MimeMessage(session);
 
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			//message.setFrom(new InternetAddress(from));
+			message.setFrom(new Address() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public String toString() {
+					// TODO Auto-generated method stub
+
+					return from;
+				}
+
+				@Override
+				public String getType() {
+					// TODO Auto-generated method stub
+					return "rfc822";
+
+				}
+
+				@Override
+				public boolean equals(Object address) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+			});
 
 			// Set To: header field of the header.
-			message.addRecipient(Message.RecipientType.BCC, new InternetAddress(to));
+			// for (int i = 0; i < to.size(); i++) {
+
+			// message.addRecipient(Message.RecipientType.BCC, new
+			// InternetAddress("gastondapice@yahoo.com"));
+			// }
+			message.addRecipient(Message.RecipientType.BCC, new InternetAddress("gastondapice@yahoo.com"));
 
 			// Set Subject: header field
 			message.setSubject(subject);
-			
+
 			// Now set the actual message
 			message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-			
-			message.setHeader( "Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
-//			message.setHeader( "Message-ID", Constant.EMPTY_STRING);
-//			message.setHeader( "Message-Id", Constant.EMPTY_STRING);
-//			message.setHeader( "message-id", Constant.EMPTY_STRING);
-//			message.setHeader( "MESSAGE-ID", Constant.EMPTY_STRING);
+
+			message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
+			message.setHeader("Message-ID", Constant.EMPTY_STRING);
+			// message.setHeader( "Message-Id", Constant.EMPTY_STRING);
+			// message.setHeader( "message-id", Constant.EMPTY_STRING);
+			// message.setHeader( "MESSAGE-ID", Constant.EMPTY_STRING);
 			message.setHeader("X-Priority", "1");
-//			message.setHeader("Priority", "Urgent");
-//			message.setHeader("Importance", "High");
-			
-//			message.removeHeader( "Message-ID");
-//			message.removeHeader( "Message-Id");
-//			message.removeHeader( "message-id");
-//			message.removeHeader( "MESSAGE-ID");
+			// message.setHeader("Priority", "Urgent");
+			// message.setHeader("Importance", "High");
+
+			// message.removeHeader( "Message-ID");
+			// message.removeHeader( "Message-Id");
+			// message.removeHeader( "message-id");
+			// message.removeHeader( "MESSAGE-ID");
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
@@ -91,31 +125,30 @@ public abstract class WolfYahoo {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	public abstract void readEmailsAndGenerateBodies(String offer, int from, int to);
-	
+
 	public void addExtraHeader(StringBuilder mail, String contact) {
 		mail.append("\n");
 		mail.append("x-receiver: " + contact);
-		if(randInt(0, 10) <=5){
+		if (randInt(0, 10) <= 5) {
 			mail.append("\n");
 			mail.append("x-receiver: tatigrane@yahoo.com");
 			mail.append("\n");
 			mail.append("x-receiver: yaninadefays02@yahoo.com");
 		}
 	}
-	
+
 	/**
 	 * @param message
-	 * @param mail 
+	 * @param mail
 	 * @throws MessagingException
 	 */
-	public void iterateHeaders(Message message, StringBuilder mail)
-			throws MessagingException {
+	public void iterateHeaders(Message message, StringBuilder mail) throws MessagingException {
 		Enumeration headers = message.getAllHeaders();
 		while (headers.hasMoreElements()) {
 			Header h = (Header) headers.nextElement();
-			if(validateHeaders(h)){
+			if (validateHeaders(h)) {
 				mail.append("\n");
 				mail.append(h.getName() + ": " + h.getValue());
 			}
@@ -127,21 +160,21 @@ public abstract class WolfYahoo {
 	 * @return
 	 */
 	public boolean validateHeaders(Header h) {
-		if(h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
+		if (h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
 				|| h.getName().equals("Received-SPF") || h.getName().equals("X-YMailISG")
 				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
 				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
 				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
-				|| h.getName().equals("Content-Length")){
+				|| h.getName().equals("Content-Length")) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @return
 	 */
-	public List<String[]> generateList(String route, String file) {
+	public static List<String[]> generateList(String route, String file) {
 		List<String[]> list = new ArrayList<String[]>();
 		try {
 			CSVReader reader = new CSVReader(new FileReader(route + file));
@@ -153,7 +186,7 @@ public abstract class WolfYahoo {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 
 	 * @param min
@@ -162,7 +195,8 @@ public abstract class WolfYahoo {
 	 */
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
-		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
+		// nextInt is normally exclusive of the top value, so add 1 to make it
+		// inclusive
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
