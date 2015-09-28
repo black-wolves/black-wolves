@@ -78,9 +78,9 @@ public abstract class WolfYahoo {
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
-		//	transport.connect(Constant.Yahoo.HOST, user, pass);
-		//	transport.sendMessage(message, ad);
-		//	transport.close();
+			transport.connect(Constant.Yahoo.HOST, user, pass);
+			transport.sendMessage(message, ad);
+			transport.close();
 			System.out.println("Body generation successfully....");
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
