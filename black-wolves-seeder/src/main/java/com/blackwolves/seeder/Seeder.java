@@ -25,11 +25,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author gaston.dapice
@@ -42,14 +42,14 @@ public class Seeder implements Runnable {
 	private YahooRunnable handler;
 
 	private Human human;
-	
-	private Seed dbSeed ;
-	
+
+	private Seed dbSeed;
+
 	private String[] seed;
-	
+
 	public Seeder() {
 	}
-	
+
 	public Seeder(String[] seed, Logger logger) {
 		logger.info("Seeder constructor");
 		this.seed = seed;
@@ -57,8 +57,8 @@ public class Seeder implements Runnable {
 	}
 
 	public void run() {
-		logger.info("Calling checkMail()");
-		checkMail();
+		logger.info("Calling addPermittedSender()");
+		addPermittedSender();
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class Seeder implements Runnable {
 				logger.error(e.getMessage(), e);
 			}
 		} while (dbSeed.getPid() == 0);
-		
+
 		WebDriver driver = createWebDriver();
 
 		logger.info("Firefox Created");
@@ -84,7 +84,7 @@ public class Seeder implements Runnable {
 
 		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
 
-		handler = validateYahooVersion(driver, seed[0]+","+seed[1]);
+		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
 
 		if (handler != null) {
 
@@ -93,18 +93,18 @@ public class Seeder implements Runnable {
 			createNewFolder(driver);
 
 			handler.runProcess();
-			
+
 			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-			
-			while(true){
-				
+
+			while (true) {
+
 				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
 				if (diff >= 0) {
 					logger.info("Running the process");
 					handler.runProcess();
 					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-				}else{
-					logger.info("Waiting for the Date to reactivate. Time to wait : "+diff+ " minutes");
+				} else {
+					logger.info("Waiting for the Date to reactivate. Time to wait : " + diff + " minutes");
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
@@ -112,10 +112,47 @@ public class Seeder implements Runnable {
 					}
 				}
 			}
-			
 
 		} else {
 			logger.info("New Interface detected.Exiting");
+		}
+	}
+
+	private void addPermittedSender() {
+
+		List<String[]> seeds = generateList("/Users/danigrane/Downloads/Madrivo/seeds/", "seeds2.csv");
+		for (int i = 1; i < seeds.size(); i++) {
+			try {
+				seed = seeds.get(i);
+				dbSeed = new Seed(seed[0], seed[1]);
+
+				WebDriver driver = createWebDriver();
+
+				human = generateRandomHumanUser();
+
+				yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
+				Thread.sleep(5000);
+
+				driver.get("https://edit.yahoo.com/commchannel/manage");
+
+				driver.findElement(By.id("addLink")).click();
+				Thread.sleep(3000);
+
+				driver.findElement(By.id("addCommStr")).clear();
+				driver.findElement(By.id("addCommStr")).sendKeys("postmaster@betoacostadalefuncionanamelamily.ro");
+				driver.findElement(By.id("saveLink")).click();
+				Thread.sleep(3000);
+				driver.findElement(By.id("yui-gen1-button")).click();
+				Thread.sleep(2000);
+				logger.debug(" Suscription successful: " + seed[0]);
+				driver.quit();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchElementException e) {
+				System.out.println("The seed "+seed[0] + " failed to suscribed");
+			}
+			
 		}
 	}
 
@@ -131,7 +168,7 @@ public class Seeder implements Runnable {
 			logger.error(e.getMessage(), e);
 		}
 		for (String[] s : pids) {
-			if(s[0].equals(myEmail)){
+			if (s[0].equals(myEmail)) {
 				return Integer.valueOf(s[1]);
 			}
 		}
@@ -213,18 +250,19 @@ public class Seeder implements Runnable {
 
 	private int calculateDifferenceBetweenDatesInMinutes(Date from, Date to) {
 		long diff = to.getTime() - from.getTime();
-		//int diffHours = (int) (diff / (60 * 60 * 1000));
+		// int diffHours = (int) (diff / (60 * 60 * 1000));
 		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-		 int diffMin = (int) (diff / (60 * 1000));
+		int diffMin = (int) (diff / (60 * 1000));
 		// int diffSec = (int) (diff / (1000));
 		return diffMin;
 	}
+
 	private Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
-		if (number <= 2) {
+		if (number <= 1) {
 			return new DumbHuman();
-		} else if (number >= 4 && number <= 8) {
+		} else if (number >= 4 && number <= 5) {
 			return new AverageHuman();
 		}
 		return new FastHuman();
@@ -245,9 +283,6 @@ public class Seeder implements Runnable {
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
-
-			logger.info("SCREENSHOT");
-			getScreenShot(driver, "quepasa");
 
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
@@ -317,20 +352,21 @@ public class Seeder implements Runnable {
 		WebElement element;
 		for (String[] d : domains) {
 			try {
-				if(driver.findElements(By.className("list-view-item-container")).size() > 0){
+				if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
 					logger.info("Adding domains to address book");
-					element = driver.findElement(By.className("list-view-item-container")).findElement(By.className("first"));
+					element = driver.findElement(By.className("list-view-item-container"))
+							.findElement(By.className("first"));
 					rightClick(driver, element);
 					Thread.sleep(YahooRunnable.randInt(2500, 3500));
 					WebElement menu = driver.findElement(By.id("menu-msglist"));
-	
+
 					List<WebElement> li = menu.findElements(By.className("onemsg"));
 					WebElement addContact = li.get(3);
 					addContact.click();
 					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-	
+
 					WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
-	
+
 					WebElement givenName = modal.findElement(By.id("givenName"));
 					givenName.clear();
 					human.type(givenName, d[0]);
@@ -358,7 +394,7 @@ public class Seeder implements Runnable {
 						logger.info("Contact added: " + d[0]);
 						Thread.sleep(YahooRunnable.randInt(2500, 3500));
 					}
-				}else{
+				} else {
 					logger.info("No emails in inbox, we can't add the domains to the address book");
 				}
 			} catch (InterruptedException e) {
@@ -377,9 +413,9 @@ public class Seeder implements Runnable {
 
 	private void createNewFolder(WebDriver driver) {
 		try {
-			if(validateIfFolderExists(driver)){
+			if (validateIfFolderExists(driver)) {
 				logger.info("Folder already exists");
-			}else{
+			} else {
 				logger.info("Creating new folder");
 				WebElement newFolder = driver.findElement(By.id("btn-newfolder"));
 				newFolder.click();
@@ -417,11 +453,12 @@ public class Seeder implements Runnable {
 	 * @return
 	 */
 	private boolean validateIfFolderExists(WebDriver driver) {
-		if(driver.findElements(By.id("Folders")).size() > 0){
-			if(driver.findElement(By.id("Folders")).findElements(By.className("foldername")).size() > 0){
-				return driver.findElement(By.id("Folders")).findElement(By.className("foldername")).getText().equals(Constant.ALL);
+		if (driver.findElements(By.id("Folders")).size() > 0) {
+			if (driver.findElement(By.id("Folders")).findElements(By.className("foldername")).size() > 0) {
+				return driver.findElement(By.id("Folders")).findElement(By.className("foldername")).getText()
+						.equals(Constant.ALL);
 			}
-			
+
 		}
 		return false;
 	}
@@ -457,6 +494,19 @@ public class Seeder implements Runnable {
 
 	}
 
+	public List<String[]> generateList(String route, String file) {
+		List<String[]> list = new ArrayList<String[]>();
+		try {
+			CSVReader reader = new CSVReader(new FileReader(route + file));
+			list = reader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return list;
+	}
+
 	public void getFingerPrint() {
 		DesiredCapabilities caps = new DesiredCapabilities();
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
@@ -476,7 +526,8 @@ public class Seeder implements Runnable {
 	}
 
 	/**
-	 * @param seed the seed to set
+	 * @param seed
+	 *            the seed to set
 	 */
 	public void setSeed(String[] seed) {
 		this.seed = seed;

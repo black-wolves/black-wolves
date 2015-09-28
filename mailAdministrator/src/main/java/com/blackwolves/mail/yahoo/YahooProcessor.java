@@ -26,7 +26,7 @@ public class YahooProcessor {
 		boolean test = false;
 		boolean warmup = true;
 
-		generateDropBodies(test, args[0], args[1], args[2]);
+		generateDropBodies(test, args[0]);
 
 		// readAndTuneBodies(test, warmup, args);
 	}
@@ -65,22 +65,21 @@ public class YahooProcessor {
 	 * @param test
 	 * 
 	 */
-	private static void generateDropBodies(boolean test, String user, String pass, String listname) {
+	private static void generateDropBodies(boolean test, String listname) {
 
 		// TEST PURPOSES
-		user = "edubartolini@yahoo.com";
-		pass = "Eduardito01";
-		List<String[]> contacts;
-		contacts = WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/", listname);
+		// user = "edubartolini@yahoo.com";
+		// pass = "Eduardito01";
 
-		// String[] users = { "vfzie@thewolvesareback.info",};
-		// pass = "P!uK7dbEb3*b&&P";
-		// contacts = WolfYahoo.generateList("/root/blackwolves/lists/" ,
-		// listname);
+		List<String[]> contacts = WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/", "seeds.csv");
+		List<String[]> senders = WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/", "seeds.csv");
 
-//		String[] offerFroms = {
-//				"=?ISO-8859-15?q?ADT Authorized Company?=?ISO-8859-15?B?|pedrodelfino@yahoo.com|?=<postmaster@betoacostadalefuncionanamelamily.ro>" };
-		String[] offerFroms = {"=?ISO-8859-15?q?Limited Time get ADT and 1 Video Camera with $0 offer?ISO-8859-15?B?|pedrodelfino@yahoo.com|?=" +"<postmaster@betoacostadalefuncionanamelamily.ro>"};
+		// String from = "\"=?ISO-8859-15?Q?Get ADT Protection and Video for $0
+		// Offer?=\" \n";
+		// from += " \"=?ISO-8859-15?B?|gastondapice@yahoo.com|?=\"\n
+		// <postmaster@betoacostadalefuncionanamelamily.ro>";
+		String[] offerFroms = { "ADT Authorized Company", "Secure Your Home", "SecureYourHome", "ADT Authorized Co",
+				"SYH - ADT Auth Co" };
 
 		String[] subjects = { "Get ADT Protection and Video for $0 Offer",
 				"Limited Time get ADT and 1 Video Camera with $0 offer",
@@ -111,17 +110,29 @@ public class YahooProcessor {
 			 */
 			WolfYahoo handler = new ProductionWolfYahoo();
 			List<String> contactGroup = new ArrayList<String>();
-			// String[]contact = contacts.get(i);
-			// String[] c = contact[0].split("\\|");
-			//contactGroup.add("pedrodelfino@yahoo.com");
-			try {
-				logger.info("Sender: " + user);
-				handler.generateAndSendMail(user, pass, offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)],
-						contactGroup, subjects[WolfYahoo.randInt(0, subjects.length - 1)], body);
-
-			} catch (Exception e) {
-				logger.info("Limit", e.getMessage());
-				return;
+			int counter  = 0;
+			int j = 0;
+			for (int i = 0; i < contacts.size(); i++) {
+				String[] contactArray = contacts.get(i);
+				String[] contact = contactArray[0].split(",");
+				
+				String[] user = senders.get(j);
+				try {
+					logger.info("customer: " + contact[0]  +" sender: "+user[0]);
+					CustomFrom customFrom = new CustomFrom(contact[0], "postmaster@betoacostadalefuncionanamelamily.ro",
+							offerFroms[WolfYahoo.randInt(0, offerFroms.length -1)]);
+					handler.generateAndSendMail(user[0], user[1], customFrom, contactGroup,
+							subjects[WolfYahoo.randInt(0, subjects.length - 1)], body);
+					counter++;
+					if(counter == 9 )
+					{
+						counter = 0;
+						j++;
+					}
+				} catch (Exception e) {
+					logger.info("Limit", e.getMessage());
+					return;
+				}
 			}
 		}
 	}

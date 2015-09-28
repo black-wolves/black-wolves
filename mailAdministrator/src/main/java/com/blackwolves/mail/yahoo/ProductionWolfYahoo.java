@@ -58,7 +58,6 @@ public class ProductionWolfYahoo extends WolfYahoo {
 				String[] c = contact[0].split("\\|");
 				mail = new StringBuilder();
 				mail.append("x-virtual-mta: " + vmta);
-				addExtraHeader(mail, c[0]);
 				int radomBody = randInt(0, msg.length-1);
 				Message message = msg[radomBody];
 				iterateHeaders(message, mail);

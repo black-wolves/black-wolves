@@ -3,7 +3,9 @@
  */
 package com.blackwolves.mail.yahoo;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +39,7 @@ public abstract class WolfYahoo {
 
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, String offerFrom, List to, String subject, String body) {
-		final String from = offerFrom;
+	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, List to, String subject, String body) {
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -59,85 +60,37 @@ public abstract class WolfYahoo {
 
 			// Set From: header field of the header.
 			//message.setFrom(new InternetAddress(from));
-			message.setFrom(new Address() {
-
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String toString() {
-					// TODO Auto-generated method stub
-
-					return from;
-				}
-
-				@Override
-				public String getType() {
-					// TODO Auto-generated method stub
-					return "rfc822";
-
-				}
-
-				@Override
-				public boolean equals(Object address) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-			});
-
-			// Set To: header field of the header.
-			// for (int i = 0; i < to.size(); i++) {
-
-			// message.addRecipient(Message.RecipientType.BCC, new
-			// InternetAddress("gastondapice@yahoo.com"));
-			// }
-			message.addRecipient(Message.RecipientType.BCC, new InternetAddress("gastondapice@yahoo.com"));
+			message.setFrom(customFrom);
 
 			// Set Subject: header field
 			message.setSubject(subject);
 
 			// Now set the actual message
 			message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-
 			message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
 			message.setHeader("Message-ID", Constant.EMPTY_STRING);
-			// message.setHeader( "Message-Id", Constant.EMPTY_STRING);
-			// message.setHeader( "message-id", Constant.EMPTY_STRING);
-			// message.setHeader( "MESSAGE-ID", Constant.EMPTY_STRING);
 			message.setHeader("X-Priority", "1");
-			// message.setHeader("Priority", "Urgent");
-			// message.setHeader("Importance", "High");
+			
+			Address [] ad =  new Address[1] ;
+			ad[0] =  new InternetAddress("gastondapice@yahoo.com");
 
-			// message.removeHeader( "Message-ID");
-			// message.removeHeader( "Message-Id");
-			// message.removeHeader( "message-id");
-			// message.removeHeader( "MESSAGE-ID");
+			message.writeTo(new FileOutputStream(new File("/Users/danigrane/Documents/repository/black-wolves/"+customFrom.getCustomer())));
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
-			transport.connect(Constant.Yahoo.HOST, user, pass);
-			transport.sendMessage(message, message.getAllRecipients());
-			transport.close();
-			System.out.println("Sent message successfully....");
+		//	transport.connect(Constant.Yahoo.HOST, user, pass);
+		//	transport.sendMessage(message, ad);
+		//	transport.close();
+			System.out.println("Body generation successfully....");
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	public abstract void readEmailsAndGenerateBodies(String offer, int from, int to);
-
-	public void addExtraHeader(StringBuilder mail, String contact) {
-		mail.append("\n");
-		mail.append("x-receiver: " + contact);
-		if (randInt(0, 10) <= 5) {
-			mail.append("\n");
-			mail.append("x-receiver: tatigrane@yahoo.com");
-			mail.append("\n");
-			mail.append("x-receiver: yaninadefays02@yahoo.com");
-		}
-	}
 
 	/**
 	 * @param message

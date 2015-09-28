@@ -20,7 +20,7 @@ public class SeederThreadPool {
 	
 	private static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 	
-	private static final int SEEDS_TO_PROCESS = 4;
+	private static final int SEEDS_TO_PROCESS = 1;
 
 	public static void main(String[] args) {
 		logger.info("Starting SeederThreadPool");
