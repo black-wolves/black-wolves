@@ -39,7 +39,7 @@ public abstract class WolfYahoo {
 
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, List to, String subject, String body) {
+	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, String subject, String body) {
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -74,14 +74,14 @@ public abstract class WolfYahoo {
 			Address [] ad =  new Address[1] ;
 			ad[0] =  new InternetAddress("gastondapice@yahoo.com");
 
-			message.writeTo(new FileOutputStream(new File("/Users/danigrane/Documents/repository/black-wolves/"+customFrom.getCustomer())));
+			message.writeTo(new FileOutputStream(new File("/var/www/logs/"+customFrom.getCustomer())));
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
 			transport.connect(Constant.Yahoo.HOST, user, pass);
 			transport.sendMessage(message, ad);
 			transport.close();
-			System.out.println("Body generation successfully....");
+			logger.info("Body generation successfully for "+ customFrom.getCustomer());
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {

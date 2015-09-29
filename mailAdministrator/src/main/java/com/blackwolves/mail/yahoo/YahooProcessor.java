@@ -24,9 +24,8 @@ public class YahooProcessor {
 		 * FOR PRODUCTION THIS VALUES MUST BE IN false
 		 */
 		boolean test = false;
-		boolean warmup = true;
 
-		generateDropBodies(test, args[0]);
+		generateDropBodies(test, args[0], args[1]);
 
 		// readAndTuneBodies(test, warmup, args);
 	}
@@ -65,14 +64,22 @@ public class YahooProcessor {
 	 * @param test
 	 * 
 	 */
-	private static void generateDropBodies(boolean test, String listname) {
+	private static void generateDropBodies(boolean test, String senderEmailAndPassword,
+			String contactEmail) {
 
 		// TEST PURPOSES
 		// user = "edubartolini@yahoo.com";
 		// pass = "Eduardito01";
 
-		List<String[]> contacts = WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/", "seeds.csv");
-		List<String[]> seeds = WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/", "seeds.csv");
+		// List<String[]> contacts =
+		// WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/",
+		// "mini_zebra.csv");
+		// List<String[]> seeds =
+		// WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/",
+		// "seeds_good.csv");
+		
+		String senderEmail = senderEmailAndPassword.split(",")[0];
+		String senderPassword = senderEmailAndPassword.split(",")[1];
 
 		String[] offerFroms = { "The Zebra" };
 
@@ -103,31 +110,18 @@ public class YahooProcessor {
 			 * THIS IS PRODUCTION
 			 */
 			WolfYahoo handler = new ProductionWolfYahoo();
-			List<String> contactGroup = new ArrayList<String>();
-			int counter = 0;
-			int j = 0;
-			for (int i = 0; i < contacts.size(); i++) {
-				String[] contactArray = contacts.get(i);
-				String[] contact = contactArray[0].split(",");
+			try {
+				logger.info("customer: " + contactEmail + " sender: " + senderEmail);
+				String[] senderRO = senderEmail.split("@");
+				senderRO[0] += "@betoacostadalefuncionanamelamily.ro";
+				CustomFrom customFrom = new CustomFrom(contactEmail, senderRO[0],
+						offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
+				handler.generateAndSendMail(senderEmail, senderPassword, customFrom,
+						subjects[WolfYahoo.randInt(0, subjects.length - 1)], body);
 
-				String[] user = seeds.get(j);
-				try {
-					logger.info("customer: " + contact[0] + " sender: " + user[0]);
-					String[] senderRO = user[0].split("@");
-					senderRO[0]+="@betoacostadalefuncionanamelamily.ro";
-					CustomFrom customFrom = new CustomFrom(contact[0], senderRO[0],
-							offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
-					handler.generateAndSendMail(user[0], user[1], customFrom, contactGroup,
-							subjects[WolfYahoo.randInt(0, subjects.length - 1)], body);
-					counter++;
-					if (counter == 9) {
-						counter = 0;
-						j++;
-					}
-				} catch (Exception e) {
-					logger.info("Limit", e.getMessage());
-					return;
-				}
+			} catch (Exception e) {
+				logger.info("Error", e.getMessage());
+				return;
 			}
 		}
 	}
