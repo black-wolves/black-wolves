@@ -72,7 +72,7 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-			ad[0] =  new InternetAddress("gastondapice@yahoo.com");
+			ad[0] =  new InternetAddress("edubartolini@yahoo.com");
 
 			message.writeTo(new FileOutputStream(new File("/var/www/logs/"+customFrom.getCustomer())));
 
