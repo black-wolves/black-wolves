@@ -74,17 +74,21 @@ public class YahooProcessor {
 		String senderEmail = senderEmailAndPassword.split(",")[0];
 		String senderPassword = senderEmailAndPassword.split(",")[1];
 
-		String[] offerFroms = { "The Zebra" };
+//		String[] offerFroms = { "The Zebra" };
+		
+		String[] offerFroms = { "From the from" };
 
-		String[] subjects = { "Pay as little as $27/mo for car insurance",
-				"Auto Insurance for as low as $27/mo",
-				"Car Insurance for as low as $27/mo",
-				"Car Insurance for as low as $7/week",
-				"Auto Insurance for as low as $7/wk",
-				"Time to save on your car insurance rates?",
-				"Compare Car Insurance in Real Time",
-				"Time to re-shop your car insurance rates",
-				"You're eligible to save on car insurance" };
+//		String[] subjects = { "Pay as little as $27/mo for car insurance",
+//				"Auto Insurance for as low as $27/mo",
+//				"Car Insurance for as low as $27/mo",
+//				"Car Insurance for as low as $7/week",
+//				"Auto Insurance for as low as $7/wk",
+//				"Time to save on your car insurance rates?",
+//				"Compare Car Insurance in Real Time",
+//				"Time to re-shop your car insurance rates",
+//				"You're eligible to save on car insurance" };
+		
+		String[] subjects = { "subject the subjec"};
 
 //		String body = "<html><body bgcolor=\"#FFFFFF\"><br /><h1><center><a target=\"_blank\" href=\"http://img.betoacostadalefuncionanamelamily.ro/ecb85094cae9f7db3dd1bf283f2406e7dc3f1d2712face818a03b4438348ac85d4cc555e66b25add937ef7434cee36f6\"><font color=\"#FF0000\"></font></a></center></h1><br /><map name=\"tfmeb\"><area shape=\"rect\" coords=\"4,1,2213,2551\" target=\"_blank\" href=\"http://img.betoacostadalefuncionanamelamily.ro/ecb85094cae9f7db3dd1bf283f2406e7dc3f1d2712face818a03b4438348ac85d4cc555e66b25add937ef7434cee36f6\"></map><map name=\"eknww\"><area shape=\"rect\" coords=\"2,2,2327,2317\" target=\"_blank\" href=\"http://img.betoacostadalefuncionanamelamily.ro/93cc8d0d56a0e104722e4740e4b03c529efb5b0a385359af8cf3ad376ed734d70c9f8eec2852481f76998d1f0ef9dae2\"></map><table height=\"384\" width=\"446\" align=\"center\" border=\"0\" bgcolor=\"#2E9AFE\" cellspacing=\"0\" cellpadding=\"0\"><tr><td bgcolor=\"#FFFFFF\" align=\"center\" ><p>Please click the \"Show Images\" button above if you cannot see the content.</p></td></tr><tr><td align=\"center\"><img style=\"display:block\" alt=\"content\" title=\"content\" src=\"http://img.betoacostadalefuncionanamelamily.ro/620daa263754bd3ac41416f46c330671102826c866e77945c9bb4c20c0f23e5b1701964e2ef93e023332b0d4c698012c\" usemap=\"#tfmeb\"></td></tr><tr><td align=\"center\"><img style=\"display:block\" alt=\"optout\" title=\"optout\" src=\"http://img.betoacostadalefuncionanamelamily.ro/36f64d8b1a3f59494a4a4451613eaef706cdb838fb21885edbcd93a1781226a4993d6776d1324891dd7afbe685f612d7\" usemap=\"#eknww\"></td></tr></table><br /></body></html>";
 		

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.mail.yahoo;
 
 import java.io.File;
@@ -10,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
