@@ -32,14 +32,12 @@ public class CustomFrom extends Address {
 
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
 		return "rfc822";
 
 	}
 
 	@Override
 	public boolean equals(Object address) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
