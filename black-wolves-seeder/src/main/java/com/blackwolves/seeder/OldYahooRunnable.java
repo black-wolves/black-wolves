@@ -6,8 +6,6 @@ package com.blackwolves.seeder;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
@@ -16,9 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.blackwolves.subscriber.SubscriberRunnable;
+import org.slf4j.Logger;
 
 /**
  * @author gaston.dapice
@@ -26,11 +22,9 @@ import com.blackwolves.subscriber.SubscriberRunnable;
  */
 public class OldYahooRunnable extends YahooRunnable{
 
-
-	private static final Logger logger = LogManager.getLogger(OldYahooRunnable.class.getName());
 	
-	public OldYahooRunnable(WebDriver driver, String seed, Human human) {
-		super(driver, seed, human);
+	public OldYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
+		super(driver, seed, human, logger);
 	}
 
 	/**
@@ -40,7 +34,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processInbox(String[] seed) throws InterruptedException {
+	public void processInbox(String[] seed) {
 		if (driver.findElements(By.id("inbox")).size() > 0) {
 
 			logger.info("Getting the Inbox Url");
@@ -90,7 +84,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processSpam(String[] seed) throws InterruptedException {
+	public void processSpam(String[] seed) {
 		if (driver.findElements(By.id("bulk")).size() > 0) {
 
 			logger.info("Getting the Bulk Url");
@@ -131,15 +125,14 @@ public class OldYahooRunnable extends YahooRunnable{
 			}
 		} else {
 			logger.info("**********   No bulk Url found   **********");
-			SubscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
+//			SubscriberRunnable.writeToFile("now_bulk_url.html", driver.getPageSource());
 		}
 	}
 
 	/**
-	 * @param driver
-	 * @throws InterruptedException
+	 * 
 	 */
-	public void clickRandomLink() throws InterruptedException {
+	public void clickRandomLink() {
 		logger.info("Getting the content of the message");
 		WebElement div = driver.findElement(By.className("mailContent"));
 		logger.info("Looking for links inside the message");
@@ -154,7 +147,9 @@ public class OldYahooRunnable extends YahooRunnable{
 					logger.info("It is an Unsubscribe link!! - we are not clicking it");
 					logger.info(aUrl);
 				} else {
-					openInNewWindow(linksToGo.get(randomLinkNo));
+					openTab(aUrl);
+					switchToNewWindow();
+					switchToPreviousWindow();
 				}
 			}
 		} else {
@@ -177,23 +172,23 @@ public class OldYahooRunnable extends YahooRunnable{
 		jse.executeScript("scroll(0, -250);");
 	}
 
-	/**
-	 * @param driver
-	 */
-	private void clickNotSpamForAllMessages(WebDriver driver) {
-		// Select all spams and move them to inbox
-		if (driver.findElements(By.id("select_all")).size() > 0) {
-
-			logger.info("Clicking Select all checkbox");
-			driver.findElement(By.id("select_all")).click();
-
-			if (driver.findElements(By.id("top_ham")).size() > 0) {
-
-				logger.info("Clicking Not spam button");
-				driver.findElement(By.id("top_ham")).click();
-			}
-		}
-	}
+//	/**
+//	 * @param driver
+//	 */
+//	private void clickNotSpamForAllMessages(WebDriver driver) {
+//		// Select all spams and move them to inbox
+//		if (driver.findElements(By.id("select_all")).size() > 0) {
+//
+//			logger.info("Clicking Select all checkbox");
+//			driver.findElement(By.id("select_all")).click();
+//
+//			if (driver.findElements(By.id("top_ham")).size() > 0) {
+//
+//				logger.info("Clicking Not spam button");
+//				driver.findElement(By.id("top_ham")).click();
+//			}
+//		}
+//	}
 
 	
 
@@ -202,7 +197,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 * @param ip
 	 * @return
 	 */
-	public static DesiredCapabilities addProxyCapabilities(String ip) {
+	public DesiredCapabilities addProxyCapabilities(String ip) {
 
 		logger.info("Using ip: " + ip);
 
@@ -229,48 +224,44 @@ public class OldYahooRunnable extends YahooRunnable{
 		return capability;
 	}
 
-
 	@Override
-	public void addToAddressBook() throws InterruptedException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void replyToEmail(WebDriverWait wait) throws InterruptedException {
+	public void replyToEmail() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void replyToEmailFromSubList(WebDriverWait wait)
-			throws InterruptedException {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void forwardEmail(WebDriverWait wait) throws InterruptedException {
+	public void replyToEmailFromSubList() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void forwardEmailFromSubList(WebDriverWait wait)
-			throws InterruptedException {
+	public void forwardEmail() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void sendEmail() throws InterruptedException {
+	public void forwardEmailFromSubList() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void clickSpam() throws InterruptedException {
+	public void sendEmail() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickSpam() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveMessageToAllFolder() {
 		// TODO Auto-generated method stub
 		
 	}

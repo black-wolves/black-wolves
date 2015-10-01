@@ -1,90 +1,43 @@
 package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-@Entity
-@Table(name = "SEED")
 public class Seed implements Serializable {
-
 
 	private static final long serialVersionUID = 5426661713841147777L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "seed_gen")
-	@SequenceGenerator(name = "seed_gen", sequenceName = "SEED_SEQ")
-	@Column(name = "SEED_ID")
 	private Long id;
 
-	@Column(name = "SEED_FIRST_NAME")
 	private String firstName;
 	
-	@Column(name = "SEED_LAST_NAME")
 	private String lastName;
 	
-	@Column(name = "SEED_EMAIL", nullable = false)
 	private String email;
 	
-	@Column(name = "SEED_PASSWORD", nullable = false)
 	private String password;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "SEED_PROF_ID", nullable = false)
-    private Profile profile;
+	private boolean myTurn = true;
+	
+	private int pid;
+	
+	private String ip;
+	
+	public String getIp() {
+		return ip;
+	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "SEED_SUBSCRIPTION"
-				, joinColumns = { @JoinColumn(name = "SDSB_SEED_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_SUBSCRIPTION_01")) }
-				, inverseJoinColumns = { @JoinColumn(name = "SDSB_SUBS_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_SUBSCRIPTION_02")) }
-				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSB_SEED_ID", "SDSB_SUBS_ID" }) })
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	private Date wakeUp;
+	
+	private Date lastSession;
+	
 	private Set<Subscription> subscriptions;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "SEED_DOMAIN"
-				, joinColumns = { @JoinColumn(name = "SDDM_SEED_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_01")) }
-				, inverseJoinColumns = { @JoinColumn(name = "SDDM_DOMN_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
-				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDDM_SEED_ID", "SDDM_DOMN_ID" }) })
-	private Set<Domain> domains;
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "SEED_SESSION"
-				, joinColumns = { @JoinColumn(name = "SDSS_SEED_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_SESSION_01")) }
-				, inverseJoinColumns = { @JoinColumn(name = "SDDM_SESS_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_DOMAIN_02")) }
-				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDSS_SEED_ID", "SDDM_SESS_ID" }) })
-	private Set<Session> sessions;
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "SEED_CONTACT"
-				, joinColumns = { @JoinColumn(name = "SDCT_SEED_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_CONTACT_01")) }
-				, inverseJoinColumns = { @JoinColumn(name = "SDCT_CONT_ID"
-						, foreignKey = @ForeignKey(name = "FK_SEED_CONTACT_02")) }
-				, uniqueConstraints = { @UniqueConstraint(columnNames = { "SDCT_SEED_ID", "SDCT_CONT_ID" }) })
-	private Set<Contact> contacts;
-
 	/**
 	 * Constructor
 	 */
@@ -102,59 +55,14 @@ public class Seed implements Serializable {
 	
 	/**
 	 * Constructor
-	 * @param firstName
-	 * @param lastName
 	 * @param email
 	 * @param password
+	 * @param ip
 	 */
-	public Seed(String firstName, String lastName, String email, String password) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public Seed(String email, String password, String ip) {
 		this.email = email;
 		this.password = password;
-	}
-	
-	/**
-	 * Constructor
-	 * @param firstName
-	 * @param lastName
-	 * @param email
-	 * @param password
-	 * @param profile
-	 */
-	public Seed(String firstName, String lastName, String email, String password, Profile profile) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.profile = profile;
-	}
-
-	/**
-	 * Constructor
-	 * @param firstName
-	 * @param lastName
-	 * @param email
-	 * @param password
-	 * @param profile
-	 * @param subscriptions
-	 * @param domains
-	 * @param sessions
-	 */
-	public Seed(String firstName, String lastName, String email,
-			String password, Profile profile, Set<Subscription> subscriptions,
-			Set<Domain> domains, Set<Session> sessions, Set<Contact> contacts) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.profile = profile;
-		this.subscriptions = subscriptions;
-		this.domains = domains;
-		this.sessions = sessions;
-		this.contacts = contacts;
+		this.ip = ip;
 	}
 
 	/**
@@ -228,26 +136,65 @@ public class Seed implements Serializable {
 	}
 
 	/**
-	 * @return the profile
+	 * @return the myTurn
 	 */
-	public Profile getProfile() {
-		return profile;
+	public boolean isMyTurn() {
+		return myTurn;
 	}
 
 	/**
-	 * @param profile the profile to set
+	 * @param myTurn the myTurn to set
 	 */
-	public void setProfile(Profile profile) {
-		this.profile = profile;
+	public void setMyTurn(boolean myTurn) {
+		this.myTurn = myTurn;
+	}
+
+	/**
+	 * @return the pid
+	 */
+	public int getPid() {
+		return pid;
+	}
+
+	/**
+	 * @param pid the pid to set
+	 */
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+
+	/**
+	 * @return the wakeUp
+	 */
+	public Date getWakeUp() {
+		return wakeUp;
+	}
+
+	/**
+	 * @param wakeUp the wakeUp to set
+	 */
+	public void setWakeUp(Date wakeUp) {
+		this.wakeUp = wakeUp;
+	}
+
+	/**
+	 * @return the lastSession
+	 */
+	public Date getLastSession() {
+		return lastSession;
+	}
+
+	/**
+	 * @param lastSession the lastSession to set
+	 */
+	public void setLastSession(Date lastSession) {
+		this.lastSession = lastSession;
 	}
 
 	/**
 	 * @return the subscriptions
 	 */
 	public Set<Subscription> getSubscriptions() {
-		if(subscriptions==null){
-			subscriptions = new HashSet<Subscription>();
-		}
 		return subscriptions;
 	}
 
@@ -256,54 +203,6 @@ public class Seed implements Serializable {
 	 */
 	public void setSubscriptions(Set<Subscription> subscriptions) {
 		this.subscriptions = subscriptions;
-	}
-
-	/**
-	 * @return the domains
-	 */
-	public Set<Domain> getDomains() {
-		if(domains==null){
-			domains = new HashSet<Domain>();
-		}
-		return domains;
-	}
-
-	/**
-	 * @param domains the domains to set
-	 */
-	public void setDomains(Set<Domain> domains) {
-		this.domains = domains;
-	}
-
-	/**
-	 * @return the sessions
-	 */
-	public Set<Session> getSessions() {
-		if(sessions==null){
-			sessions = new HashSet<Session>();
-		}
-		return sessions;
-	}
-
-	/**
-	 * @param sessions the sessions to set
-	 */
-	public void setSessions(Set<Session> sessions) {
-		this.sessions = sessions;
-	}
-
-	/**
-	 * @return the contacts
-	 */
-	public Set<Contact> getContacts() {
-		return contacts;
-	}
-
-	/**
-	 * @param contacts the contacts to set
-	 */
-	public void setContacts(Set<Contact> contacts) {
-		this.contacts = contacts;
 	}
 
 	/**

@@ -5,34 +5,18 @@ package com.blackwolves.persistence.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 /**
  * @author gastondapice
  *
  */
-@Entity
-@Table(name = "SUBSCRIPTION")
 public class Subscription implements Serializable {
 
 	private static final long serialVersionUID = 425219251604705012L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "subscription_gen")
-	@SequenceGenerator(name = "subscription_gen", sequenceName = "SUBSCRIPTION_SEQ")
-	@Column(name = "SUBS_ID")
 	private Long id;
 
-	@Column(name = "SUBS_NAME", nullable = false)
 	private String name;
 	
-	@Column(name = "SUBS_URL", nullable = false)
 	private String url;
 
 	/**

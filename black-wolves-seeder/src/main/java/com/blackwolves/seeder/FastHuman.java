@@ -15,11 +15,10 @@ public class FastHuman extends Human {
 	public FastHuman() {
 		super();
 		logger.info("Fast Human Created");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void type(WebElement input, String string) throws InterruptedException {
+	public void type(WebElement input, String string) {
 			input.sendKeys(string);
 	}
 
