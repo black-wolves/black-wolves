@@ -2,7 +2,6 @@ package com.blackwolves.mail;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class CustomMimeMessage extends MimeMessage {
@@ -20,15 +19,6 @@ public class CustomMimeMessage extends MimeMessage {
 	}
 
 	public static String getUniqueMessageIDValue(Session ssn) {
-		String suffix = null;
-
-		InternetAddress addr = InternetAddress.getLocalAddress(ssn);
-		if (addr != null)
-			suffix = addr.getAddress();
-		else {
-			suffix = "javamailuser@localhost"; // worst-case default
-		}
-
 		StringBuffer s = new StringBuffer();
 
 		// Unique string is <hashcode>.<id>.<currentTime>.JavaMail.<suffix>

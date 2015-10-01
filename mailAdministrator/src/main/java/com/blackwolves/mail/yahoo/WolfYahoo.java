@@ -1,8 +1,6 @@
 package com.blackwolves.mail.yahoo;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,9 +67,9 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-			ad[0] =  new InternetAddress(user);
+			ad[0] =  new InternetAddress("yaninadefays03@yahoo.com");
 
-			message.writeTo(new FileOutputStream(new File("/var/www/logs/"+customFrom.getCustomer())));
+//			message.writeTo(new FileOutputStream(new File("/var/www/logs/"+customFrom.getCustomer())));
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
@@ -81,9 +79,7 @@ public abstract class WolfYahoo {
 			logger.info("Body generation successfully for "+ customFrom.getCustomer());
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		} 
 	}
 
 	public abstract void readEmailsAndGenerateBodies(String offer, int from, int to);
