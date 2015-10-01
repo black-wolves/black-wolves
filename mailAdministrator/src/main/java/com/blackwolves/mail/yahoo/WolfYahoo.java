@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+import com.blackwolves.mail.CustomMimeMessage;
 import com.blackwolves.mail.util.Constant;
 
 /**
@@ -52,7 +53,7 @@ public abstract class WolfYahoo {
 
 		try {
 			// Create a default MimeMessage object.
-			MimeMessage message = new MimeMessage(session);
+			MimeMessage message = new CustomMimeMessage(session);
 
 			// Set From: header field of the header.
 			//message.setFrom(new InternetAddress(from));

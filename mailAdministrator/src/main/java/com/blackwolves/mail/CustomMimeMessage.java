@@ -33,7 +33,7 @@ public class CustomMimeMessage extends MimeMessage {
 
 		// Unique string is <hashcode>.<id>.<currentTime>.JavaMail.<suffix>
 		s.append(s.hashCode()).append('.').append(getUniqueId()).append('.').append(System.currentTimeMillis())
-				.append('.').append("mailer.").append(suffix);
+				.append("@betoacostadalefuncionanamelamily.ro");
 		return s.toString();
 	}
 
