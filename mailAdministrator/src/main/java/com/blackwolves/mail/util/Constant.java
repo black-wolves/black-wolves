@@ -7,7 +7,6 @@ public interface Constant {
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 	public static final String BLANK_SPACE = " ";
-	public static final String GENERATE_CAMPAIGN = "/bin/sh /Users/gastondapicetest.sh";
 
 	public interface Yahoo{
 		public static final String IMAP_YAHOO = "imap.mail.yahoo.com";
