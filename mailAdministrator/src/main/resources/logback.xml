@@ -11,17 +11,6 @@
 				%d{yyyy-MM-dd HH:mm:ss} - %msg%n
 			</Pattern>
 		</encoder>
-
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!-- rollover daily -->
-			<fileNamePattern>${USER_HOME}/archived/yahooProcessor.%d{yyyy-MM-dd}.%i.log
-                        </fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>10MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-
 	</appender>
 	
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -37,6 +26,10 @@
 		<appender-ref ref="FILE-AUDIT" />
 		<appender-ref ref="STDOUT" />
 	</logger>
+	
+	<logger name="ch.qos.logback" level="WARN"/>
+	
+	<logger name="c.q.l.core" level="WARN"/>
 	
 	<root level="error">
 		<appender-ref ref="STDOUT" />
