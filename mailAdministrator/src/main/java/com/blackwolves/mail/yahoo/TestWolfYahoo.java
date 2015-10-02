@@ -37,7 +37,7 @@ public class TestWolfYahoo extends WolfYahoo {
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#readEmailsAndGenerateBodies(java.lang.String, int, int)
 	 */
 	@Override
-	public void readEmailsAndGenerateBodies(String offer, int from, int to) {
+	public void readEmailsAndGenerateBodies(String offer) {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);

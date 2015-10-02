@@ -3,6 +3,7 @@ package com.blackwolves.mail.yahoo;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import javax.mail.Address;
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -77,12 +79,26 @@ public abstract class WolfYahoo {
 			transport.sendMessage(message, ad);
 			transport.close();
 			logger.info("Body generation successfully for "+ customFrom.getCustomer());
+		} catch (AuthenticationFailedException e){
+			PrintWriter out = null;
+			try {
+				out = new PrintWriter(Constant.ROUTE_LOGS_ERROR + user);
+				StringBuilder error  = new StringBuilder();
+				error.append("Could not connect with user: " + user);
+				out.println(error);
+			} catch (FileNotFoundException e1) {
+				logger.error(e.getMessage(), e);
+			} finally{
+				if(out!=null){
+					out.close();
+				}
+			}
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
-		} 
+		}
 	}
 
-	public abstract void readEmailsAndGenerateBodies(String offer, int from, int to);
+	public abstract void readEmailsAndGenerateBodies(String offer);
 
 	/**
 	 * @param message
