@@ -4,6 +4,8 @@
 package com.blackwolves.mail.yahoo;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Folder;
@@ -43,30 +45,42 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		try {
 			Store store = session.getStore("imaps");
 			// IMAP host for yahoo.
-			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.");
-			Folder bodiesFolder = store.getFolder(offer);
+			store.connect(Constant.Yahoo.IMAP_YAHOO, "gastondapice11@yahoo.com", "wolf2015.1");
+//			Folder bodiesFolder = store.getFolder(offer);
+			Folder bodiesFolder = store.getFolder(Constant.Yahoo.INBOX);
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
 			String vmta = "awu9";
-//			List<String[]> contacts;
-//			contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
-//				for (String[] contact : contacts) {
+//			List<String[]> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
+			List<String[]> contacts = generateList("/var/www/1641/", "Final_supresat_shuf_Clicks_Yahoo_20150416.1641.noseed.noca");
+//			for (String[] contact : contacts) {
 //			for (; from < to; from++) {
 			for (int i = 0; i < msg.length; i++) {
-//				String[] contact = contacts.get(from);
-//				String[] c = contact[0].split("\\|");
-				mail = new StringBuilder();
-				mail.append("x-virtual-mta: " + vmta);
-//				int radomBody = randInt(0, msg.length-1);
-				Message message = msg[i];
-				iterateHeaders(message, mail);
-				mail.append("\n");
-				mail.append("\n");
-				mail.append(message.getContent());
-				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + "897/" + i);
-				out.println(mail);
-				out.close();
+				try{
+					Message message = msg[i];
+					String[] from = message.getFrom()[0].toString().split("\\|");
+					String[] receiver = {from[1]};
+					if(contacts.contains(receiver)){
+	//					String[] contact = contacts.get(from);
+	//					String[] c = contact[0].split("\\|");
+						mail = new StringBuilder();
+						mail.append("x-virtual-mta: " + vmta);
+	//					int radomBody = randInt(0, msg.length-1);
+						mail.append("\n");
+						mail.append("x-receiver: " + receiver[0]);
+						iterateHeaders(message, mail);
+						mail.append("\n");
+						mail.append("\n");
+						mail.append(message.getContent());
+						PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + "897/" + receiver);
+						out.println(mail);
+						out.close();
+					}
+				}catch (ArrayIndexOutOfBoundsException e) {
+					logger.error(e.getMessage(), e);
+					continue;
+				}
 			}
 			bodiesFolder.close(true);
 			store.close();

@@ -69,7 +69,8 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-			ad[0] =  new InternetAddress("yaninadefays03@yahoo.com");
+//			ad[0] =  new InternetAddress("yaninadefays03@yahoo.com");
+			ad[0] =  new InternetAddress("gastondapice11@yahoo.com");
 
 //			message.writeTo(new FileOutputStream(new File("/var/www/logs/"+customFrom.getCustomer())));
 
@@ -112,6 +113,11 @@ public abstract class WolfYahoo {
 			if (validateHeaders(h)) {
 				mail.append("\n");
 				mail.append(h.getName() + ": " + h.getValue());
+				
+//				if header == date change the date
+//				String pattern = "EEE, dd MMM yyyy HH:mm:ss Z";
+//				SimpleDateFormat format = new SimpleDateFormat(pattern);
+//				message.setHeader("DATE", format.format(new Date()));
 			}
 		}
 	}
@@ -126,7 +132,7 @@ public abstract class WolfYahoo {
 				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
 				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
 				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
-				|| h.getName().equals("Content-Length")) {
+				|| h.getName().equals("X-Yahoo-Newman-Id") || h.getName().equals("Content-Length")) {
 			return false;
 		}
 		return true;

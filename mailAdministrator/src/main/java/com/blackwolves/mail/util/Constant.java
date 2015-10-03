@@ -3,7 +3,7 @@ package com.blackwolves.mail.util;
 public interface Constant {
 
 	public static final String ROUTE = "/var/www/";
-	public static final String ROUTE_LOGS_ERROR = "/var/www/logs/error/";
+	public static final String ROUTE_LOGS_ERROR = "/var/www/logs/errors/";
 	public static final String EMPTY_STRING = "";
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
