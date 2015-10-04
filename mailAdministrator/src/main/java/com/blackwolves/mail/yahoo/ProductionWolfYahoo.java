@@ -44,18 +44,25 @@ public class ProductionWolfYahoo extends WolfYahoo {
 	 */
 	@Override
 	public void readEmailsAndGenerateBodies(String offer) {
-		Properties props = System.getProperties();
-		props.setProperty("mail.store.protocol", "imaps");
-		Session session = Session.getDefaultInstance(props, null);
-		StringBuilder mail = new StringBuilder();
 		try {
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
+			
+			Properties props = System.getProperties();
+			props.setProperty("mail.store.protocol", "imaps");
+			Session session = Session.getDefaultInstance(props, null);
 			Store store = session.getStore("imaps");
 			
 			boolean keepGoing = true;
+			int count = 1;
 			while(keepGoing){
 				if(!store.isConnected()){
+					
+					props = System.getProperties();
+					props.setProperty("mail.store.protocol", "imaps");
+					session = Session.getDefaultInstance(props, null);
+					store = session.getStore("imaps");
+					
 					logger.info("Store is not connected, starting the connection");
 					store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
 					logger.info("Connected to " + SEED);
@@ -72,8 +79,9 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					String[] from = message.getFrom()[0].toString().split("\\|");
 					String receiver = from[1];
 					if(contacts.contains(receiver) && from[0].contains("Military")){
-						logger.info("Creating body new body");
-						mail = new StringBuilder();
+						logger.info("Creating body: " + count);
+						count++;
+						StringBuilder mail = new StringBuilder();
 						mail.append("x-virtual-mta: " + VMTA);
 						mail.append("\n");
 						mail.append("x-receiver: " + receiver);
