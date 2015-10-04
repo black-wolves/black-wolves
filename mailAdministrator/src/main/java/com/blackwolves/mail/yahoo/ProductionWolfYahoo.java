@@ -10,7 +10,6 @@ import java.util.Properties;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
-import javax.mail.FolderClosedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -27,6 +26,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 
 	private static final String SEED = "yaninadefays03@yahoo.com";
 	private static final String SEED_PASSWORD = "wolf2015.2";
+	private static final String VMTA = "awu9";
 
 	/* (non-Javadoc)
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#generateAndSendMail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
@@ -47,101 +47,59 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);
-		String vmta = "awu9";
 		StringBuilder mail = new StringBuilder();
 		try {
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
 			Store store = session.getStore("imaps");
-			Folder offerFolder = null;
-			int bodiesCount;
+			
 			boolean keepGoing = true;
 			while(keepGoing){
 				if(!store.isConnected()){
 					logger.info("Store is not connected, starting the connection");
 					store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
 					logger.info("Connected to " + SEED);
-					offerFolder = store.getFolder(offer);
-					offerFolder.open(Folder.READ_WRITE);
 				}
-				if(!offerFolder.isOpen()){
-					logger.info("Folder is not open");
-					offerFolder = store.getFolder(offer);
-					offerFolder.open(Folder.READ_WRITE);
-				}
+				Folder offerFolder = store.getFolder(offer);
+				offerFolder.open(Folder.READ_WRITE);
 				Message msgs[] = offerFolder.getMessages();
-				bodiesCount = offerFolder.getMessageCount();
+				int bodiesCount = offerFolder.getMessageCount();
 				logger.info("Bodies to create: " + bodiesCount);
-				int max = msgs.length>1400?1400:msgs.length;
-				for (int i = 0; i < max; i++) {
-					try{
-						Message message = msgs[i];
-						String[] from = message.getFrom()[0].toString().split("\\|");
-						String receiver = from[1];
-						if(contacts.contains(receiver) && from[0].contains("Military")){
-							logger.info("Creating body: " + (i+1));
-							mail = new StringBuilder();
-							mail.append("x-virtual-mta: " + vmta);
-							mail.append("\n");
-							mail.append("x-receiver: " + receiver);
-							iterateHeaders(message, mail);
-							mail.append("\n");
-							mail.append("\n");
-							mail.append(message.getContent());
-							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
-							out.println(mail);
-							out.close();
-							logger.info("Body created for: " + receiver);
-							--bodiesCount;
-							logger.info("Remainig bodies: " + bodiesCount);
-							saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
-						}
-					}catch (ArrayIndexOutOfBoundsException e) {
-						logger.error(e.getMessage(), e);
-						continue;
-					}catch (FolderClosedException e) {
-						logger.error(e.getMessage(), e);
-						if(!store.isConnected()){
-							logger.info("Store is not connected, starting the connection");
-							store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
-							logger.info("Connected to " + SEED);
-							offerFolder = store.getFolder(offer);
-							offerFolder.open(Folder.READ_WRITE);
-						}
-						if(!offerFolder.isOpen()){
-							logger.info("Folder is not open");
-							offerFolder = store.getFolder(offer);
-							offerFolder.open(Folder.READ_WRITE);
-						}
-						continue;
-					}catch (IOException e){
-						logger.error(e.getMessage(), e);
-						if(!store.isConnected()){
-							logger.info("Store is not connected, starting the connection");
-							store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
-							logger.info("Connected to " + SEED);
-							offerFolder = store.getFolder(offer);
-							offerFolder.open(Folder.READ_WRITE);
-						}
-						if(!offerFolder.isOpen()){
-							logger.info("Folder is not open");
-							offerFolder = store.getFolder(offer);
-							offerFolder.open(Folder.READ_WRITE);
-						}
-						continue;
+				keepGoing = msgs.length==0?false:true;
+				if(keepGoing){
+					int i = WolfYahoo.randInt(0, msgs.length);
+					Message message = msgs[i];
+					String[] from = message.getFrom()[0].toString().split("\\|");
+					String receiver = from[1];
+					if(contacts.contains(receiver) && from[0].contains("Military")){
+						logger.info("Creating body new body");
+						mail = new StringBuilder();
+						mail.append("x-virtual-mta: " + VMTA);
+						mail.append("\n");
+						mail.append("x-receiver: " + receiver);
+						iterateHeaders(message, mail);
+						mail.append("\n");
+						mail.append("\n");
+						mail.append(message.getContent());
+						PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
+						out.println(mail);
+						out.close();
+						logger.info("Body created for: " + receiver);
+						--bodiesCount;
+						logger.info("Remainig bodies: " + bodiesCount);
+						saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
 					}
+					offerFolder.close(true);
+					logger.info("Folder closed");
 				}
-				offerFolder.close(true);
-				logger.info("Folder closed");
-				store.close();
-				logger.info("Store closed");
-				keepGoing = false;
-				logger.info("Keep going false");
 			}
-			
+			store.close();
+			logger.info("Store closed");
 		} catch (NoSuchProviderException e) {
 			logger.error(e.getMessage(), e);
 		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -170,7 +128,6 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			}
 		}
 		logger.info("Message moved");
-		offerFolder.expunge();
 	}
 
 }
