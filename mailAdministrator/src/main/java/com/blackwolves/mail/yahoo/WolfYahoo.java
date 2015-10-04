@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.mail.Address;
 import javax.mail.AuthenticationFailedException;
+import javax.mail.FolderClosedException;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -106,7 +107,7 @@ public abstract class WolfYahoo {
 	 * @param mail
 	 * @throws MessagingException
 	 */
-	public void iterateHeaders(Message message, StringBuilder mail) throws MessagingException {
+	public void iterateHeaders(Message message, StringBuilder mail) throws MessagingException, FolderClosedException {
 		Enumeration headers = message.getAllHeaders();
 		while (headers.hasMoreElements()) {
 			Header h = (Header) headers.nextElement();

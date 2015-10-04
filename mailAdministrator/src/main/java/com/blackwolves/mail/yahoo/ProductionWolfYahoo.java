@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.FolderClosedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -59,6 +60,10 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					offerFolder = store.getFolder(offer);
 					offerFolder.open(Folder.READ_WRITE);
 				}
+				if(!offerFolder.isOpen()){
+					offerFolder = store.getFolder(offer);
+					offerFolder.open(Folder.READ_WRITE);
+				}
 				Message msgs[] = offerFolder.getMessages();
 				bodiesCount = offerFolder.getMessageCount();
 				logger.info("Bodies to create: " + bodiesCount);
@@ -87,6 +92,11 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						}
 					}catch (ArrayIndexOutOfBoundsException e) {
 						logger.error(e.getMessage(), e);
+						continue;
+					}catch (FolderClosedException e) {
+						logger.error(e.getMessage(), e);
+						offerFolder = store.getFolder(offer);
+						offerFolder.open(Folder.READ_WRITE);
 						continue;
 					}
 				}
