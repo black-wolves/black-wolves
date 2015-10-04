@@ -25,6 +25,9 @@ import com.blackwolves.mail.util.Constant;
  */
 public class ProductionWolfYahoo extends WolfYahoo {
 
+	private static final String SEED = "yaninadefays03@yahoo.com";
+	private static final String SEED_PASSWORD = "wolf2015.2";
+
 	/* (non-Javadoc)
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#generateAndSendMail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -56,8 +59,8 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			while(keepGoing){
 				if(!store.isConnected()){
 					logger.info("Store is not connected, starting the connection");
-					store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
-					logger.info("Connected to yaninadefays03@yahoo.com");
+					store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
+					logger.info("Connected to " + SEED);
 					offerFolder = store.getFolder(offer);
 					offerFolder.open(Folder.READ_WRITE);
 				}
@@ -100,8 +103,8 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						logger.error(e.getMessage(), e);
 						if(!store.isConnected()){
 							logger.info("Store is not connected, starting the connection");
-							store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
-							logger.info("Connected to yaninadefays03@yahoo.com");
+							store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
+							logger.info("Connected to " + SEED);
 							offerFolder = store.getFolder(offer);
 							offerFolder.open(Folder.READ_WRITE);
 						}
@@ -115,8 +118,8 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						logger.error(e.getMessage(), e);
 						if(!store.isConnected()){
 							logger.info("Store is not connected, starting the connection");
-							store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
-							logger.info("Connected to yaninadefays03@yahoo.com");
+							store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
+							logger.info("Connected to " + SEED);
 							offerFolder = store.getFolder(offer);
 							offerFolder.open(Folder.READ_WRITE);
 						}

@@ -70,10 +70,7 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-//			ad[0] =  new InternetAddress("yaninadefays03@yahoo.com");
-			ad[0] =  new InternetAddress("gastondapice11@yahoo.com");
-
-//			message.writeTo(new FileOutputStream(new File("/var/www/logs/"+customFrom.getCustomer())));
+			ad[0] =  new InternetAddress("yaninadefays03@yahoo.com");
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
