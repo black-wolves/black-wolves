@@ -25,7 +25,7 @@ import com.blackwolves.mail.util.Constant;
 public class ProductionWolfYahoo extends WolfYahoo {
 
 	private static final String SEED = "yaninadefays03@yahoo.com";
-	private static final String SEED_PASSWORD = "wolf2015.2";
+	private static final String SEED_PASSWORD = "wolf2015.3";
 	private static final String VMTA = "awu9";
 
 	/* (non-Javadoc)
