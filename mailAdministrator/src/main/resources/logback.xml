@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="USER_HOME" value="/var/www/logs" />
+	<property name="USER_HOME" value="/var/www/logs/" />
 
 	<appender name="FILE-AUDIT"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${USER_HOME}/yahooProcessor.log</file>
+		<file>${USER_HOME}yahooProcessor.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
 				%d{yyyy-MM-dd HH:mm:ss} - %msg%n
