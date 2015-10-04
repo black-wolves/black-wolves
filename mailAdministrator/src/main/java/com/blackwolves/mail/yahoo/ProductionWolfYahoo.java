@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -46,14 +47,14 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			// IMAP host for yahoo.
 			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
 			logger.info("Connected to yaninadefays03@yahoo.com");
-			Folder bodiesFolder = store.getFolder(offer);
-			bodiesFolder.open(Folder.READ_ONLY);
-			Message msgs[] = bodiesFolder.getMessages();
+			Folder offerFolder = store.getFolder(offer);
+			offerFolder.open(Folder.READ_WRITE);
+			Message msgs[] = offerFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
 			String vmta = "awu9";
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
-			int bodiesCount = bodiesFolder.getMessageCount();
+			int bodiesCount = offerFolder.getMessageCount();
 			logger.info("Bodies to create: " + bodiesCount);
 			for (int i = 0; i < msgs.length; i++) {
 				try{
@@ -61,7 +62,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					String[] from = message.getFrom()[0].toString().split("\\|");
 					String receiver = from[1];
 					if(contacts.contains(receiver) && from[0].contains("Military")){
-						logger.info("Creating body: " + i);
+						logger.info("Creating body: " + (i+1));
 						mail = new StringBuilder();
 						mail.append("x-virtual-mta: " + vmta);
 						mail.append("\n");
@@ -76,13 +77,14 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						logger.info("Body created for: " + receiver);
 						--bodiesCount;
 						logger.info("Remainig bodies: " + bodiesCount);
+						saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
 					}
 				}catch (ArrayIndexOutOfBoundsException e) {
 					logger.error(e.getMessage(), e);
 					continue;
 				}
 			}
-			bodiesFolder.close(true);
+			offerFolder.close(true);
 			store.close();
 		} catch (NoSuchProviderException e) {
 			logger.error(e.getMessage(), e);
@@ -94,5 +96,28 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		
 	}
 
+	public void saveMessages(Store store, String offer, Message message, Folder offerFolder, int messageNumber) throws Exception {
+		Folder dfolder = store.getFolder(offer+"-OLD");
+		if (!dfolder.exists())
+			dfolder.create(Folder.HOLDS_MESSAGES);
+
+		// Get the message objects to copy
+		Message[] msgs = offerFolder.getMessages(messageNumber, messageNumber);
+		logger.info("Moving " + msgs.length + " messages");
+
+		if (msgs.length != 0) {
+			offerFolder.copyMessages(msgs, dfolder);
+			offerFolder.setFlags(msgs, new Flags(Flags.Flag.DELETED), true);
+
+			// Dump out the Flags of the moved messages, to insure that
+			// all got deleted
+			for (int i = 0; i < msgs.length; i++) {
+				if (!msgs[i].isSet(Flags.Flag.DELETED))
+					logger.info("Message # " + msgs[i] + " not deleted");
+			}
+		}
+		logger.info("Message moved");
+		offerFolder.expunge();
+	}
 
 }
