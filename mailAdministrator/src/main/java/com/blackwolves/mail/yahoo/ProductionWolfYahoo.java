@@ -54,7 +54,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			Folder offerFolder = null;
 			int bodiesCount;
 			boolean keepGoing = true;
-			while(keepGoing ){
+			while(keepGoing){
 				if(!store.isConnected()){
 					logger.info("Store is not connected, starting the connection");
 					store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
@@ -63,13 +63,15 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					offerFolder.open(Folder.READ_WRITE);
 				}
 				if(!offerFolder.isOpen()){
+					logger.info("Folder is not open");
 					offerFolder = store.getFolder(offer);
 					offerFolder.open(Folder.READ_WRITE);
 				}
 				Message msgs[] = offerFolder.getMessages();
 				bodiesCount = offerFolder.getMessageCount();
 				logger.info("Bodies to create: " + bodiesCount);
-				for (int i = 0; i < msgs.length; i++) {
+				int max = msgs.length>1400?1400:msgs.length;
+				for (int i = 0; i < max; i++) {
 					try{
 						Message message = msgs[i];
 						String[] from = message.getFrom()[0].toString().split("\\|");
@@ -97,6 +99,13 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						continue;
 					}catch (FolderClosedException e) {
 						logger.error(e.getMessage(), e);
+						if(!store.isConnected()){
+							logger.info("Store is not connected, starting the connection");
+							store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
+							logger.info("Connected to yaninadefays03@yahoo.com");
+							offerFolder = store.getFolder(offer);
+							offerFolder.open(Folder.READ_WRITE);
+						}
 						if(!offerFolder.isOpen()){
 							logger.info("Folder is not open");
 							offerFolder = store.getFolder(offer);
@@ -105,6 +114,13 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						continue;
 					}catch (IOException e){
 						logger.error(e.getMessage(), e);
+						if(!store.isConnected()){
+							logger.info("Store is not connected, starting the connection");
+							store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
+							logger.info("Connected to yaninadefays03@yahoo.com");
+							offerFolder = store.getFolder(offer);
+							offerFolder.open(Folder.READ_WRITE);
+						}
 						if(!offerFolder.isOpen()){
 							logger.info("Folder is not open");
 							offerFolder = store.getFolder(offer);
