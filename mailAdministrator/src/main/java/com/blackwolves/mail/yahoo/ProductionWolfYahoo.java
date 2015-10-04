@@ -65,7 +65,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						mail.append("\n");
 						mail.append("\n");
 						mail.append(message.getContent());
-						PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + "897/" + receiver);
+						PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
 						out.println(mail);
 						out.close();
 					}

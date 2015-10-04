@@ -12,6 +12,7 @@ public interface Constant {
 	public interface Yahoo{
 		public static final String IMAP_YAHOO = "imap.mail.yahoo.com";
 		public static final String PICKUP_ROUTE = "/ramcache/pmta/pickup/";
+		public static final String BLACKWOLVES_ROUTE = "/root/blackwolves/bodies/";
 		public static final String INBOX = "Inbox";
 		public static final String BODIES = "Bodies";
 
