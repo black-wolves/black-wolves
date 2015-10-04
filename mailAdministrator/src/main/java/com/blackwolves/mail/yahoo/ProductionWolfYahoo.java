@@ -43,6 +43,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 	public void readEmailsAndGenerateBodies(String offer) {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
+		props.setProperty("mail.imap.closefoldersonstorefailure", "false");
 		Session session = Session.getDefaultInstance(props, null);
 		String vmta = "awu9";
 		StringBuilder mail = new StringBuilder();
@@ -97,6 +98,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					}catch (FolderClosedException e) {
 						logger.error(e.getMessage(), e);
 						if(!offerFolder.isOpen()){
+							logger.info("Folder is not open");
 							offerFolder = store.getFolder(offer);
 							offerFolder.open(Folder.READ_WRITE);
 						}
@@ -104,6 +106,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					}catch (IOException e){
 						logger.error(e.getMessage(), e);
 						if(!offerFolder.isOpen()){
+							logger.info("Folder is not open");
 							offerFolder = store.getFolder(offer);
 							offerFolder.open(Folder.READ_WRITE);
 						}
