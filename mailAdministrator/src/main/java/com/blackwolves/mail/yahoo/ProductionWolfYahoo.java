@@ -43,7 +43,6 @@ public class ProductionWolfYahoo extends WolfYahoo {
 	public void readEmailsAndGenerateBodies(String offer) {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
-		props.setProperty("mail.imap.closefoldersonstorefailure", "false");
 		Session session = Session.getDefaultInstance(props, null);
 		String vmta = "awu9";
 		StringBuilder mail = new StringBuilder();
