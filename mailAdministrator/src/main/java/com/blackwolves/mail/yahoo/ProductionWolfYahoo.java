@@ -3,6 +3,7 @@
  */
 package com.blackwolves.mail.yahoo;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Properties;
@@ -95,8 +96,17 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						continue;
 					}catch (FolderClosedException e) {
 						logger.error(e.getMessage(), e);
-						offerFolder = store.getFolder(offer);
-						offerFolder.open(Folder.READ_WRITE);
+						if(!offerFolder.isOpen()){
+							offerFolder = store.getFolder(offer);
+							offerFolder.open(Folder.READ_WRITE);
+						}
+						continue;
+					}catch (IOException e){
+						logger.error(e.getMessage(), e);
+						if(!offerFolder.isOpen()){
+							offerFolder = store.getFolder(offer);
+							offerFolder.open(Folder.READ_WRITE);
+						}
 						continue;
 					}
 				}
