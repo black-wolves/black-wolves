@@ -48,14 +48,16 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			logger.info("Connected to yaninadefays03@yahoo.com");
 			Folder bodiesFolder = store.getFolder(offer);
 			bodiesFolder.open(Folder.READ_ONLY);
-			Message msg[] = bodiesFolder.getMessages();
+			Message msgs[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
 			String vmta = "awu9";
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
-			for (int i = 0; i < msg.length; i++) {
+			int bodiesCount = bodiesFolder.getMessageCount();
+			logger.info("Bodies to create: " + bodiesCount);
+			for (int i = 0; i < msgs.length; i++) {
 				try{
-					Message message = msg[i];
+					Message message = msgs[i];
 					String[] from = message.getFrom()[0].toString().split("\\|");
 					String receiver = from[1];
 					if(contacts.contains(receiver) && from[0].contains("Military")){
@@ -72,6 +74,8 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						out.println(mail);
 						out.close();
 						logger.info("Body created for: " + receiver);
+						--bodiesCount;
+						logger.info("Remainig bodies: " + bodiesCount);
 					}
 				}catch (ArrayIndexOutOfBoundsException e) {
 					logger.error(e.getMessage(), e);
