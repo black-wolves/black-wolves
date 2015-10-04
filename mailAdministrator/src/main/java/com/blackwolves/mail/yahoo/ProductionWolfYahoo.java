@@ -42,19 +42,23 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);
+		String vmta = "awu9";
+		StringBuilder mail = new StringBuilder();
 		try {
-			Store store = session.getStore("imaps");
-			// IMAP host for yahoo.
-			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
-			logger.info("Connected to yaninadefays03@yahoo.com");
-			Folder offerFolder = store.getFolder(offer);
-			offerFolder.open(Folder.READ_WRITE);
-			Message msgs[] = offerFolder.getMessages();
-			StringBuilder mail = new StringBuilder();
-			String vmta = "awu9";
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
-			int bodiesCount = offerFolder.getMessageCount();
+			Store store = session.getStore("imaps");
+			Folder offerFolder = null;
+			int bodiesCount;
+			if(!store.isConnected()){
+				logger.info("Store is not connected, starting the connection");
+				store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
+				logger.info("Connected to yaninadefays03@yahoo.com");
+				offerFolder = store.getFolder(offer);
+				offerFolder.open(Folder.READ_WRITE);
+			}
+			Message msgs[] = offerFolder.getMessages();
+			bodiesCount = offerFolder.getMessageCount();
 			logger.info("Bodies to create: " + bodiesCount);
 			for (int i = 0; i < msgs.length; i++) {
 				try{
