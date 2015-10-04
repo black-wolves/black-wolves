@@ -50,46 +50,54 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			Store store = session.getStore("imaps");
 			Folder offerFolder = null;
 			int bodiesCount;
-			if(!store.isConnected()){
-				logger.info("Store is not connected, starting the connection");
-				store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
-				logger.info("Connected to yaninadefays03@yahoo.com");
-				offerFolder = store.getFolder(offer);
-				offerFolder.open(Folder.READ_WRITE);
-			}
-			Message msgs[] = offerFolder.getMessages();
-			bodiesCount = offerFolder.getMessageCount();
-			logger.info("Bodies to create: " + bodiesCount);
-			for (int i = 0; i < msgs.length; i++) {
-				try{
-					Message message = msgs[i];
-					String[] from = message.getFrom()[0].toString().split("\\|");
-					String receiver = from[1];
-					if(contacts.contains(receiver) && from[0].contains("Military")){
-						logger.info("Creating body: " + (i+1));
-						mail = new StringBuilder();
-						mail.append("x-virtual-mta: " + vmta);
-						mail.append("\n");
-						mail.append("x-receiver: " + receiver);
-						iterateHeaders(message, mail);
-						mail.append("\n");
-						mail.append("\n");
-						mail.append(message.getContent());
-						PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
-						out.println(mail);
-						out.close();
-						logger.info("Body created for: " + receiver);
-						--bodiesCount;
-						logger.info("Remainig bodies: " + bodiesCount);
-						saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
-					}
-				}catch (ArrayIndexOutOfBoundsException e) {
-					logger.error(e.getMessage(), e);
-					continue;
+			boolean keepGoing = true;
+			while(keepGoing ){
+				if(!store.isConnected()){
+					logger.info("Store is not connected, starting the connection");
+					store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
+					logger.info("Connected to yaninadefays03@yahoo.com");
+					offerFolder = store.getFolder(offer);
+					offerFolder.open(Folder.READ_WRITE);
 				}
+				Message msgs[] = offerFolder.getMessages();
+				bodiesCount = offerFolder.getMessageCount();
+				logger.info("Bodies to create: " + bodiesCount);
+				for (int i = 0; i < msgs.length; i++) {
+					try{
+						Message message = msgs[i];
+						String[] from = message.getFrom()[0].toString().split("\\|");
+						String receiver = from[1];
+						if(contacts.contains(receiver) && from[0].contains("Military")){
+							logger.info("Creating body: " + (i+1));
+							mail = new StringBuilder();
+							mail.append("x-virtual-mta: " + vmta);
+							mail.append("\n");
+							mail.append("x-receiver: " + receiver);
+							iterateHeaders(message, mail);
+							mail.append("\n");
+							mail.append("\n");
+							mail.append(message.getContent());
+							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
+							out.println(mail);
+							out.close();
+							logger.info("Body created for: " + receiver);
+							--bodiesCount;
+							logger.info("Remainig bodies: " + bodiesCount);
+							saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
+						}
+					}catch (ArrayIndexOutOfBoundsException e) {
+						logger.error(e.getMessage(), e);
+						continue;
+					}
+				}
+				offerFolder.close(true);
+				logger.info("Folder closed");
+				store.close();
+				logger.info("Store closed");
+				keepGoing = false;
+				logger.info("Keep going false");
 			}
-			offerFolder.close(true);
-			store.close();
+			
 		} catch (NoSuchProviderException e) {
 			logger.error(e.getMessage(), e);
 		} catch (MessagingException e) {
