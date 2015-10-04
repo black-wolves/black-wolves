@@ -18,9 +18,9 @@ public class YahooProcessor {
 		boolean test = false;
 		boolean warmup = false;
 
-		generateDropBodies(test, args[0], args[1]);
+//		generateDropBodies(test, args[0], args[1]);
 
-//		 readAndTuneBodies(test, warmup, args);
+		 readAndTuneBodies(test, warmup, args);
 	}
 
 	/**

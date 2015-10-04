@@ -74,31 +74,36 @@ public class ProductionWolfYahoo extends WolfYahoo {
 				logger.info("Bodies to create: " + bodiesCount);
 				keepGoing = msgs.length==0?false:true;
 				if(keepGoing){
-					int i = WolfYahoo.randInt(0, msgs.length);
-					Message message = msgs[i];
-					String[] from = message.getFrom()[0].toString().split("\\|");
-					String receiver = from[1];
-					if(contacts.contains(receiver) && from[0].contains("Military")){
-						logger.info("Creating body: " + count);
-						count++;
-						StringBuilder mail = new StringBuilder();
-						mail.append("x-virtual-mta: " + VMTA);
-						mail.append("\n");
-						mail.append("x-receiver: " + receiver);
-						iterateHeaders(message, mail);
-						mail.append("\n");
-						mail.append("\n");
-						mail.append(message.getContent());
-						PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
-						out.println(mail);
-						out.close();
-						logger.info("Body created for: " + receiver);
-						--bodiesCount;
-						logger.info("Remainig bodies: " + bodiesCount);
-						saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
+					try{
+						int i = WolfYahoo.randInt(0, msgs.length);
+						Message message = msgs[i];
+						String[] from = message.getFrom()[0].toString().split("\\|");
+						String receiver = from[1];
+						if(contacts.contains(receiver) && from[0].contains("Military")){
+							logger.info("Creating body: " + count);
+							count++;
+							StringBuilder mail = new StringBuilder();
+							mail.append("x-virtual-mta: " + VMTA);
+							mail.append("\n");
+							mail.append("x-receiver: " + receiver);
+							iterateHeaders(message, mail);
+							mail.append("\n");
+							mail.append("\n");
+							mail.append(message.getContent());
+							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
+							out.println(mail);
+							out.close();
+							logger.info("Body created for: " + receiver);
+							--bodiesCount;
+							logger.info("Remainig bodies: " + bodiesCount);
+							saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
+						}
+						offerFolder.close(true);
+						logger.info("Folder closed");
+					} catch (ArrayIndexOutOfBoundsException e) {
+						logger.error(e.getMessage(), e);
+						continue;
 					}
-					offerFolder.close(true);
-					logger.info("Folder closed");
 				}
 			}
 			store.close();
