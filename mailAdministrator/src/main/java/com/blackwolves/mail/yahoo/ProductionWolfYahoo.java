@@ -4,7 +4,6 @@
 package com.blackwolves.mail.yahoo;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,30 +44,23 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		try {
 			Store store = session.getStore("imaps");
 			// IMAP host for yahoo.
-			store.connect(Constant.Yahoo.IMAP_YAHOO, "gastondapice11@yahoo.com", "wolf2015.1");
-//			Folder bodiesFolder = store.getFolder(offer);
-			Folder bodiesFolder = store.getFolder(Constant.Yahoo.INBOX);
+			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
+			Folder bodiesFolder = store.getFolder(offer);
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
 			String vmta = "awu9";
-//			List<String[]> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
-			List<String[]> contacts = generateList("/var/www/1641/", "Final_supresat_shuf_Clicks_Yahoo_20150416.1641.noseed.noca");
-//			for (String[] contact : contacts) {
-//			for (; from < to; from++) {
+			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			for (int i = 0; i < msg.length; i++) {
 				try{
 					Message message = msg[i];
 					String[] from = message.getFrom()[0].toString().split("\\|");
-					String[] receiver = {from[1]};
-					if(contacts.contains(receiver)){
-	//					String[] contact = contacts.get(from);
-	//					String[] c = contact[0].split("\\|");
+					String receiver = from[1];
+					if(contacts.contains(receiver) && from[0].contains("Military")){
 						mail = new StringBuilder();
 						mail.append("x-virtual-mta: " + vmta);
-	//					int radomBody = randInt(0, msg.length-1);
 						mail.append("\n");
-						mail.append("x-receiver: " + receiver[0]);
+						mail.append("x-receiver: " + receiver);
 						iterateHeaders(message, mail);
 						mail.append("\n");
 						mail.append("\n");

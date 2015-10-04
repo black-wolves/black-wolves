@@ -50,10 +50,9 @@ public class WarmupWolfYahoo extends WolfYahoo {
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
 			String vmta = "awu2";
-			List<String[]> contacts;
+			List<String> contacts;
 			contacts = generateList(Constant.ROUTE , "seeds.csv");
-			for (String[] contact : contacts) {
-				String[] c = contact[0].split("\\|");
+			for (String contact : contacts) {
 				mail = new StringBuilder();
 				mail.append("x-virtual-mta: " + vmta);
 				int radomBody = randInt(0, msg.length-1);
@@ -62,7 +61,7 @@ public class WarmupWolfYahoo extends WolfYahoo {
 				mail.append("\n");
 				mail.append("\n");
 				mail.append(message.getContent());
-				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + c[0]);
+				PrintWriter out = new PrintWriter(Constant.Yahoo.PICKUP_ROUTE + contact);
 				out.println(mail);
 				out.close();
 			}

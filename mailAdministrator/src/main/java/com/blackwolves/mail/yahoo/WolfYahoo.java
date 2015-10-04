@@ -141,17 +141,22 @@ public abstract class WolfYahoo {
 	/**
 	 * @return
 	 */
-	public static List<String[]> generateList(String route, String file) {
+	public static List<String> generateList(String route, String file) {
 		List<String[]> list = new ArrayList<String[]>();
+		List<String> finalList = new ArrayList<String>();
 		try {
 			CSVReader reader = new CSVReader(new FileReader(route + file));
 			list = reader.readAll();
+			for (String[] uglySeed : list) {
+				String[] seed = uglySeed[0].split("\\|");
+				finalList.add(seed[0]);
+			}
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return list;
+		return finalList;
 	}
 
 	/**
