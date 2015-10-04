@@ -58,10 +58,10 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			while(keepGoing){
 				if(!store.isConnected()){
 					
-					props = System.getProperties();
-					props.setProperty("mail.store.protocol", "imaps");
-					session = Session.getDefaultInstance(props, null);
-					store = session.getStore("imaps");
+//					props = System.getProperties();
+//					props.setProperty("mail.store.protocol", "imaps");
+//					session = Session.getDefaultInstance(props, null);
+//					store = session.getStore("imaps");
 					
 					logger.info("Store is not connected, starting the connection");
 					store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
