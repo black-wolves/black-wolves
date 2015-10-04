@@ -35,6 +35,7 @@ import com.blackwolves.mail.util.Constant;
  */
 public abstract class WolfYahoo {
 
+	private static final String SEED_TO_SEND_EMAILS = "yaninadefays03@yahoo.com";
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
 	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, String subject, String body) {
@@ -70,7 +71,7 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-			ad[0] =  new InternetAddress("yaninadefays03@yahoo.com");
+			ad[0] =  new InternetAddress(SEED_TO_SEND_EMAILS);
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
