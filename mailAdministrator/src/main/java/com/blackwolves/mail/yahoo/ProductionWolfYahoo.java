@@ -45,18 +45,21 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			Store store = session.getStore("imaps");
 			// IMAP host for yahoo.
 			store.connect(Constant.Yahoo.IMAP_YAHOO, "yaninadefays03@yahoo.com", "wolf2015.1");
+			logger.info("Connected to yaninadefays03@yahoo.com");
 			Folder bodiesFolder = store.getFolder(offer);
 			bodiesFolder.open(Folder.READ_ONLY);
 			Message msg[] = bodiesFolder.getMessages();
 			StringBuilder mail = new StringBuilder();
 			String vmta = "awu9";
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
+			logger.info("Contact lists generated");
 			for (int i = 0; i < msg.length; i++) {
 				try{
 					Message message = msg[i];
 					String[] from = message.getFrom()[0].toString().split("\\|");
 					String receiver = from[1];
 					if(contacts.contains(receiver) && from[0].contains("Military")){
+						logger.info("Creating body: " + i);
 						mail = new StringBuilder();
 						mail.append("x-virtual-mta: " + vmta);
 						mail.append("\n");
@@ -68,6 +71,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 						PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
 						out.println(mail);
 						out.close();
+						logger.info("Body created for: " + receiver);
 					}
 				}catch (ArrayIndexOutOfBoundsException e) {
 					logger.error(e.getMessage(), e);
