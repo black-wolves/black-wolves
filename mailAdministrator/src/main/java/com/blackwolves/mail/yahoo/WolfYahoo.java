@@ -101,7 +101,7 @@ public abstract class WolfYahoo {
 		}
 	}
 
-	public abstract void readEmailsAndGenerateBodies(String offer);
+	public abstract void readEmailsAndGenerateBodies(String offer, String seed, String pass);
 
 	/**
 	 * @param message

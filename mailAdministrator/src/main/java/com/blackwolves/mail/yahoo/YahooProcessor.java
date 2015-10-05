@@ -18,9 +18,9 @@ public class YahooProcessor {
 		boolean test = false;
 		boolean warmup = false;
 
-		generateDropBodies(test, args[0], args[1]);
+//		generateDropBodies(test, args[0], args[1]);
 
-//		 readAndTuneBodies(test, warmup, args);
+		 readAndTuneBodies(test, warmup, args);
 	}
 
 	/**
@@ -33,17 +33,21 @@ public class YahooProcessor {
 			logger.info("TEST MODE");
 
 			WolfYahoo handler = new TestWolfYahoo();
-			handler.readEmailsAndGenerateBodies(null);
+			handler.readEmailsAndGenerateBodies(null, null ,null);
 		} else if (warmup) {
 			logger.info("WARMUP MODE");
 			String offer = args[0];
+			String seed = args[1];
+			String pass = args[2];
 			WolfYahoo handler = new WarmupWolfYahoo();
-			handler.readEmailsAndGenerateBodies(offer);
+			handler.readEmailsAndGenerateBodies(offer, seed, pass);
 		} else {
 			logger.info("ELSE MODE");
 			String offer = args[0];
+			String seed = args[1];
+			String pass = args[2];
 			WolfYahoo handler = new ProductionWolfYahoo();
-			handler.readEmailsAndGenerateBodies(offer);
+			handler.readEmailsAndGenerateBodies(offer, seed, pass);
 		}
 
 	}

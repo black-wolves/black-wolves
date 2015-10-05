@@ -24,8 +24,8 @@ import com.blackwolves.mail.util.Constant;
  */
 public class ProductionWolfYahoo extends WolfYahoo {
 
-	private static final String SEED = "yaninadefays03@yahoo.com";
-	private static final String SEED_PASSWORD = "wolf2015.3";
+//	private static final String SEED = "yaninadefays03@yahoo.com";
+//	private static final String SEED_PASSWORD = "wolf2015.3";
 	private static final String VMTA = "awu9";
 
 	/* (non-Javadoc)
@@ -43,7 +43,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#readEmailsAndGenerateBodies(java.lang.String, int, int)
 	 */
 	@Override
-	public void readEmailsAndGenerateBodies(String offer) {
+	public void readEmailsAndGenerateBodies(String offer, String seed, String pass) {
 		try {
 			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
@@ -64,8 +64,8 @@ public class ProductionWolfYahoo extends WolfYahoo {
 //					store = session.getStore("imaps");
 					
 					logger.info("Store is not connected, starting the connection");
-					store.connect(Constant.Yahoo.IMAP_YAHOO, SEED, SEED_PASSWORD);
-					logger.info("Connected to " + SEED);
+					store.connect(Constant.Yahoo.IMAP_YAHOO, seed, pass);
+					logger.info("Connected to " + seed);
 				}
 				Folder offerFolder = store.getFolder(offer);
 				offerFolder.open(Folder.READ_WRITE);
@@ -90,7 +90,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 							mail.append("\n");
 							mail.append("\n");
 							mail.append(message.getContent());
-							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + "897/" + receiver);
+							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + offer + "/" + receiver);
 							out.println(mail);
 							out.close();
 							logger.info("Body created for: " + receiver);
