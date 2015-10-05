@@ -36,9 +36,9 @@ import com.blackwolves.mail.util.Constant;
 public abstract class WolfYahoo {
 
 	private static final String[] SEEDS_TO_SEND_EMAILS = {
-			"oufeolxonhk@yahoo.com", "vfzie@yahoo.com", "vhecxrg@yahoo.com",
-			"dtyziysaxyl@yahoo.com", "exiwzoqeuvt@yahoo.com",
-			"mrgszcqcf@yahoo.com", "gazvcqsg@yahoo.com" };
+			"gastondapice@yahoo.com", "gastondapice02@yahoo.com", "gastondapice03@yahoo.com",
+			"gastondapice04@yahoo.com", "gastondapice05@yahoo.com",
+			"gastondapice10@yahoo.com", "gastondapice11@yahoo.com" };
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
 	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, String subject, String body) {
