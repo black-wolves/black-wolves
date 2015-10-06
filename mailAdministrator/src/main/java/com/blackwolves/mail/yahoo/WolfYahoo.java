@@ -74,14 +74,15 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-			ad[0] =  new InternetAddress(SEEDS_TO_SEND_EMAILS[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)]);
+			String to = SEEDS_TO_SEND_EMAILS[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+			ad[0] =  new InternetAddress(to);
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
 			transport.connect(Constant.Yahoo.HOST, user, pass);
 			transport.sendMessage(message, ad);
 			transport.close();
-			logger.info("Body generation successfully for "+ customFrom.getCustomer());
+			logger.info("Body generation successfully for "+ customFrom.getCustomer() + " sent to: " + to);
 		} catch (AuthenticationFailedException e){
 			PrintWriter out = null;
 			try {
