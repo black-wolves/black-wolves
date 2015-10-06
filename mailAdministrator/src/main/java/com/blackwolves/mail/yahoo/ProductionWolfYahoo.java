@@ -117,8 +117,9 @@ public class ProductionWolfYahoo extends WolfYahoo {
 
 	public void saveMessages(Store store, String offer, Message message, Folder offerFolder, int messageNumber) throws Exception {
 		Folder dfolder = store.getFolder(offer+"-OLD");
-		if (!dfolder.exists())
-			dfolder.create(Folder.HOLDS_MESSAGES);
+//		if (!dfolder.exists()){
+//			dfolder.create(Folder.HOLDS_MESSAGES);
+//		}
 
 		// Get the message objects to copy
 		Message[] msgs = offerFolder.getMessages(messageNumber, messageNumber);
