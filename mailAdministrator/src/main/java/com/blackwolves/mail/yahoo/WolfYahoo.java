@@ -36,9 +36,21 @@ import com.blackwolves.mail.util.Constant;
 public abstract class WolfYahoo {
 
 	private static final String[] SEEDS_TO_SEND_EMAILS = {
-			"gastondapice@yahoo.com", "gastondapice02@yahoo.com", "gastondapice03@yahoo.com",
-			"gastondapice04@yahoo.com", "gastondapice05@yahoo.com",
-			"gastondapice10@yahoo.com", "gastondapice11@yahoo.com" };
+			"gastondapice@yahoo.com", "gastondapice02@yahoo.com",
+			"gastondapice03@yahoo.com", "gastondapice04@yahoo.com",
+			"gastondapice05@yahoo.com", "gastondapice10@yahoo.com",
+			"gastondapice11@yahoo.com" };
+
+	private static final String[] BACKUP_SEED = {
+			"gastondapice@yahoo.com,wolf2015.5",
+			"gastondapice02@yahoo.com,wolf2015.3",
+			"gastondapice03@yahoo.com,wolf2015.3",
+			"gastondapice04@yahoo.com,wolf2015.3",
+			"gastondapice05@yahoo.com,wolf2015.3",
+			"gastondapice10@yahoo.com,wolf2015.3",
+			"gastondapice11@yahoo.com,wolf2015.3",
+			"yaninadefays03@yahoo.com,wolf2015.3" };
+
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
 	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, String subject, String body) {
@@ -56,6 +68,24 @@ public abstract class WolfYahoo {
 		// Get the default Session object.
 		Session session = Session.getDefaultInstance(properties);
 
+		boolean keepTrying = false;
+		do{
+			sendEmail(user, pass, customFrom, subject, body, session, keepTrying);
+		}while(keepTrying);
+	}
+
+	/**
+	 * @param user
+	 * @param pass
+	 * @param customFrom
+	 * @param subject
+	 * @param body
+	 * @param session
+	 * @param keepTrying 
+	 * @return 
+	 */
+	private void sendEmail(String user, String pass, CustomFrom customFrom,
+			String subject, String body, Session session, boolean keepTrying) {
 		try {
 			// Create a default MimeMessage object.
 			MimeMessage message = new CustomMimeMessage(session);
@@ -79,26 +109,43 @@ public abstract class WolfYahoo {
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
+			if(keepTrying){
+				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+				String bs[] = backupSeed.split(",");
+				user = bs[0];
+				pass = bs[1];
+			}
 			transport.connect(Constant.Yahoo.HOST, user, pass);
 			transport.sendMessage(message, ad);
 			transport.close();
 			logger.info("Body generation successfully for "+ customFrom.getCustomer() + " sent to: " + to);
+			keepTrying = false;
 		} catch (AuthenticationFailedException e){
-			PrintWriter out = null;
-			try {
-				out = new PrintWriter(Constant.ROUTE_LOGS_ERROR + user);
-				StringBuilder error  = new StringBuilder();
-				error.append("Could not connect with user: " + user);
-				out.println(error);
-			} catch (FileNotFoundException e1) {
-				logger.error(e.getMessage(), e);
-			} finally{
-				if(out!=null){
-					out.close();
-				}
-			}
+			saveSeedErrorOnException(user, e, keepTrying);
 		} catch (MessagingException e) {
-			logger.error(e.getMessage(), e);
+			saveSeedErrorOnException(user, e, keepTrying);
+		}
+	}
+
+	/**
+	 * @param user
+	 * @param e
+	 */
+	private void saveSeedErrorOnException(String user, Exception e, boolean keepTrying) {
+		
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter(Constant.ROUTE_LOGS_ERROR + user);
+			StringBuilder error  = new StringBuilder();
+			error.append("Could not connect with user: " + user);
+			out.println(error);
+		} catch (FileNotFoundException e1) {
+			logger.error(e.getMessage(), e1);
+		} finally{
+			if(out!=null){
+				out.close();
+			}
+			keepTrying = true;
 		}
 	}
 
