@@ -67,7 +67,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 				Message msgs[] = offerFolder.getMessages();
 				int bodiesCount = offerFolder.getMessageCount();
 				logger.info("Bodies to create: " + bodiesCount);
-				keepGoing = msgs==null||msgs.length==0?false:true;
+				keepGoing = msgs==null||msgs.length<=0?false:true;
 				if(keepGoing){
 					try{
 						int i = WolfYahoo.randInt(0, msgs.length);
