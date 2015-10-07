@@ -138,6 +138,10 @@ public abstract class WolfYahoo {
 			out = new PrintWriter(Constant.ROUTE_LOGS_ERROR + user);
 			StringBuilder error  = new StringBuilder();
 			error.append("Could not connect with user: " + user);
+			error.append("\n");
+			error.append(e.getMessage());
+			error.append("\n");
+			error.append(e);
 			out.println(error);
 		} catch (FileNotFoundException e1) {
 			logger.error(e.getMessage(), e1);
