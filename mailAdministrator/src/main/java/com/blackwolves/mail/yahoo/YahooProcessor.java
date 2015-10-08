@@ -20,7 +20,7 @@ public class YahooProcessor {
 
 		if(args[0] != null && args[0].equals("send")){
 			logger.info("SEND ----- generate and drop bodies option selected");
-			generateDropBodies(test, args[1], args[2]);
+			generateDropBodies(test, args);
 		}else if(args[0] != null && args[0].equals("download")){
 			logger.info("DOWNLOAD ----- read and tune bodies option selected");
 			readAndTuneBodies(test, warmup, args);
@@ -62,7 +62,7 @@ public class YahooProcessor {
 	 * @param test
 	 * 
 	 */
-	private static void generateDropBodies(boolean test, String senderEmailAndPassword, String contactEmail) {
+	private static void generateDropBodies(boolean test, String[] args) {
 
 		// TEST PURPOSES
 		// user = "edubartolini@yahoo.com";
@@ -75,9 +75,11 @@ public class YahooProcessor {
 		// WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/",
 		// "seeds_good.csv");
 		
-		String senderEmail = senderEmailAndPassword.split(",")[0];
-		String senderPassword = senderEmailAndPassword.split(",")[1];
-
+		String senderEmail = args[1].split(",")[0];
+		String senderPassword = args[1].split(",")[1];
+		String domainRo = args[1].split(",")[2];
+		String contactEmail = args[2];
+		
 //		String[] offerFroms = { "The Zebra" };
 		
 		String[] offerFroms = { "Military.com" };
@@ -129,10 +131,7 @@ public class YahooProcessor {
 			WolfYahoo handler = new ProductionWolfYahoo();
 			try {
 				logger.info("customer: " + contactEmail + " sender: " + senderEmail);
-				String[] senderRO = senderEmail.split("@");
-				senderRO[0] += "@betoacostadalefuncionanamelamily.ro";
-//				senderRO[0] += "@dmacareanaalefuncionanamelamance.ro";
-				CustomFrom customFrom = new CustomFrom(contactEmail, senderRO[0], offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
+				CustomFrom customFrom = new CustomFrom(contactEmail, domainRo, offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
 				handler.generateAndSendMail(senderEmail, senderPassword, customFrom, subjects[WolfYahoo.randInt(0, subjects.length - 1)], body);
 
 			} catch (Exception e) {
