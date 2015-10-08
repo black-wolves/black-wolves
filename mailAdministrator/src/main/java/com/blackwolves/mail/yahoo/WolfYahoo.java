@@ -53,7 +53,7 @@ public abstract class WolfYahoo {
 
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, CustomFrom customFrom, String subject, String body) {
+	public void generateAndSendMail(String user, String pass, String subject, String body, String contactEmail, String domainRo, String offerFrom) {
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -69,8 +69,9 @@ public abstract class WolfYahoo {
 		Session session = Session.getDefaultInstance(properties);
 
 		boolean keepTrying = false;
+		
 		do{
-			sendEmail(user, pass, customFrom, subject, body, session, keepTrying);
+			sendEmail(user, pass, subject, body, session, keepTrying, contactEmail, domainRo, offerFrom);
 		}while(keepTrying);
 	}
 
@@ -82,16 +83,26 @@ public abstract class WolfYahoo {
 	 * @param body
 	 * @param session
 	 * @param keepTrying 
+	 * @param offerFroms 
+	 * @param domainRo 
+	 * @param contactEmail 
 	 * @return 
 	 */
-	private void sendEmail(String user, String pass, CustomFrom customFrom,
-			String subject, String body, Session session, boolean keepTrying) {
+	private void sendEmail(String user, String pass, String subject, String body, Session session, boolean keepTrying, String contactEmail, String senderDomainRo, String offerFrom) {
 		try {
+			if(keepTrying){
+				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+				String bs[] = backupSeed.split(",");
+				user = bs[0];
+				pass = bs[1];
+				senderDomainRo = user.split("@")[0] + "@betoacostadalefuncionanamelamily.ro";
+			}
 			// Create a default MimeMessage object.
 			MimeMessage message = new CustomMimeMessage(session);
 
 			// Set From: header field of the header.
 			//message.setFrom(new InternetAddress(from));
+			CustomFrom customFrom = new CustomFrom(contactEmail, senderDomainRo, offerFrom);
 			message.setFrom(customFrom);
 
 			// Set Subject: header field
@@ -109,12 +120,6 @@ public abstract class WolfYahoo {
 
 			// Send message
 			Transport transport = session.getTransport("smtp");
-			if(keepTrying){
-				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
-				String bs[] = backupSeed.split(",");
-				user = bs[0];
-				pass = bs[1];
-			}
 			transport.connect(Constant.Yahoo.HOST, user, pass);
 			transport.sendMessage(message, ad);
 			transport.close();

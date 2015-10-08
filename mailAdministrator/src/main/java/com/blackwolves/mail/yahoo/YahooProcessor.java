@@ -77,7 +77,7 @@ public class YahooProcessor {
 		
 		String senderEmail = args[1].split(",")[0];
 		String senderPassword = args[1].split(",")[1];
-		String domainRo = args[1].split(",")[2];
+		String senderDomainRo = args[1].split(",")[2];
 		String contactEmail = args[2];
 		
 //		String[] offerFroms = { "The Zebra" };
@@ -131,8 +131,7 @@ public class YahooProcessor {
 			WolfYahoo handler = new ProductionWolfYahoo();
 			try {
 				logger.info("customer: " + contactEmail + " sender: " + senderEmail);
-				CustomFrom customFrom = new CustomFrom(contactEmail, domainRo, offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
-				handler.generateAndSendMail(senderEmail, senderPassword, customFrom, subjects[WolfYahoo.randInt(0, subjects.length - 1)], body);
+				handler.generateAndSendMail(senderEmail, senderPassword, subjects[WolfYahoo.randInt(0, subjects.length - 1)], body, contactEmail, senderDomainRo, offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
 
 			} catch (Exception e) {
 				logger.info("Error", e.getMessage());
