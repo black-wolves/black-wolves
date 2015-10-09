@@ -123,7 +123,7 @@ public abstract class WolfYahoo {
 			transport.connect(Constant.Yahoo.HOST, user, pass);
 			transport.sendMessage(message, ad);
 			transport.close();
-			logger.info("Body generation successfully for "+ customFrom.getCustomer() + " sent to: " + to);
+			logger.info("Body generation successfully for "+ customFrom.getCustomer() + " sent to: " + to + " created by: " + user);
 			keepTrying = false;
 		} catch (AuthenticationFailedException e){
 			saveSeedErrorOnException(user, e, keepTrying);
