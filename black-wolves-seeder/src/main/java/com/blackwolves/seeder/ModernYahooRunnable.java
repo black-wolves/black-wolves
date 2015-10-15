@@ -31,6 +31,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 		checkWelcomeDialog();
 		validateOkayModal();
+		
+		moveMouse();
 
 		if (validateInboxFolder()) {
 
@@ -748,6 +750,123 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
 					.findElement(By.tagName("a"));
 			send.click();
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StaleElementReferenceException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotVisibleException e) {
+			logger.error(e.getMessage(), e);
+		} catch (ElementNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	public void moveMouse(){
+		try {
+			logger.info("Enters to move mouse");
+			//Build webElement object to contain menu link xpath for all the mainmenu links
+//			WebElement HomeLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[1]/a")); 
+//			WebElement ShowsLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[2]/a"));   
+//			WebElement MusicLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[3]/a"));
+//			WebElement EventsLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[6]/a"));
+			
+			WebElement yucsHelp = driver.findElement(By.id("yucs-help"));
+			WebElement inboxLabel = driver.findElement(By.className("inbox-label"));
+			WebElement multitask = driver.findElement(By.id("multitask"));
+			WebElement spamLabel = driver.findElement(By.id("spam-label"));
+			WebElement yucsHomeLink = driver.findElement(By.id("yucs-home_link"));
+			WebElement typeaheadInput = driver.findElement(By.className("typeahead-input"));
+			WebElement uhWrapper = driver.findElement(By.xpath("//*[@id='uhWrapper']/table/tbody/tr/td/a"));
+			WebElement yucsProfile = driver.findElement(By.id("yucs-profile"));
+			WebElement smartviews = driver.findElement(By.id("smartviews"));
+			WebElement trash = driver.findElement(By.className("trash"));
+			WebElement sent = driver.findElement(By.className("sent"));
+			WebElement drafts = driver.findElement(By.className("drafts"));
+			WebElement compose = driver.findElement(By.id("Compose"));
+			WebElement mailSearchBtn = driver.findElement(By.id("mail-search-btn"));
+			WebElement webSearchBtn = driver.findElement(By.id("web-search-btn"));
+	
+			//Create an action object called myMouse
+			Actions myMouse = new Actions(driver);
+
+			//there is a slight delay before each mouse movement hence the "Thread.sleep" statement
+			if (throwDice()) {
+				myMouse.moveToElement(yucsHelp).build().perform();
+				logger.info("Moving to configuration wheel");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(inboxLabel).build().perform();
+				logger.info("Moving to inbox");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(multitask).build().perform();
+				logger.info("Moving to multitask");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(spamLabel).build().perform();
+				logger.info("Moving to spam");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(yucsHomeLink).build().perform();
+				logger.info("Moving to Home");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(typeaheadInput).build().perform();
+				logger.info("Moving to search box");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(uhWrapper).build().perform();
+				logger.info("Moving to yahoo icon");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(yucsProfile).build().perform();
+				logger.info("Moving to Profile");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(smartviews).build().perform();
+				logger.info("Moving to smartviews");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(trash).build().perform();
+				logger.info("Moving to trash");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(sent).build().perform();
+				logger.info("Moving to sent");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(drafts).build().perform();
+				logger.info("Moving to drafts");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(compose).build().perform();
+				logger.info("Moving to compose");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(mailSearchBtn).build().perform();
+				logger.info("Moving to mailSearchBtn");
+				Thread.sleep(5000L);
+			}
+			if (throwDice()) {
+				myMouse.moveToElement(webSearchBtn).build().perform();
+				logger.info("Moving to webSearchBtn");
+				Thread.sleep(5000L);
+			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
