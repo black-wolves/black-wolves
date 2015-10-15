@@ -566,14 +566,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 				return false;
 			}
 			
-			if (isWarmupDomain(false, msg)) {
+//			if (isWarmupDomain(false, msg)) {
 				WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 				logger.info("******** Dragging Message to inbox ***********");
 				(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
 		//		driver.navigate().refresh();
 				return true;
-			}
-			return false;
+//			}
+//			return false;
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
@@ -599,7 +599,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			WebElement currentMsg = spamMsgs.get(randomPosition);
 
-			if (isWarmupDomain(false, currentMsg)) {
+//			if (isWarmupDomain(false, currentMsg)) {
 				logger.info("Opening the spam message");
 				currentMsg.findElement(By.className("subj")).click();
 				Thread.sleep(randInt(2000, 3000));
@@ -616,9 +616,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 					Thread.sleep(randInt(2500, 3500));
 				}
 				return true;
-			} else {
-				return false;
-			}
+//			} else {
+//				return false;
+//			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
