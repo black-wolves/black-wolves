@@ -57,7 +57,8 @@ public class Seeder implements Runnable {
 
 	public void run() {
 		logger.info("Calling addPermittedSender()");
-		addPermittedSender();
+//		addPermittedSender();
+		checkMail();
 	}
 
 	/**
@@ -66,8 +67,8 @@ public class Seeder implements Runnable {
 		logger.info("Entering first do while");
 //		do {
 			dbSeed = new Seed(seed[0], seed[1]);
-			logger.info("Searching for seed PID");
-			dbSeed.setPid(getPidFromFile(seed[0]));
+//			logger.info("Searching for seed PID");
+//			dbSeed.setPid(getPidFromFile(seed[0]));
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -112,6 +113,7 @@ public class Seeder implements Runnable {
 //				}
 //			}
 
+			driver.quit();
 		} else {
 			logger.info("New Interface detected.Exiting");
 		}
