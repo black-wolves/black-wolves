@@ -482,6 +482,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 	@Override
 	public void processSpam(String[] seed) {
 		logger.info("Processing Spam....");
+		
+		moveMouse();
 
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
