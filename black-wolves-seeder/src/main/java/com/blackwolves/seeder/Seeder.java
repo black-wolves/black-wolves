@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
@@ -25,11 +24,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
+import au.com.bytecode.opencsv.CSVReader;
+
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author gaston.dapice
@@ -65,7 +64,7 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		logger.info("Entering first do while");
-		do {
+//		do {
 			dbSeed = new Seed(seed[0], seed[1]);
 			logger.info("Searching for seed PID");
 			dbSeed.setPid(getPidFromFile(seed[0]));
@@ -74,7 +73,7 @@ public class Seeder implements Runnable {
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage(), e);
 			}
-		} while (dbSeed.getPid() == 0);
+//		} while (dbSeed.getPid() == 0);
 
 		WebDriver driver = createWebDriver();
 
@@ -87,31 +86,31 @@ public class Seeder implements Runnable {
 		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
 
 		if (handler != null) {
-
-			addToAddressBook(driver);
-
-			createNewFolder(driver);
-
+//
+//			addToAddressBook(driver);
+//
+//			createNewFolder(driver);
+//
 			handler.runProcess();
-
-			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-
-			while (true) {
-
-				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
-				if (diff >= 0) {
-					logger.info("Running the process");
-					handler.runProcess();
-					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-				} else {
-					logger.info("Waiting for the Date to reactivate. Time to wait : " + diff + " minutes");
-					try {
-						Thread.sleep(60000);
-					} catch (InterruptedException e) {
-						logger.error(e.getMessage(), e);
-					}
-				}
-			}
+//
+//			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
+//
+//			while (true) {
+//
+//				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
+//				if (diff >= 0) {
+//					logger.info("Running the process");
+//					handler.runProcess();
+//					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
+//				} else {
+//					logger.info("Waiting for the Date to reactivate. Time to wait : " + diff + " minutes");
+//					try {
+//						Thread.sleep(60000);
+//					} catch (InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//					}
+//				}
+//			}
 
 		} else {
 			logger.info("New Interface detected.Exiting");
