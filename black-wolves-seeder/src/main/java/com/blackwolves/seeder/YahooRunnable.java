@@ -35,7 +35,7 @@ public abstract class YahooRunnable {
 
 	protected static Logger logger;
 
-	protected final double PERCENTAGE = generateDoubleRandom(0.7, 0.8);
+	protected final double PERCENTAGE = generateDoubleRandom(1.0, 1.0);
 	
 	protected String seed = "";
 	
