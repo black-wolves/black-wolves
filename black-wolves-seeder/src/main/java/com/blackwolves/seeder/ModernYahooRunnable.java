@@ -43,9 +43,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 			for (int j = 0; j < percentage; j++) {
 
 				try {
-					if (throwDice()) {
-						sendEmail();
-					}
+//					if (throwDice()) {
+//						sendEmail();
+//					}
 
 					logger.info((percentage - j) + " emails to go ");
 					Thread.sleep(randInt(2500, 3500));
@@ -63,39 +63,39 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("Getting the random message");
 						WebElement currentMsg = inboxMsgs.get(randomPosition);
 
-						if (isWarmupDomain(true, currentMsg)) {
+//						if (isWarmupDomain(true, currentMsg)) {
 
 							logger.info("Clicking in Msg : " + currentMsg.getText());
 							currentMsg.findElement(By.className("subj")).click();
 
 							clickShowImages("show-text");
 
-							if (throwDice()) {
-								replyToEmail();
-							} else if (throwDice()) {
-								forwardEmail();
-							} else if (throwDice()) {
-								clickRandomLink();
-							}
+//							if (throwDice()) {
+//								replyToEmail();
+//							} else if (throwDice()) {
+//								forwardEmail();
+//							} else if (throwDice()) {
+//								clickRandomLink();
+//							}
 
-							moveMessageToAllFolder();
+//							moveMessageToAllFolder();
 
 							Thread.sleep(randInt(2500, 3500));
 							logger.info("Going back to inbox");
 							driver.findElement(By.className("inbox-label")).click();
 
 							checkForInboxReloadError();
-						} else {
-							if (YahooRunnable.randInt(0, 1) == 1) {
-
-								logger.info("Clicking in Msg : " + currentMsg.getText());
-								currentMsg.findElement(By.className("subj")).click();
-
-								Thread.sleep(randInt(2500, 3500));
-
-								clickSpam();
-							}
-						}
+//						} else {
+//							if (YahooRunnable.randInt(0, 1) == 1) {
+//
+//								logger.info("Clicking in Msg : " + currentMsg.getText());
+//								currentMsg.findElement(By.className("subj")).click();
+//
+//								Thread.sleep(randInt(2500, 3500));
+//
+//								clickSpam();
+//							}
+//						}
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
