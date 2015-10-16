@@ -71,7 +71,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							currentMsg.findElement(By.className("subj")).click();
 
 							clickShowImages("show-text");
-
+clickRandomLink();
 //							if (throwDice()) {
 //								replyToEmail();
 //							} else if (throwDice()) {
