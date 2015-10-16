@@ -327,8 +327,11 @@ public class Seeder implements Runnable {
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
-			} else {
-				
+			} else if (driver.findElements(By.id("comm-channel-module")).size() > 0) {
+				logger.info("*************  Phone validation. Going to URL  **************");
+				driver.get("http://mail.yahoo.com");
+				handler = new ModernYahooRunnable(driver, seed, human, logger);			} 
+			else {
 				getScreenShot(driver,YahooRunnable.randInt(1, 100)+"newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
