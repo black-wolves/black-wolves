@@ -128,47 +128,20 @@ public class Seeder implements Runnable {
 
 	private void visitSomewhereBefore(WebDriver driver) {
 		logger.info("Visiting somewhere else");
+		String [] sites =  new String [10]; 
+		sites[0] = "http://lanacion.com";
+		sites[1] = "http://ole.com.ar";
+		sites[2] = "http://marca.com" ;
+		sites[3] = "http://dig.com" ;
+		sites[4] = "http://yahoo.com" ;
+		sites[5] = "http://google.com" ;
+		sites[6] = "http://clarin.com" ;
+		sites[7] = "http://amazon.com" ;
+		sites[8] = "http://ebay.com" ;
+		sites[9] = "http://mcdonalds.com" ;
 		int random = ModernYahooRunnable.randInt(0, 9);
-
-		if (random == 0) {
-			driver.get("http://lanacion.com");
-		}
-		if (random == 1) {
-
-		}
-		driver.get("http://ole.com.ar");
-
-		if (random == 2) {
-			driver.get("http://marca.com");
-
-		}
-		if (random == 3) {
-			driver.get("http://dig.com");
-
-		}
-		if (random == 4) {
-			driver.get("http://yahoo.com");
-
-		}
-		if (random == 5) {
-			driver.get("http://google.com");
-
-		}
-		if (random == 6) {
-
-		}
-		if (random == 7) {
-			driver.get("http://clarin.com");
-
-		}
-		if (random == 8) {
-			driver.get("http://amazon.com");
-
-		}
-		if (random == 9) {
-			driver.get("http://ebay.com");
-
-		}
+		logger.info("***************** Visiting :"+ sites[random]);
+		driver.get(sites[random]);
 	}
 
 	private void addPermittedSender() {
