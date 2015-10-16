@@ -328,7 +328,8 @@ public class Seeder implements Runnable {
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
 			} else {
-				getScreenShot(driver, seed+"newVersion");
+				
+				getScreenShot(driver,YahooRunnable.randInt(1, 100)+"newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
 		} catch (InterruptedException e) {
@@ -488,6 +489,7 @@ public class Seeder implements Runnable {
 		// Now you can do whatever you need to do with it, for example copy
 		// somewhere
 		try {
+			
 			FileUtils.copyFile(scrFile, new File("/var/www/errors/" + name + ".jpg"));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
