@@ -293,9 +293,9 @@ public class Seeder implements Runnable {
 	private Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
-		if (number <= 1) {
+		if (number <= 3) {
 			return new DumbHuman();
-		} else if (number >= 4 && number <= 5) {
+		} else if (number >= 4 && number <= 8) {
 			return new AverageHuman();
 		}
 		return new FastHuman();
