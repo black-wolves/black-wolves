@@ -76,8 +76,12 @@ public class Seeder implements Runnable {
 //		} while (dbSeed.getPid() == 0);
 
 		WebDriver driver = createWebDriver();
-
 		logger.info("Firefox Created");
+
+		if(ModernYahooRunnable.randInt(0, 9) == 9) {
+			checkUserAgent(driver);
+		}
+
 
 		human = generateRandomHumanUser();
 
@@ -178,9 +182,9 @@ public class Seeder implements Runnable {
 	/**
 	 * 
 	 */
-	private void testPurposes() {
-		WebDriver driver = createWebDriver();
-		logger.info("Firefox Created");
+	private void checkUserAgent(WebDriver driver) {
+		//WebDriver driver = createWebDriver();
+		logger.info("checking user agent");
 		driver.get("http://www.useragentstring.com/");
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		try {

@@ -500,7 +500,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 					int chances = randInt(0, 10);
 					boolean increment;
 					Thread.sleep(randInt(2000, 3000));
-					logger.info("************* CHANCES ="+chances);
+					logger.info("************* CHANCES = "+chances);
 					if (chances <= 8) {
 						increment = normalNotSpam();
 					} else {
