@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -127,7 +129,6 @@ public class Seeder implements Runnable {
 	}
 
 	private void visitSomewhereBefore(WebDriver driver) {
-		logger.info("Visiting somewhere else");
 		String [] sites =  new String [10]; 
 		sites[0] = "http://lanacion.com";
 		sites[1] = "http://ole.com.ar";
@@ -142,6 +143,13 @@ public class Seeder implements Runnable {
 		int random = ModernYahooRunnable.randInt(0, 9);
 		logger.info("***************** Visiting :"+ sites[random]);
 		driver.get(sites[random]);
+		
+		Set<Cookie> allCookies = driver.manage().getCookies();
+		
+		for (Cookie cookie : allCookies) {
+			logger.info("***************** Cookies? :"+ cookie.getName());
+
+		}
 	}
 
 	private void addPermittedSender() {
