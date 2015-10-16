@@ -216,8 +216,8 @@ public class Seeder implements Runnable {
 		profile.setPreference("modifyheaders.config.active", true);
 		profile.setPreference("modifyheaders.config.alwaysOn", true);
 		profile.setPreference("general.useragent.override",
-				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
-
+				getRandomUA());
+		
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		// capabilities.setBrowserName("Graneeeeeeekk");
 		capabilities.setPlatform(org.openqa.selenium.Platform.ANY);
@@ -528,6 +528,23 @@ public class Seeder implements Runnable {
 		clickMe.click();
 	}
 
+	public String getRandomUA()
+	{
+		String [] uas = new String [10];
+		uas[0] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0";
+		uas[1] =   "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36";
+		uas[3] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11";
+		uas[4] = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+		uas[5] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36";
+		uas[6] = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36";
+		uas[7] = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
+		uas[8] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36";
+		uas[9] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
+		return uas[ModernYahooRunnable.randInt(0, 9)];
+		
+		
+	}
+	
 	/**
 	 * @return the seed
 	 */
