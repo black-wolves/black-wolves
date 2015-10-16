@@ -56,7 +56,6 @@ public class Seeder implements Runnable {
 	}
 
 	public void run() {
-		logger.info("Calling addPermittedSender()");
 //		addPermittedSender();
 		checkMail();
 	}
@@ -329,6 +328,7 @@ public class Seeder implements Runnable {
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
 			} else {
+				getScreenShot(driver, seed+"newVersion.jpg");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
 		} catch (InterruptedException e) {
