@@ -91,11 +91,12 @@ public abstract class WolfYahoo {
 	private void sendEmail(String user, String pass, String subject, String body, Session session, boolean keepTrying, String contactEmail, String senderDomainRo, String offerFrom) {
 		try {
 			if(keepTrying){
-				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+//				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+				String backupSeed = "gastondapice03@yahoo.com";
 				String bs[] = backupSeed.split(",");
 				user = bs[0];
 				pass = bs[1];
-				senderDomainRo = user.split("@")[0] + "@betoacostadalefuncionanamelamily.ro";
+				senderDomainRo = user.split("@")[0] + "@walllale.info";
 			}
 			// Create a default MimeMessage object.
 			MimeMessage message = new CustomMimeMessage(session);
@@ -115,7 +116,8 @@ public abstract class WolfYahoo {
 			message.setHeader("X-Priority", "1");
 			
 			Address [] ad =  new Address[1] ;
-			String to = SEEDS_TO_SEND_EMAILS[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+//			String to = SEEDS_TO_SEND_EMAILS[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
+			String to ="gastondapice@yahoo.com";
 			ad[0] =  new InternetAddress(to);
 
 			// Send message
