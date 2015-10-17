@@ -35,7 +35,7 @@ public abstract class YahooRunnable {
 
 	protected static Logger logger;
 
-	protected final double PERCENTAGE = generateDoubleRandom(1.0, 1.0);
+	protected final double PERCENTAGE = generateDoubleRandom(0.6, 0.8);
 	
 	protected String seed = "";
 	
@@ -70,8 +70,9 @@ public abstract class YahooRunnable {
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
-			processSpam(seed);
 			processInbox(seed);
+			processSpam(seed);
+
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
 			logger.error("NoSuchElementException");

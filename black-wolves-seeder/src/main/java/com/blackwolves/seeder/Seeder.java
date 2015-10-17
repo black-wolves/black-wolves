@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -56,8 +58,7 @@ public class Seeder implements Runnable {
 	}
 
 	public void run() {
-		logger.info("Calling addPermittedSender()");
-//		addPermittedSender();
+		// addPermittedSender();
 		checkMail();
 	}
 
@@ -65,20 +66,25 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		logger.info("Entering first do while");
-//		do {
-			dbSeed = new Seed(seed[0], seed[1]);
-//			logger.info("Searching for seed PID");
-//			dbSeed.setPid(getPidFromFile(seed[0]));
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-			}
-//		} while (dbSeed.getPid() == 0);
+		// do {
+		dbSeed = new Seed(seed[0], seed[1]);
+		// logger.info("Searching for seed PID");
+		// dbSeed.setPid(getPidFromFile(seed[0]));
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
+		// } while (dbSeed.getPid() == 0);
 
 		WebDriver driver = createWebDriver();
-
 		logger.info("Firefox Created");
+
+		if (ModernYahooRunnable.randInt(0, 9) == 9) {
+			checkUserAgent(driver);
+		}
+
+		visitSomewhereBefore(driver);
 
 		human = generateRandomHumanUser();
 
@@ -87,35 +93,62 @@ public class Seeder implements Runnable {
 		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
 
 		if (handler != null) {
-//
-//			addToAddressBook(driver);
-//
-//			createNewFolder(driver);
-//
+			//
+			// addToAddressBook(driver);
+			//
+			// createNewFolder(driver);
+			//
 			handler.runProcess();
-//
-//			dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-//
-//			while (true) {
-//
-//				int diff = calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new Date());
-//				if (diff >= 0) {
-//					logger.info("Running the process");
-//					handler.runProcess();
-//					dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-//				} else {
-//					logger.info("Waiting for the Date to reactivate. Time to wait : " + diff + " minutes");
-//					try {
-//						Thread.sleep(60000);
-//					} catch (InterruptedException e) {
-//						logger.error(e.getMessage(), e);
-//					}
-//				}
-//			}
+			//
+			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
+			//
+			// while (true) {
+			//
+			// int diff =
+			// calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new
+			// Date());
+			// if (diff >= 0) {
+			// logger.info("Running the process");
+			// handler.runProcess();
+			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
+			// } else {
+			// logger.info("Waiting for the Date to reactivate. Time to wait : "
+			// + diff + " minutes");
+			// try {
+			// Thread.sleep(60000);
+			// } catch (InterruptedException e) {
+			// logger.error(e.getMessage(), e);
+			// }
+			// }
+			// }
 
 			driver.quit();
 		} else {
 			logger.info("New Interface detected.Exiting");
+		}
+	}
+
+	private void visitSomewhereBefore(WebDriver driver) {
+		String [] sites =  new String [10]; 
+		sites[0] = "http://lanacion.com";
+		sites[1] = "http://ole.com.ar";
+		sites[2] = "http://marca.com" ;
+		sites[3] = "http://dig.com" ;
+		sites[4] = "http://yahoo.com" ;
+		sites[5] = "http://google.com" ;
+		sites[6] = "http://clarin.com" ;
+		sites[7] = "http://amazon.com" ;
+		sites[8] = "http://ebay.com" ;
+		sites[9] = "http://mcdonalds.com" ;
+		int random = ModernYahooRunnable.randInt(0, 9);
+		logger.info("***************** Visiting :"+ sites[random]);
+		driver.get(sites[random]);
+		
+		Set<Cookie> allCookies = driver.manage().getCookies();
+		
+		for (Cookie cookie : allCookies) {
+			logger.info("***************** Cookies? :"+ cookie.getName());
+
 		}
 	}
 
@@ -151,9 +184,9 @@ public class Seeder implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoSuchElementException e) {
-				System.out.println("The seed "+seed[0] + " failed to suscribed");
+				System.out.println("The seed " + seed[0] + " failed to suscribed");
 			}
-			
+
 		}
 	}
 
@@ -179,9 +212,9 @@ public class Seeder implements Runnable {
 	/**
 	 * 
 	 */
-	private void testPurposes() {
-		WebDriver driver = createWebDriver();
-		logger.info("Firefox Created");
+	private void checkUserAgent(WebDriver driver) {
+		// WebDriver driver = createWebDriver();
+		logger.info("checking user agent");
 		driver.get("http://www.useragentstring.com/");
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		try {
@@ -212,8 +245,7 @@ public class Seeder implements Runnable {
 		profile.setPreference("modifyheaders.headers.enabled0", true);
 		profile.setPreference("modifyheaders.config.active", true);
 		profile.setPreference("modifyheaders.config.alwaysOn", true);
-		profile.setPreference("general.useragent.override",
-				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+		profile.setPreference("general.useragent.override", getRandomUA());
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		// capabilities.setBrowserName("Graneeeeeeekk");
@@ -261,9 +293,9 @@ public class Seeder implements Runnable {
 	private Human generateRandomHumanUser() {
 		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
-		if (number <= 1) {
+		if (number <= 3) {
 			return new DumbHuman();
-		} else if (number >= 4 && number <= 5) {
+		} else if (number >= 4 && number <= 8) {
 			return new AverageHuman();
 		}
 		return new FastHuman();
@@ -328,7 +360,12 @@ public class Seeder implements Runnable {
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
+			} else if (driver.findElements(By.id("comm-channel-module")).size() > 0) {
+				logger.info("*************  Phone validation. Going to URL  **************");
+				driver.get("http://mail.yahoo.com");
+				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else {
+				getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
 		} catch (InterruptedException e) {
@@ -488,7 +525,8 @@ public class Seeder implements Runnable {
 		// Now you can do whatever you need to do with it, for example copy
 		// somewhere
 		try {
-			FileUtils.copyFile(scrFile, new File("/var/www/" + name + ".jpg"));
+
+			FileUtils.copyFile(scrFile, new File("/var/www/errors/" + name + ".jpg"));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -517,6 +555,21 @@ public class Seeder implements Runnable {
 		driver.get(url);
 		WebElement clickMe = driver.findElement(By.id("clicklink"));
 		clickMe.click();
+	}
+
+	public String getRandomUA() {
+		String[] uas = new String[10];
+		uas[0] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0";
+		uas[1] = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36";
+		uas[3] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11";
+		uas[4] = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+		uas[5] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36";
+		uas[6] = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36";
+		uas[7] = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
+		uas[8] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36";
+		uas[9] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
+		return uas[ModernYahooRunnable.randInt(0, 9)];
+
 	}
 
 	/**
