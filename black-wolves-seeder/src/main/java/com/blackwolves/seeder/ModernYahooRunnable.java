@@ -72,7 +72,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 						// if (isWarmupDomain(true, currentMsg)) {
 
-						logger.info("Clicking in Msg : " + currentMsg.getText());
+						logger.info(" ################# Clicking in Msg : " + currentMsg.getText());
 						currentMsg.findElement(By.className("subj")).click();
 
 						clickShowImages("show-text");
