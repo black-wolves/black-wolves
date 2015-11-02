@@ -50,7 +50,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 					// }
 					if(driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0)
 					{
-						List notifications = driver.findElements(By.className("list-view-item"));
+						List notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
 						WebElement dialog = (WebElement) notifications.get(0);
 						dialog.click();
 					}

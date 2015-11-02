@@ -167,16 +167,15 @@ public abstract class YahooRunnable {
 					logger.info("Getting the show images div");
 					List<WebElement> divs = driver.findElements(By.className("show-text"));
 					WebElement showImage = divs.get(0);
-					WebElement a = showImage.findElement(By.tagName("a"));
-					logger.info("clicking with the link");
 
-					showImage.click();
+					WebElement a = showImage.findElement(By.tagName("a"));
 					mouse.moveToElement(a);
-					logger.info("clicking with the mouse");
-					mouse.click();
-					logger.info("Clicking the show images button");
+					logger.info("clicking!");
+
+					a.click();
 					logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
 					Thread.sleep(randInt(3000, 5000));
+					ModernYahooRunnable.scrollToBottom(driver);
 				}else{
 					logger.info("No Images to click");
 				}
