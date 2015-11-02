@@ -84,7 +84,7 @@ public abstract class YahooRunnable {
 	 * @return boolean
 	 */
 	public static boolean throwDice() {
-		int dice = randInt(1, 4);
+		int dice = randInt(1, 6);
 		return dice == 3;
 	}
 	
