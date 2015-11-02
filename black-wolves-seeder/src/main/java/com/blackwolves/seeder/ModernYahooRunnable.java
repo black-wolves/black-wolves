@@ -11,6 +11,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.slf4j.Logger;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
@@ -24,14 +25,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public ModernYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
 		super(driver, seed, human, logger);
 	}
-	
+
 	@Override
 	public void processInbox(String[] seed) {
 		logger.info("Processing inbox");
 
 		checkWelcomeDialog();
 		validateOkayModal();
-		
 		moveMouse();
 
 		if (validateInboxFolder()) {
@@ -45,10 +45,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 			for (int j = 0; j < percentage; j++) {
 
 				try {
-//					if (throwDice()) {
-//						sendEmail();
-//					}
-
+					// if (throwDice()) {
+					// sendEmail();
+					// }
+					if(driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0)
+					{
+						List notifications = driver.findElements(By.className("list-view-item"));
+						WebElement dialog = (WebElement) notifications.get(0);
+						dialog.click();
+					}
 					logger.info((percentage - j) + " emails to go ");
 					Thread.sleep(randInt(2500, 3500));
 
@@ -65,39 +70,40 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("Getting the random message");
 						WebElement currentMsg = inboxMsgs.get(randomPosition);
 
-//						if (isWarmupDomain(true, currentMsg)) {
+						// if (isWarmupDomain(true, currentMsg)) {
 
-							logger.info("Clicking in Msg : " + currentMsg.getText());
-							currentMsg.findElement(By.className("subj")).click();
+						logger.info("Clicking in Msg : " + currentMsg.getText());
+						currentMsg.findElement(By.className("subj")).click();
 
-							clickShowImages("show-text");
-clickRandomLink();
-//							if (throwDice()) {
-//								replyToEmail();
-//							} else if (throwDice()) {
-//								forwardEmail();
-//							} else if (throwDice()) {
-//								clickRandomLink();
-//							}
+						clickShowImages("show-text");
+						clickRandomLink();
+						// if (throwDice()) {
+						// replyToEmail();
+						// } else if (throwDice()) {
+						// forwardEmail();
+						// } else if (throwDice()) {
+						// clickRandomLink();
+						// }
 
-//							moveMessageToAllFolder();
+						// moveMessageToAllFolder();
+						scrollToBottom(driver);
+						Thread.sleep(randInt(2500, 3500));
+						logger.info("Going back to inbox");
+						driver.findElement(By.className("inbox-label")).click();
 
-							Thread.sleep(randInt(2500, 3500));
-							logger.info("Going back to inbox");
-							driver.findElement(By.className("inbox-label")).click();
-
-							checkForInboxReloadError();
-//						} else {
-//							if (YahooRunnable.randInt(0, 1) == 1) {
-//
-//								logger.info("Clicking in Msg : " + currentMsg.getText());
-//								currentMsg.findElement(By.className("subj")).click();
-//
-//								Thread.sleep(randInt(2500, 3500));
-//
-//								clickSpam();
-//							}
-//						}
+						checkForInboxReloadError();
+						// } else {
+						// if (YahooRunnable.randInt(0, 1) == 1) {
+						//
+						// logger.info("Clicking in Msg : " +
+						// currentMsg.getText());
+						// currentMsg.findElement(By.className("subj")).click();
+						//
+						// Thread.sleep(randInt(2500, 3500));
+						//
+						// clickSpam();
+						// }
+						// }
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
@@ -482,9 +488,11 @@ clickRandomLink();
 	@Override
 	public void processSpam(String[] seed) {
 		logger.info("Processing Spam....");
-		
-		moveMouse();
-
+		try {
+			moveMouse();
+		} catch (MoveTargetOutOfBoundsException e) {
+			logger.info("Process Spam MoveTargetOutOfBoundsException ");
+		}
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
 
@@ -500,7 +508,7 @@ clickRandomLink();
 					int chances = randInt(0, 10);
 					boolean increment;
 					Thread.sleep(randInt(2000, 3000));
-					logger.info("************* CHANCES = "+chances);
+					logger.info("************* CHANCES = " + chances);
 					if (chances <= 8) {
 						increment = normalNotSpam();
 					} else {
@@ -564,21 +572,21 @@ clickRandomLink();
 			logger.info("Selecting spam message");
 			WebElement msg = null;
 			try {
-				 msg = spamMsgs.get(randomPosition);
-				 
+				msg = spamMsgs.get(randomPosition);
+
 			} catch (ArrayIndexOutOfBoundsException e) {
 				logger.error("dragAndDropNotSpam: ArrayIndexOutOfBoundsException");
 				return false;
 			}
-			
-//			if (isWarmupDomain(false, msg)) {
-				WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
-				logger.info("******** Dragging Message to inbox ***********");
-				(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
-		//		driver.navigate().refresh();
-				return true;
-//			}
-//			return false;
+
+			// if (isWarmupDomain(false, msg)) {
+			WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
+			logger.info("******** Dragging Message to inbox ***********");
+			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
+			// driver.navigate().refresh();
+			return true;
+			// }
+			// return false;
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
@@ -590,7 +598,7 @@ clickRandomLink();
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
 		}
-		
+
 		return false;
 	}
 
@@ -604,26 +612,27 @@ clickRandomLink();
 
 			WebElement currentMsg = spamMsgs.get(randomPosition);
 
-//			if (isWarmupDomain(false, currentMsg)) {
-				logger.info("Opening the spam message");
-				currentMsg.findElement(By.className("subj")).click();
-				Thread.sleep(randInt(2000, 3000));
+			// if (isWarmupDomain(false, currentMsg)) {
+			logger.info("Opening the spam message");
+			currentMsg.findElement(By.className("subj")).click();
+			Thread.sleep(randInt(2000, 3000));
 
-				clickShowImages("show-text");
-				Thread.sleep(randInt(2000, 3000));
-				// REMOVED CLICK FROM LIST SINCE IT IS BREAKING IN THE SERVER
-				if (false) {
-					logger.info("******** Clicking the not spam LIST button ***********");
-					notSpamFromSubList();
-				} else {
-					logger.info("******** Clicking the not spam MAIN button ***********");
-					driver.findElement(By.id("main-btn-spam")).click();
-					Thread.sleep(randInt(2500, 3500));
-				}
-				return true;
-//			} else {
-//				return false;
-//			}
+			clickShowImages("show-text");
+			Thread.sleep(randInt(2000, 3000));
+			scrollToBottom(driver);
+			// REMOVED CLICK FROM LIST SINCE IT IS BREAKING IN THE SERVER
+			if (false) {
+				logger.info("******** Clicking the not spam LIST button ***********");
+				notSpamFromSubList();
+			} else {
+				logger.info("******** Clicking the not spam MAIN button ***********");
+				driver.findElement(By.id("main-btn-spam")).click();
+				Thread.sleep(randInt(2500, 3500));
+			}
+			return true;
+			// } else {
+			// return false;
+			// }
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
@@ -765,23 +774,27 @@ clickRandomLink();
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
-	public void moveMouse(){
+
+	public void moveMouse() {
 		try {
 			logger.info("Enters to move mouse");
-			//Build webElement object to contain menu link xpath for all the mainmenu links
-//			WebElement HomeLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[1]/a")); 
-//			WebElement ShowsLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[2]/a"));   
-//			WebElement MusicLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[3]/a"));
-//			WebElement EventsLink = driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[6]/a"));
-			
-		
-	
-			//Create an action object called myMouse
+			// Build webElement object to contain menu link xpath for all the
+			// mainmenu links
+			// WebElement HomeLink =
+			// driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[1]/a"));
+			// WebElement ShowsLink =
+			// driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[2]/a"));
+			// WebElement MusicLink =
+			// driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[3]/a"));
+			// WebElement EventsLink =
+			// driver.findElement(By.xpath("//*[@id='globalNav']/ul/li[6]/a"));
+
+			// Create an action object called myMouse
 			Actions myMouse = new Actions(driver);
 
-			//there is a slight delay before each mouse movement hence the "Thread.sleep" statement
-			if (throwDice()) {			
+			// there is a slight delay before each mouse movement hence the
+			// "Thread.sleep" statement
+			if (throwDice()) {
 				WebElement yucsHelp = driver.findElement(By.id("yucs-help"));
 				myMouse.moveToElement(yucsHelp).build().perform();
 				logger.info("Moving to configuration wheel");
@@ -884,4 +897,7 @@ clickRandomLink();
 		}
 	}
 
+	public static void scrollToBottom(WebDriver driver) {
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
+	}
 }
