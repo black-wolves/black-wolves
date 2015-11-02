@@ -70,11 +70,11 @@ public class ProductionWolfYahoo extends WolfYahoo {
 				keepGoing = msgs==null||msgs.length<=0?false:true;
 				if(keepGoing){
 					try{
-						int i = WolfYahoo.randInt(0, msgs.length);
+						int i = WolfYahoo.randInt(0, msgs.length-1);
 						Message message = msgs[i];
 						String[] from = message.getFrom()[0].toString().split("\\|");
 						String receiver = from[1];
-						if(contacts.contains(receiver) && from[0].contains("Military")){
+//						if(contacts.contains(receiver) && from[0].contains("Military")){
 							logger.info("Creating body: " + count);
 							count++;
 							StringBuilder mail = new StringBuilder();
@@ -92,7 +92,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 							--bodiesCount;
 							logger.info("Remainig bodies: " + bodiesCount);
 							saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
-						}
+//						}
 						offerFolder.close(true);
 						logger.info("Folder closed");
 					} catch (ArrayIndexOutOfBoundsException e) {
