@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -70,11 +71,11 @@ public class Seeder implements Runnable {
 		dbSeed = new Seed(seed[0], seed[1]);
 		// logger.info("Searching for seed PID");
 		// dbSeed.setPid(getPidFromFile(seed[0]));
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
-		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			logger.error(e.getMessage(), e);
+//		}
 		// } while (dbSeed.getPid() == 0);
 
 		WebDriver driver = createWebDriver();
@@ -94,10 +95,13 @@ public class Seeder implements Runnable {
 
 		if (handler != null) {
 			//
-			// addToAddressBook(driver);
+			 addToAddressBook(driver);
 			//
 			// createNewFolder(driver);
 			//
+//			
+//			newAddToAddressBook(driver);
+			
 			handler.runProcess();
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
@@ -126,6 +130,30 @@ public class Seeder implements Runnable {
 		} else {
 			logger.info("New Interface detected.Exiting");
 		}
+	}
+
+	private void newAddToAddressBook(WebDriver driver) {
+		try {
+			WebElement contacts = driver.findElement(By.xpath("//*[@id='nav']/ul/li[2]/a"));
+			contacts.click();
+			WebElement div = driver.findElement(By.xpath("//*[@id='paneshell']/div"));
+			Actions myMouse = new Actions(driver);
+			myMouse.moveToElement(div).build().perform();
+			myMouse.click();
+			myMouse.click().build().perform();
+			myMouse.moveByOffset(86, 266);
+			div.click();
+			
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchelementException");
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException");
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException");
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException");
+		}
+		
 	}
 
 	private void visitSomewhereBefore(WebDriver driver) {
