@@ -315,14 +315,16 @@ public class Seeder implements Runnable {
 			WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 			human.type(passwordInput, seed[1]);
 
-			logger.info("Clicking login button");
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
+				logger.info("Clicking login button");
+
 				Thread.sleep(YahooRunnable.randInt(1000, 25000));
 				driver.findElement(By.id("login-signin")).click();
 				
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
+			
 			getScreenShot(driver, "After_click_login");
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
