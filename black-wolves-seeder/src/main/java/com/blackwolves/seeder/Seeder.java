@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -25,13 +26,15 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.persistence.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author gaston.dapice
@@ -67,16 +70,7 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		logger.info("Entering first do while");
-		// do {
 		dbSeed = new Seed(seed[0], seed[1]);
-		// logger.info("Searching for seed PID");
-		// dbSeed.setPid(getPidFromFile(seed[0]));
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			logger.error(e.getMessage(), e);
-//		}
-		// } while (dbSeed.getPid() == 0);
 
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
@@ -85,7 +79,7 @@ public class Seeder implements Runnable {
 			checkUserAgent(driver);
 		}
 
-		visitSomewhereBefore(driver);
+		// visitSomewhereBefore(driver);
 
 		human = generateRandomHumanUser();
 
@@ -94,39 +88,15 @@ public class Seeder implements Runnable {
 		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
 
 		if (handler != null) {
-			//
-			 addToAddressBook(driver);
-			//
-			// createNewFolder(driver);
-			//
-//			
-//			newAddToAddressBook(driver);
-			
 			handler.runProcess();
-			//
-			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-			//
-			// while (true) {
-			//
-			// int diff =
-			// calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new
-			// Date());
-			// if (diff >= 0) {
-			// logger.info("Running the process");
-			// handler.runProcess();
-			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-			// } else {
-			// logger.info("Waiting for the Date to reactivate. Time to wait : "
-			// + diff + " minutes");
-			// try {
-			// Thread.sleep(60000);
-			// } catch (InterruptedException e) {
-			// logger.error(e.getMessage(), e);
-			// }
-			// }
-			// }
+			while (!YahooRunnable.throwDice()) {
+				logger.info("Entering Process");
+				handler.runProcess();
+				handler.waitForIt(60000, 120000);
 
+			}
 			driver.quit();
+
 		} else {
 			logger.info("New Interface detected.Exiting");
 		}
@@ -143,7 +113,7 @@ public class Seeder implements Runnable {
 			myMouse.click().build().perform();
 			myMouse.moveByOffset(86, 266);
 			div.click();
-			
+
 		} catch (NoSuchElementException e) {
 			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
@@ -153,29 +123,29 @@ public class Seeder implements Runnable {
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
 		}
-		
+
 	}
 
 	private void visitSomewhereBefore(WebDriver driver) {
-		String [] sites =  new String [10]; 
+		String[] sites = new String[10];
 		sites[0] = "http://lanacion.com";
 		sites[1] = "http://ole.com.ar";
-		sites[2] = "http://marca.com" ;
-		sites[3] = "http://dig.com" ;
-		sites[4] = "http://yahoo.com" ;
-		sites[5] = "http://google.com" ;
-		sites[6] = "http://clarin.com" ;
-		sites[7] = "http://amazon.com" ;
-		sites[8] = "http://ebay.com" ;
-		sites[9] = "http://mcdonalds.com" ;
+		sites[2] = "http://marca.com";
+		sites[3] = "http://dig.com";
+		sites[4] = "http://yahoo.com";
+		sites[5] = "http://google.com";
+		sites[6] = "http://clarin.com";
+		sites[7] = "http://amazon.com";
+		sites[8] = "http://ebay.com";
+		sites[9] = "http://mcdonalds.com";
 		int random = ModernYahooRunnable.randInt(0, 9);
-		logger.info("***************** Visiting :"+ sites[random]);
+		logger.info("***************** Visiting :" + sites[random]);
 		driver.get(sites[random]);
-		
+
 		Set<Cookie> allCookies = driver.manage().getCookies();
-		
+
 		for (Cookie cookie : allCookies) {
-			logger.info("***************** Cookies? :"+ cookie.getName());
+			logger.info("***************** Cookies? :" + cookie.getName());
 
 		}
 	}
@@ -273,23 +243,15 @@ public class Seeder implements Runnable {
 		profile.setPreference("modifyheaders.headers.enabled0", true);
 		profile.setPreference("modifyheaders.config.active", true);
 		profile.setPreference("modifyheaders.config.alwaysOn", true);
-		profile.setPreference("general.useragent.override", getRandomUA());
-
+		profile.setPreference("general.useragent.override",
+				"Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53");
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		// capabilities.setBrowserName("Graneeeeeeekk");
 		capabilities.setPlatform(org.openqa.selenium.Platform.ANY);
 		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 
-		// caps.setCapability("applicationCacheEnabled", false);
-		// String PROXY = "192.168.1.111:8888";
-		// org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
-		// proxy.setHttpProxy(PROXY)
-		// .setFtpProxy(PROXY)
-		// .setSslProxy(PROXY);
-		// caps.setCapability(CapabilityType.PROXY, proxy);
 		WebDriver driver = new FirefoxDriver(capabilities);
+		driver.manage().window().setSize(new Dimension(320, 568));
 
-		driver.manage().window().maximize();
 		return driver;
 	}
 
@@ -326,7 +288,7 @@ public class Seeder implements Runnable {
 		} else if (number >= 4 && number <= 8) {
 			return new AverageHuman();
 		}
-		return new FastHuman();
+		return new AverageHuman();
 	}
 
 	/**
@@ -380,7 +342,16 @@ public class Seeder implements Runnable {
 	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 		try {
 			Thread.sleep(10000);
-			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
+
+			WebDriverWait wait = new WebDriverWait(driver, 1000);
+
+			checkJustOneTapPage(driver, seed);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("msgListItem")));
+
+			if (driver.findElements(By.className("msgListItem")).size() > 0) {
+				logger.info("************   Mobile version   **********");
+				handler = new MobileRunnable(driver, seed, human, logger);
+			} else if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
 				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
@@ -408,6 +379,21 @@ public class Seeder implements Runnable {
 			logger.error("ElementNotFoundException");
 		}
 		return handler;
+	}
+
+	private void checkJustOneTapPage(WebDriver driver, String seed) {
+		try {
+			WebElement skipLink = driver.findElement(By.xpath("//*[@id='mobile_site_link']"));
+			if (skipLink != null) {
+				logger.info("************   Just One Tap Away Mobile Page   **********");
+				skipLink.click();
+				handler = new MobileRunnable(driver, seed, human, logger);
+			}
+
+		} catch (NoSuchElementException e) {
+			logger.info("Just One Tap Page not shown");
+		}
+
 	}
 
 	/**
@@ -561,15 +547,15 @@ public class Seeder implements Runnable {
 
 	}
 
-	public List<String[]> generateList(String route, String file) {
+	public static List<String[]> generateList(String route, String file) {
 		List<String[]> list = new ArrayList<String[]>();
 		try {
 			CSVReader reader = new CSVReader(new FileReader(route + file));
 			list = reader.readAll();
 		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			// logger.error(e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			// logger.error(e.getMessage(), e);
 		}
 		return list;
 	}

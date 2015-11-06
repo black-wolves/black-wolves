@@ -15,6 +15,7 @@ import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.slf4j.Logger;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+import com.itextpdf.awt.geom.misc.RenderingHints.Key;
 
 /**
  * @author danigrane
@@ -86,7 +87,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 						// }
 
 						// moveMessageToAllFolder();
-						scrollToBottom(driver);
+						
 						Thread.sleep(randInt(2500, 3500));
 						logger.info("Going back to inbox");
 						driver.findElement(By.className("inbox-label")).click();
@@ -289,6 +290,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 						openTab(aUrl);
 						switchToNewWindow();
 						switchToPreviousWindow();
+						linksToGo.get(randomLinkNo).sendKeys(Keys.DOWN);
+
 					}
 				}
 			} else {
@@ -897,7 +900,4 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	public static void scrollToBottom(WebDriver driver) {
-		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
-	}
 }

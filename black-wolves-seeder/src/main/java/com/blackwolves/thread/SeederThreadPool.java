@@ -3,6 +3,7 @@
  */
 package com.blackwolves.thread;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,8 +26,8 @@ public class SeederThreadPool {
 	public static void main(String[] args) {
 		logger.info("Starting SeederThreadPool");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
-		
-		iterateSeeds(args, executor);
+		List seeds = Seeder.generateList("/var/www/", "seeds.csv");
+		iterateSeeds(seeds, executor);
 		
 //		UNCOMMENT THIS FOR TEST ONLY AND COMMENT THE ONE ABOVE
 //		__________________________________________testIterateSeeds(args, executor);
@@ -40,14 +41,15 @@ public class SeederThreadPool {
 	}
 	
 	/**
-	 * @param args
+	 * @param seeds
 	 * @param executor
 	 */
-	private static void iterateSeeds(String[] args, ExecutorService executor) {
-		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
-			String[] seed = args[i].split(",");
+	private static void iterateSeeds(List seeds, ExecutorService executor) {
+		for (int i = 0; i < SEEDS_TO_PROCESS; i++) {
+			String[] seed = (String [])seeds.get(i);
+			
 			MDC.put("logFileName", seed[0]);
-			Seeder seeder = new Seeder(seed, logger);
+     		Seeder seeder = new Seeder(seed, logger);
 			Runnable worker = seeder;
 			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
 			executor.execute(worker);
