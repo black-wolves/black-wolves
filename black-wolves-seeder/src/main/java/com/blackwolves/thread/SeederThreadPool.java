@@ -26,8 +26,10 @@ public class SeederThreadPool {
 	public static void main(String[] args) {
 		logger.info("Starting SeederThreadPool");
 		ExecutorService executor = Executors.newFixedThreadPool(SEEDS_TO_PROCESS);
-		List seeds = Seeder.generateList("/var/www/", "seeds.csv");
-		iterateSeeds(seeds, executor);
+	//	List seeds = Seeder.generateList("/var/www/", "seeds.csv");
+		String [] seed =  new String [2];
+		seed = args[1].split(",");
+		iterateSeeds(seed, executor);
 		
 //		UNCOMMENT THIS FOR TEST ONLY AND COMMENT THE ONE ABOVE
 //		__________________________________________testIterateSeeds(args, executor);
@@ -44,9 +46,9 @@ public class SeederThreadPool {
 	 * @param seeds
 	 * @param executor
 	 */
-	private static void iterateSeeds(List seeds, ExecutorService executor) {
+	private static void iterateSeeds(String[] seed, ExecutorService executor) {
 		for (int i = 0; i < SEEDS_TO_PROCESS; i++) {
-			String[] seed = (String [])seeds.get(i);
+	//		String[] seed = (String [])seeds.get(i);
 			
 			MDC.put("logFileName", seed[0]);
      		Seeder seeder = new Seeder(seed, logger);
