@@ -31,7 +31,9 @@ public class OldMobileRunnable extends YahooRunnable {
 					logger.info("Msg number :" + i);
 
 					msgs = driver.findElements(By.className("item"));
-					WebElement msg = (WebElement) msgs.get(YahooRunnable.randInt(0, msgs.size() - 1));
+					int msgPosition = YahooRunnable.randInt(0, msgs.size() - 1);
+					logger.info("msgPosition : "+msgPosition);
+					WebElement msg = (WebElement) msgs.get(msgPosition);
 
 					logger.info("Subject : " + msg.findElement(By.xpath("//*[@class='subtext']/div")).getText());
 					waitForIt(1000, 3000);
