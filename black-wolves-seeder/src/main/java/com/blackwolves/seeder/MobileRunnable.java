@@ -55,7 +55,6 @@ public class MobileRunnable extends YahooRunnable {
 	private void deleteEmailAfterRead() {
 		logger.info("deleteEmailAfterRead()");
 		driver.findElement(By.xpath("//*[@id='bottom_delete']")).click();
-		;
 	}
 
 	private void viewHtml() {

@@ -92,7 +92,7 @@ public class Seeder implements Runnable {
 			while (!YahooRunnable.throwDice()) {
 				logger.info("Entering Process");
 				handler.runProcess();
-				handler.waitForIt(60000, 120000);
+				handler.waitForIt(60000, 2400000);
 
 			}
 			driver.quit();
@@ -318,13 +318,13 @@ public class Seeder implements Runnable {
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				logger.info("Clicking login button");
 
-				Thread.sleep(YahooRunnable.randInt(1000, 25000));
+				Thread.sleep(YahooRunnable.randInt(1000, 2500));
 				driver.findElement(By.id("login-signin")).click();
 				
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
-			
+			https://login.yahoo.com/m?.src=ym&.intl=us&.lang=en-US&.done=https%3A%2F%2Fmail.yahoo.com
 			getScreenShot(driver, "After_click_login");
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -346,17 +346,21 @@ public class Seeder implements Runnable {
 	 */
 	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 
 			WebDriverWait wait = new WebDriverWait(driver, 1000);
 
 			checkJustOneTapPage(driver, seed);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("msgListItem")));
+		//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("msgListItem")));
 
 			if (driver.findElements(By.className("msgListItem")).size() > 0) {
 				logger.info("************   Mobile version   **********");
 				handler = new MobileRunnable(driver, seed, human, logger);
-			} else if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
+			} else if (driver.findElements(By.className("items")).size() > 0) {
+				logger.info("**********   Mobile Old version   **********");
+				handler = new OldMobileRunnable(driver, seed, human, logger);
+			}
+			else if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
 				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
