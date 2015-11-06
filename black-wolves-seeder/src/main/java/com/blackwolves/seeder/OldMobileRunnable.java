@@ -98,6 +98,9 @@ public class OldMobileRunnable extends YahooRunnable {
 
 	private void deleteEmailAfterRead() {
 		logger.info("deleteEmailAfterRead()");
+		driver.findElement(By.xpath("//a[@accesskey='4']")).click();
+		goToInboxFolder();
+
 
 	}
 
