@@ -349,13 +349,13 @@ public abstract class YahooRunnable {
 
 	public static void scrollDownSlow(WebDriver driver) {
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
-		for (int i = 0; i < randInt(8, 16); i++) {
+		logger.info("Scrolling Down");
+		for (int i = 0; i < randInt(4,8); i++) {
 			int scrollBy = randInt(10, 150);
 			javascript.executeScript("window.scrollBy(0, " + scrollBy + ")", "");
 			try {
-				Thread.sleep(randInt(1500, 3000));
+				Thread.sleep(randInt(1500, 2300));
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -363,13 +363,13 @@ public abstract class YahooRunnable {
 
 	public static void scrollUpSlow(WebDriver driver) {
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
-		for (int i = 0; i < randInt(8, 14); i++) {
+		logger.info("Scrolling Up");
+		for (int i = 0; i < randInt(4, 8); i++) {
 			int scrollBy = randInt(10, 200);
 			javascript.executeScript("window.scrollBy(0, " + -scrollBy + ")", "");
 			try {
-				Thread.sleep(randInt(1200, 2500));
+				Thread.sleep(randInt(700, 1500));
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -378,10 +378,10 @@ public abstract class YahooRunnable {
 	}
 	public void waitForIt(int min ,int max) {
 		try {
-			logger.info("Sleeping a little bit");
-			Thread.sleep(YahooRunnable.randInt(min, max));
+			int sleepTime = YahooRunnable.randInt(min, max);
+			logger.info("Waiting "+sleepTime+" seconds");
+			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			logger.info("InterruptedException");
 		}
 	}

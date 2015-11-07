@@ -98,6 +98,7 @@ public class Seeder implements Runnable {
 			driver.quit();
 
 		} else {
+			getScreenShot(driver, seed[0]+"exit");
 			logger.info("New Interface detected.Exiting");
 		}
 	}
