@@ -31,7 +31,7 @@ public class MobileRunnable extends YahooRunnable {
 			for (int i = 0; i < msgsToProcess; i++) {
 				logger.info("Msg number :" + i);
 
-				msgs = driver.findElements(By.className("mlink"));
+			//	msgs = driver.findElements(By.className("mlink"));
 				WebElement msg = (WebElement) msgs.get(YahooRunnable.randInt(0, msgs.size() - 1));
 				logger.info("Subject : "+msg.findElement(By.xpath("//*[@class='subject']")).getText());
 				waitForIt(1000, 3000);
@@ -82,7 +82,7 @@ public class MobileRunnable extends YahooRunnable {
 		int msgsToProcess = YahooRunnable.randInt(1, msgs.size() - 1);
 		for (int i = 0; i < msgsToProcess; i++) {
 			logger.info("Msg number :" + i);
-			msgs = driver.findElements(By.className("mlink"));
+//			msgs = driver.findElements(By.className("mlink"));
 			WebElement msg = (WebElement) msgs.get(YahooRunnable.randInt(1, msgs.size() - 1));
 			logger.info("Subject : "+msg.findElement(By.xpath("//*[@class='subject']")).getText());
 

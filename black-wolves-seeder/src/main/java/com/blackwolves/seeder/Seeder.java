@@ -324,7 +324,6 @@ public class Seeder implements Runnable {
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
-			https://login.yahoo.com/m?.src=ym&.intl=us&.lang=en-US&.done=https%3A%2F%2Fmail.yahoo.com
 			getScreenShot(driver, "After_click_login");
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
