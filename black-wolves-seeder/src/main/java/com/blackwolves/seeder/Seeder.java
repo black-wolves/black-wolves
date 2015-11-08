@@ -348,12 +348,13 @@ public class Seeder implements Runnable {
 		try {
 			Thread.sleep(20000);
 
-			WebDriverWait wait = new WebDriverWait(driver, 1000);
+			WebDriverWait wait = new WebDriverWait(driver, 900);
 
 			checkJustOneTapPage(driver, seed);
+			
 		//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("msgListItem")));
-
-			if (driver.findElements(By.className("msgListItem")).size() > 0) {
+  
+			if (driver.findElements(By.className("search-container")).size() > 0) {
 				logger.info("************   Mobile version   **********");
 				handler = new MobileRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.className("items")).size() > 0) {

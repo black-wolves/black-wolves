@@ -236,6 +236,7 @@ public class MobileRunnable extends YahooRunnable {
 	}
 
 	private boolean findMySender(String folder) {
+		logger.info("Looking for the msg in  "+folder);
 		if (folder.equals("Inbox")) {
 			goToInboxFolder();
 		} else if (folder.equals("Spam")) {

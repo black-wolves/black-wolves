@@ -191,7 +191,7 @@ public class OldMobileRunnable extends YahooRunnable {
 			if (findMySender("Spam")) {
 				break;
 			}
-			waitForIt(1000, 3000);
+			waitForIt(60000, 180000);
 		}
 		goToInboxFolder();
 	}
