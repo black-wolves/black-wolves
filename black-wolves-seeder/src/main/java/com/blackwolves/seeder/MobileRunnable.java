@@ -1,11 +1,9 @@
 package com.blackwolves.seeder;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -33,23 +31,34 @@ public class MobileRunnable extends YahooRunnable {
 
 				msgs = driver.findElements(By.className("mlink"));
 				WebElement msg = (WebElement) msgs.get(YahooRunnable.randInt(0, msgs.size() - 1));
-				logger.info("Subject : "+msg.findElement(By.xpath("//*[@class='subject']")).getText());
+				logger.info("Subject : " + msg.findElement(By.xpath("//*[@class='subject']")).getText());
 				waitForIt(1000, 3000);
-				msg.click();
-				viewHtml();
-				waitForIt(1000, 10000);
-				scrollDownSlow(driver);
-				scrollUpSlow(driver);
-				clickRandomLink();
-				if (throwDice()) {
-
-					backToInboxArrow();
-				} else
-					deleteEmailAfterRead();
+				processMsg(msg, "Inbox");
 
 			}
 		}
 
+	}
+
+	private void processMsg(WebElement msg, String folder) {
+		msg.click();
+		viewHtml();
+		waitForIt(1000, 10000);
+		scrollDownSlow(driver);
+		scrollUpSlow(driver);
+		clickRandomLink();
+		
+		if (folder.equals("Spam")) {
+			driver.findElement(By.xpath("//*[@id='bottom_ham']")).click();
+		}
+		else
+			backToInboxArrow();
+
+		// if (throwDice()) {
+		//
+		// backToInboxArrow();
+		// } else
+		// deleteEmailAfterRead();
 	}
 
 	private void deleteEmailAfterRead() {
@@ -85,7 +94,7 @@ public class MobileRunnable extends YahooRunnable {
 			logger.info("Msg number :" + i);
 			msgs = driver.findElements(By.className("mlink"));
 			WebElement msg = (WebElement) msgs.get(YahooRunnable.randInt(0, msgs.size() - 1));
-			logger.info("Subject : "+msg.findElement(By.xpath("//*[@class='subject']")).getText());
+			logger.info("Subject : " + msg.findElement(By.xpath("//*[@class='subject']")).getText());
 
 			msg.click();
 			viewHtml();
@@ -213,6 +222,34 @@ public class MobileRunnable extends YahooRunnable {
 	public void forwardEmailFromSubList() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void listenAndWaitForMyMsg() {
+		while (!findMySender("Inbox")) {
+			if (findMySender("Spam")) {
+				break;
+			}
+			waitForIt(60000, 180000);
+		}
+		goToInboxFolder();
+	}
+
+	private boolean findMySender(String folder) {
+		if (folder.equals("Inbox")) {
+			goToInboxFolder();
+		} else if (folder.equals("Spam")) {
+			goToSpamFolder();
+		}  
+		List<WebElement> senders = driver.findElements(By.xpath("//*[@class='sender']"));
+		for (WebElement sdr : senders) {
+			if (sdr.getText().contains("Daniel Daniel")) {
+				logger.info("Mails has been found by user "+seed);
+				processMsg(sdr,folder);
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -900,4 +900,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
+	@Override
+	public void listenAndWaitForMyMsg() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

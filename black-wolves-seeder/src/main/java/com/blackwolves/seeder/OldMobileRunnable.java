@@ -32,21 +32,8 @@ public class OldMobileRunnable extends YahooRunnable {
 
 					msgs = driver.findElements(By.className("item"));
 					int msgPosition = YahooRunnable.randInt(0, msgs.size() - 1);
-					logger.info("msgPosition : "+msgPosition);
+					logger.info("msgPosition : " + msgPosition);
 					WebElement msg = (WebElement) msgs.get(msgPosition);
-
-					logger.info("Subject : " + msg.findElement(By.xpath("//*[@class='subtext']/div")).getText());
-					waitForIt(1000, 3000);
-					msg.findElement(By.tagName("a")).click();
-					viewHtml();
-					scrollDownSlow(driver);
-					scrollUpSlow(driver);
-					clickRandomLink();
-					if (throwDice()) {
-
-						backToInboxArrow();
-					} else
-						deleteEmailAfterRead();
 
 				}
 			}
@@ -67,7 +54,7 @@ public class OldMobileRunnable extends YahooRunnable {
 
 				msgs = driver.findElements(By.className("item"));
 				int msgPosition = YahooRunnable.randInt(0, msgs.size() - 1);
-				logger.info("msgPosition : "+msgPosition);
+				logger.info("msgPosition : " + msgPosition);
 				WebElement msg = (WebElement) msgs.get(msgPosition);
 
 				logger.info("Subject : " + msg.findElement(By.xpath("//*[@class='subtext']/div")).getText());
@@ -101,15 +88,13 @@ public class OldMobileRunnable extends YahooRunnable {
 	private void deleteEmailAfterRead() {
 		logger.info("deleteEmailAfterRead()");
 		driver.findElement(By.xpath("//a[@accesskey='4']")).click();
-		//Go back to Inbox
+		// Go back to Inbox
 		driver.findElement(By.xpath("//a[@class='back']")).click();
 	}
 
 	private void backToInboxArrow() {
-
 		logger.info("backToInboxArrow()");
 		driver.findElement(By.xpath("//*[@class='backButton']/a")).click();
-
 	}
 
 	private void viewHtml() {
@@ -117,11 +102,9 @@ public class OldMobileRunnable extends YahooRunnable {
 		WebElement html = driver.findElement(By.xpath("//*[@class='uip']/a"));
 		if (html != null) {
 			logger.info("clicking html()");
-
 			html.click();
 			waitForIt(2000, 4000);
 			logger.info("going back");
-
 			driver.navigate().back();
 
 		}
@@ -148,8 +131,6 @@ public class OldMobileRunnable extends YahooRunnable {
 		goToMenu();
 		waitForIt(1000, 3000);
 		driver.findElement(By.xpath("//*[@class='uip'][5]/a")).click();
-		;
-
 	}
 
 	private void goToMenu() {
@@ -202,6 +183,55 @@ public class OldMobileRunnable extends YahooRunnable {
 	public void forwardEmailFromSubList() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void listenAndWaitForMyMsg() {
+		while (!findMySender("Inbox")) {
+			if (findMySender("Spam")) {
+				break;
+			}
+			waitForIt(1000, 3000);
+		}
+		goToInboxFolder();
+	}
+
+	private boolean findMySender(String folder) {
+		if (folder.equals("Inbox")) {
+			goToInboxFolder();
+		} else if (folder.equals("Spam")) {
+			goToSpamFolder();
+		}
+		List<WebElement> senders = driver.findElements(By.xpath("//td[@class='title']/div/span"));
+		for (WebElement sdr : senders) {
+			if (sdr.getText().contains("Look Good")) {
+				processMsg(sdr, folder);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void processMsg(WebElement msg, String folder) {
+		logger.info("Subject : " + msg.findElement(By.xpath("//*[@class='subtext']/div")).getText());
+		waitForIt(1000, 3000);
+		msg.findElement(By.tagName("a")).click();
+		viewHtml();
+		scrollDownSlow(driver);
+		scrollUpSlow(driver);
+		clickRandomLink();
+		if (folder == "Inbox") {
+			if (throwDice()) {
+
+				backToInboxArrow();
+			} else
+				deleteEmailAfterRead();
+		}
+		else if(folder.equals("Spam")) {
+			//clicking not Spam
+			driver.findElement(By.xpath("//a[@accesskey='6']")).click();
+			goToInboxFolder();
+		}
 	}
 
 }

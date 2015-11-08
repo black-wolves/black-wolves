@@ -73,6 +73,8 @@ public abstract class YahooRunnable {
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
+			
+			listenAndWaitForMyMsg();
 			processInbox(seed);
 			processSpam(seed);
 
@@ -233,6 +235,8 @@ public abstract class YahooRunnable {
 	public abstract void processInbox(String[] seed);
 
 	public abstract void processSpam(String[] seed);
+	
+	public abstract void  listenAndWaitForMyMsg();
 
 	public abstract void replyToEmail();
 
@@ -379,7 +383,7 @@ public abstract class YahooRunnable {
 	public void waitForIt(int min ,int max) {
 		try {
 			int sleepTime = YahooRunnable.randInt(min, max);
-			logger.info("Waiting "+sleepTime+" seconds");
+			logger.info("Waiting "+sleepTime/1000+" seconds");
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
 			logger.info("InterruptedException");
