@@ -620,9 +620,11 @@ public class Seeder implements Runnable {
 	public void writeLogToFile()
 	{
 		try {
+			logger.info("Adding to bots_ready.txt");
 			File file = new File("/var/www/bots_ready.txt");
 			FileWriter fileWriter = new FileWriter(file);
-			fileWriter.write("Seed Ready "+dbSeed.getEmail());
+			fileWriter.write("Seed Ready :"+dbSeed.getEmail());
+			
 			fileWriter.flush();
 			fileWriter.close();
 		} catch (IOException e) {
