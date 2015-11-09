@@ -89,13 +89,13 @@ public class Seeder implements Runnable {
 
 		if (handler != null) {
 			handler.runProcess();
-			while (!YahooRunnable.throwDice()) {
+			while (true) {
 				logger.info("Entering Process");
 				handler.runProcess();
 				handler.waitForIt(60000, 2400000);
 
 			}
-			driver.quit();
+		//	driver.quit();
 
 		} else {
 			getScreenShot(driver, seed[0]+"exit");
