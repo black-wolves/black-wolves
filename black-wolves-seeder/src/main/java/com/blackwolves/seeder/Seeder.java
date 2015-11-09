@@ -99,7 +99,7 @@ public class Seeder implements Runnable {
 
 		} else {
 			getScreenShot(driver, seed[0]+"exit");
-			logger.info("New Interface detected.Exiting");
+			logger.info("Handler is null.New Interface detected.Exiting");
 		}
 	}
 

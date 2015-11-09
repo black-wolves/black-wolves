@@ -244,7 +244,7 @@ public class MobileRunnable extends YahooRunnable {
 		}  
 		List<WebElement> senders = driver.findElements(By.xpath("//*[@class='sender']"));
 		for (WebElement sdr : senders) {
-			if (sdr.getText().contains("Daniel Daniel")) {
+			if (sdr.getText().contains("Aleia")) {
 				logger.info("Mails has been found by user "+seed);
 				processMsg(sdr,folder);
 				return true;
