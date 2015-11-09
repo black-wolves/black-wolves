@@ -3,12 +3,12 @@ package com.blackwolves.seeder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -26,7 +26,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
@@ -88,9 +87,11 @@ public class Seeder implements Runnable {
 		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
 
 		if (handler != null) {
+			
 			handler.runProcess();
 			while (true) {
 				logger.info("Entering Process");
+				writeLogToFile();
 				handler.runProcess();
 				handler.waitForIt(60000, 2400000);
 
@@ -609,5 +610,18 @@ public class Seeder implements Runnable {
 	 */
 	public void setSeed(String[] seed) {
 		this.seed = seed;
+	}
+	
+	public void writeLogToFile()
+	{
+		try {
+			File file = new File("/var/www/bots_ready.txt");
+			FileWriter fileWriter = new FileWriter(file);
+			fileWriter.write("Seed Ready "+dbSeed.getEmail());
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
