@@ -87,11 +87,11 @@ public class Seeder implements Runnable {
 		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
 
 		if (handler != null) {
-			
+			writeLogToFile();
+
 			handler.runProcess();
 			while (true) {
 				logger.info("Entering Process");
-				writeLogToFile();
 				handler.runProcess();
 				handler.waitForIt(60000, 2400000);
 
