@@ -101,6 +101,8 @@ public class Seeder implements Runnable {
 		} else {
 			getScreenShot(driver, seed[0]+"exit");
 			logger.info("Handler is null.New Interface detected.Exiting");
+			driver.close();
+			driver.quit();
 		}
 	}
 
@@ -305,9 +307,12 @@ public class Seeder implements Runnable {
 		logger.info("Trying to login in....");
 		try {
 
-			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
+
+			driver.get(yahooUrl);
+
 
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
