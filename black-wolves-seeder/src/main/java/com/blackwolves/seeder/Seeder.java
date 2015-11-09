@@ -357,6 +357,7 @@ public class Seeder implements Runnable {
 			WebDriverWait wait = new WebDriverWait(driver, 900);
 
 			checkJustOneTapPage(driver, seed);
+			checkPhoneValidation(driver, seed);
 			
 		//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("msgListItem")));
   
@@ -402,6 +403,21 @@ public class Seeder implements Runnable {
 			WebElement skipLink = driver.findElement(By.xpath("//*[@id='mobile_site_link']"));
 			if (skipLink != null) {
 				logger.info("************   Just One Tap Away Mobile Page   **********");
+				skipLink.click();
+				handler = new MobileRunnable(driver, seed, human, logger);
+			}
+
+		} catch (NoSuchElementException e) {
+			logger.info("Just One Tap Page not shown");
+		}
+
+	}
+	
+	private void checkPhoneValidation(WebDriver driver, String seed) {
+		try {
+			WebElement skipLink = driver.findElement(By.xpath("//*[@class='cta-primary-col']/a"));
+			if (skipLink != null) {
+				logger.info("************   Phone Validation Page   **********");
 				skipLink.click();
 				handler = new MobileRunnable(driver, seed, human, logger);
 			}

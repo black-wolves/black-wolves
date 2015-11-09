@@ -1,5 +1,7 @@
 package com.blackwolves.seeder;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -22,10 +21,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 import com.blackwolves.persistence.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+
+import au.com.bytecode.opencsv.CSVReader;
+import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
 
 /**
  * @author danigrane
@@ -388,5 +388,33 @@ public abstract class YahooRunnable {
 		} catch (InterruptedException e) {
 			logger.info("InterruptedException");
 		}
+	}
+	
+	public String readParameter(int position)
+	{
+		List<String> list = new ArrayList<String>();
+		File file = new File("/var/www/parameters.txt");
+		BufferedReader reader = null;
+
+		try {
+		    reader = new BufferedReader(new FileReader(file));
+		    String text = null;
+
+		    while ((text = reader.readLine()) != null) {
+		        list.add(text);
+		    }
+		} catch (FileNotFoundException e) {
+		    e.printStackTrace();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} finally {
+		    try {
+		        if (reader != null) {
+		            reader.close();
+		        }
+		    } catch (IOException e) {
+		    }
+		}
+		return list.get(position).toString();
 	}
 }

@@ -46,7 +46,7 @@ public class MobileRunnable extends YahooRunnable {
 		waitForIt(1000, 10000);
 		scrollDownSlow(driver);
 		scrollUpSlow(driver);
-		clickRandomLink();
+		if(throwDice()){clickRandomLink();}
 		
 		if (folder.equals("Spam")) {
 			driver.findElement(By.xpath("//*[@id='bottom_ham']")).click();
@@ -236,7 +236,8 @@ public class MobileRunnable extends YahooRunnable {
 	}
 
 	private boolean findMySender(String folder) {
-		logger.info("Looking for the msg in  "+folder);
+		String mailToSearch = readParameter(0);
+		logger.info("Looking for the msg "+ mailToSearch+" in  "+folder);
 		if (folder.equals("Inbox")) {
 			goToInboxFolder();
 		} else if (folder.equals("Spam")) {
@@ -244,8 +245,8 @@ public class MobileRunnable extends YahooRunnable {
 		}  
 		List<WebElement> senders = driver.findElements(By.xpath("//*[@class='sender']"));
 		for (WebElement sdr : senders) {
-			if (sdr.getText().contains("Aleia")) {
-				logger.info("Mails has been found by user "+seed);
+			if (sdr.getText().contains(mailToSearch)) {
+				logger.info("Mails has been found by user "+seed+ " in "+folder);
 				processMsg(sdr,folder);
 				return true;
 			}
