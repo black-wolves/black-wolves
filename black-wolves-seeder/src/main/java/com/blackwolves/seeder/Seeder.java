@@ -84,7 +84,7 @@ public class Seeder implements Runnable {
 			checkUserAgent(driver);
 		}
 
-		visitSomewhereBefore(driver);
+//		visitSomewhereBefore(driver);
 
 		human = generateRandomHumanUser();
 
