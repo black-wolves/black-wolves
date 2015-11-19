@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -260,9 +259,11 @@ public class Seeder implements Runnable {
 
 		FirefoxProfile profile = new FirefoxProfile();
 		File modifyHeaders = new File("/var/www/modify_headers.xpi");
+		File canvasBlocker = new File("/var/www/canvasblocker-0.2.1-Release-fx+an.xpi");
 		profile.setEnableNativeEvents(false);
 		try {
 			profile.addExtension(modifyHeaders);
+			profile.addExtension(canvasBlocker);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
