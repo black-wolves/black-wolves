@@ -35,9 +35,11 @@ public abstract class YahooRunnable {
 
 	protected static Logger logger;
 
-	protected final double PERCENTAGE = 1.00;//generateDoubleRandom(0.7, 0.9);
+	protected final double PERCENTAGE = generateDoubleRandom(0.2, 0.4);
 	
 	protected String seed = "";
+	
+	protected String order = "";
 	
 	protected Human human;
 
@@ -70,8 +72,16 @@ public abstract class YahooRunnable {
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
 		try {
-			processInbox(seed);
-			processSpam(seed);
+			if(order.contains("inbox")){
+				logger.info("Processing inbox");
+				processInbox(seed);
+			}
+			if (order.contains("spam")) {
+				logger.info("Processing spam....");
+				processSpam(seed);
+			}
+						
+
 
 			logger.info("Finished!!");
 		} catch (NoSuchElementException e) {
@@ -321,5 +331,10 @@ public abstract class YahooRunnable {
 	    } catch (InterruptedException e){
 	    	logger.error(e.getMessage(), e);
 	    }
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+		
 	}
 }

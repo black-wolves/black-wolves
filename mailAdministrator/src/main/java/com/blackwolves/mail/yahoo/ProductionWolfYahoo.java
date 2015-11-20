@@ -26,7 +26,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 
 //	private static final String SEED = "yaninadefays03@yahoo.com";
 //	private static final String SEED_PASSWORD = "wolf2015.3";
-	private static final String VMTA = "awu9";
+	private static final String VMTA = "mta3";
 
 	/* (non-Javadoc)
 	 * @see com.blackwolves.mail.yahoo.WolfYahoo#generateAndSendMail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
@@ -72,8 +72,9 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					try{
 						int i = WolfYahoo.randInt(0, msgs.length-1);
 						Message message = msgs[i];
-						String[] from = message.getFrom()[0].toString().split("\\|");
-						String receiver = from[1];
+//						String[] from = message.getFrom()[0].toString().split("\\|");
+//						String receiver = from[1];
+						String receiver = message.getAllRecipients()[0].toString();
 //						if(contacts.contains(receiver) && from[0].contains("Military")){
 							logger.info("Creating body: " + count);
 							count++;
@@ -85,13 +86,13 @@ public class ProductionWolfYahoo extends WolfYahoo {
 							mail.append("\n");
 							mail.append("\n");
 							mail.append(message.getContent());
-							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + offer + "/" + receiver);
+							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + offer + "/" + receiver + i);
 							out.println(mail);
 							out.close();
 							logger.info("Body created for: " + receiver);
 							--bodiesCount;
 							logger.info("Remainig bodies: " + bodiesCount);
-							saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
+//							saveMessages(store, offer, message, offerFolder, message.getMessageNumber());
 //						}
 						offerFolder.close(true);
 						logger.info("Folder closed");
