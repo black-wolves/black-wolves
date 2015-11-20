@@ -46,8 +46,9 @@ public class SeederThreadPool {
 	private static void iterateSeeds(String[] args, ExecutorService executor) {
 		for (int i = 1; i <= SEEDS_TO_PROCESS; i++) {
 			String[] seed = args[i].split(",");
+			String order = args[SEEDS_TO_PROCESS+1];
 			MDC.put("logFileName", seed[0]);
-			Seeder seeder = new Seeder(seed, logger);
+			Seeder seeder = new Seeder(seed, logger,order);
 			Runnable worker = seeder;
 			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
 			executor.execute(worker);
@@ -62,7 +63,7 @@ public class SeederThreadPool {
 	private static void __________________________________________testIterateSeeds(String[] args, ExecutorService executor) {
     	String[] seed = args[0].split(",");
     	MDC.put("logFileName", seed[0]);
-        Seeder seeder = new Seeder(seed, logger);
+        Seeder seeder = new Seeder(seed, logger,"InboxAndSpam");
         Runnable worker = seeder;
         logger.info("Executing thread: with seed: " + seed[0] + " " +seed[1]);
         executor.execute(worker);

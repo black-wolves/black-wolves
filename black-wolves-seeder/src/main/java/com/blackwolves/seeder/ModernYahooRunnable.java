@@ -28,7 +28,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	@Override
 	public void processInbox(String[] seed) {
-		logger.info("Processing inbox");
 
 		checkWelcomeDialog();
 		validateOkayModal();
@@ -487,7 +486,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 */
 	@Override
 	public void processSpam(String[] seed) {
-		logger.info("Processing Spam....");
 		try {
 			moveMouse();
 		} catch (MoveTargetOutOfBoundsException e) {

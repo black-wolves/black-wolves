@@ -48,13 +48,16 @@ public class Seeder implements Runnable {
 
 	private String[] seed;
 
+	private String order;
+
 	public Seeder() {
 	}
 
-	public Seeder(String[] seed, Logger logger) {
+	public Seeder(String[] seed, Logger logger,String order) {
 		logger.info("Seeder constructor");
 		this.seed = seed;
 		this.logger = logger;
+		this.order = order;
 	}
 
 	public void run() {
@@ -101,6 +104,7 @@ public class Seeder implements Runnable {
 //			
 //			newAddToAddressBook(driver);
 			
+			handler.setOrder(order);
 			handler.runProcess();
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
@@ -124,7 +128,7 @@ public class Seeder implements Runnable {
 			// }
 			// }
 			// }
-
+			driver.close();
 			driver.quit();
 		} else {
 			logger.info("New Interface detected.Exiting");
