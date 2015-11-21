@@ -391,11 +391,12 @@ public abstract class YahooRunnable {
 	public static void deleteSeedFromFile(String seed) {
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
 			List<String> usedSeeds = readSeedsFromFile();
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
 			for (String usedSeed : usedSeeds) {
 				if(!seed.equals(usedSeed)){
 					pw.write(usedSeed);
+					pw.write("\n");
 				}
 			}
 		} catch (IOException e) {
