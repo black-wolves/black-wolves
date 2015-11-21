@@ -69,12 +69,16 @@ public class SeederThreadPool {
 		for (int i = 1; i <= seedsToProcess; i++) {
 			int seedNumber = YahooRunnable.randInt(0, seeds.size()-1);
 			String[] seed = seeds.get(seedNumber);
+			List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
+			if(!usedSeeds.contains(seed[0])){
+				MDC.put("logFileName", seed[0]);
+				Seeder seeder = new Seeder(seed, logger, args[2]);
+				Runnable worker = seeder;
+				YahooRunnable.writeSeedToFile(seed[0]);
+				logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
+				executor.execute(worker);
+			}
 			seeds.remove(seedNumber);
-			MDC.put("logFileName", seed[0]);
-			Seeder seeder = new Seeder(seed, logger, args[2]);
-			Runnable worker = seeder;
-			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
-			executor.execute(worker);
 		}
 	}
 	

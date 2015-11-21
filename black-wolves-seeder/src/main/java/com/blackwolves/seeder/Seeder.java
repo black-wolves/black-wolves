@@ -130,6 +130,7 @@ public class Seeder implements Runnable {
 			// }
 			driver.close();
 			driver.quit();
+			YahooRunnable.deleteSeedFromFile(seed[0]);
 		} else {
 			logger.info("New Interface detected.Exiting");
 		}

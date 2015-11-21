@@ -1,8 +1,12 @@
 package com.blackwolves.seeder;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -336,5 +340,61 @@ public abstract class YahooRunnable {
 	public void setOrder(String order) {
 		this.order = order;
 		
+	}
+	
+	public static void writeSeedToFile(String seed) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
+			List<String> usedSeeds = readSeedsFromFile();
+			for (String usedSeed : usedSeeds) {
+				pw.write(usedSeed);
+			}
+			pw.write(seed);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			if(pw!=null){
+				pw.close();
+			}
+		}
+	}
+
+	public static List<String> readSeedsFromFile() {
+		List<String> list = null;
+		try {
+			File file = new File(Constant.ROUTE + "in-use-seeds.txt");
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			list = new ArrayList<String>();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				list.add(line);
+			}
+			fileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public static void deleteSeedFromFile(String seed) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
+			List<String> usedSeeds = readSeedsFromFile();
+			for (String usedSeed : usedSeeds) {
+				if(!seed.equals(usedSeed)){
+					pw.write(usedSeed);
+				}
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			if(pw!=null){
+				pw.close();
+			}
+		}
 	}
 }
