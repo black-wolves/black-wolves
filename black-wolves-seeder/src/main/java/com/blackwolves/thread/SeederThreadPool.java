@@ -27,9 +27,20 @@ public class SeederThreadPool {
 		ExecutorService executor = null;
 		if("multiple".equals(args[0])){
 			logger.info("Starting SeederThreadPool");
+			List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
+			
 			int seedsToProcess = Integer.valueOf(args[1]);
 			executor = Executors.newFixedThreadPool(seedsToProcess);
-			processSeeds(args, executor, seedsToProcess);
+			
+			processSeeds(args, executor, seedsToProcess, seeds);
+		}else if("specific".equals(args[0])){
+			logger.info("Starting SeederThreadPool");
+			List<String[]> seeds = YahooRunnable.generateSeedsList("specific.csv");
+			
+			int seedsToProcess = seeds.size();
+			executor = Executors.newFixedThreadPool(seedsToProcess);
+			
+			processSeeds(args, executor, seedsToProcess, seeds);
 		}else if("one".equals(args[0])){
 			executor = Executors.newFixedThreadPool(1);
 			processSeed(args, executor);
@@ -53,8 +64,7 @@ public class SeederThreadPool {
 	 * @param executor
 	 * @param seedsToProcess 
 	 */
-	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess) {
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
+	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess, List<String[]> seeds) {
 		for (int i = 1; i <= seedsToProcess; i++) {
 			int seedNumber = YahooRunnable.randInt(0, seeds.size()-1);
 			String[] seed = seeds.get(seedNumber);

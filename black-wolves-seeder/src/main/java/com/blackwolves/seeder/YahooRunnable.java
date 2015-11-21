@@ -124,10 +124,10 @@ public abstract class YahooRunnable {
 	/**
 	 * @return
 	 */
-	public static List<String[]> generateSeedsList() {
+	public static List<String[]> generateSeedsList(String fileName) {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + "seeds.csv"));
+			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));
 			seeds = seedsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);

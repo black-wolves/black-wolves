@@ -32,7 +32,7 @@ public abstract class Human {
 	public String generateRandomTo(String mySeed) {
 		String[] s = mySeed.split(",");
 		String myMail = s[0];
-		List<String[]> seeds = YahooRunnable.generateSeedsList();
+		List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
 		String to = Constant.EMPTY_STRING;
 		do {
 			String[] seed = seeds.get(YahooRunnable.randInt(0, seeds.size()-1));
