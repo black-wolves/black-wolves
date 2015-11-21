@@ -56,7 +56,9 @@ public class SeederThreadPool {
 	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess) {
 		List<String[]> seeds = YahooRunnable.generateSeedsList();
 		for (int i = 1; i <= seedsToProcess; i++) {
-			String[] seed = seeds.get(YahooRunnable.randInt(0, seeds.size()-1));
+			int seedNumber = YahooRunnable.randInt(0, seeds.size()-1);
+			String[] seed = seeds.get(seedNumber);
+			seeds.remove(seedNumber);
 			MDC.put("logFileName", seed[0]);
 			Seeder seeder = new Seeder(seed, logger, args[2]);
 			Runnable worker = seeder;
