@@ -49,15 +49,18 @@ public class Seeder implements Runnable {
 	private String[] seed;
 
 	private String order;
+	
+	private String type;
 
 	public Seeder() {
 	}
 
-	public Seeder(String[] seed, Logger logger,String order) {
+	public Seeder(String[] seed, Logger logger,String order, String type) {
 		logger.info("Seeder constructor");
 		this.seed = seed;
 		this.logger = logger;
 		this.order = order;
+		this.type = type;
 	}
 
 	public void run() {
@@ -105,7 +108,19 @@ public class Seeder implements Runnable {
 //			newAddToAddressBook(driver);
 			
 			handler.setOrder(order);
-			handler.runProcess();
+			int count = 1;
+			do{
+				handler.runProcess();
+				if(Constant.SPECIFIC.equals(type)){
+					try {
+						Thread.sleep(180000);
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage(), e);
+						continue;
+					}
+				}
+				++count;
+			}while(Constant.SPECIFIC.equals(type) && count <=5);
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			//

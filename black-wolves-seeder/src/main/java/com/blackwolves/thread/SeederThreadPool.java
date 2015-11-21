@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.seeder.Seeder;
 import com.blackwolves.seeder.YahooRunnable;
 
@@ -25,15 +26,15 @@ public class SeederThreadPool {
 
 	public static void main(String[] args) {
 		ExecutorService executor = null;
-		if("multiple".equals(args[0])){
+		if(Constant.MULTIPLE.equals(args[0])){
 			logger.info("Starting multiple SeederThreadPool");
 			List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
 			
 			int seedsToProcess = Integer.valueOf(args[1]);
 			executor = Executors.newFixedThreadPool(seedsToProcess);
 			
-			processSeeds(args, executor, seedsToProcess, seeds);
-		}else if("specific".equals(args[0])){
+			processSeeds(args, executor, seedsToProcess, seeds, Constant.MULTIPLE);
+		}else if(Constant.SPECIFIC.equals(args[0])){
 			logger.info("Starting specific SeederThreadPool");
 			YahooRunnable.setPERCENTAGE(0.9);
 			List<String[]> seeds = YahooRunnable.generateSeedsList("specific.csv");
@@ -41,11 +42,11 @@ public class SeederThreadPool {
 			int seedsToProcess = seeds.size();
 			executor = Executors.newFixedThreadPool(seedsToProcess);
 			
-			processSeeds(args, executor, seedsToProcess, seeds);
-		}else if("one".equals(args[0])){
+			processSeeds(args, executor, seedsToProcess, seeds, Constant.SPECIFIC);
+		}else if(Constant.ONE.equals(args[0])){
 			logger.info("Starting one SeederThreadPool");
 			executor = Executors.newFixedThreadPool(1);
-			processSeed(args, executor);
+			processSeed(args, executor, Constant.ONE);
 		}
 		
 //		UNCOMMENT THIS FOR TEST ONLY AND COMMENT THE ONE ABOVE
@@ -66,18 +67,20 @@ public class SeederThreadPool {
 	 * @param executor
 	 * @param seedsToProcess 
 	 */
-	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess, List<String[]> seeds) {
+	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess, List<String[]> seeds, String type) {
 		for (int i = 1; i <= seedsToProcess; i++) {
 			int seedNumber = YahooRunnable.randInt(0, seeds.size()-1);
 			String[] seed = seeds.get(seedNumber);
 			List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
 			if(!usedSeeds.contains(seed[0])){
 				MDC.put("logFileName", seed[0]);
-				Seeder seeder = new Seeder(seed, logger, args[2]);
+				Seeder seeder = new Seeder(seed, logger, args[2], type);
 				Runnable worker = seeder;
 				YahooRunnable.writeSeedToFile(seed[0]);
 				logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
 				executor.execute(worker);
+			}else{
+				logger.info("Seeder is alreayd in the used file");
 			}
 			seeds.remove(seedNumber);
 		}
@@ -87,10 +90,10 @@ public class SeederThreadPool {
 	 * @param args
 	 * @param executor
 	 */
-	private static void processSeed(String[] args, ExecutorService executor) {
+	private static void processSeed(String[] args, ExecutorService executor, String type) {
 		String[] seed = args[1].split(",");
 		MDC.put("logFileName", seed[0]);
-		Seeder seeder = new Seeder(seed, logger, args[2]);
+		Seeder seeder = new Seeder(seed, logger, args[2], type);
 		Runnable worker = seeder;
 		logger.info("Executing thread: with seed: " + seed[0] + " " + seed[1]);
 		executor.execute(worker);
@@ -101,10 +104,10 @@ public class SeederThreadPool {
 	 * @param args
 	 * @param executor
 	 */
-	private static void __________________________________________testIterateSeeds(String[] args, ExecutorService executor) {
+	private static void __________________________________________testIterateSeeds(String[] args, ExecutorService executor, String type) {
     	String[] seed = args[0].split(",");
     	MDC.put("logFileName", seed[0]);
-        Seeder seeder = new Seeder(seed, logger,"InboxAndSpam");
+        Seeder seeder = new Seeder(seed, logger,"InboxAndSpam", type);
         Runnable worker = seeder;
         logger.info("Executing thread: with seed: " + seed[0] + " " +seed[1]);
         executor.execute(worker);
