@@ -35,6 +35,7 @@ public class SeederThreadPool {
 			processSeeds(args, executor, seedsToProcess, seeds);
 		}else if("specific".equals(args[0])){
 			logger.info("Starting specific SeederThreadPool");
+			YahooRunnable.setPERCENTAGE(0.9);
 			List<String[]> seeds = YahooRunnable.generateSeedsList("specific.csv");
 			
 			int seedsToProcess = seeds.size();

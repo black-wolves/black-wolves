@@ -35,7 +35,7 @@ public abstract class YahooRunnable {
 
 	protected static Logger logger;
 
-	protected final double PERCENTAGE = generateDoubleRandom(0.2, 0.4);
+	protected static  double PERCENTAGE = generateDoubleRandom(0.2, 0.4);
 	
 	protected String seed = "";
 	
@@ -226,7 +226,7 @@ public abstract class YahooRunnable {
 	 * @param min
 	 * @return double
 	 */
-	public double generateDoubleRandom(double max, double min) {
+	public static double generateDoubleRandom(double max, double min) {
 		double r = Math.random();
 		if (r < 0.5) {
 			return ((1 - Math.random()) * (max - min) + min);
@@ -336,5 +336,13 @@ public abstract class YahooRunnable {
 	public void setOrder(String order) {
 		this.order = order;
 		
+	}
+
+	public double getPERCENTAGE() {
+		return PERCENTAGE;
+	}
+
+	public static void setPERCENTAGE(double pERCENTAGE) {
+		PERCENTAGE = pERCENTAGE;
 	}
 }
