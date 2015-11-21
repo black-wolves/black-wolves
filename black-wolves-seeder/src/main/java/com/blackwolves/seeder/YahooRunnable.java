@@ -353,10 +353,11 @@ public abstract class YahooRunnable {
 	public static void writeSeedToFile(String seed) {
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
 			List<String> usedSeeds = readSeedsFromFile();
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
 			for (String usedSeed : usedSeeds) {
 				pw.write(usedSeed);
+				pw.write("\n");
 			}
 			pw.write(seed);
 		} catch (IOException e) {
