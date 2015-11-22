@@ -35,24 +35,26 @@ public class LoginWolfYahoo {
 
 	public static void main(String[] args) {
 		
-		String fileName = args[0];
-		checkAvailableSeeds(fileName);
+		String inputFileName = args[0];
+		String outputFileName = args[1];
+		checkAvailableSeeds(inputFileName, outputFileName);
 	}
 
 	/**
 	 * 
-	 * @param fileName
+	 * @param inputFileName
+	 * @param outputFileName 
 	 */
-	private static void checkAvailableSeeds(String fileName) {
+	private static void checkAvailableSeeds(String inputFileName, String outputFileName) {
 		logger.info("Generating contacts list");
-		List<String[]> contacts = generateSeedsList(fileName);
+		List<String[]> contacts = generateSeedsList(inputFileName);
 		logger.info("Contact lists generated");
 		
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 		Session session = Session.getDefaultInstance(props, null);
 		
-		clearFileContent();
+		clearFileContent(outputFileName);
 		
 		for (String[] seed : contacts) {
 			try{
@@ -79,7 +81,7 @@ public class LoginWolfYahoo {
 				
 				store.close();
 				
-				writeSeedToFile(seed);
+				writeSeedToFile(seed, outputFileName);
 				logger.info("Store closed");
 			} catch (NoSuchProviderException e) {
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
@@ -117,11 +119,11 @@ public class LoginWolfYahoo {
 	 * 
 	 * @param seed
 	 */
-	private static void writeSeedToFile(String[] seed) {
+	private static void writeSeedToFile(String[] seed, String outputFileName) {
 		PrintWriter pw = null;
 		try {
-			List<String> usedSeeds = readSeedsFromFile();
-			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "seeds_bun.csv"));
+			List<String> usedSeeds = readSeedsFromFile(outputFileName);
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + outputFileName));
 			for (String usedSeed : usedSeeds) {
 				pw.write(usedSeed);
 				pw.write("\n");
@@ -139,10 +141,10 @@ public class LoginWolfYahoo {
 	 * 
 	 * @return
 	 */
-	private static List<String> readSeedsFromFile() {
+	private static List<String> readSeedsFromFile(String outputFileName) {
 		List<String> list = null;
 		try {
-			File file = new File(Constant.ROUTE + "seeds_bun.csv");
+			File file = new File(Constant.ROUTE + outputFileName);
 			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			list = new ArrayList<String>();
@@ -158,12 +160,12 @@ public class LoginWolfYahoo {
 		return list;
 	}
 	
-	private static void clearFileContent(){
+	private static void clearFileContent(String outputFileName){
 		PrintWriter writer = null;
 		try {
-		writer = new PrintWriter(Constant.ROUTE + "seeds_bun.csv");
-		writer.print("");
-		writer.close();
+			writer = new PrintWriter(Constant.ROUTE + outputFileName);
+			writer.print("");
+			writer.close();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} finally{
