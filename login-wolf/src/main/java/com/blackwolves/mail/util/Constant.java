@@ -24,4 +24,6 @@ public interface Constant {
 		public static final String CONTENT_TRANSFER_ENCODING = "7bit";
 	}
 	
+	
+	
 }

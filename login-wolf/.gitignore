@@ -1,0 +1,9 @@
+/bin/
+.project
+.classpath
+.settings
+/target/
+.DS_Store
+/Users/
+/mailAdministrator.log
+/dependency-reduced-pom.xml

@@ -23,6 +23,8 @@ import javax.mail.search.FlagTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.blackwolves.mail.util.Constant;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 /**
@@ -33,11 +35,6 @@ public class Calculator {
 
 	private static Logger logger = LoggerFactory.getLogger(Calculator.class);
 	
-	private static final String IMAP_YAHOO = "imap.mail.yahoo.com";
-	private static final String ROUTE = "/var/www/";
-	private static final String INBOX = "Inbox";
-	private static final String SPAM = "Bulk Mail";
-
 	public static void main(String args[]) {
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
@@ -55,7 +52,7 @@ public class Calculator {
 			try{
 				Store store = session.getStore("imaps");
 				// IMAP host for yahoo.
-				store.connect(IMAP_YAHOO, seed[0], seed[1]);
+				store.connect(Constant.Yahoo.IMAP_YAHOO, seed[0], seed[1]);
 				obtainFoldersCount(store, spamDomains, inboxDomains, warmupDomains);
 				store.close();
 				i++;
@@ -95,7 +92,7 @@ public class Calculator {
 	private static List<String[]> generateSeedsList() {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-			CSVReader seedsReader = new CSVReader(new FileReader(ROUTE + "seeds.csv"));
+			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + "seeds.csv"));
 			seeds = seedsReader.readAll();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
@@ -112,7 +109,7 @@ public class Calculator {
 		List<String[]> domains = new ArrayList<String[]>();
 		List<String> finalDomains = new ArrayList<String>();
 		try {
-			CSVReader domainsReader = new CSVReader(new FileReader(ROUTE + "domains.txt"));
+			CSVReader domainsReader = new CSVReader(new FileReader(Constant.ROUTE + "domains.txt"));
 			domains = domainsReader.readAll();
 			for (String[] domain : domains) {
 				finalDomains.add(domain[0]);
@@ -134,8 +131,8 @@ public class Calculator {
 	 * @throws MessagingException
 	 */
 	private static void obtainFoldersCount(Store store, Map<String, Long> spamDomains, Map<String, Long> inboxDomains, List<String> warmupDomains) throws MessagingException {
-		Folder spam = store.getFolder(SPAM);
-		Folder inbox = store.getFolder(INBOX);
+		Folder spam = store.getFolder(Constant.Yahoo.SPAM);
+		Folder inbox = store.getFolder(Constant.Yahoo.INBOX);
 		spamDomains = obtainFolderCountByDomain(spamDomains, spam, warmupDomains);
 		inboxDomains = obtainFolderCountByDomain(inboxDomains, inbox, warmupDomains);
 		
