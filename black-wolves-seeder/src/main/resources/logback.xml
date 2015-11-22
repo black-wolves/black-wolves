@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="USER_HOME" value="/var/www/logs" />
+	<property name="USER_HOME" value="/var/www/logs/seeder" />
 
 	<appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
 
