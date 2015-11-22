@@ -56,6 +56,7 @@ public class LoginWolfYahoo {
 		
 		clearFileContent(outputFileName);
 		List<String[]> activeSeeds = new ArrayList<String[]>();
+		List<String[]> activeSeedsWithSpam = new ArrayList<String[]>();
 		List<String[]> inactiveSeeds = new ArrayList<String[]>();
 		
 		for (String[] seed : contacts) {
@@ -79,15 +80,19 @@ public class LoginWolfYahoo {
 				spam.close(true);
 				logger.info("Spam folder closed");
 				
-				logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is alive with " + inboxCount + " messages in inbox and " + spamCount + " messages in spam");
-				
+				String[] newSeed = {seed[0], seed[1], String.valueOf(inboxCount), String.valueOf(spamCount)};
 				store.close();
 				logger.info("Store closed");
 				
 				writeSeedToFile(seed, outputFileName);
 				
-				activeSeeds.add(seed);
+				if(spamCount>100){
+					activeSeedsWithSpam.add(newSeed);
+				}else{
+					activeSeeds.add(newSeed);
+				}
 			} catch (NoSuchProviderException e) {
+				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
 				continue;
@@ -97,6 +102,7 @@ public class LoginWolfYahoo {
 				logger.error(e.getMessage());
 				continue;
 			} catch (MessagingException e) {
+				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
 				continue;
@@ -105,12 +111,15 @@ public class LoginWolfYahoo {
 		logger.info("");
 		logger.info("Active seeds:");
 		for (String[] seed : activeSeeds) {
-			logger.info(seed[0], seed[1]);
+			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+		}
+		for (String[] seed : activeSeedsWithSpam) {
+			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		logger.info("");
 		logger.info("Inactive seeds:");
 		for (String[] seed : inactiveSeeds) {
-			logger.info(seed[0], seed[1]);
+			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is INACTIVE");
 		}
 		logger.info("");
 		logger.info("Finished validating seeds");
