@@ -160,6 +160,10 @@ public class LoginWolfYahoo {
 		return list;
 	}
 	
+	/**
+	 * 
+	 * @param outputFileName
+	 */
 	private static void clearFileContent(String outputFileName){
 		PrintWriter writer = null;
 		try {
