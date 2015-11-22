@@ -486,19 +486,33 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 */
 	@Override
 	public void processSpam(String[] seed) {
+		
+
 		try {
-			moveMouse();
+		//	moveMouse();
 		} catch (MoveTargetOutOfBoundsException e) {
 			logger.info("Process Spam MoveTargetOutOfBoundsException ");
 		}
+		
+		
+		
+		
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
 
+			if(true)
+			{
+				logger.info("Checking all NOT SPAM");
+				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
+				checkbox.click();
+				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();;
+			}
+			
 			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (spamMsgs.size() * PERCENTAGE);
-
+			
 			for (int j = 0; j < percentage;) {
 
 				try {
