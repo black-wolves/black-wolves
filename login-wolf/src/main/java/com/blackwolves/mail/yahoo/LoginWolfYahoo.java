@@ -102,7 +102,7 @@ public class LoginWolfYahoo {
 				continue;
 			}
 		}
-		logger.info("Finished validating seeds");
+		logger.info("");
 		logger.info("Active seeds:");
 		for (String[] seed : activeSeeds) {
 			logger.info(seed[0], seed[1]);
@@ -112,6 +112,8 @@ public class LoginWolfYahoo {
 		for (String[] seed : inactiveSeeds) {
 			logger.info(seed[0], seed[1]);
 		}
+		logger.info("");
+		logger.info("Finished validating seeds");
 	}
 
 	/**
