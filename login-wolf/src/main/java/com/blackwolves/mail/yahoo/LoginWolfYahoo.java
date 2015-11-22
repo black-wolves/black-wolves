@@ -55,6 +55,8 @@ public class LoginWolfYahoo {
 		Session session = Session.getDefaultInstance(props, null);
 		
 		clearFileContent(outputFileName);
+		List<String[]> activeSeeds = new ArrayList<String[]>();
+		List<String[]> inactiveSeeds = new ArrayList<String[]>();
 		
 		for (String[] seed : contacts) {
 			try{
@@ -62,7 +64,7 @@ public class LoginWolfYahoo {
 				
 				logger.info("Starting the connection");
 				store.connect(Constant.Yahoo.IMAP_YAHOO, Constant.Yahoo.IMAP_PORT, seed[0], seed[1]);
-				logger.info("Connected to " + seed);
+				logger.info("Connected to " + seed[0] + " with pass: " + seed[1]);
 				
 				
 				Folder inbox = store.getFolder(Constant.Yahoo.INBOX);
@@ -77,17 +79,20 @@ public class LoginWolfYahoo {
 				spam.close(true);
 				logger.info("Spam folder closed");
 				
-				logger.info("Seed is alive with " + inboxCount + " messages in inbox and " + spamCount + " messages in spam");
+				logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is alive with " + inboxCount + " messages in inbox and " + spamCount + " messages in spam");
 				
 				store.close();
+				logger.info("Store closed");
 				
 				writeSeedToFile(seed, outputFileName);
-				logger.info("Store closed");
+				
+				activeSeeds.add(seed);
 			} catch (NoSuchProviderException e) {
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
 				continue;
 			} catch (AuthenticationFailedException e) {
+				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage());
 				continue;
@@ -96,6 +101,16 @@ public class LoginWolfYahoo {
 				logger.error(e.getMessage(), e);
 				continue;
 			}
+		}
+		logger.info("Finished validating seeds");
+		logger.info("Active seeds:");
+		for (String[] seed : activeSeeds) {
+			logger.info(seed[0], seed[1]);
+		}
+		logger.info("");
+		logger.info("Inactive seeds:");
+		for (String[] seed : inactiveSeeds) {
+			logger.info(seed[0], seed[1]);
 		}
 	}
 
