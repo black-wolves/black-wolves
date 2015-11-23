@@ -50,7 +50,7 @@ public class Seeder implements Runnable {
 
 	private String order;
 	
-	private String type;
+	public static String type;
 
 	public Seeder() {
 	}
@@ -60,7 +60,7 @@ public class Seeder implements Runnable {
 		this.seed = seed;
 		this.logger = logger;
 		this.order = order;
-		this.type = type;
+		Seeder.type = type;
 	}
 
 	public void run() {

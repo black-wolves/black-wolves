@@ -14,6 +14,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.slf4j.Logger;
 
+import com.blackwolves.persistence.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -500,7 +501,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
 
-			if(!throwDice())
+			if(Constant.SPECIFIC.equals(Seeder.type) )
 			{
 				logger.info("Checking all NOT SPAM");
 				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
