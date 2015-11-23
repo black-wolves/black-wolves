@@ -500,7 +500,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
-
+			logger.info("Seeder type: "+ Seeder.type);
 			if(Constant.SPECIFIC.equals(Seeder.type) )
 			{
 				logger.info("Checking all NOT SPAM");
