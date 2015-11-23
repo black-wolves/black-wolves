@@ -86,7 +86,7 @@ public class LoginWolfYahoo {
 				
 				writeSeedToFile(seed, outputFileName);
 				
-				if(spamCount>100){
+				if(spamCount>=50){
 					activeSeedsWithSpam.add(newSeed);
 				}else{
 					activeSeeds.add(newSeed);
