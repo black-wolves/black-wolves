@@ -113,14 +113,15 @@ public class Seeder implements Runnable {
 				handler.runProcess();
 				if(Constant.SPECIFIC.equals(type)){
 					try {
-						Thread.sleep(180000);
+						Thread.sleep(120000);
 					} catch (InterruptedException e) {
 						logger.error(e.getMessage(), e);
 						continue;
 					}
 				}
+				logger.info("Count Specific"+ count);
 				++count;
-			}while(Constant.SPECIFIC.equals(type) && count <=5);
+			}while(Constant.SPECIFIC.equals(type) && count <=20);
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			//
@@ -143,6 +144,7 @@ public class Seeder implements Runnable {
 			// }
 			// }
 			// }
+			logger.info("Finished!!");
 			driver.close();
 			driver.quit();
 			YahooRunnable.deleteSeedFromFile(seed[0]);

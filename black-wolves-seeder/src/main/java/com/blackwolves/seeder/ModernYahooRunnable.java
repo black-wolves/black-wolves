@@ -500,7 +500,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
 
-			if(true)
+			if(!throwDice())
 			{
 				logger.info("Checking all NOT SPAM");
 				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
