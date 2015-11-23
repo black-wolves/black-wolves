@@ -512,7 +512,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 
 			logger.info("Percentage is " + PERCENTAGE);
-			int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+			int percentage = (int) (spamMsgs.size() * PERCENTAGE)  ;
+			
+			if (percentage > 10) {
+				percentage = 3;
+			}
 			
 			for (int j = 0; j < percentage;) {
 

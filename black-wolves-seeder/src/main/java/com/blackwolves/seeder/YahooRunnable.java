@@ -85,6 +85,7 @@ public abstract class YahooRunnable {
 				processSpam(seed);
 			}
 						
+			
 		} catch (NoSuchElementException e) {
 			logger.error("NoSuchElementException");
 		}
