@@ -102,7 +102,7 @@ public class LoginWolfYahoo {
 				}
 				--seedsToGo;
 			} catch (NoSuchProviderException e) {
-				inactiveSeeds.add(seed);
+				writeSeedToFile(seed, outputFileName);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
 				--seedsToGo;
@@ -114,7 +114,7 @@ public class LoginWolfYahoo {
 				--seedsToGo;
 				continue;
 			} catch (MessagingException e) {
-				inactiveSeeds.add(seed);
+				writeSeedToFile(seed, outputFileName);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
 				--seedsToGo;
