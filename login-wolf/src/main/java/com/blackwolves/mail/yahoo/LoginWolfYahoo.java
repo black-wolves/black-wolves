@@ -94,9 +94,9 @@ public class LoginWolfYahoo {
 				
 				writeSeedToFile(seed, outputFileName);
 				
-				if(spamCount<=100){
+				if(spamCount<=250){
 					activeSeeds.add(newSeed);
-				}else if (spamCount >100 && spamCount <=500){
+				}else if (spamCount >250 && spamCount <=500){
 					activeSeedsWithSpam.add(newSeed);
 					writeSeedToFile(seed, "specific.csv");
 				}else{
