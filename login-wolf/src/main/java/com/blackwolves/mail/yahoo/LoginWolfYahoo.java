@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.mail.util.Constant;
+import com.blackwolves.mail.util.SeedComparator;
 
 /**
  * @author gastondapice
@@ -57,6 +60,7 @@ public class LoginWolfYahoo {
 		clearFileContent(outputFileName);
 		List<String[]> activeSeeds = new ArrayList<String[]>();
 		List<String[]> activeSeedsWithSpam = new ArrayList<String[]>();
+		List<String[]> activeSeedsWithHugeSpam = new ArrayList<String[]>();
 		List<String[]> inactiveSeeds = new ArrayList<String[]>();
 		
 		for (String[] seed : contacts) {
@@ -86,10 +90,12 @@ public class LoginWolfYahoo {
 				
 				writeSeedToFile(seed, outputFileName);
 				
-				if(spamCount>=50){
+				if(spamCount<=100){
+					activeSeeds.add(newSeed);
+				}else if (spamCount >100 && spamCount <=500){
 					activeSeedsWithSpam.add(newSeed);
 				}else{
-					activeSeeds.add(newSeed);
+					activeSeedsWithHugeSpam.add(newSeed);
 				}
 			} catch (NoSuchProviderException e) {
 				inactiveSeeds.add(seed);
@@ -108,12 +114,19 @@ public class LoginWolfYahoo {
 				continue;
 			}
 		}
+		Collections.sort(activeSeeds, new SeedComparator<String[]>());
+		Collections.sort(activeSeedsWithSpam, new SeedComparator<String[]>());
+		Collections.sort(activeSeedsWithHugeSpam, new SeedComparator<String[]>());
+		
 		logger.info("");
 		logger.info("Active seeds:");
 		for (String[] seed : activeSeeds) {
 			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		for (String[] seed : activeSeedsWithSpam) {
+			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+		}
+		for (String[] seed : activeSeedsWithHugeSpam) {
 			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		logger.info("");
