@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -58,6 +57,8 @@ public class LoginWolfYahoo {
 		Session session = Session.getDefaultInstance(props, null);
 		
 		clearFileContent(outputFileName);
+		clearFileContent("specific.csv");
+		
 		List<String[]> activeSeeds = new ArrayList<String[]>();
 		List<String[]> activeSeedsWithSpam = new ArrayList<String[]>();
 		List<String[]> activeSeedsWithHugeSpam = new ArrayList<String[]>();
@@ -97,8 +98,10 @@ public class LoginWolfYahoo {
 					activeSeeds.add(newSeed);
 				}else if (spamCount >100 && spamCount <=500){
 					activeSeedsWithSpam.add(newSeed);
+					writeSeedToFile(seed, "specific.csv");
 				}else{
 					activeSeedsWithHugeSpam.add(newSeed);
+					writeSeedToFile(seed, "specific.csv");
 				}
 				--seedsToGo;
 			} catch (NoSuchProviderException e) {
