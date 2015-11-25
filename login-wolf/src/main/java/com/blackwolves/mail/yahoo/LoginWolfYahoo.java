@@ -63,7 +63,10 @@ public class LoginWolfYahoo {
 		List<String[]> activeSeedsWithHugeSpam = new ArrayList<String[]>();
 		List<String[]> inactiveSeeds = new ArrayList<String[]>();
 		
+		logger.info("Seeds to calculate: " + contacts.size());
+		int seedsToGo = contacts.size();
 		for (String[] seed : contacts) {
+			logger.info("Seeds to go: " + seedsToGo);
 			try{
 				Store store = session.getStore("imaps");
 				
@@ -97,20 +100,24 @@ public class LoginWolfYahoo {
 				}else{
 					activeSeedsWithHugeSpam.add(newSeed);
 				}
+				--seedsToGo;
 			} catch (NoSuchProviderException e) {
 				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
+				--seedsToGo;
 				continue;
 			} catch (AuthenticationFailedException e) {
 				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage());
+				--seedsToGo;
 				continue;
 			} catch (MessagingException e) {
 				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
+				--seedsToGo;
 				continue;
 			}
 		}
