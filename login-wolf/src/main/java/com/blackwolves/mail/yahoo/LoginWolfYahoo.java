@@ -121,13 +121,13 @@ public class LoginWolfYahoo {
 		logger.info("");
 		logger.info("Active seeds:");
 		for (String[] seed : activeSeeds) {
-			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+			logger.info(seed[0] + "," + seed[1] + " ACTIVE seed with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		for (String[] seed : activeSeedsWithSpam) {
-			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+			logger.info(seed[0] + "," + seed[1] + " ACTIVE seed with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		for (String[] seed : activeSeedsWithHugeSpam) {
-			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+			logger.info(seed[0] + "," + seed[1] + " ACTIVE seed with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		logger.info("");
 		logger.info("Inactive seeds:");
