@@ -79,7 +79,7 @@ public class SeederThreadPool {
 				logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
 				executor.execute(worker);
 			}else{
-				logger.info("Seeder is alreayd in the used file");
+				logger.info("Seeder is already in the used file");
 			}
 			seeds.remove(seedNumber);
 		}

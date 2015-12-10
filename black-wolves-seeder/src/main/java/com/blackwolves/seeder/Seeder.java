@@ -49,13 +49,13 @@ public class Seeder implements Runnable {
 	private String[] seed;
 
 	private String order;
-	
+
 	public static String type;
 
 	public Seeder() {
 	}
 
-	public Seeder(String[] seed, Logger logger,String order, String type) {
+	public Seeder(String[] seed, Logger logger, String order, String type) {
 		logger.info("Seeder constructor");
 		this.seed = seed;
 		this.logger = logger;
@@ -72,16 +72,7 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		logger.info("Entering first do while");
-		// do {
 		dbSeed = new Seed(seed[0], seed[1]);
-		// logger.info("Searching for seed PID");
-		// dbSeed.setPid(getPidFromFile(seed[0]));
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			logger.error(e.getMessage(), e);
-//		}
-		// } while (dbSeed.getPid() == 0);
 
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
@@ -90,7 +81,7 @@ public class Seeder implements Runnable {
 			checkUserAgent(driver);
 		}
 
-//		visitSomewhereBefore(driver);
+		// visitSomewhereBefore(driver);
 
 		human = generateRandomHumanUser();
 
@@ -100,18 +91,18 @@ public class Seeder implements Runnable {
 
 		if (handler != null) {
 			//
-//			 addToAddressBook(driver);
+			// addToAddressBook(driver);
 			//
 			// createNewFolder(driver);
 			//
-//			
-//			newAddToAddressBook(driver);
-			
+			//
+			// newAddToAddressBook(driver);
+
 			handler.setOrder(order);
 			int count = 1;
-			do{
+			do {
 				handler.runProcess();
-				if(Constant.SPECIFIC.equals(type)){
+				if (Constant.SPECIFIC.equals(type)) {
 					try {
 						Thread.sleep(120000);
 					} catch (InterruptedException e) {
@@ -119,9 +110,9 @@ public class Seeder implements Runnable {
 						continue;
 					}
 				}
-				logger.info("Count Specific"+ count);
+				logger.info("Count Specific" + count);
 				++count;
-			}while(Constant.SPECIFIC.equals(type) && count <=20);
+			} while (Constant.SPECIFIC.equals(type) && count <= 20);
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			//
@@ -164,7 +155,7 @@ public class Seeder implements Runnable {
 			myMouse.click().build().perform();
 			myMouse.moveByOffset(86, 266);
 			div.click();
-			
+
 		} catch (NoSuchElementException e) {
 			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
@@ -174,29 +165,29 @@ public class Seeder implements Runnable {
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
 		}
-		
+
 	}
 
 	private void visitSomewhereBefore(WebDriver driver) {
-		String [] sites =  new String [10]; 
+		String[] sites = new String[10];
 		sites[0] = "http://lanacion.com";
 		sites[1] = "http://ole.com.ar";
-		sites[2] = "http://marca.com" ;
-		sites[3] = "http://dig.com" ;
-		sites[4] = "http://yahoo.com" ;
-		sites[5] = "http://google.com" ;
-		sites[6] = "http://clarin.com" ;
-		sites[7] = "http://amazon.com" ;
-		sites[8] = "http://ebay.com" ;
-		sites[9] = "http://mcdonalds.com" ;
+		sites[2] = "http://marca.com";
+		sites[3] = "http://dig.com";
+		sites[4] = "http://yahoo.com";
+		sites[5] = "http://google.com";
+		sites[6] = "http://clarin.com";
+		sites[7] = "http://amazon.com";
+		sites[8] = "http://ebay.com";
+		sites[9] = "http://mcdonalds.com";
 		int random = ModernYahooRunnable.randInt(0, 9);
-		logger.info("***************** Visiting :"+ sites[random]);
+		logger.info("***************** Visiting :" + sites[random]);
 		driver.get(sites[random]);
-		
+
 		Set<Cookie> allCookies = driver.manage().getCookies();
-		
+
 		for (Cookie cookie : allCookies) {
-			logger.info("***************** Cookies? :"+ cookie.getName());
+			logger.info("***************** Cookies? :" + cookie.getName());
 
 		}
 	}
@@ -408,6 +399,8 @@ public class Seeder implements Runnable {
 				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
+				checkMultipleAccountsPanel(driver);
+
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
@@ -415,7 +408,9 @@ public class Seeder implements Runnable {
 				logger.info("*************  Phone validation. Going to URL  **************");
 				driver.get("http://mail.yahoo.com");
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
-			} else {
+			}
+
+			else {
 				getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
@@ -431,6 +426,15 @@ public class Seeder implements Runnable {
 			logger.error("ElementNotFoundException");
 		}
 		return handler;
+	}
+
+	private void checkMultipleAccountsPanel(WebDriver driver) {
+		if (driver.findElements(By.id("imapInOnboardDlg")).size() > 0) {
+			logger.info("**********   Multiple accounts Panel Found   **********");
+			if (driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).isDisplayed()) {
+				driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).click();
+			}
+		}
 	}
 
 	/**
