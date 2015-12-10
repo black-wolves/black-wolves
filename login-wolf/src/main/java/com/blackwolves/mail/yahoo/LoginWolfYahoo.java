@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.mail.util.Constant;
+import com.blackwolves.mail.util.SeedComparator;
 
 /**
  * @author gastondapice
@@ -55,11 +57,17 @@ public class LoginWolfYahoo {
 		Session session = Session.getDefaultInstance(props, null);
 		
 		clearFileContent(outputFileName);
+		clearFileContent("specific.csv");
+		
 		List<String[]> activeSeeds = new ArrayList<String[]>();
 		List<String[]> activeSeedsWithSpam = new ArrayList<String[]>();
+		List<String[]> activeSeedsWithHugeSpam = new ArrayList<String[]>();
 		List<String[]> inactiveSeeds = new ArrayList<String[]>();
 		
+		logger.info("Seeds to calculate: " + contacts.size());
+		int seedsToGo = contacts.size();
 		for (String[] seed : contacts) {
+			logger.info("Seeds to go: " + seedsToGo);
 			try{
 				Store store = session.getStore("imaps");
 				
@@ -86,35 +94,50 @@ public class LoginWolfYahoo {
 				
 				writeSeedToFile(seed, outputFileName);
 				
-				if(spamCount>100){
-					activeSeedsWithSpam.add(newSeed);
-				}else{
+				if(spamCount<=50){
 					activeSeeds.add(newSeed);
+				}else if (spamCount >50 && spamCount <=200){
+					activeSeedsWithSpam.add(newSeed);
+					writeSeedToFile(seed, "specific.csv");
+				}else{
+					activeSeedsWithHugeSpam.add(newSeed);
+					writeSeedToFile(seed, "specific.csv");
 				}
+				--seedsToGo;
 			} catch (NoSuchProviderException e) {
-				inactiveSeeds.add(seed);
+				writeSeedToFile(seed, outputFileName);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
+				--seedsToGo;
 				continue;
 			} catch (AuthenticationFailedException e) {
 				inactiveSeeds.add(seed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage());
+				--seedsToGo;
 				continue;
 			} catch (MessagingException e) {
-				inactiveSeeds.add(seed);
+				writeSeedToFile(seed, outputFileName);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
+				--seedsToGo;
 				continue;
 			}
 		}
+		Collections.sort(activeSeeds, new SeedComparator<String[]>());
+		Collections.sort(activeSeedsWithSpam, new SeedComparator<String[]>());
+		Collections.sort(activeSeedsWithHugeSpam, new SeedComparator<String[]>());
+		
 		logger.info("");
 		logger.info("Active seeds:");
 		for (String[] seed : activeSeeds) {
-			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+			logger.info(seed[0] + "," + seed[1] + " ACTIVE seed with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		for (String[] seed : activeSeedsWithSpam) {
-			logger.info("Seed " + seed[0] + " with pass: " + seed[1] + " is active with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+			logger.info(seed[0] + "," + seed[1] + " ACTIVE seed with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
+		}
+		for (String[] seed : activeSeedsWithHugeSpam) {
+			logger.info(seed[0] + "," + seed[1] + " ACTIVE seed with " + seed[2] + " messages in inbox and " + seed[3] + " messages in spam");
 		}
 		logger.info("");
 		logger.info("Inactive seeds:");
