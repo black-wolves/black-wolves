@@ -411,7 +411,7 @@ public class Seeder implements Runnable {
 			}
 
 			else {
-				getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
+				//getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
 		} catch (InterruptedException e) {
