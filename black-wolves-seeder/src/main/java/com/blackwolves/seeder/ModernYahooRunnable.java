@@ -48,8 +48,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 					// if (throwDice()) {
 					// sendEmail();
 					// }
-					if(driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0)
-					{
+					if (driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0) {
 						List notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
 						WebElement dialog = (WebElement) notifications.get(0);
 						dialog.click();
@@ -487,37 +486,39 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 */
 	@Override
 	public void processSpam(String[] seed) {
-		
 
 		try {
-		//	moveMouse();
+			if (Constant.SPECIFIC.equals(Seeder.type)) {
+
+				removeConversationMailView();
+			}
+
 		} catch (MoveTargetOutOfBoundsException e) {
 			logger.info("Process Spam MoveTargetOutOfBoundsException ");
 		}
-		
-		
-		
-		
+
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
-			logger.info("Seeder type: "+ Seeder.type);
-			if(Constant.SPECIFIC.equals(Seeder.type) )
-			{
+			logger.info("Seeder type: " + Seeder.type);
+			if (Constant.SPECIFIC.equals(Seeder.type)) {
+
+
 				logger.info("Checking all NOT SPAM");
 				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
 				checkbox.click();
-				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();;
+				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();
+				
 			}
-			
+
 			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 
 			logger.info("Percentage is " + PERCENTAGE);
-			int percentage = (int) (spamMsgs.size() * PERCENTAGE)  ;
-			
+			int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+
 			if (percentage > 10) {
 				percentage = 3;
 			}
-			
+
 			for (int j = 0; j < percentage;) {
 
 				try {
@@ -549,6 +550,36 @@ public class ModernYahooRunnable extends YahooRunnable {
 			}
 		} else {
 			logger.info("Spam Folder is empty! UOHOOO!");
+		}
+	}
+
+	private void removeConversationMailView() {
+
+		try {
+			Actions myMouse = new Actions(driver);
+
+			WebElement settings = driver.findElement(By.id("yucs-help"));
+			myMouse.moveToElement(settings).build().perform();
+			logger.info("Moving to configuration wheel");
+
+			Thread.sleep(randInt(1000, 2000));
+
+			driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
+			Thread.sleep(randInt(1000, 2000));
+
+			if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
+				logger.info("Conversation mode is on. Turning off. Aprox 15 seconds");
+
+				driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
+				Thread.sleep(randInt(500, 2000));
+
+				driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
+				Thread.sleep(randInt(5000, 10000));
+
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

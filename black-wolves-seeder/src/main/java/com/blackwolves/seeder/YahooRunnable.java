@@ -75,6 +75,7 @@ public abstract class YahooRunnable {
 	 */
 	public void runProcess() {
 		String[] seed = this.seed.split(",");
+		
 		try {
 			if(order.contains("inbox")){
 				logger.info("Processing inbox");
