@@ -589,6 +589,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 * @return
 	 */
 	private boolean validateSpamFolder() {
+		logger.info("Entering validateSpamFolder ");
 		try {
 			if (driver.findElements(By.id("spam-label")).size() > 0) {
 				WebElement spam = driver.findElement(By.id("spam-label"));
