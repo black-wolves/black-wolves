@@ -104,7 +104,7 @@ public class Seeder implements Runnable {
 				handler.runProcess();
 				if (Constant.SPECIFIC.equals(type)) {
 					try {
-						Thread.sleep(120000);
+						Thread.sleep(60000);
 					} catch (InterruptedException e) {
 						logger.error(e.getMessage(), e);
 						continue;

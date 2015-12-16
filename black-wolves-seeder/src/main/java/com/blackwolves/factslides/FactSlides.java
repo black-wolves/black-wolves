@@ -11,11 +11,13 @@ import javax.imageio.ImageIO;
 public class FactSlides {
 
 	public static void main(String[] args) {
-		for (int i = 5110; i <= 5444; i++) {
+		int count = 5155;
+		for (int i = 5444; i <= 5485; i++) {
 			try {
 				String imageUrl = "http://www.factslides.com/imgs/ishots/" + i + ".png";
 				BufferedImage bufferedImage = ImageIO.read(new URL(imageUrl));
-				ImageIO.write(bufferedImage, "png", new File("/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo2/images/" + i + ".png"));
+				ImageIO.write(bufferedImage, "png", new File("/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo/images/" + count + ".png"));
+				++count;
 				System.out.println("Image: " + i + " downloaded");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
