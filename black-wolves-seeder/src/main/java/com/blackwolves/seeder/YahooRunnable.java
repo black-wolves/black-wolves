@@ -308,10 +308,13 @@ public abstract class YahooRunnable {
 		    driver.switchTo().window(newTab);
 		    Thread.sleep(randInt(5000, 10000));
 	    } catch (NoSuchWindowException e){
-	    	logger.error(e.getMessage(), e);
+	    	logger.error("NoSuchWindowException");
 	    } catch (InterruptedException e){
-	    	logger.error(e.getMessage(), e);
+	    	logger.error(e.getMessage());
+	    }catch (NoSuchElementException e){
+	    	logger.error("NoSuchElementException");
 	    }
+	    
 	}
 	
 	/**
