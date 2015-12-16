@@ -112,7 +112,7 @@ public class Seeder implements Runnable {
 				}
 				logger.info("Count Specific" + count);
 				++count;
-			} while (Constant.SPECIFIC.equals(type) && count <= 20);
+			} while (count <= 20);
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			//

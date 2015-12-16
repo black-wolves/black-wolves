@@ -1,5 +1,8 @@
 package com.blackwolves.seeder;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -72,8 +75,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 						// if (isWarmupDomain(true, currentMsg)) {
 
 						logger.info(" ################# Clicking in Msg : " + currentMsg.getText());
-						currentMsg.findElement(By.className("subj")).click();
+						logMails(currentMsg.getText().substring(0, 12));
 
+						currentMsg.findElement(By.className("subj")).click();
 						clickShowImages("show-text");
 						clickRandomLink();
 						// if (throwDice()) {
@@ -272,7 +276,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		try {
 			logger.info("Getting the content of the message");
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			WebElement div = driver.findElement(By.className("thread-body"));
+			WebElement div = driver.findElement(By.className("email-wrapped"));
 			logger.info("Looking for links inside the message");
 			Thread.sleep(YahooRunnable.randInt(1500, 2500));
 			if (div.findElements(By.tagName("a")).size() > 0) {
@@ -581,6 +585,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		catch (NoSuchElementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -633,6 +642,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("******** Dragging Message to inbox ***********");
 			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
 			// driver.navigate().refresh();
+
 			return true;
 			// }
 			// return false;
@@ -663,7 +673,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			// if (isWarmupDomain(false, currentMsg)) {
 			logger.info("Opening the spam message");
+			logMails(currentMsg.getText().substring(0,12));
+
 			currentMsg.findElement(By.className("subj")).click();
+
 			Thread.sleep(randInt(2000, 3000));
 
 			clickShowImages("show-text");
@@ -948,5 +961,26 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	public static void scrollToBottom(WebDriver driver) {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
+	}
+	
+	
+	public static void logMails(String log) {
+		File file = new File("/var/www/total.txt");
+		FileWriter fw;
+		String newline = System.getProperty("line.separator");
+
+		try {
+			fw = new FileWriter(file,true);
+			fw.write(log);
+			fw.write(newline);
+			
+		 
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 
+	
 	}
 }
