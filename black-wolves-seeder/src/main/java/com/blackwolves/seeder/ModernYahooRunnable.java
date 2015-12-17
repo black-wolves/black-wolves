@@ -492,8 +492,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public void processSpam(String[] seed) {
 
 		try {
+			logger.info("Process Spam");
+
 			if (Constant.SPECIFIC.equals(Seeder.type)) {
 
+				logger.info("RemoveConversationMailView");
 				removeConversationMailView();
 			}
 
@@ -506,12 +509,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Seeder type: " + Seeder.type);
 			if (Constant.SPECIFIC.equals(Seeder.type)) {
 
-
 				logger.info("Checking all NOT SPAM");
 				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
 				checkbox.click();
 				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();
-				
+
 			}
 
 			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
@@ -523,23 +525,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				percentage = 3;
 			}
 
-			for (int j = 0; j < percentage;) {
+			for (int j = 0; j < percentage; j++) {
 
 				try {
 					logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
 					int chances = randInt(0, 10);
-					boolean increment;
 					Thread.sleep(randInt(2000, 3000));
 					logger.info("************* CHANCES = " + chances);
 					if (chances <= 8) {
-						increment = normalNotSpam();
+						normalNotSpam();
 					} else {
-						increment = dragAndDropNotSpam();
+						dragAndDropNotSpam();
 					}
-					// if(increment){
-					if (true) {
-						j++;
-					}
+				
 				} catch (InterruptedException e) {
 					logger.error(e.getMessage(), e);
 				} catch (NoSuchElementException e) {
@@ -583,13 +581,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("InterruptedException");
 		}
-		
+
 		catch (NoSuchElementException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("NoSuchElementException");
 		}
+
+		catch (ElementNotVisibleException e) {
+			logger.info("ElementNotVisibleException");
+		}
+
 	}
 
 	/**
@@ -641,11 +644,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement inboxFolder = driver.findElement(By.className("inbox-label"));
 			logger.info("******** Dragging Message to inbox ***********");
 			(new Actions(driver)).dragAndDrop(msg, inboxFolder).perform();
-			// driver.navigate().refresh();
 
 			return true;
-			// }
-			// return false;
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
@@ -673,14 +673,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			// if (isWarmupDomain(false, currentMsg)) {
 			logger.info("Opening the spam message");
-			logMails(currentMsg.getText().substring(0,12));
+			logMails(currentMsg.getText().substring(0, 4));
 
 			currentMsg.findElement(By.className("subj")).click();
 
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1000, 2000));
 
 			clickShowImages("show-text");
-			Thread.sleep(randInt(2000, 3000));
+			Thread.sleep(randInt(1000, 2000));
 			scrollToBottom(driver);
 			// REMOVED CLICK FROM LIST SINCE IT IS BREAKING IN THE SERVER
 			if (false) {
@@ -962,25 +962,22 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public static void scrollToBottom(WebDriver driver) {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
 	}
-	
-	
+
 	public static void logMails(String log) {
 		File file = new File("/var/www/total.txt");
 		FileWriter fw;
 		String newline = System.getProperty("line.separator");
 
 		try {
-			fw = new FileWriter(file,true);
+			fw = new FileWriter(file, true);
 			fw.write(log);
 			fw.write(newline);
-			
-		 
+
 			fw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	 
-	
+
 	}
 }
