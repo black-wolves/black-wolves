@@ -67,12 +67,11 @@ public class SeederThreadPool {
 	 * @param seedsToProcess 
 	 */
 	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess, List<String[]> seeds, String type) {
-		List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
 
-		for (int i = 1; i <= usedSeeds.size(); i++) {
+		for (int i = 1; i <= seeds.size(); i++) {
 			int seedNumber = YahooRunnable.randInt(0, seeds.size()-1);
 			String[] seed = seeds.get(i);
-			//List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
+			List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
 			if(!usedSeeds.contains(seed[0])){
 				MDC.put("logFileName", seed[0]);
 				Seeder seeder = new Seeder(seed, logger, args[2], type);
