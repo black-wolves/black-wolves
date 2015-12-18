@@ -68,7 +68,7 @@ public class SeederThreadPool {
 	 */
 	private static void processSeeds(String[] args, ExecutorService executor, int seedsToProcess, List<String[]> seeds, String type) {
 
-		for (int i = 1; i <= seeds.size(); i++) {
+		for (int i = 1; i <= seeds.size() -1 ; i++) {
 			int seedNumber = YahooRunnable.randInt(0, seeds.size()-1);
 			String[] seed = seeds.get(i);
 			List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
