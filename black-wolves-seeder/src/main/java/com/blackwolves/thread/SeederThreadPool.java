@@ -31,7 +31,7 @@ public class SeederThreadPool {
 			List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
 			
 			int seedsToProcess = Integer.valueOf(args[1]);
-			executor = Executors.newFixedThreadPool(seedsToProcess);
+			executor = Executors.newFixedThreadPool(seeds.size() -1);
 			
 			processSeeds(args, executor, seedsToProcess, seeds, Constant.MULTIPLE);
 		}else if(Constant.SPECIFIC.equals(args[0])){

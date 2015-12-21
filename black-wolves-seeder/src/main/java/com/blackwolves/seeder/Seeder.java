@@ -102,9 +102,9 @@ public class Seeder implements Runnable {
 			int count = 1;
 			do {
 				handler.runProcess();
-				if (Constant.SPECIFIC.equals(type)) {
+				if (Constant.SPECIFIC.equals(type) || Constant.MULTIPLE.equals(type) ) {
 					try {
-						Thread.sleep(120000);
+						Thread.sleep(60000);
 					} catch (InterruptedException e) {
 						logger.error(e.getMessage(), e);
 						continue;
@@ -112,7 +112,7 @@ public class Seeder implements Runnable {
 				}
 				logger.info("Count Specific" + count);
 				++count;
-			} while (Constant.SPECIFIC.equals(type) && count <= 20);
+			} while ( count <= 50);
 			//
 			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
 			//
