@@ -507,48 +507,54 @@ public class ModernYahooRunnable extends YahooRunnable {
 		if (validateSpamFolder()) {
 			logger.info("There are msgs in the spam folder, go get them Tiger!");
 			logger.info("Seeder type: " + Seeder.type);
-			if (Constant.SPECIFIC.equals(Seeder.type)) {
+			if (Constant.SPECIFIC.equals(Seeder.type) || Constant.DESTROYER.equals(Seeder.type)) {
 
 				logger.info("Checking all NOT SPAM");
 				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
-				checkbox.click();
+				if(!checkbox.isSelected()){
+					checkbox.click();
+				}
+				
 				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();
 
 			}
 
-			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
+			else if (Constant.MULTIPLE.equals(Seeder.type)) {
+				List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
 
-			logger.info("Percentage is " + PERCENTAGE);
-			int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+				logger.info("Percentage is " + PERCENTAGE);
+				int percentage = (int) (spamMsgs.size() * PERCENTAGE);
 
-			if (percentage > 10) {
-				percentage = 3;
-			}
-
-			for (int j = 0; j < percentage; j++) {
-
-				try {
-					logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
-					int chances = randInt(0, 10);
-					Thread.sleep(randInt(2000, 3000));
-					logger.info("************* CHANCES = " + chances);
-					if (chances <= 8) {
-						normalNotSpam();
-					} else {
-						dragAndDropNotSpam();
-					}
-				
-				} catch (InterruptedException e) {
-					logger.error(e.getMessage(), e);
-				} catch (NoSuchElementException e) {
-					logger.error("NoSuchelementException");
-				} catch (StaleElementReferenceException e) {
-					logger.error("StaleElementReferenceException");
-				} catch (ElementNotVisibleException e) {
-					logger.error("ElementNotVisibleException");
-				} catch (ElementNotFoundException e) {
-					logger.error("ElementNotFoundException");
+				if (percentage > 10) {
+					percentage = 3;
 				}
+
+				for (int j = 0; j < percentage; j++) {
+
+					try {
+						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
+						int chances = randInt(0, 10);
+						Thread.sleep(randInt(2000, 3000));
+						logger.info("************* CHANCES = " + chances);
+						if (chances <= 8) {
+							normalNotSpam();
+						} else {
+							dragAndDropNotSpam();
+						}
+
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage(), e);
+					} catch (NoSuchElementException e) {
+						logger.error("NoSuchelementException");
+					} catch (StaleElementReferenceException e) {
+						logger.error("StaleElementReferenceException");
+					} catch (ElementNotVisibleException e) {
+						logger.error("ElementNotVisibleException");
+					} catch (ElementNotFoundException e) {
+						logger.error("ElementNotFoundException");
+					}
+				}
+
 			}
 		} else {
 			logger.info("Spam Folder is empty! UOHOOO!");

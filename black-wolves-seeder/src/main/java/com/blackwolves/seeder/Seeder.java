@@ -109,6 +109,14 @@ public class Seeder implements Runnable {
 						logger.error(e.getMessage(), e);
 						continue;
 					}
+					
+				}else if(Constant.DESTROYER.equals(type) )	{
+					try {
+						Thread.sleep(10000);
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage(), e);
+						continue;
+					}
 				}
 				logger.info("Count Specific" + count);
 				++count;

@@ -30,7 +30,7 @@ public class SeederThreadPool {
 			List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
 
 			// int seedsToProcess = Integer.valueOf(args[1]);
-			executor = Executors.newFixedThreadPool(seeds.size() - 1);
+			executor = Executors.newFixedThreadPool(seeds.size());
 
 			processSeeds(args, executor, seeds.size(), seeds, Constant.MULTIPLE);
 		} else if (Constant.SPECIFIC.equals(args[0])) {
@@ -41,7 +41,17 @@ public class SeederThreadPool {
 			executor = Executors.newFixedThreadPool(seedsToProcess);
 
 			processSeeds(args, executor, seedsToProcess, seeds, Constant.SPECIFIC);
-		} else if (Constant.ONE.equals(args[0])) {
+		} 
+		
+		else if (Constant.DESTROYER.equals(args[0])) {
+			logger.info("Starting Destroyer SeederThreadPool");
+			List<String[]> seeds = YahooRunnable.generateSeedsList("specific.csv");
+
+			int seedsToProcess = seeds.size();
+			executor = Executors.newFixedThreadPool(seedsToProcess);
+			processSeeds(args, executor, seedsToProcess, seeds, Constant.DESTROYER);
+		}
+		else if (Constant.ONE.equals(args[0])) {
 			logger.info("Starting one SeederThreadPool");
 			executor = Executors.newFixedThreadPool(1);
 			processSeed(args, executor, Constant.ONE);
