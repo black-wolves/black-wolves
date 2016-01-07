@@ -25,7 +25,6 @@ public class DumbHuman extends Human {
 			try {
 				Character myCharacter = new Character(charArray[i]);
 				if (YahooRunnable.throwDice()) {
-					logger.info("Human make mistakes");
 					String typo = RandomStringUtils.random(1, "abcdefghijklmnopqrstuvwxyz");
 					input.sendKeys(typo);
 					Thread.sleep(YahooRunnable.randInt(500, 1800));

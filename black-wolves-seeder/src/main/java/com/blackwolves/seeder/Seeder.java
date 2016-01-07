@@ -3,6 +3,7 @@ package com.blackwolves.seeder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -102,15 +103,15 @@ public class Seeder implements Runnable {
 			int count = 1;
 			do {
 				handler.runProcess();
-				if (Constant.SPECIFIC.equals(type) || Constant.MULTIPLE.equals(type) ) {
+				if (Constant.SPECIFIC.equals(type) || Constant.MULTIPLE.equals(type)) {
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
 						logger.error(e.getMessage(), e);
 						continue;
 					}
-					
-				}else if(Constant.DESTROYER.equals(type) )	{
+
+				} else if (Constant.DESTROYER.equals(type)) {
 					try {
 						Thread.sleep(10000);
 					} catch (InterruptedException e) {
@@ -120,36 +121,16 @@ public class Seeder implements Runnable {
 				}
 				logger.info("Count Specific" + count);
 				++count;
-			} while ( count <= 50);
-			//
-			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-			//
-			// while (true) {
-			//
-			// int diff =
-			// calculateDifferenceBetweenDatesInMinutes(dbSeed.getWakeUp(), new
-			// Date());
-			// if (diff >= 0) {
-			// logger.info("Running the process");
-			// handler.runProcess();
-			// dbSeed.setWakeUp(DateUtils.addMinutes(new Date(), 3));
-			// } else {
-			// logger.info("Waiting for the Date to reactivate. Time to wait : "
-			// + diff + " minutes");
-			// try {
-			// Thread.sleep(60000);
-			// } catch (InterruptedException e) {
-			// logger.error(e.getMessage(), e);
-			// }
-			// }
-			// }
+			} while (count <= 50);
 			logger.info("Finished!!");
-			driver.close();
-			driver.quit();
-			YahooRunnable.deleteSeedFromFile(seed[0]);
+
 		} else {
+			logAttempts(dbSeed.getEmail() + "," + dbSeed.getPassword() + "  was not able to connect");
 			logger.info("New Interface detected.Exiting");
 		}
+		driver.close();
+		driver.quit();
+		YahooRunnable.deleteSeedFromFile(seed[0]);
 	}
 
 	private void newAddToAddressBook(WebDriver driver) {
@@ -419,7 +400,8 @@ public class Seeder implements Runnable {
 			}
 
 			else {
-				//getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
+				// getScreenShot(driver, YahooRunnable.randInt(1, 100) +
+				// "newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
 		} catch (InterruptedException e) {
@@ -632,6 +614,24 @@ public class Seeder implements Runnable {
 		uas[7] = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
 		uas[8] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36";
 		return uas[ModernYahooRunnable.randInt(0, 8)];
+
+	}
+
+	public static void logAttempts(String log) {
+		File file = new File("/var/www/total.txt");
+		FileWriter fw;
+		String newline = System.getProperty("line.separator");
+
+		try {
+			fw = new FileWriter(file, true);
+			fw.write(log);
+			fw.write(newline);
+
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

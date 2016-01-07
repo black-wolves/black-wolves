@@ -48,9 +48,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 			for (int j = 0; j < percentage; j++) {
 
 				try {
-					// if (throwDice()) {
-					// sendEmail();
-					// }
 					if (driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0) {
 						List notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
 						WebElement dialog = (WebElement) notifications.get(0);
@@ -75,38 +72,21 @@ public class ModernYahooRunnable extends YahooRunnable {
 						// if (isWarmupDomain(true, currentMsg)) {
 
 						logger.info(" ################# Clicking in Msg : " + currentMsg.getText());
-						logMails(currentMsg.getText().substring(0, 12));
+						//logMails(currentMsg.getText().substring(0, 12));
 
 						currentMsg.findElement(By.className("subj")).click();
 						clickShowImages("show-text");
 						clickRandomLink();
-						// if (throwDice()) {
-						// replyToEmail();
-						// } else if (throwDice()) {
-						// forwardEmail();
-						// } else if (throwDice()) {
-						// clickRandomLink();
-						// }
+			
 
-						// moveMessageToAllFolder();
+					//	moveMessageToAllFolder();
 						scrollToBottom(driver);
 						Thread.sleep(randInt(2500, 3500));
 						logger.info("Going back to inbox");
 						driver.findElement(By.className("inbox-label")).click();
 
 						checkForInboxReloadError();
-						// } else {
-						// if (YahooRunnable.randInt(0, 1) == 1) {
-						//
-						// logger.info("Clicking in Msg : " +
-						// currentMsg.getText());
-						// currentMsg.findElement(By.className("subj")).click();
-						//
-						// Thread.sleep(randInt(2500, 3500));
-						//
-						// clickSpam();
-						// }
-						// }
+						
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
@@ -535,7 +515,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
 						int chances = randInt(0, 10);
 						Thread.sleep(randInt(2000, 3000));
-						logger.info("************* CHANCES = " + chances);
 						if (chances <= 8) {
 							normalNotSpam();
 						} else {
@@ -679,8 +658,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			// if (isWarmupDomain(false, currentMsg)) {
 			logger.info("Opening the spam message");
-			logMails(currentMsg.getText().substring(0, 4));
-
 			currentMsg.findElement(By.className("subj")).click();
 
 			Thread.sleep(randInt(1000, 2000));
@@ -969,21 +946,5 @@ public class ModernYahooRunnable extends YahooRunnable {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
 	}
 
-	public static void logMails(String log) {
-		File file = new File("/var/www/total.txt");
-		FileWriter fw;
-		String newline = System.getProperty("line.separator");
 
-		try {
-			fw = new FileWriter(file, true);
-			fw.write(log);
-			fw.write(newline);
-
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 }
