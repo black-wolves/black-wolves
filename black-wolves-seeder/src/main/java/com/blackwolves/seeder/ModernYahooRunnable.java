@@ -1,8 +1,5 @@
 package com.blackwolves.seeder;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -474,7 +471,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		try {
 			logger.info("Process Spam");
 
-			if (Constant.SPECIFIC.equals(Seeder.type)) {
+			if (Constant.SPECIFIC.equals(Seeder.type) || Constant.DESTROYER.equals(Seeder.type)) {
 
 				logger.info("RemoveConversationMailView");
 				removeConversationMailView();

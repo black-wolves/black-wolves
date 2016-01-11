@@ -11,8 +11,8 @@ import javax.imageio.ImageIO;
 public class FactSlides {
 
 	public static void main(String[] args) {
-		int count = 5155;
-		for (int i = 5444; i <= 5485; i++) {
+		int count = 5238;
+		for (int i = 5529; i <= 5548; i++) {
 			try {
 				String imageUrl = "http://www.factslides.com/imgs/ishots/" + i + ".png";
 				BufferedImage bufferedImage = ImageIO.read(new URL(imageUrl));
