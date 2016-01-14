@@ -3,6 +3,7 @@
  */
 package com.blackwolves.thread;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +28,12 @@ public class SeederThreadPool {
 		ExecutorService executor = null;
 		if (Constant.MULTIPLE.equals(args[0])) {
 			logger.info("Starting multiple SeederThreadPool");
-			List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
+			List<String[]> seeds = new ArrayList<String[]>();
+			if(args.length == 4 && Constant.SENDER.equals(args[3])){
+				seeds = YahooRunnable.generateSeedsList("seeds_sender.csv");
+			}else{
+				seeds = YahooRunnable.generateSeedsList("seeds.csv");
+			}
 
 			// int seedsToProcess = Integer.valueOf(args[1]);
 			executor = Executors.newFixedThreadPool(seeds.size());

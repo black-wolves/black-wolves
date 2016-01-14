@@ -18,4 +18,5 @@ public interface Constant {
 	public static final String MULTIPLE = "multiple";
 	public static final String ONE = "one";
 	public static final String DESTROYER = "destroyer";
+	public static final String SENDER = "sender";
 }
