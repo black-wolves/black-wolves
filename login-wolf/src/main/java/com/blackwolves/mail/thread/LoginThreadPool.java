@@ -100,9 +100,9 @@ public class LoginThreadPool {
 			}
 		
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		} catch (ExecutionException e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 	}
 
