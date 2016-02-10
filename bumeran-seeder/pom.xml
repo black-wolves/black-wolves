@@ -3,7 +3,7 @@
   
 	<modelVersion>4.0.0</modelVersion>
   	<groupId>com.blackwolves</groupId>
-	<artifactId>black-wolves-seeder</artifactId>
+	<artifactId>bumeran-seeder</artifactId>
 	<version>CURRENT</version>
 	<packaging>jar</packaging>
 
@@ -58,7 +58,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>seeder_wolf</finalName>
+		<finalName>bumeran_wolf</finalName>
 <!-- 		<finalName>subscriber_wolf</finalName> -->
 		
 		<plugins>
