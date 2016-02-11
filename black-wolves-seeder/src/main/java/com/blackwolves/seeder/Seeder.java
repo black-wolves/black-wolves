@@ -78,9 +78,9 @@ public class Seeder implements Runnable {
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
 
-		if (ModernYahooRunnable.randInt(0, 9) == 9) {
-			checkUserAgent(driver);
-		}
+//		if (ModernYahooRunnable.randInt(0, 9) == 9) {
+			getIpSource(driver);
+//		}
 
 		// visitSomewhereBefore(driver);
 
@@ -241,16 +241,17 @@ public class Seeder implements Runnable {
 	/**
 	 * 
 	 */
-	private void checkUserAgent(WebDriver driver) {
+	private void getIpSource(WebDriver driver) {
 		// WebDriver driver = createWebDriver();
-		logger.info("checking user agent");
-		driver.get("http://www.useragentstring.com/");
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		try {
-			FileUtils.copyFile(scrFile, new File("/var/www/test_driver.jpg"));
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		logger.info("checking ip ");
+		driver.get("http://www.whatsmyip.org/");
+		logger.info("Ip: " + driver.findElement(By.tagName("h1")).getText());
+//		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+//		try {
+//			FileUtils.copyFile(scrFile, new File("/var/www/test_driver.jpg"));
+//		} catch (IOException e) {
+//			logger.error(e.getMessage(), e);
+//		}
 	}
 
 	/**
