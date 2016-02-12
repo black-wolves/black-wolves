@@ -53,7 +53,7 @@ public abstract class WolfYahoo {
 
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, String subject, String body, String contactEmail, String domainRo, String offerFrom) {
+	public void generateAndSendMail(String user, String pass, String subject, String body, String contactEmail, String domain, String offerFrom) {
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -71,24 +71,23 @@ public abstract class WolfYahoo {
 		boolean keepTrying = false;
 		
 		do{
-			sendEmail(user, pass, subject, body, session, keepTrying, contactEmail, domainRo, offerFrom);
+			sendEmail(user, pass, subject, body, session, keepTrying, contactEmail, domain, offerFrom);
 		}while(keepTrying);
 	}
 
 	/**
+	 * 
 	 * @param user
 	 * @param pass
-	 * @param customFrom
 	 * @param subject
 	 * @param body
 	 * @param session
-	 * @param keepTrying 
-	 * @param offerFroms 
-	 * @param domainRo 
-	 * @param contactEmail 
-	 * @return 
+	 * @param keepTrying
+	 * @param contactEmail
+	 * @param senderDomain
+	 * @param offerFrom
 	 */
-	private void sendEmail(String user, String pass, String subject, String body, Session session, boolean keepTrying, String contactEmail, String senderDomainRo, String offerFrom) {
+	private void sendEmail(String user, String pass, String subject, String body, Session session, boolean keepTrying, String contactEmail, String senderDomain, String offerFrom) {
 		try {
 			if(keepTrying){
 //				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
@@ -96,14 +95,14 @@ public abstract class WolfYahoo {
 				String bs[] = backupSeed.split(",");
 				user = bs[0];
 				pass = bs[1];
-				senderDomainRo = user.split("@")[0] + "@walllale.info";
+				senderDomain = user.split("@")[0] + "@walllale.info";
 			}
 			// Create a default MimeMessage object.
 			MimeMessage message = new CustomMimeMessage(session);
 
 			// Set From: header field of the header.
 			//message.setFrom(new InternetAddress(from));
-			CustomFrom customFrom = new CustomFrom(contactEmail, senderDomainRo, offerFrom);
+			CustomFrom customFrom = new CustomFrom(contactEmail, senderDomain, offerFrom);
 			message.setFrom(customFrom);
 
 			// Set Subject: header field
@@ -135,8 +134,10 @@ public abstract class WolfYahoo {
 	}
 
 	/**
+	 * 
 	 * @param user
 	 * @param e
+	 * @param keepTrying
 	 */
 	private void saveSeedErrorOnException(String user, Exception e, boolean keepTrying) {
 		
@@ -163,9 +164,11 @@ public abstract class WolfYahoo {
 	public abstract void readEmailsAndGenerateBodies(String offer, String seed, String pass);
 
 	/**
+	 * 
 	 * @param message
 	 * @param mail
 	 * @throws MessagingException
+	 * @throws FolderClosedException
 	 */
 	public void iterateHeaders(Message message, StringBuilder mail) throws MessagingException, FolderClosedException {
 		Enumeration headers = message.getAllHeaders();
@@ -184,6 +187,7 @@ public abstract class WolfYahoo {
 	}
 
 	/**
+	 * 
 	 * @param h
 	 * @return
 	 */
@@ -200,6 +204,9 @@ public abstract class WolfYahoo {
 	}
 
 	/**
+	 * 
+	 * @param route
+	 * @param file
 	 * @return
 	 */
 	public static List<String> generateList(String route, String file) {

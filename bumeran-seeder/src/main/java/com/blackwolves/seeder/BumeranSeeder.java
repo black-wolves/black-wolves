@@ -62,35 +62,31 @@ public class BumeranSeeder implements Runnable {
 	 * 
 	 */
 	public void run() {
-		try {
-			logger.info("Entering first do while");
-	
-			WebDriver driver = createWebDriver();
-			logger.info("Firefox Created");
-	
-			human = generateRandomHumanUser();
-			
-			logger.info("Processing post");
-			bumeranLogin(driver);
-			
-			logger.info("Getting to la busqueda url: " + Constant.BUSQUEDA_URL);
-			driver.get(Constant.BUSQUEDA_URL);
 		
+		logger.info("Entering first do while");
+
+		WebDriver driver = createWebDriver();
+		logger.info("Firefox Created");
+
+		human = generateRandomHumanUser();
+		
+		logger.info("Processing post");
+		bumeranLogin(driver);
+		
+		logger.info("Getting to la busqueda url: " + Constant.BUSQUEDA_URL);
+		driver.get(Constant.BUSQUEDA_URL);
+		try {
 			Thread.sleep(10000);
 			driver.findElement(By.id("1031750527")).click();
 			Thread.sleep(randInt(3000, 4000));
-			while(true){
-				getEmails(driver);
-				Thread.sleep(randInt(3000, 4000));
-			}
+			getEmails(driver);
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
+			logger.error(e.getMessage(), e);
+		} finally{
+			logger.info("Finished!!");
+			driver.close();
+			driver.quit();
 		}
-		
-		
-//		logger.info("Finished!!");
-//		driver.close();
-//		driver.quit();
 	}
 
 
@@ -99,17 +95,39 @@ public class BumeranSeeder implements Runnable {
 	 * @param driver
 	 */
 	private void getEmails(WebDriver driver) {
-		WebElement resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales"));
-		resumenDatosPersonales.findElement(By.partialLinkText("@"));
-		
-		String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
-		logger.info("Email: " + email + "Url: " + driver.getCurrentUrl());
-		if(email!=null&&!email.isEmpty()){
-			writeSeedToFile(email.toLowerCase());
+		while(true){
+			try{
+				WebElement resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales"));
+				resumenDatosPersonales.findElement(By.partialLinkText("@"));
+				
+				String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
+				logger.info("Email: " + email + "Url: " + driver.getCurrentUrl());
+				if(email!=null&&!email.isEmpty()){
+					writeSeedToFile(email.toLowerCase());
+				}
+				
+				WebElement proximoPostulante = driver.findElement(By.className("postulanteProximo"));
+				proximoPostulante.click();
+				Thread.sleep(randInt(3000, 4000));
+			} catch (NoSuchElementException e) {
+				logger.error(e.getMessage(), e);
+				continue;
+			} catch (StaleElementReferenceException e) {
+				logger.error(e.getMessage(), e);
+				continue;
+			} catch (ElementNotVisibleException e) {
+				logger.error(e.getMessage(), e);
+				continue;
+			} catch (ElementNotFoundException e) {
+				logger.error(e.getMessage(), e);
+				continue;
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage(), e);
+				continue;
+			}
+			
 		}
 		
-		WebElement proximoPostulante = driver.findElement(By.className("postulanteProximo"));
-		proximoPostulante.click();
 	}
 	
 	/**
@@ -188,15 +206,15 @@ public class BumeranSeeder implements Runnable {
 				logger.info("Already logged in..Moving forward!");
 			}
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error(e.getMessage(), e);
 		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
+			logger.error(e.getMessage(), e);
 		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
+			logger.error(e.getMessage(), e);
 		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
+			logger.error(e.getMessage(), e);
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
