@@ -70,13 +70,14 @@ public class BumeranSeeder implements Runnable {
 
 		human = generateRandomHumanUser();
 		
-		logger.info("Processing post");
+		logger.info("Executing bumeranLogin");
 		bumeranLogin(driver);
 		
-		logger.info("Getting to la busqueda url: " + Constant.BUSQUEDA_URL);
+		logger.info("Getting to: " + Constant.BUSQUEDA_URL);
 		driver.get(Constant.BUSQUEDA_URL);
 		try {
 			Thread.sleep(10000);
+			logger.info("finding element by id");
 			driver.findElement(By.id("1031750527")).click();
 			Thread.sleep(randInt(3000, 4000));
 			getEmails(driver);
@@ -95,9 +96,10 @@ public class BumeranSeeder implements Runnable {
 	 * @param driver
 	 */
 	private void getEmails(WebDriver driver) {
+		logger.info("Starting to harvest emails");
 		while(true){
 			try{
-				WebElement resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales"));
+				WebElement resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales "));
 				resumenDatosPersonales.findElement(By.partialLinkText("@"));
 				
 				String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
