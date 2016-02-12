@@ -76,7 +76,7 @@ public class BumeranSeeder implements Runnable {
 			logger.info("Getting to la busqueda url: " + Constant.BUSQUEDA_URL);
 			driver.get(Constant.BUSQUEDA_URL);
 		
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 			driver.findElement(By.id("1031750527")).click();
 			Thread.sleep(randInt(3000, 4000));
 			while(true){
