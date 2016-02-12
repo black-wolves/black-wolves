@@ -76,12 +76,12 @@ public class BumeranSeeder implements Runnable {
 			logger.info("Getting to la busqueda url: " + Constant.BUSQUEDA_URL);
 			driver.get(Constant.BUSQUEDA_URL);
 		
-			Thread.sleep(randInt(3000, 4000));
-			driver.findElement(By.id("36026580")).click();
+			Thread.sleep(5000);
+			driver.findElement(By.id("1003176425")).click();
 			Thread.sleep(randInt(3000, 4000));
 			while(true){
 				getEmails(driver);
-				Thread.sleep(5000);
+				Thread.sleep(randInt(3000, 4000));
 			}
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException");
