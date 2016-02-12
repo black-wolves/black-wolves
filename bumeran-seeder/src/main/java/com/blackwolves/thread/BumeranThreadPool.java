@@ -1,4 +1,4 @@
-package com.bumeran.thread;
+package com.blackwolves.thread;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.bumeran.seeder.BumeranSeeder;
+import com.blackwolves.seeder.BumeranSeeder;
 
 /**
  * 

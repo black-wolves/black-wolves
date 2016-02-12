@@ -1,4 +1,4 @@
-package com.bumeran.seeder;
+package com.blackwolves.seeder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,11 +28,11 @@ import org.slf4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.bumeran.behavior.AverageHuman;
-import com.bumeran.behavior.DumbHuman;
-import com.bumeran.behavior.FastHuman;
-import com.bumeran.behavior.Human;
-import com.bumeran.util.Constant;
+import com.blackwolves.behavior.AverageHuman;
+import com.blackwolves.behavior.DumbHuman;
+import com.blackwolves.behavior.FastHuman;
+import com.blackwolves.behavior.Human;
+import com.blackwolves.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**

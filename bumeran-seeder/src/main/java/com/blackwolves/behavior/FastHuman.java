@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.bumeran.behavior;
+package com.blackwolves.behavior;
 
 import org.openqa.selenium.WebElement;
 

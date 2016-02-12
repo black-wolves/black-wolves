@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.bumeran.behavior;
+package com.blackwolves.behavior;
 
 import org.openqa.selenium.WebElement;
 
-import com.bumeran.seeder.BumeranSeeder;
+import com.blackwolves.seeder.BumeranSeeder;
 
 /**
  * 

@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.bumeran.behavior;
+package com.blackwolves.behavior;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.bumeran.seeder.BumeranSeeder;
+import com.blackwolves.seeder.BumeranSeeder;
 
 /**
  * 

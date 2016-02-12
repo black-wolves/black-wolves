@@ -1,64 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="USER_HOME" value="/var/www/logs/bumeran" />
+	<property name="DEV_HOME" value="/var/www/logs/bumeran" />
 
-	<appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
-
-		<!-- This is MDC value -->
-		<!-- We will assign a value to 'logFileName' via Java code -->
-		<discriminator>
-			<key>bumeran_emails.txt</key>
-			<defaultValue>bumeran</defaultValue>
-		</discriminator>
-
-		<sift>
-
-		  <!-- A standard RollingFileAppender, the log file is based on 'logFileName' at runtime  -->
-		  <appender name="FILE-${logFileName}"
-			class="ch.qos.logback.core.rolling.RollingFileAppender">
-			<file>${USER_HOME}/${logFileName}.log</file>
-
-			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-				<Pattern>
-					%d{yyyy-MM-dd HH:mm:ss} %level - %msg%n
-				</Pattern>
-			</encoder>
-
-			<rollingPolicy
-				class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-				<FileNamePattern>${USER_HOME}/${logFileName}.%i.log.zip
-				</FileNamePattern>
-				<MinIndex>1</MinIndex>
-				<MaxIndex>10</MaxIndex>
-			</rollingPolicy>
-
-			<triggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-				<MaxFileSize>10MB</MaxFileSize>
-			</triggeringPolicy>
-
-		  </appender>
-
-		</sift>
-	</appender>
-
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
+	<appender name="FILE-AUDIT"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${DEV_HOME}/bumeran.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
-				%-5level %logger{36} - %msg%n
+				%d{yyyy-MM-dd HH:mm:ss} - %msg%n
 			</Pattern>
-		</layout>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${DEV_HOME}/archived/debug.%d{yyyy-MM-dd}.%i.log
+                        </fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
 	</appender>
 
-	<logger name="com.blackwolves" level="info"
+	<logger name="com.blackwolves" level="debug"
 		additivity="false">
-		<appender-ref ref="FILE-THREAD" />
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE-AUDIT" />
 	</logger>
-	
+
 	<root level="error">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE-AUDIT" />
 	</root>
 
 </configuration>

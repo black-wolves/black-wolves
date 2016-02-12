@@ -1,4 +1,4 @@
-package com.bumeran.util;
+package com.blackwolves.util;
 
 /**
  * 
