@@ -77,7 +77,7 @@ public class BumeranSeeder implements Runnable {
 		driver.get(Constant.BUSQUEDA_URL);
 		try {
 			Thread.sleep(10000);
-			logger.info("finding element by id");
+			logger.info("finding first contact");
 			WebElement contact = driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a"));
 			contact.click();
 			Thread.sleep(randInt(3000, 4000));
@@ -101,9 +101,9 @@ public class BumeranSeeder implements Runnable {
 		while(true){
 			try{
 				WebElement resumenDatosPersonales = null;
-				if(driver.findElements( By.id("resumenDatosPersonales") ).size() != 0){
+				if(driver.findElements(By.className("resumenDatosPersonales")).size() != 0){
 					resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales"));
-				}else if(driver.findElements( By.id("resumenDatosPersonales ") ).size() != 0){
+				}else if(driver.findElements(By.className("resumenDatosPersonales ")).size() != 0){
 					resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales "));
 				}
 				if(resumenDatosPersonales!=null){
