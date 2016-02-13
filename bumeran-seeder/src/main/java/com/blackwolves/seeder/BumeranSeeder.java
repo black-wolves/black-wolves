@@ -78,7 +78,8 @@ public class BumeranSeeder implements Runnable {
 		try {
 			Thread.sleep(10000);
 			logger.info("finding element by id");
-			driver.findElement(By.id("1031750527")).click();
+			WebElement contact = driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a"));
+			contact.click();
 			Thread.sleep(randInt(3000, 4000));
 			getEmails(driver);
 		} catch (InterruptedException e) {
