@@ -1,4 +1,4 @@
-package com.blackwolves.mail.yahoo;
+package com.blackwolves.mail;
 
 import javax.mail.Address;
 

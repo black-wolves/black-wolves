@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+import com.blackwolves.mail.CustomFrom;
 import com.blackwolves.mail.CustomMimeMessage;
 import com.blackwolves.mail.util.Constant;
 
