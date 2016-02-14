@@ -45,26 +45,11 @@ public interface Constant {
 												};
 	
 	public static final String[] contactEmails = {
-												"mfjthyun@yahoo.com,vCf%AHN3G9G%5Pk",
-												"xegcym@yahoo.com,gZ#s84qJT@$M*QK",
-												"ceszqgjpfw@yahoo.com,VHgN*mxB3jxsGkX",
-												"enkkimnxnd@yahoo.com,u2bkrE#jjUfeU6r",
-												"kkwwrjnm@yahoo.com,?%4UuU!RMVFyUS&",
-												"itskqju@yahoo.com,RymYJH@*7vF7urj",
-												"jeizps@yahoo.com,$3ZEvd6gawepuk*",
-												"surbefhx@yahoo.com,cmj7%3?DUK92W5c",
-												"ygxluttqe@yahoo.com,F&GQ7k#mGCJUPHV",
-												"eearskt@yahoo.com,Vf@2nWZSyz2Zc@N",
-												"mezxwahl@yahoo.com,*9RjEF%4CAJqNjX",
-												"ceebuzvqk@yahoo.com,RFaeqqE3r3u*Kdd",
-												"caarrapg@yahoo.com,N4@eVW9YRxaU#2a",
-												"orbtvn@yahoo.com,!?Q7pEYAXR@B*U6",
-												"dvwyjbjvrc@yahoo.com,%5U%k7K65YW@asA",
-												"cxcbamp@yahoo.com,gGjX35nwtfZ%2h?",
-												"dfjtrqseik@yahoo.com,wyRwYDbD2Y&G6Qk",
-												"kmjkzrk@yahoo.com,5!2W6g#!6jHA$ds",
-												"xprwzzsw@yahoo.com,Vg$@SqCM!49uMCz",
-												"rprdlcwxyel@yahoo.com,qjvtPa4c!NFV9sJ"
+												"offers-1@austroyed.info,wolf2015.",
+												"offers-2@austroyed.info,wolf2015.",
+												"offers-3@austroyed.info,wolf2015.",
+												"offers-4@austroyed.info,wolf2015.",
+												"offers-5@austroyed.info,wolf2015."
 												};
 	
 	public interface offer_804{

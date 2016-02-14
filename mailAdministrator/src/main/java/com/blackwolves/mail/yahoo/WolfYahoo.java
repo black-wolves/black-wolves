@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.mail.CustomFrom;
+import com.blackwolves.mail.CustomMimeMessage;
 import com.blackwolves.mail.util.Constant;
 
 /**
@@ -51,8 +52,8 @@ public abstract class WolfYahoo {
 		Session session = Session.getDefaultInstance(properties);
 
 		// Create a default MimeMessage object.
-//		MimeMessage message = new CustomMimeMessage(session, domain);
-		MimeMessage message = new MimeMessage(session);
+		MimeMessage message = new CustomMimeMessage(session, domain);
+//		MimeMessage message = new MimeMessage(session);
 
 		// Set From: header field of the header.
 		//message.setFrom(new InternetAddress(from));
@@ -63,10 +64,14 @@ public abstract class WolfYahoo {
 		message.setSubject(subject);
 
 		// Now set the actual message
+		
+//		MimeBodyPart textPart = new MimeBodyPart();
+//		textPart.setContent(body, "text/html");
+//		Multipart mp = new MimeMultipart();
+//		mp.addBodyPart(textPart);
+//		message.setContent(mp);
+		
 		message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-//		message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
-//		message.setHeader("Message-ID", Constant.EMPTY_STRING);
-//		message.setHeader("X-Priority", "1");
 		
 		Address [] toAd =  new Address[1] ;
 		toAd[0] =  new InternetAddress(contactEmail);
@@ -93,7 +98,7 @@ public abstract class WolfYahoo {
 		while (headers.hasMoreElements()) {
 			Header h = (Header) headers.nextElement();
 //			if (validateHeaders(h)) {
-//				mail.append("\n");
+				mail.append("\n");
 //				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
 				mail.append(h.getName() + ": " + h.getValue());
 				

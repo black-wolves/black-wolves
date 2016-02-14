@@ -3,14 +3,22 @@
  */
 package com.blackwolves.mail.yahoo;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -73,6 +81,11 @@ public class ProductionWolfYahoo extends WolfYahoo {
 							mail.append("\n");
 							mail.append("\n");
 							mail.append(message.getContent());
+							
+//							Multipart mp = (Multipart) message.getContent();
+//							BodyPart bp = mp.getBodyPart(0);
+//							mail.append(bp.getContent());
+							
 							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + offer + "/" + receiver + i);
 							out.println(mail);
 							out.close();
@@ -125,6 +138,52 @@ public class ProductionWolfYahoo extends WolfYahoo {
 			}
 		}
 		logger.info("Message moved");
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 */
+	private void writeSeedToFile(String[] seed, String outputFileName) {
+		PrintWriter pw = null;
+		try {
+			List<String> usedSeeds = readSeedsFromFile(outputFileName);
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + outputFileName));
+			for (String usedSeed : usedSeeds) {
+				pw.write(usedSeed);
+				pw.write("\n");
+			}
+			pw.write(seed[0] + "," + seed[1]);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			if(pw!=null){
+				pw.close();
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private List<String> readSeedsFromFile(String outputFileName) {
+		List<String> list = null;
+		try {
+			File file = new File(Constant.ROUTE + outputFileName);
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			list = new ArrayList<String>();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				list.add(line);
+			}
+			fileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 }
