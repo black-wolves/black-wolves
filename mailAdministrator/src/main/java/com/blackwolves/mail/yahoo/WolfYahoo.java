@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.mail.CustomFrom;
-import com.blackwolves.mail.CustomMimeMessage;
 import com.blackwolves.mail.util.Constant;
 
 /**
@@ -52,7 +51,8 @@ public abstract class WolfYahoo {
 		Session session = Session.getDefaultInstance(properties);
 
 		// Create a default MimeMessage object.
-		MimeMessage message = new CustomMimeMessage(session, domain);
+//		MimeMessage message = new CustomMimeMessage(session, domain);
+		MimeMessage message = new MimeMessage(session);
 
 		// Set From: header field of the header.
 		//message.setFrom(new InternetAddress(from));
@@ -93,8 +93,9 @@ public abstract class WolfYahoo {
 		while (headers.hasMoreElements()) {
 			Header h = (Header) headers.nextElement();
 //			if (validateHeaders(h)) {
-				mail.append("\n");
-				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
+//				mail.append("\n");
+//				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
+				mail.append(h.getName() + ": " + h.getValue());
 				
 //				if header == date change the date
 //				String pattern = "EEE, dd MMM yyyy HH:mm:ss Z";
