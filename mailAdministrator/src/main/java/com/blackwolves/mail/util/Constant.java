@@ -15,7 +15,7 @@ public interface Constant {
 		public static final String IMAP_YAHOO = "imap.mail.yahoo.com";
 		public static final int IMAP_PORT = 993;
 		public static final String PICKUP_ROUTE = "/ramcache/pmta/pickup/";
-		public static final String BLACKWOLVES_ROUTE = "/root/blackwolves/bodies/";
+		public static final String BLACKWOLVES_ROUTE = "/var/www/bodies/";
 		public static final String INBOX = "Inbox";
 		public static final String SPAM = "Bulk Mail";
 		public static final String BODIES = "Bodies";

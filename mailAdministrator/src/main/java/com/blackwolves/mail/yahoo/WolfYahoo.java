@@ -64,9 +64,9 @@ public abstract class WolfYahoo {
 
 		// Now set the actual message
 		message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-//					message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
-//					message.setHeader("Message-ID", Constant.EMPTY_STRING);
-//					message.setHeader("X-Priority", "1");
+//		message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
+//		message.setHeader("Message-ID", Constant.EMPTY_STRING);
+//		message.setHeader("X-Priority", "1");
 		
 		Address [] toAd =  new Address[1] ;
 		toAd[0] =  new InternetAddress(contactEmail);
@@ -92,15 +92,15 @@ public abstract class WolfYahoo {
 		Enumeration headers = message.getAllHeaders();
 		while (headers.hasMoreElements()) {
 			Header h = (Header) headers.nextElement();
-			if (validateHeaders(h)) {
+//			if (validateHeaders(h)) {
 				mail.append("\n");
-				mail.append(h.getName() + ": " + h.getValue());
+				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
 				
 //				if header == date change the date
 //				String pattern = "EEE, dd MMM yyyy HH:mm:ss Z";
 //				SimpleDateFormat format = new SimpleDateFormat(pattern);
 //				message.setHeader("DATE", format.format(new Date()));
-			}
+//			}
 		}
 	}
 
@@ -110,12 +110,13 @@ public abstract class WolfYahoo {
 	 * @return
 	 */
 	public boolean validateHeaders(Header h) {
-		if (h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
-				|| h.getName().equals("Received-SPF") || h.getName().equals("X-YMailISG")
-				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
-				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
-				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
-				|| h.getName().equals("X-Yahoo-Newman-Id") || h.getName().equals("Content-Length")) {
+//		if (h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
+//				|| h.getName().equals("Received-SPF") || h.getName().equals("X-YMailISG")
+//				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
+//				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
+//				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
+//				|| h.getName().equals("X-Yahoo-Newman-Id") || h.getName().equals("Content-Length")) {
+		if (h.getName().equals("X-Yahoo-SMTP")) {
 			return false;
 		}
 		return true;

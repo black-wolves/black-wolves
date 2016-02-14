@@ -119,8 +119,8 @@ public class YahooProcessor {
 		} else {
 			logger.info("ELSE MODE");
 			String offer = args[1];
-			String seed = args[2];
-			String pass = args[3];
+			String seed = args[2].split(",")[0];
+			String pass = args[2].split(",")[1];
 			WolfYahoo handler = new ProductionWolfYahoo();
 			handler.readEmailsAndGenerateBodies(offer, seed, pass);
 		}

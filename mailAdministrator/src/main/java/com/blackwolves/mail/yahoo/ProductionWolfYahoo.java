@@ -5,7 +5,6 @@ package com.blackwolves.mail.yahoo;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -24,19 +23,7 @@ import com.blackwolves.mail.util.Constant;
  */
 public class ProductionWolfYahoo extends WolfYahoo {
 
-//	private static final String SEED = "yaninadefays03@yahoo.com";
-//	private static final String SEED_PASSWORD = "wolf2015.3";
-	private static final String VMTA = "mta3";
-
-	/* (non-Javadoc)
-	 * @see com.blackwolves.mail.yahoo.WolfYahoo#generateAndSendMail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-	 */
-//	@Override
-//	public void generateAndSendMail(String user, String pass, String offerFrom,
-//			String to, String subject, String body) {
-//		super.generateAndSendMail(user, pass, offerFrom, to, subject, body);
-//
-//	}
+	private static final String VMTA = "vps-yahoo";
 
 	/*
 	 * (non-Javadoc)
@@ -45,7 +32,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 	@Override
 	public void readEmailsAndGenerateBodies(String offer, String seed, String pass) {
 		try {
-			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
+//			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
 			
 			Properties props = System.getProperties();
@@ -62,7 +49,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					store.connect(Constant.Yahoo.IMAP_YAHOO, Constant.Yahoo.IMAP_PORT, seed, pass);
 					logger.info("Connected to " + seed);
 				}
-				Folder offerFolder = store.getFolder(offer);
+				Folder offerFolder = store.getFolder(Constant.Yahoo.INBOX);
 				offerFolder.open(Folder.READ_WRITE);
 				Message msgs[] = offerFolder.getMessages();
 				int bodiesCount = offerFolder.getMessageCount();
@@ -81,7 +68,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 							StringBuilder mail = new StringBuilder();
 							mail.append("x-virtual-mta: " + VMTA);
 							mail.append("\n");
-							mail.append("x-receiver: " + receiver);
+							mail.append("x-receiver: " + "gastondapice@yahoo.com");
 							iterateHeaders(message, mail);
 							mail.append("\n");
 							mail.append("\n");
@@ -116,7 +103,7 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		
 	}
 
-	public void saveMessages(Store store, String offer, Message message, Folder offerFolder, int messageNumber) throws Exception {
+	private void saveMessages(Store store, String offer, Message message, Folder offerFolder, int messageNumber) throws Exception {
 		Folder dfolder = store.getFolder(offer+"-OLD");
 //		if (!dfolder.exists()){
 //			dfolder.create(Folder.HOLDS_MESSAGES);
