@@ -77,7 +77,6 @@
 <!-- 							      <resource>META-INF/spring.schemas</resource> -->
 <!-- 							    </transformer> -->
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-<!-- 									<mainClass>com.blackwolves.mail.Calculator</mainClass> -->
 									<mainClass>com.blackwolves.mail.yahoo.YahooProcessor</mainClass>
 								</transformer>
 							</transformers>
