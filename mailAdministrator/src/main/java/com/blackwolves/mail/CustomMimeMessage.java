@@ -6,11 +6,13 @@ import javax.mail.internet.MimeMessage;
 
 public class CustomMimeMessage extends MimeMessage {
 	Session session;
+	static String senderDomain;
 	private static int id = 0;
 
-	public CustomMimeMessage(Session session) {
+	public CustomMimeMessage(Session session, String senderDomain) {
 		super(session);
 		this.session = session;
+		CustomMimeMessage.senderDomain = senderDomain;
 	}
 
 	@Override
@@ -23,7 +25,7 @@ public class CustomMimeMessage extends MimeMessage {
 
 		// Unique string is <hashcode>.<id>.<currentTime>.JavaMail.<suffix>
 		s.append(s.hashCode()).append('.').append(getUniqueId()).append('.').append(System.currentTimeMillis())
-				.append("@betoacostadalefuncionanamelamily.ro");
+				.append("@" + senderDomain);
 		return s.toString();
 	}
 

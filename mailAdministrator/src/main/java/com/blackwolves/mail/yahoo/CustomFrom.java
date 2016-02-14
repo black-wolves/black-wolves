@@ -24,9 +24,9 @@ public class CustomFrom extends Address {
 
 	@Override
 	public String toString() {
-		from = "\"=?ISO-8859-15?Q?"+title+"?=\" \n";
-		from += " \"=?ISO-8859-15?B?|"+customer+"|?=\"\n <"+senderMail+">";
-
+//		from = "\"=?ISO-8859-15?Q?"+title+"?=\" \n";
+//		from += " \"=?ISO-8859-15?B?|"+customer+"|?=\"\n <"+senderMail+">";
+		from = "\"" + title + "\" " +  "<" + senderMail + ">";
 		return from;
 	}
 

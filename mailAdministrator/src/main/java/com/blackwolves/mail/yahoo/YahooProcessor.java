@@ -1,7 +1,14 @@
 package com.blackwolves.mail.yahoo;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.blackwolves.mail.util.Constant;
 
 /**
  * @author gastondapice
@@ -20,7 +27,7 @@ public class YahooProcessor {
 
 		if(args[0] != null && args[0].equals("send")){
 			logger.info("SEND ----- generate and drop bodies option selected");
-			generateDropBodies(test, args);
+			generateDropBodies(args);
 		}else if(args[0] != null && args[0].equals("download")){
 //			download Inbox emweqwwttrk@yahoo.com nSP*Db6ucGbpjzb
 			logger.info("DOWNLOAD ----- read and tune bodies option selected");
@@ -31,6 +38,67 @@ public class YahooProcessor {
 	}
 
 	/**
+	 * 
+	 * @param args
+	 */
+	private static void generateDropBodies(String[] args) {
+		for (int i = 1; i <= 100; ) {
+			for (int j = 0; j < Constant.senderEmails.length; j++) {
+				String senderEmailAndPassword = Constant.senderEmails[j];
+				String senderPassword = senderEmailAndPassword.split(",")[1];
+				String senderDomain = senderEmailAndPassword.split("@")[1].split(",")[0];
+				String contactEmail = Constant.contactEmails[WolfYahoo.randInt(0, Constant.contactEmails.length - 1)].split(",")[0];
+				String senderEmail = senderEmailAndPassword.split(",")[0];
+
+				WolfYahoo handler = new ProductionWolfYahoo();
+				logger.info("Sending email to: " + contactEmail + " from: " + senderEmailAndPassword);
+				try {
+					handler.generateAndSendMail(senderEmail, senderPassword, Constant.offer_804.subjects[WolfYahoo.randInt(0, Constant.offer_804.subjects.length - 1)], Constant.offer_804.bodies[WolfYahoo.randInt(0, Constant.offer_804.bodies.length - 1)], contactEmail, senderDomain, Constant.offer_804.froms[WolfYahoo.randInt(0, Constant.offer_804.froms.length - 1)]);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					saveSeedErrorOnException(senderEmail, e);
+					continue;
+				}
+				logger.info("Body " + i + " generation successfully sent to: " + contactEmail + " sent by: " + senderEmail);
+				i++;
+			}
+//			try {
+//				Thread.sleep(27000);
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage());
+//			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param user
+	 * @param e
+	 */
+	private static void saveSeedErrorOnException(String user, MessagingException e) {
+		
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter(Constant.ROUTE_LOGS_ERROR + user);
+			StringBuilder error  = new StringBuilder();
+			error.append("Could not connect with user: " + user);
+			error.append("\n");
+			error.append(e.getMessage());
+			error.append(e.getStackTrace());
+			error.append("\n");
+			error.append(e);
+			out.println(error);
+		} catch (FileNotFoundException e1) {
+			logger.error(e1.getMessage(), e1);
+		} finally{
+			if(out!=null){
+				out.close();
+			}
+		}
+	}
+	
+	/**
+	 * 
 	 * @param test
 	 * @param warmup
 	 * @param args
@@ -57,82 +125,5 @@ public class YahooProcessor {
 			handler.readEmailsAndGenerateBodies(offer, seed, pass);
 		}
 
-	}
-
-	/**
-	 * @param test
-	 * 
-	 */
-	private static void generateDropBodies(boolean test, String[] args) {
-
-		// TEST PURPOSES
-		// user = "edubartolini@yahoo.com";
-		// pass = "Eduardito01";
-
-		// List<String[]> contacts =
-		// WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/",
-		// "mini_zebra.csv");
-		// List<String[]> seeds =
-		// WolfYahoo.generateList("/Users/danigrane/Downloads/Madrivo/seeds/",
-		// "seeds_good.csv");
-		
-		String senderEmail = args[1].split(",")[0];
-		String senderPassword = args[1].split(",")[1];
-		String senderDomainRo = args[1].split(",")[2];
-		String contactEmail = args[2];
-
-		String[] offerFroms = { "The HARP Lenders" };
-		
-//		String[] offerFroms = { "The Zebra" };
-		
-//		String[] subjects = { "Pay as little as $27/mo for car insurance",
-//				"Auto Insurance for as low as $27/mo",
-//				"Car Insurance for as low as $27/mo",
-//				"Car Insurance for as low as $7/week",
-//				"Auto Insurance for as low as $7/wk",
-//				"Time to save on your car insurance rates?",
-//				"Compare Car Insurance in Real Time",
-//				"Time to re-shop your car insurance rates",
-//				"You're eligible to save on car insurance" };
-		
-		String[] subjects = { "ARP 2.0 Refinance Program Extended Until 2016 - Act Before Rates Go Up"};
-
-//		String body = "<html><body>Hello World</body></html>";
-		
-		String body = "<html>" +
-		"<body bgcolor=\"#FFFFFF\"><br />" +
-		"<h1><center><a target=\"_blank\" href=\"http://geneveral.info/2eefc6e61b5c886a475f1ede161d2039134d9aec45571392f005f6f41ab29810c0dd3848215d2ef110183a725a88763c29caf10e0165c54160f4bec64479ff9b\"><font color=\"#FF0000\"></font></a></center></h1><br />" +
-		"<map name=\"ihawg\"><area shape=\"rect\" coords=\"4,1,2014,2576\" target=\"_blank\" href=\"http://geneveral.info/2eefc6e61b5c886a475f1ede161d2039134d9aec45571392f005f6f41ab29810c0dd3848215d2ef110183a725a88763c29caf10e0165c54160f4bec64479ff9b\"></map>" +
-		"<map name=\"vwykz\"><area shape=\"rect\" coords=\"4,2,2462,2435\" target=\"_blank\" href=\"http://geneveral.info/e370e9e1ec6a1dd6bd475af4ebe7a9bc64e930386adf309d3b60f7d7b3935a772854c6f76a2f30e7fdf2f9ad3dad6900a75a77d351e18afdc26825394621fe26\"></map>" +
-		"<table height=\"368\" width=\"419\" align=\"center\" border=\"0\" bgcolor=\"#2E9AFE\" cellspacing=\"0\" cellpadding=\"0\">" +
-		"<tr><td bgcolor=\"#FFFFFF\" align=\"center\" ><p>Please click the \"Show Images\" button above if you cannot see the content.</p></td></tr>" +
-		"<tr><td align=\"center\"><img style=\"display:block\" alt=\"content\" title=\"content\" src=\"http://geneveral.info/4a31ddc604ea45b58e0f203b61a62d7196a30d61327c8d0114e070440a4150c03f4dcbec72620d248632b681aa50ded215169cb599c0346d28b6f2308e53d6cd\" usemap=\"#ihawg\"></td></tr>" +
-		"<tr><td align=\"center\"><img style=\"display:block\" alt=\"unsubscribe\" title=\"unsubscribe\" src=\"http://geneveral.info/f3a39bcfeb6585aacc44470cbb9b2177d1ab912c5625b77b5128efd049932048de85006a272a7d346917399fbd4b8ee2f08c47a87247a1f9e1ab1aef3bfb8e7d\" usemap=\"#vwykz\"></td></tr></table><br />" +
-		"</body>" +
-		"</html>";
-
-		if (test) {
-			/*
-			 * THIS IS ONLY FOR TEST
-			 */
-			// WolfYahoo handler = new TestWolfYahoo();
-			// handler.generateAndSendMail(users[WolfYahoo.randInt(0,
-			// users.length-1)], pass, offerFroms[WolfYahoo.randInt(0,
-			// offerFroms.length-1)], to, subjects[WolfYahoo.randInt(0,
-			// subjects.length-1)], body);
-		} else {
-			/*
-			 * THIS IS PRODUCTION
-			 */
-			WolfYahoo handler = new ProductionWolfYahoo();
-			try {
-				logger.info("customer: " + contactEmail + " sender: " + senderEmail);
-				handler.generateAndSendMail(senderEmail, senderPassword, subjects[WolfYahoo.randInt(0, subjects.length - 1)], body, contactEmail, senderDomainRo, offerFroms[WolfYahoo.randInt(0, offerFroms.length - 1)]);
-
-			} catch (Exception e) {
-				logger.info("Error", e.getMessage());
-				return;
-			}
-		}
 	}
 }

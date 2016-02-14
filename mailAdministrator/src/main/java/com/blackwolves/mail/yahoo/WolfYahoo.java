@@ -3,7 +3,6 @@ package com.blackwolves.mail.yahoo;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.Properties;
 import java.util.Random;
 
 import javax.mail.Address;
-import javax.mail.AuthenticationFailedException;
 import javax.mail.FolderClosedException;
 import javax.mail.Header;
 import javax.mail.Message;
@@ -35,25 +33,9 @@ import com.blackwolves.mail.util.Constant;
  */
 public abstract class WolfYahoo {
 
-	private static final String[] SEEDS_TO_SEND_EMAILS = {
-			"gastondapice@yahoo.com", "gastondapice02@yahoo.com",
-			"gastondapice03@yahoo.com", "gastondapice04@yahoo.com",
-			"gastondapice05@yahoo.com", "gastondapice10@yahoo.com",
-			"gastondapice11@yahoo.com" };
-
-	private static final String[] BACKUP_SEED = {
-			"gastondapice@yahoo.com,wolf2015.5",
-			"gastondapice02@yahoo.com,wolf2015.3",
-			"gastondapice03@yahoo.com,wolf2015.3",
-			"gastondapice04@yahoo.com,wolf2015.3",
-			"gastondapice05@yahoo.com,wolf2015.3",
-			"gastondapice10@yahoo.com,wolf2015.3",
-			"gastondapice11@yahoo.com,wolf2015.3",
-			"yaninadefays03@yahoo.com,wolf2015.3" };
-
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
 
-	public void generateAndSendMail(String user, String pass, String subject, String body, String contactEmail, String domain, String offerFrom) {
+	public void generateAndSendMail(String user, String pass, String subject, String body, String contactEmail, String domain, String offerFrom) throws MessagingException {
 
 		// Get system properties
 		Properties properties = System.getProperties();
@@ -68,97 +50,32 @@ public abstract class WolfYahoo {
 		// Get the default Session object.
 		Session session = Session.getDefaultInstance(properties);
 
-		boolean keepTrying = false;
+		// Create a default MimeMessage object.
+		MimeMessage message = new CustomMimeMessage(session, domain);
+
+		// Set From: header field of the header.
+		//message.setFrom(new InternetAddress(from));
+		CustomFrom customFrom = new CustomFrom(contactEmail, user, offerFrom);
+		message.setFrom(customFrom);
+
+		// Set Subject: header field
+		message.setSubject(subject);
+
+		// Now set the actual message
+		message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
+//					message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
+//					message.setHeader("Message-ID", Constant.EMPTY_STRING);
+//					message.setHeader("X-Priority", "1");
 		
-		do{
-			sendEmail(user, pass, subject, body, session, keepTrying, contactEmail, domain, offerFrom);
-		}while(keepTrying);
-	}
+		Address [] toAd =  new Address[1] ;
+		toAd[0] =  new InternetAddress(contactEmail);
+		message.addRecipient(Message.RecipientType.TO, toAd[0]);
 
-	/**
-	 * 
-	 * @param user
-	 * @param pass
-	 * @param subject
-	 * @param body
-	 * @param session
-	 * @param keepTrying
-	 * @param contactEmail
-	 * @param senderDomain
-	 * @param offerFrom
-	 */
-	private void sendEmail(String user, String pass, String subject, String body, Session session, boolean keepTrying, String contactEmail, String senderDomain, String offerFrom) {
-		try {
-			if(keepTrying){
-//				String backupSeed = BACKUP_SEED[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
-				String backupSeed = "gastondapice03@yahoo.com";
-				String bs[] = backupSeed.split(",");
-				user = bs[0];
-				pass = bs[1];
-				senderDomain = user.split("@")[0] + "@walllale.info";
-			}
-			// Create a default MimeMessage object.
-			MimeMessage message = new CustomMimeMessage(session);
-
-			// Set From: header field of the header.
-			//message.setFrom(new InternetAddress(from));
-			CustomFrom customFrom = new CustomFrom(contactEmail, senderDomain, offerFrom);
-			message.setFrom(customFrom);
-
-			// Set Subject: header field
-			message.setSubject(subject);
-
-			// Now set the actual message
-			message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-			message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
-			message.setHeader("Message-ID", Constant.EMPTY_STRING);
-			message.setHeader("X-Priority", "1");
-			
-			Address [] ad =  new Address[1] ;
-//			String to = SEEDS_TO_SEND_EMAILS[randInt(0, SEEDS_TO_SEND_EMAILS.length-1)];
-			String to ="gastondapice@yahoo.com";
-			ad[0] =  new InternetAddress(to);
-
-			// Send message
-			Transport transport = session.getTransport("smtp");
-			transport.connect(Constant.Yahoo.HOST, user, pass);
-			transport.sendMessage(message, ad);
-			transport.close();
-			logger.info("Body generation successfully for "+ customFrom.getCustomer() + " sent to: " + to + " created by: " + user);
-			keepTrying = false;
-		} catch (AuthenticationFailedException e){
-			saveSeedErrorOnException(user, e, keepTrying);
-		} catch (MessagingException e) {
-			saveSeedErrorOnException(user, e, keepTrying);
-		}
-	}
-
-	/**
-	 * 
-	 * @param user
-	 * @param e
-	 * @param keepTrying
-	 */
-	private void saveSeedErrorOnException(String user, Exception e, boolean keepTrying) {
-		
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter(Constant.ROUTE_LOGS_ERROR + user);
-			StringBuilder error  = new StringBuilder();
-			error.append("Could not connect with user: " + user);
-			error.append("\n");
-			error.append(e.getMessage());
-			error.append("\n");
-			error.append(e);
-			out.println(error);
-		} catch (FileNotFoundException e1) {
-			logger.error(e.getMessage(), e1);
-		} finally{
-			if(out!=null){
-				out.close();
-			}
-			keepTrying = true;
-		}
+		// Send message
+		Transport transport = session.getTransport("smtp");
+		transport.connect(Constant.Yahoo.HOST, user, pass);
+		transport.sendMessage(message,message.getAllRecipients());
+		transport.close();
 	}
 
 	public abstract void readEmailsAndGenerateBodies(String offer, String seed, String pass);
