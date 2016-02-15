@@ -8,17 +8,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -67,8 +67,6 @@ public class ProductionWolfYahoo extends WolfYahoo {
 					try{
 						int i = WolfYahoo.randInt(0, msgs.length-1);
 						Message message = msgs[i];
-//						String[] from = message.getFrom()[0].toString().split("\\|");
-//						String receiver = from[1];
 						String receiver = message.getAllRecipients()[0].toString();
 //						if(contacts.contains(receiver) && from[0].contains("Military")){
 							logger.info("Creating body: " + count);
@@ -81,11 +79,6 @@ public class ProductionWolfYahoo extends WolfYahoo {
 							mail.append("\n");
 							mail.append("\n");
 							mail.append(message.getContent());
-							
-//							Multipart mp = (Multipart) message.getContent();
-//							BodyPart bp = mp.getBodyPart(0);
-//							mail.append(bp.getContent());
-							
 							PrintWriter out = new PrintWriter(Constant.Yahoo.BLACKWOLVES_ROUTE + offer + "/" + receiver + i);
 							out.println(mail);
 							out.close();
@@ -184,6 +177,35 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		}
 		
 		return list;
+	}
+	
+	private static String getStringFromInputStream(InputStream is) {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
 	}
 
 }

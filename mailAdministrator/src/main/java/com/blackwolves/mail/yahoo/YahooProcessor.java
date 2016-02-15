@@ -53,7 +53,7 @@ public class YahooProcessor {
 				WolfYahoo handler = new ProductionWolfYahoo();
 				logger.info("Sending email to: " + contactEmail + " from: " + senderEmailAndPassword);
 				try {
-					handler.generateAndSendMail(senderEmail, senderPassword, Constant.offer_804.subjects[WolfYahoo.randInt(0, Constant.offer_804.subjects.length - 1)], Constant.offer_804.bodies[WolfYahoo.randInt(0, Constant.offer_804.bodies.length - 1)], contactEmail, senderDomain, Constant.offer_804.froms[WolfYahoo.randInt(0, Constant.offer_804.froms.length - 1)]);
+					handler.generateAndSendMail(senderEmail, senderPassword, Constant.offer_1148.subjects[WolfYahoo.randInt(0, Constant.offer_1148.subjects.length - 1)], Constant.offer_1148.bodies[WolfYahoo.randInt(0, Constant.offer_1148.bodies.length - 1)], contactEmail, senderDomain, Constant.offer_1148.froms[WolfYahoo.randInt(0, Constant.offer_1148.froms.length - 1)]);
 				} catch (MessagingException e) {
 					e.printStackTrace();
 					saveSeedErrorOnException(senderEmail, e);
@@ -62,11 +62,6 @@ public class YahooProcessor {
 				logger.info("Body " + i + " generation successfully sent to: " + contactEmail + " sent by: " + senderEmail);
 				i++;
 			}
-//			try {
-//				Thread.sleep(27000);
-//			} catch (InterruptedException e) {
-//				logger.error(e.getMessage());
-//			}
 		}
 	}
 	

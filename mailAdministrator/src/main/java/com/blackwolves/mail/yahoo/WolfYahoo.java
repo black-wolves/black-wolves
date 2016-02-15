@@ -66,15 +66,18 @@ public abstract class WolfYahoo {
 		// Now set the actual message
 		
 //		MimeBodyPart textPart = new MimeBodyPart();
-//		textPart.setContent(body, "text/html");
+//		textPart.setContent(body, Constant.Yahoo.CONTENT_TYPE);
+//		message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
+//		message.setHeader("Content-Transfer-Encoding", "quoted-printable");
 //		Multipart mp = new MimeMultipart();
 //		mp.addBodyPart(textPart);
 //		message.setContent(mp);
 		
 		message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-		
+
 		Address [] toAd =  new Address[1] ;
 		toAd[0] =  new InternetAddress(contactEmail);
+//		toAd[0] =  new InternetAddress("gastondapice@yahoo.com");
 		message.addRecipient(Message.RecipientType.TO, toAd[0]);
 
 		// Send message
@@ -99,13 +102,8 @@ public abstract class WolfYahoo {
 			Header h = (Header) headers.nextElement();
 //			if (validateHeaders(h)) {
 				mail.append("\n");
-//				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
 				mail.append(h.getName() + ": " + h.getValue());
-				
-//				if header == date change the date
-//				String pattern = "EEE, dd MMM yyyy HH:mm:ss Z";
-//				SimpleDateFormat format = new SimpleDateFormat(pattern);
-//				message.setHeader("DATE", format.format(new Date()));
+//				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
 //			}
 		}
 	}
