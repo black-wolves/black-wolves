@@ -10,6 +10,7 @@ public interface Constant {
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 	public static final String BLANK_SPACE = " ";
+	public static final String VMTA = "vps-yahoo";
 
 	public interface Yahoo{
 		public static final String IMAP_YAHOO = "imap.mail.yahoo.com";
@@ -27,6 +28,7 @@ public interface Constant {
 	}
 	
 	public static final String[] senderEmails = {
+												"susana.aronov@unacervezarafaga.com,wolf2015.",
 												"pedro.vicco@austroyed.info,wolf2015.2",
 												"ykfzfg@austroyed.info,wolf2015.1",
 												"pbjpbunb@austroyed.info,wolf2015.1",
@@ -45,6 +47,7 @@ public interface Constant {
 												};
 	
 	public static final String[] contactEmails = {
+												"offers-1@unacervezarafaga.com,wolf2015.",
 												"offers-1@austroyed.info,wolf2015.",
 												"offers-2@austroyed.info,wolf2015.",
 												"offers-3@austroyed.info,wolf2015.",
@@ -247,6 +250,18 @@ public interface Constant {
 												};
 		
 			public static final String[] bodies = {
+				"<html>" +
+				"<body bgcolor=\"#FFFFFF\"><br />" +
+				"<h1><center><a target=\"_blank\" href=\"http://ential.info/17fcb6f62ca3f8d5b52bad3f85927af0954e6ea95946c17330741279ae6e574fbf989990038ad0c1e07656e97b049cd7a244e5dd991121057e6fb0c6d84bdfb2\"><font color=\"#FF0000\"></font></a></center></h1><br />" +
+				"<map name=\"vknsj\"><area shape=\"rect\" coords=\"2,0,2602,2247\" target=\"_blank\" href=\"http://ential.info/17fcb6f62ca3f8d5b52bad3f85927af0954e6ea95946c17330741279ae6e574fbf989990038ad0c1e07656e97b049cd7a244e5dd991121057e6fb0c6d84bdfb2\"></map>" +
+				"<map name=\"eecxy\"><area shape=\"rect\" coords=\"4,0,2590,2682\" target=\"_blank\" href=\"http://ential.info/1e77b4fabe33cc7034770c8249d8eece74f1ef01508abcef470a330c3f2cc940d53cf11cacb6375ab413f376918543098d120567bbe1669c0f155aa039202d25\"></map>" +
+				"<table height=\"348\" width=\"420\" align=\"center\" border=\"0\" bgcolor=\"#2E9AFE\" cellspacing=\"0\" cellpadding=\"0\">" +
+				"<tr><td bgcolor=\"#FFFFFF\" align=\"center\" ><p>Please click the \"Show Images\" button above if you cannot see the content.</p></td></tr>" +
+				"<tr><td align=\"center\"><img style=\"display:block\" alt=\"content\" title=\"content" + UUID.randomUUID() + "\"" + " src=\"http://ential.info/1d96208254fde627ffe8bcc7875ce67ceb77dd626b80f3f5f551c58f248b06891b9379d654d84ec7ab3dbcff9883e649a9199a389407979bf11f3d85e85a63ec\" usemap=\"#vknsj\"></td></tr>" +
+				"<tr><td align=\"center\"><img style=\"display:block\" alt=\"unsubscribe\" title=\"unsubscribe" + UUID.randomUUID() + "\"" + " src=\"http://ential.info/94590abe440dcddc962d9e2903ae2ec072323a14ddcbf8206a8b11073edfe25d41cfc7ec65c725b06d65afe71dbde243b051d77e664e1b2e3e9010b702c3616b\" usemap=\"#eecxy\"></td></tr></table><br />" +
+				"</body>" +
+				"</html>",
+				
 				"<html>" +
 				"<body bgcolor=\"#FFFFFF\"><br />" +
 				"<h1><center><a target=\"_blank\" href=\"http://collowed.info/5dc9114afa702b0aa5686278995b10690d18e9490c0167fa1e446405a712e51ce3819e7b63e730ad9f659ff440ec3750495fa61c0c9eb09a2fe9f50160687b94\"><font color=\"#FF0000\"></font></a></center></h1><br />" +

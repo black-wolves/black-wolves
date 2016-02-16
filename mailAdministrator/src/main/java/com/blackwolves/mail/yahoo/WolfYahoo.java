@@ -1,129 +1,116 @@
 package com.blackwolves.mail.yahoo;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 
-import javax.mail.Address;
-import javax.mail.FolderClosedException;
-import javax.mail.Header;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.blackwolves.mail.CustomFrom;
-import com.blackwolves.mail.CustomMimeMessage;
 import com.blackwolves.mail.util.Constant;
 
 /**
  * @author gastondapice
  *
  */
-public abstract class WolfYahoo {
+public abstract class WolfYahoo{
 
 	protected static Logger logger = LoggerFactory.getLogger(WolfYahoo.class);
-
-	public void generateAndSendMail(String user, String pass, String subject, String body, String contactEmail, String domain, String offerFrom) throws MessagingException {
-
-		// Get system properties
-		Properties properties = System.getProperties();
-		// Setup mail server
-		properties.put("mail.smtp.starttls.enable", Constant.TRUE);
-		properties.put("mail.smtp.host", Constant.Yahoo.HOST);
-		properties.put("mail.smtp.user", user);
-		properties.put("mail.smtp.password", pass);
-		properties.put("mail.smtp.port", Constant.Yahoo.PORT);
-		properties.put("mail.smtp.auth", Constant.TRUE);
-
-		// Get the default Session object.
-		Session session = Session.getDefaultInstance(properties);
-
-		// Create a default MimeMessage object.
-		MimeMessage message = new CustomMimeMessage(session, domain);
-//		MimeMessage message = new MimeMessage(session);
-
-		// Set From: header field of the header.
-		//message.setFrom(new InternetAddress(from));
-		CustomFrom customFrom = new CustomFrom(contactEmail, user, offerFrom);
-		message.setFrom(customFrom);
-
-		// Set Subject: header field
-		message.setSubject(subject);
-
-		// Now set the actual message
-		
-//		MimeBodyPart textPart = new MimeBodyPart();
-//		textPart.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-//		message.setHeader("Content-Transfer-Encoding", Constant.Yahoo.CONTENT_TRANSFER_ENCODING);
-//		message.setHeader("Content-Transfer-Encoding", "quoted-printable");
-//		Multipart mp = new MimeMultipart();
-//		mp.addBodyPart(textPart);
-//		message.setContent(mp);
-		
-		message.setContent(body, Constant.Yahoo.CONTENT_TYPE);
-
-		Address [] toAd =  new Address[1] ;
-		toAd[0] =  new InternetAddress(contactEmail);
-//		toAd[0] =  new InternetAddress("gastondapice@yahoo.com");
-		message.addRecipient(Message.RecipientType.TO, toAd[0]);
-
-		// Send message
-		Transport transport = session.getTransport("smtp");
-		transport.connect(Constant.Yahoo.HOST, user, pass);
-		transport.sendMessage(message,message.getAllRecipients());
-		transport.close();
-	}
-
-	public abstract void readEmailsAndGenerateBodies(String offer, String seed, String pass);
+	
+	public abstract void generateAndSendEmail(String user, String pass, String subject, String body, String contactEmail, String domain, String offerFrom) throws MessagingException;
+	
+	public abstract void downloadAndGenerateDropBodies(String offer, String seed, String pass);
 
 	/**
 	 * 
-	 * @param message
-	 * @param mail
-	 * @throws MessagingException
-	 * @throws FolderClosedException
+	 * @param seed
 	 */
-	public void iterateHeaders(Message message, StringBuilder mail) throws MessagingException, FolderClosedException {
-		Enumeration headers = message.getAllHeaders();
-		while (headers.hasMoreElements()) {
-			Header h = (Header) headers.nextElement();
-//			if (validateHeaders(h)) {
-				mail.append("\n");
-				mail.append(h.getName() + ": " + h.getValue());
-//				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
-//			}
+	protected void writeSeedToFile(String[] seed, String outputFileName) {
+		PrintWriter pw = null;
+		try {
+			List<String> usedSeeds = readSeedsFromFile(outputFileName);
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + outputFileName));
+			for (String usedSeed : usedSeeds) {
+				pw.write(usedSeed);
+				pw.write("\n");
+			}
+			pw.write(seed[0] + "," + seed[1]);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			if(pw!=null){
+				pw.close();
+			}
 		}
 	}
-
+	
 	/**
 	 * 
-	 * @param h
 	 * @return
 	 */
-	public boolean validateHeaders(Header h) {
-//		if (h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
-//				|| h.getName().equals("Received-SPF") || h.getName().equals("X-YMailISG")
-//				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
-//				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
-//				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
-//				|| h.getName().equals("X-Yahoo-Newman-Id") || h.getName().equals("Content-Length")) {
-		if (h.getName().equals("X-Yahoo-SMTP")) {
-			return false;
+	protected List<String> readSeedsFromFile(String outputFileName) {
+		List<String> list = null;
+		try {
+			File file = new File(Constant.ROUTE + outputFileName);
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			list = new ArrayList<String>();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				list.add(line);
+			}
+			fileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return true;
+		
+		return list;
+	}
+	/**
+	 * 
+	 * @param is
+	 * @return
+	 */
+	protected static String getStringFromInputStream(InputStream is) {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
 	}
 
 	/**
@@ -156,7 +143,7 @@ public abstract class WolfYahoo {
 	 * @param max
 	 * @return
 	 */
-	public static int randInt(int min, int max) {
+	protected static int randInt(int min, int max) {
 		Random rand = new Random();
 		// nextInt is normally exclusive of the top value, so add 1 to make it
 		// inclusive

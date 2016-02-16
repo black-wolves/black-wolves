@@ -1,22 +1,14 @@
-/**
- * 
- */
 package com.blackwolves.mail.yahoo;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.FolderClosedException;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -29,16 +21,16 @@ import com.blackwolves.mail.util.Constant;
  * @author gastondapice
  *
  */
-public class ProductionWolfYahoo extends WolfYahoo {
+public class DownloadWolfYahoo extends WolfYahoo{
 
-	private static final String VMTA = "vps-yahoo";
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.blackwolves.mail.yahoo.WolfYahoo#readEmailsAndGenerateBodies(java.lang.String, int, int)
+	/**
+	 * 
+	 * @param offer
+	 * @param seed
+	 * @param pass
 	 */
 	@Override
-	public void readEmailsAndGenerateBodies(String offer, String seed, String pass) {
+	public void downloadAndGenerateDropBodies(String offer, String seed, String pass) {
 		try {
 //			List<String> contacts = generateList("/root/blackwolves/lists/" + offer + "/" , "sup");
 			logger.info("Contact lists generated");
@@ -65,14 +57,14 @@ public class ProductionWolfYahoo extends WolfYahoo {
 				keepGoing = msgs==null||msgs.length<=0?false:true;
 				if(keepGoing){
 					try{
-						int i = WolfYahoo.randInt(0, msgs.length-1);
+						int i = randInt(0, msgs.length-1);
 						Message message = msgs[i];
 						String receiver = message.getAllRecipients()[0].toString();
 //						if(contacts.contains(receiver) && from[0].contains("Military")){
 							logger.info("Creating body: " + count);
 							count++;
 							StringBuilder mail = new StringBuilder();
-							mail.append("x-virtual-mta: " + VMTA);
+							mail.append("x-virtual-mta: " + Constant.VMTA);
 							mail.append("\n");
 							mail.append("x-receiver: " + "gastondapice@yahoo.com");
 							iterateHeaders(message, mail);
@@ -132,80 +124,50 @@ public class ProductionWolfYahoo extends WolfYahoo {
 		}
 		logger.info("Message moved");
 	}
-	
+
 	/**
 	 * 
-	 * @param seed
+	 * @param message
+	 * @param mail
+	 * @throws MessagingException
+	 * @throws FolderClosedException
 	 */
-	private void writeSeedToFile(String[] seed, String outputFileName) {
-		PrintWriter pw = null;
-		try {
-			List<String> usedSeeds = readSeedsFromFile(outputFileName);
-			pw = new PrintWriter(new FileWriter(Constant.ROUTE + outputFileName));
-			for (String usedSeed : usedSeeds) {
-				pw.write(usedSeed);
-				pw.write("\n");
-			}
-			pw.write(seed[0] + "," + seed[1]);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		} finally{
-			if(pw!=null){
-				pw.close();
-			}
+	public void iterateHeaders(Message message, StringBuilder mail) throws MessagingException, FolderClosedException {
+		Enumeration headers = message.getAllHeaders();
+		while (headers.hasMoreElements()) {
+			Header h = (Header) headers.nextElement();
+//			if (validateHeaders(h)) {
+				mail.append("\n");
+				mail.append(h.getName() + ": " + h.getValue());
+//				mail.append(h.getName() + ": " + (h.getName().equals("Return-Path")?"<>":h.getValue()));
+//			}
 		}
 	}
-	
+
 	/**
 	 * 
+	 * @param h
 	 * @return
 	 */
-	private List<String> readSeedsFromFile(String outputFileName) {
-		List<String> list = null;
-		try {
-			File file = new File(Constant.ROUTE + outputFileName);
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			list = new ArrayList<String>();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				list.add(line);
-			}
-			fileReader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public boolean validateHeaders(Header h) {
+//		if (h.getName().equals("X-Apparently-To") || h.getName().equals("Return-Path")
+//				|| h.getName().equals("Received-SPF") || h.getName().equals("X-YMailISG")
+//				|| h.getName().equals("X-Originating-IP") || h.getName().equals("Authentication-Results")
+//				|| h.getName().equals("Received") || h.getName().equals("X-Yahoo-Newman-Property")
+//				|| h.getName().equals("X-YMail-OSG") || h.getName().equals("X-Yahoo-SMTP")
+//				|| h.getName().equals("X-Yahoo-Newman-Id") || h.getName().equals("Content-Length")) {
+		if (h.getName().equals("X-Yahoo-SMTP")) {
+			return false;
 		}
-		
-		return list;
+		return true;
 	}
-	
-	private static String getStringFromInputStream(InputStream is) {
 
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
-
-		String line;
-		try {
-
-			br = new BufferedReader(new InputStreamReader(is));
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return sb.toString();
-
+	@Override
+	public void generateAndSendEmail(String user, String pass, String subject,
+			String body, String contactEmail, String domain, String offerFrom)
+			throws MessagingException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
