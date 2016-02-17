@@ -18,6 +18,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -101,6 +102,9 @@ public class BumeranSeeder implements Runnable {
 			} catch (ElementNotFoundException e) {
 				logger.error(e.getMessage(), e);
 				continue;
+			} catch (UnhandledAlertException e) {
+				logger.error(e.getMessage(), e);
+				continue;
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage(), e);
 				continue;
@@ -122,10 +126,13 @@ public class BumeranSeeder implements Runnable {
 	private boolean getEmails(WebDriver driver, boolean backToSearch) {
 		logger.info("Starting to harvest emails");
 		if(driver.findElements(By.className("resumenDatosPersonales")).size() != 0){
+			logger.info("resumenDatosPersonales sin espacio");
 			backToSearch = processDatosPersonales(driver, "resumenDatosPersonales", backToSearch);
 		}else if(driver.findElements(By.className("resumenDatosPersonales ")).size() != 0){
+			logger.info("resumenDatosPersonales con espacio");
 			backToSearch = processDatosPersonales(driver, "resumenDatosPersonales ", backToSearch);
 		}else {
+			logger.info("resumenDatosPersonales no encontrado");
 			backToSearch = true;
 		}
 		return backToSearch;
@@ -142,20 +149,25 @@ public class BumeranSeeder implements Runnable {
 		WebElement resumenDatosPersonales = null;
 		resumenDatosPersonales = driver.findElement(By.className(classToLookFor));
 		if(resumenDatosPersonales!=null){
+			logger.info("resumenDatosPersonales distinto a null");
 			if(driver.findElements(By.partialLinkText("@")).size() != 0){
+				logger.info("partialLinkText @ encontrado");
 				resumenDatosPersonales.findElement(By.partialLinkText("@"));
 				String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
-				logger.info("Email: " + email + "Url: " + driver.getCurrentUrl());
+				logger.info("***** Email: " + email + " Url: " + driver.getCurrentUrl());
 				if(email!=null&&!email.isEmpty()){
+					logger.info("escribiendo mail en el archivo");
 					writeSeedToFile(email.toLowerCase());
 				}
 			}
 		}
 		if(driver.findElements(By.className("postulanteProximo")).size() != 0){
+			logger.info("postulanteProximo encontrado");
 			WebElement proximoPostulante = driver.findElement(By.className("postulanteProximo"));
 			proximoPostulante.click();
 			backToSearch = false;
 		}else{
+			logger.info("postulanteProximo no encontrado");
 			backToSearch = true;
 		}
 		return backToSearch;
