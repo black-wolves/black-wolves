@@ -150,9 +150,8 @@ public class BumeranSeeder implements Runnable {
 		resumenDatosPersonales = driver.findElement(By.className(classToLookFor));
 		if(resumenDatosPersonales!=null){
 			logger.info("resumenDatosPersonales distinto a null");
-			if(driver.findElements(By.partialLinkText("@")).size() != 0){
+			if(resumenDatosPersonales.findElements(By.partialLinkText("@")).size() != 0){
 				logger.info("partialLinkText @ encontrado");
-				resumenDatosPersonales.findElement(By.partialLinkText("@"));
 				String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
 				logger.info("***** Email: " + email + " Url: " + driver.getCurrentUrl());
 				if(email!=null&&!email.isEmpty()){
