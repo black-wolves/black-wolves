@@ -67,56 +67,28 @@ public class BumeranSeeder implements Runnable {
 
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
-
+		
 		human = generateRandomHumanUser();
 		
 		logger.info("Executing bumeranLogin");
 		bumeranLogin(driver);
-		
-		logger.info("Getting to: " + Constant.BUSQUEDA_URL);
-		driver.get(Constant.BUSQUEDA_URL);
-		try {
-			Thread.sleep(10000);
-			logger.info("finding first contact");
-			WebElement contact = driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a"));
-			contact.click();
-			Thread.sleep(randInt(3000, 4000));
-			getEmails(driver);
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
-		} finally{
-			logger.info("Finished!!");
-			driver.close();
-			driver.quit();
-		}
-	}
-
-
-	/**
-	 * 
-	 * @param driver
-	 */
-	private void getEmails(WebDriver driver) {
-		logger.info("Starting to harvest emails");
-		while(true){
-			try{
-				WebElement resumenDatosPersonales = null;
-				if(driver.findElements(By.className("resumenDatosPersonales")).size() != 0){
-					resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales"));
-				}else if(driver.findElements(By.className("resumenDatosPersonales ")).size() != 0){
-					resumenDatosPersonales = driver.findElement(By.className("resumenDatosPersonales "));
+		boolean backToSearch = true;
+		boolean exit = true;
+		while(exit){
+			try {	
+				if(backToSearch){
+					logger.info("Getting to: " + Constant.BUSQUEDA_URL);
+					driver.get(Constant.BUSQUEDA_URL);
+					
+					Thread.sleep(10000);
+					
+					logger.info("finding first contact");
+					WebElement contact = driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a"));
+					contact.click();
 				}
-				if(resumenDatosPersonales!=null){
-					resumenDatosPersonales.findElement(By.partialLinkText("@"));
-					String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
-					logger.info("Email: " + email + "Url: " + driver.getCurrentUrl());
-					if(email!=null&&!email.isEmpty()){
-						writeSeedToFile(email.toLowerCase());
-					}
-				}
-				WebElement proximoPostulante = driver.findElement(By.className("postulanteProximo"));
-				proximoPostulante.click();
 				Thread.sleep(randInt(3000, 4000));
+				
+				backToSearch = getEmails(driver, backToSearch);
 			} catch (NoSuchElementException e) {
 				logger.error(e.getMessage(), e);
 				continue;
@@ -133,9 +105,60 @@ public class BumeranSeeder implements Runnable {
 				logger.error(e.getMessage(), e);
 				continue;
 			}
-			
 		}
-		
+		logger.info("Closing and quiting driver");
+		driver.close();
+		driver.quit();
+		logger.info("Finished!!");
+	}
+
+
+	/**
+	 * 
+	 * @param driver
+	 * @param backToSearch 
+	 * @return 
+	 */
+	private boolean getEmails(WebDriver driver, boolean backToSearch) {
+		logger.info("Starting to harvest emails");
+		if(driver.findElements(By.className("resumenDatosPersonales")).size() != 0){
+			backToSearch = processDatosPersonales(driver, "resumenDatosPersonales", backToSearch);
+		}else if(driver.findElements(By.className("resumenDatosPersonales ")).size() != 0){
+			backToSearch = processDatosPersonales(driver, "resumenDatosPersonales ", backToSearch);
+		}else {
+			backToSearch = true;
+		}
+		return backToSearch;
+	}
+
+	/**
+	 * 
+	 * @param driver
+	 * @param classToLookFor
+	 * @param backToSearch
+	 * @return 
+	 */
+	private boolean processDatosPersonales(WebDriver driver, String classToLookFor, boolean backToSearch) {
+		WebElement resumenDatosPersonales = null;
+		resumenDatosPersonales = driver.findElement(By.className(classToLookFor));
+		if(resumenDatosPersonales!=null){
+			if(driver.findElements(By.partialLinkText("@")).size() != 0){
+				resumenDatosPersonales.findElement(By.partialLinkText("@"));
+				String email = resumenDatosPersonales.findElement(By.partialLinkText("@")).getText();
+				logger.info("Email: " + email + "Url: " + driver.getCurrentUrl());
+				if(email!=null&&!email.isEmpty()){
+					writeSeedToFile(email.toLowerCase());
+				}
+			}
+		}
+		if(driver.findElements(By.className("postulanteProximo")).size() != 0){
+			WebElement proximoPostulante = driver.findElement(By.className("postulanteProximo"));
+			proximoPostulante.click();
+			backToSearch = false;
+		}else{
+			backToSearch = true;
+		}
+		return backToSearch;
 	}
 	
 	/**
