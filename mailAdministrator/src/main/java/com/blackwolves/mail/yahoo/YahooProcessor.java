@@ -48,7 +48,7 @@ public class YahooProcessor {
 				WolfYahoo handler = new SendWolfYahoo();
 				logger.info("Sending email to: " + contactEmail + " from: " + senderEmailAndPassword);
 				try {
-					handler.generateAndSendEmail(senderEmail, senderPassword, Constant.offer_1148.subjects[SendWolfYahoo.randInt(0, Constant.offer_1148.subjects.length - 1)], Constant.offer_1148.bodies[SendWolfYahoo.randInt(0, Constant.offer_1148.bodies.length - 1)], contactEmail, senderDomain, Constant.offer_1148.froms[SendWolfYahoo.randInt(0, Constant.offer_1148.froms.length - 1)]);
+					handler.generateAndSendEmail(senderEmail, senderPassword, Constant.newsletter.subjects[SendWolfYahoo.randInt(0, Constant.newsletter.subjects.length - 1)], Constant.newsletter.bodies[SendWolfYahoo.randInt(0, Constant.newsletter.bodies.length - 1)], contactEmail, senderDomain, Constant.newsletter.froms[SendWolfYahoo.randInt(0, Constant.newsletter.froms.length - 1)]);
 				}catch (AuthenticationFailedException e) {
 					e.printStackTrace();
 					saveSeedErrorOnException(senderEmail, e);

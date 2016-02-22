@@ -55,6 +55,252 @@ public interface Constant {
 												"offers-5@austroyed.info,wolf2015."
 												};
 	
+	public interface newsletter{
+		public static final String[] froms = {
+											"The Cool Info"
+											};
+		
+		public static final String[] subjects = {
+												"Do you know what \"SATURNALIA\" is?"
+												};
+		
+			public static final String[] bodies = {
+												"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
+"<html xmlns=\"http://www.w3.org/1999/xhtml\">" +
+"<head>" +
+"	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" +
+"	<!--[if !mso]><!-->" +
+"		<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />" +
+"	<!--<![endif]-->" +
+"	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+"	<title>The Cool Info</title>" +
+"	<style type=\"text/css\">" +
+"		div, p, a, li, td { " +
+"			-webkit-text-size-adjust:none;" + 
+"		}" +
+"		p {" +
+"			font-size: 14px;" +
+"			Margin-bottom: 10px;" +
+"		}" +
+"		body {" +
+"			Margin: 0;" +
+"			padding: 0;" +
+"			min-width: 100%;" +
+"			background-color: #ffffff;" +
+"		}" +
+"		table {" +
+"			border-spacing: 0;" +
+"			font-family: sans-serif;" +
+"			color: #333333;" +
+"		}" +
+"		td {" +
+"			padding: 0;" +
+"		}" +
+"		img {" +
+"			border: 0;" +
+"		}" +
+"		a {" +
+"			border-radius:3px;" +
+"		}" +
+"		.wrapper {" +
+"			width: 100%;" +
+"			table-layout: fixed;" +
+"			-webkit-text-size-adjust: 100%;" +
+"			-ms-text-size-adjust: 100%;" +
+"		}" +
+"		.webkit {" +
+"			max-width: 600px;" +
+"		}" +
+"		.outer {" +
+"			Margin: 0 auto;" +
+"			width: 100%;" +
+"			max-width: 600px;" +
+"			-webkit-box-shadow: inset 0px -1px 5px 0px rgba(0,0,0,0.75);" +
+"			-moz-box-shadow: inset 0px -1px 5px 0px rgba(0,0,0,0.75);" +
+"			box-shadow: inset 0px -1px 5px 0px rgba(0,0,0,0.75);" +
+"		}" +
+"		.full-width-image img {" +
+"			width: 100%;" +
+"			max-width: 600px;" +
+"			height: auto;" +
+"		}" +
+"		.inner {" +
+"			padding: 20px;" +
+"		}" +
+"		a {" +
+"			color: #ee6a56;" +
+"			text-decoration: underline;" +
+"		}" +
+"		.h1 {" +
+"			font-size: 21px;" +
+"			font-weight: bold;" +
+"			Margin-bottom: 18px;" +
+"		}" +
+"		" +
+"		.one-column .contents {" +
+"			text-align: center;" +
+"		}" +
+"		.two-column {" +
+"			text-align: center;" +
+"			font-size: 0;" +
+"		}" +
+"		.two-column .column {" +
+"			width: 100%;" +
+"			max-width: 300px;" +
+"			display: inline-block;" +
+"			vertical-align: top;" +
+"		}" +
+"		.contents {" +
+"			width: 100%;" +
+"		}" +
+"		.two-column .contents {" +
+"			font-size: 14px;" +
+"			text-align: center;" +
+"			color:#000;" +
+"		}" +
+"		.two-column img {" +
+"			width: 100%;" +
+"			max-width: 300px;" +
+"			height: auto;" +
+"		}" +
+"		.two-column .text {" +
+"			padding-top: 30px;" +
+"		}" +
+"		" +
+"		.three-column {" +
+"			text-align: center;" +
+"			font-size: 0;" +
+"			padding-top: 10px;" +
+"			padding-bottom: 10px;" +
+"		}" +
+"		.three-column .column {" +
+"			width: 100%;" +
+"			max-width: 200px;" +
+"			display: inline-block;" +
+"			vertical-align: top;" +
+"		}" +
+"		.three-column .contents {" +
+"			font-size: 14px;" +
+"			text-align: center;" +
+"		}" +
+"		.three-column img {" +
+"			width: 100%;" +
+"			max-width: 60px;" +
+"			height: auto;" +
+"		}" +
+"		.three-column .text {" +
+"			padding-top: 10px;" +
+"		}" +
+"		.text-shadow {" +
+"			text-shadow: 1px 1px 1px rgba(150, 150, 150, 1);" +
+"			text-align:center;" +
+"		}" +
+"	</style>" +
+"	" +
+"	<!--[if (gte mso 9)|(IE)]>" +
+"		<style type=\"text/css\">" +
+"			table {border-collapse: collapse !important;}" +
+"		</style>" +
+"	<![endif]-->" +
+"	" +
+"</head>" +
+"<body style=\"Margin:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;min-width:100%;background-color:#ffffff;\">" +
+"	<center class=\"wrapper\" style=\"width:100%;table-layout:fixed;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;\">" +
+"		<div class=\"webkit\" style=\"max-width:600px;\">" +
+"				" +
+"				<!-- Start: Preheader -->" +
+"                <div style=\"font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;line-height:1px;mso-line-height-rule:exactly;display:none;max-width:0px;max-height:0px;opacity:0;overflow:hidden;mso-hide:all;\" >" +
+"                	<!-- Your preheader text goes here -->" +
+"                </div>" +
+"                <!-- End: Preheader -->" +
+"                " +
+"			<!--[if (gte mso 9)|(IE)]>" +
+"				<table width=\"600\" align=\"center\" style=\"border-spacing:0;font-family:sans-serif;color:#333333;\">" +
+"				<tr>" +
+"				<td style=\"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\">" +
+"			<![endif]-->" +
+"				" +
+"			<table class=\"outer\" align=\"center\" style=\"border-spacing:0;font-family:sans-serif;color:#333333;Margin:0 auto;width:100%;max-width:600px;-webkit-box-shadow:inset 0px -1px 5px 0px rgba(0,0,0,0.75);-moz-box-shadow:inset 0px -1px 5px 0px rgba(0,0,0,0.75);box-shadow:inset 0px -1px 5px 0px rgba(0,0,0,0.75);\">" +
+"				<tr>" +
+"					<td class=\"one-column\" style=\"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\">" +
+"						<table width=\"100%\" style=\"border-spacing:0;font-family:sans-serif;color:#333333;\">" +
+"							<tr>" +
+"								<td class=\"inner contents\" width=\"600\" height=\"50\" style=\" background-color:#FF6609;padding-top:20px;padding-bottom:20px;padding-right:20px;padding-left:20px;text-align:center;\">" +
+"									<p style=\"font-size:24px; color:#ffffff; font-family:arial, sans-serif; Margin-bottom:0px;\">" +
+"										<a href=\"http://thecoolinfo.com\" valign=\"middle\" style=\"text-decoration:none; font-family:arial, sans-serif; color:#ffffff; font-weight:bold;\">The Cool Info" +
+"										</a>" +
+"									</p>" +
+"								</td>" +
+"							</tr>" +
+"						</table>" +
+"					</td>" +
+"				</tr>" +
+"				<tr>" +
+"					<td class=\"container\">" +
+"                        <img src=\"http://thecoolinfo.com/images/658.png\" class=\"img-responsive\" width=\"600\" height=\"403\" alt=\"Fact\"/>" +
+"						<!--[if gte mso 9]>" +
+"						<v:rect xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"true\" stroke=\"false\" style=\"width:600px;height:448px;\">" +
+"							<v:fill type=\"tile\" src=\"http://thecoolinfo.com/images/658.png\" color=\"#ff0000\" />" +
+"							<v:textbox inset=\"0,0,0,0\">" +
+"						<![endif]-->" +
+"						" +
+"						" +
+"						<!--[if gte mso 9]>" +
+"						</v:textbox>" +
+"						</v:rect>" +
+"						<![endif]-->" +
+"					</td>" +
+"				</tr>" +
+"				<tr>" +
+"					<td class=\"one-column\" style=\"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\">" +
+"						<table width=\"100%\" style=\"border-spacing:0;font-family:sans-serif;color:#333333;\">" +
+"							<tr>" +
+"								<td class=\"one-column\" style=\"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\">" +
+"									<table width=\"100%\" style=\"border-spacing:0;font-family:sans-serif;color:#333333;\">" +
+"										<tr>" +
+"											<td class=\"inner contents\" style=\"background-color:#FF6609;	padding-top:20px;padding-bottom:10px;padding-right:20px;padding-left:20px;width:100%;text-align:center; color:#000000; font-size:20px;\">" +
+"												<p style=\"color:#ffffff; font-size:18px; font-weight:bold;\">Another fact that might be of interest to you</p>" +
+"												<p style=\"font-size:16px;\">Ancient Babylonians did math in base 60 instead of base 10. That's why we have... <a href=\"http://thecoolinfo.com/factoftheday.html\" style=\"color:#ffffff;text-decoration:none;border-radius:3px;\">...read the rest of the fact here</a></p>" +
+"											</td>" +
+"										</tr>" +
+"									</table>" +
+"								</td>" +
+"							</tr>" +
+"						</table>" +
+"					</td>" +
+"				</tr>" +
+"				<tr>" +
+"					<td class=\"one-column\" style=\"background-color:#efefef; padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\">" +
+"						<table width=\"100%\" style=\"border-spacing:0;font-family:sans-serif;color:#333333;\">" +
+"							<tr>" +
+"								<td class=\"inner contents\" align=\"left\" style=\" color:#333333; font-family:arial;font-size:16px;padding-top:20px;padding-bottom:20px;padding-right:20px;padding-left:20px;width:100%;text-align:center; width:600px;\">" +
+"									<p style=\"font-family:arial; text-align:center; sans-serif;font-size:12px;Margin:0;Margin-bottom:10px; margin-top:30px;\">This email was sent to '%%emailaddress%%'.</p>" +
+"									<p style=\"font-family:arial; text-align:center; sans-serif;font-size:12px;Margin:0;Margin-bottom:10px;\">If you no longer wish to receive these emails you may unsubscribe by <a href=\"%%unsubscribelink%%\">clicking this link</a> at any time.</p>" +
+"								</td>" +
+"							</tr>" +
+"							<tr>" +
+"								<td align=\"center\" width=\"100%\" height=\"10\" style=\"background-color:#ff6609\">" +
+"									<p style=\"color:#ffffff; font-size:16px;\">&copy; 2016 The Cool Info, all rights reserved.</p>" +
+"								</td>" +
+"							</tr>" +
+"						</table>" +
+"					</td>" +
+"				</tr>" +
+"			</table>" +
+"			" +
+"			<!--[if (gte mso 9)|(IE)]>" +
+"				</td>" +
+"				</tr>" +
+"				</table>" +
+"			<![endif]-->" +
+"			" +
+"		</div>" +
+"	</center>" +
+"</body>" +
+"</html>"
+												};
+	}
+	
 	public interface offer_804{
 		public static final String[] froms = {
 											"The HARP Lenders",
