@@ -75,7 +75,7 @@ public class BumeranSeeder implements Runnable {
 		
 		logger.info("Executing bumeranLogin");
 		bumeranLogin(driver);
-		getScreenShot(driver, "afterLogin"+new SimpleDateFormat("MMddyyyy").format(new Date()));
+		
 		boolean backToSearch = true;
 		boolean exit = true;
 		while(exit){
@@ -84,13 +84,12 @@ public class BumeranSeeder implements Runnable {
 					logger.info("Getting to: " + Constant.BUSQUEDA_URL);
 					driver.get(Constant.BUSQUEDA_URL);
 					
-					Thread.sleep(10000);
+					Thread.sleep(5000);
 					getScreenShot(driver, "busquedaUrlLoaded"+new SimpleDateFormat("MMddyyyy").format(new Date()));
 					logger.info("finding first contact");
-					WebElement contact = driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a"));
-					contact.click();
+					driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a")).click();
 				}
-				Thread.sleep(10000);
+				Thread.sleep(5000);
 				getScreenShot(driver, "firstContactClicked"+new SimpleDateFormat("MMddyyyy").format(new Date()));
 				
 				backToSearch = getEmails(driver, backToSearch);
@@ -234,11 +233,11 @@ public class BumeranSeeder implements Runnable {
 	private void bumeranLogin(WebDriver driver) {
 		logger.info("Trying to login in....");
 		try {
-			getScreenShot(driver, "loginPage"+new SimpleDateFormat("MMddyyyy").format(new Date()));
-			Thread.sleep(randInt(2000, 3000));
+			
 			logger.info("Getting to the url: " + Constant.BUMERAN_URL);
 			driver.get(Constant.BUMERAN_URL);
-			getScreenShot(driver, "loginPage"+new SimpleDateFormat("MMddyyyy").format(new Date()));
+			Thread.sleep(randInt(2000, 3000));
+			
 			logger.info("Introducing username: " + Constant.USERNAME);
 			WebElement accountInput = driver.findElement(By.id("input-username"));
 			human.type(accountInput, Constant.USERNAME);
