@@ -89,7 +89,7 @@ public class BumeranSeeder implements Runnable {
 					WebElement contact = driver.findElement(By.xpath("//*[@class='tbl_light']/tbody/tr[2]/td[3]/p/a"));
 					contact.click();
 				}
-				Thread.sleep(randInt(3000, 4000));
+				Thread.sleep(10000);
 				
 				backToSearch = getEmails(driver, backToSearch);
 			} catch (NoSuchElementException e) {
