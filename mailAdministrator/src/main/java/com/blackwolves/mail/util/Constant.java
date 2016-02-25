@@ -31,7 +31,7 @@ public interface Constant {
 	}
 	
 	public static final String[] senderEmails = {
-												"susana.aronov@unacervezarafaga.com,wolf2015.",
+//												"susana.aronov@unacervezarafaga.com,wolf2015.",
 												"pedro.vicco@austroyed.info,wolf2015.2",
 												"ykfzfg@austroyed.info,wolf2015.1",
 												"pbjpbunb@austroyed.info,wolf2015.1",
@@ -50,7 +50,7 @@ public interface Constant {
 												};
 	
 	public static final String[] contactEmails = {
-												"offers-1@unacervezarafaga.com,wolf2015.",
+//												"offers-1@unacervezarafaga.com,wolf2015.",
 												"offers-1@austroyed.info,wolf2015.",
 												"offers-2@austroyed.info,wolf2015.",
 												"offers-3@austroyed.info,wolf2015.",
