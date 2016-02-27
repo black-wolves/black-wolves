@@ -37,8 +37,8 @@ public class YahooProcessor {
 	 * @param args
 	 */
 	private static void generateAndSendEmail(String[] args) {
-		for (int i = 1; i <= 100; ) {
-			for (int j = 0; j < Constant.senderEmails.length; j++) {
+		for (int i = 1; i <= 100; ) {  
+			for (int j = 0; j < Constant.senderEmails.length ; j++) {
 				String senderEmailAndPassword = Constant.senderEmails[j];
 				String senderPassword = senderEmailAndPassword.split(",")[1];
 				String senderDomain = senderEmailAndPassword.split("@")[1].split(",")[0];
