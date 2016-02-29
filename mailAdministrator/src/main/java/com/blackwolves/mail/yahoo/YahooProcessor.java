@@ -37,18 +37,20 @@ public class YahooProcessor {
 	 * @param args
 	 */
 	private static void generateAndSendEmail(String[] args) {
+		String domain = args[1];
+		String offer = args[2];
 		for (int i = 1; i <= 100; ) {  
-			for (int j = 0; j < Constant.senderEmails.length ; j++) {
-				String senderEmailAndPassword = Constant.senderEmails[j];
+			for (int j = 0; j < senderEmailsSelector(domain).length ; j++) {
+				String senderEmailAndPassword = senderEmailsSelector(domain)[j];
 				String senderPassword = senderEmailAndPassword.split(",")[1];
 				String senderDomain = senderEmailAndPassword.split("@")[1].split(",")[0];
-				String contactEmail = Constant.contactEmails[SendWolfYahoo.randInt(0, Constant.contactEmails.length - 1)].split(",")[0];
+				String contactEmail = contactEmailsSelector(domain)[SendWolfYahoo.randInt(0, contactEmailsSelector(domain).length - 1)].split(",")[0];
 				String senderEmail = senderEmailAndPassword.split(",")[0];
 
 				WolfYahoo handler = new SendWolfYahoo();
 				logger.info("Sending email to: " + contactEmail + " from: " + senderEmailAndPassword);
 				try {
-					handler.generateAndSendEmail(senderEmail, senderPassword, Constant.offer_1607.subjects[SendWolfYahoo.randInt(0, Constant.offer_1607.subjects.length - 1)], Constant.offer_1607.bodies[SendWolfYahoo.randInt(0, Constant.offer_1607.bodies.length - 1)], contactEmail, senderDomain, Constant.offer_1607.froms[SendWolfYahoo.randInt(0, Constant.offer_1607.froms.length - 1)]);
+					handler.generateAndSendEmail(senderEmail, senderPassword, subjectsOfferSelector(offer)[SendWolfYahoo.randInt(0, subjectsOfferSelector(offer).length - 1)], bodiesOfferSelector(offer)[SendWolfYahoo.randInt(0, bodiesOfferSelector(offer).length - 1)], contactEmail, senderDomain, fromsOfferSelector(offer)[SendWolfYahoo.randInt(0, fromsOfferSelector(offer).length - 1)]);
 				}catch (AuthenticationFailedException e) {
 					e.printStackTrace();
 					saveSeedErrorOnException(senderEmail, e);
@@ -70,7 +72,7 @@ public class YahooProcessor {
 //			try {
 //				WolfYahoo handler = new SendWolfYahoo();
 //				logger.info("Sending email to: " + contactEmail + " from: " + senderEmailAndPassword);
-//				handler.generateAndSendEmail(senderEmail, senderPassword, Constant.offer_1148.subjects[SendWolfYahoo.randInt(0, Constant.offer_1148.subjects.length - 1)], Constant.offer_1148.bodies[SendWolfYahoo.randInt(1, Constant.offer_1148.bodies.length - 1)], contactEmail, senderDomain, Constant.offer_1148.froms[SendWolfYahoo.randInt(0, Constant.offer_1148.froms.length - 1)]);
+//				handler.generateAndSendEmail(senderEmail, senderPassword, subjectsOfferSelector(offer)[SendWolfYahoo.randInt(0, subjectsOfferSelector(offer).length - 1)], bodiesOfferSelector[SendWolfYahoo.randInt(1, bodiesOfferSelector.length - 1)], contactEmail, senderDomain, fromsOfferSelector(offer)[SendWolfYahoo.randInt(0, fromsOfferSelector(offer).length - 1)]);
 //			}catch (AuthenticationFailedException e) {
 //				e.printStackTrace();
 //				saveSeedErrorOnException(senderEmail, e);
@@ -83,6 +85,94 @@ public class YahooProcessor {
 //			logger.info("Body " + i + " generation successfully sent to: " + contactEmail + " sent by: " + senderEmail);
 //			i++;
 		}
+	}
+
+	/**
+	 * @param offer 
+	 * @return
+	 */
+	private static String[] fromsOfferSelector(String offer) {
+		switch(offer) {
+		    case Constant.Offer._804.number:
+		    	return Constant.Offer._804.froms;
+		    case Constant.Offer._1148.number:
+		    	return Constant.Offer._1148.froms;
+		    case Constant.Offer._1607.number:
+		    	return Constant.Offer._1607.froms;
+		    case Constant.Offer._1654.number:
+		    	return Constant.Offer._1654.froms;
+		    case Constant.Offer._1553.number:
+		    	return Constant.Offer._1553.froms;
+		}
+		return null;
+	}
+
+	/**
+	 * @param offer 
+	 * @return
+	 */
+	private static String[] bodiesOfferSelector(String offer) {
+		switch(offer) {
+	    case Constant.Offer._804.number:
+	    	return Constant.Offer._804.bodies;
+	    case Constant.Offer._1148.number:
+	    	return Constant.Offer._1148.bodies;
+	    case Constant.Offer._1607.number:
+	    	return Constant.Offer._1607.bodies;
+	    case Constant.Offer._1654.number:
+	    	return Constant.Offer._1654.bodies;
+	    case Constant.Offer._1553.number:
+	    	return Constant.Offer._1553.bodies;
+	}
+	return null;
+	}
+
+	/**
+	 * @param offer 
+	 * @return
+	 */
+	private static String[] subjectsOfferSelector(String offer) {
+		switch(offer) {
+	    case Constant.Offer._804.number:
+	    	return Constant.Offer._804.subjects;
+	    case Constant.Offer._1148.number:
+	    	return Constant.Offer._1148.subjects;
+	    case Constant.Offer._1607.number:
+	    	return Constant.Offer._1607.subjects;
+	    case Constant.Offer._1654.number:
+	    	return Constant.Offer._1654.subjects;
+	    case Constant.Offer._1553.number:
+	    	return Constant.Offer._1553.subjects;
+	}
+	return null;
+	}
+
+	/**
+	 * @param domain 
+	 * @return
+	 */
+	private static String[] contactEmailsSelector(String domain) {
+		switch(domain) {
+	    case Constant.domains.unacervezarafaga:
+	    	return Constant.contactEmails.unacervezarafaga_com;
+	    case Constant.domains.austroyed:
+	    	return Constant.contactEmails.austroyed_info;
+		}
+		return null;
+	}
+
+	/**
+	 * @param domain 
+	 * @return
+	 */
+	private static String[] senderEmailsSelector(String domain) {
+		switch(domain) {
+	    case Constant.domains.unacervezarafaga:
+	    	return Constant.senderEmails.unacervezarafaga_com;
+	    case Constant.domains.austroyed:
+	    	return Constant.senderEmails.austroyed_info;
+		}
+		return null;
 	}
 	
 	/**
