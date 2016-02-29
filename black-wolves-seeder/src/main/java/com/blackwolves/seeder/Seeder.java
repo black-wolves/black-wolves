@@ -78,10 +78,6 @@ public class Seeder implements Runnable {
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
 
-//		if (ModernYahooRunnable.randInt(0, 9) == 9) {
-			getIpSource(driver);
-//		}
-
 		// visitSomewhereBefore(driver);
 
 		human = generateRandomHumanUser();
@@ -239,18 +235,6 @@ public class Seeder implements Runnable {
 	}
 
 	/**
-	 * 
-	 */
-	private void getIpSource(WebDriver driver) {
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		try {
-			FileUtils.copyFile(scrFile, new File("/var/www/logs/errors/yahoo_login"+ModernYahooRunnable.randInt(0, 10000)+".jpg"));
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	/**
 	 * @return
 	 */
 	private WebDriver createWebDriver() {
@@ -344,6 +328,7 @@ public class Seeder implements Runnable {
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			logger.info("Getting to the url: " + yahooUrl);
 			driver.get(yahooUrl);
+			getScreenShot(driver, "loginAttempt+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
