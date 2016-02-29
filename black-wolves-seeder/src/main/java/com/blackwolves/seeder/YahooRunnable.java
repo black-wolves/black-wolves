@@ -132,6 +132,7 @@ public abstract class YahooRunnable {
 		try {
 			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));
 			seeds = seedsReader.readAll();
+			seedsReader.close();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {

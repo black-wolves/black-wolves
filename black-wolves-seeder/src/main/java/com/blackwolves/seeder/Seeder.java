@@ -242,16 +242,12 @@ public class Seeder implements Runnable {
 	 * 
 	 */
 	private void getIpSource(WebDriver driver) {
-		// WebDriver driver = createWebDriver();
-		logger.info("checking ip ");
-		driver.get("http://www.whatsmyip.org/");
-		logger.info("Ip: " + driver.findElement(By.tagName("h1")).getText());
-//		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-//		try {
-//			FileUtils.copyFile(scrFile, new File("/var/www/test_driver.jpg"));
-//		} catch (IOException e) {
-//			logger.error(e.getMessage(), e);
-//		}
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		try {
+			FileUtils.copyFile(scrFile, new File("/var/www/logs/errors/yahoo_login"+ModernYahooRunnable.randInt(0, 10000)+".jpg"));
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	/**

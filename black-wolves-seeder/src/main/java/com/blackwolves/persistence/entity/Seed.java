@@ -36,7 +36,6 @@ public class Seed implements Serializable {
 	
 	private Date lastSession;
 	
-	private Set<Subscription> subscriptions;
 	
 	/**
 	 * Constructor
@@ -191,19 +190,6 @@ public class Seed implements Serializable {
 		this.lastSession = lastSession;
 	}
 
-	/**
-	 * @return the subscriptions
-	 */
-	public Set<Subscription> getSubscriptions() {
-		return subscriptions;
-	}
-
-	/**
-	 * @param subscriptions the subscriptions to set
-	 */
-	public void setSubscriptions(Set<Subscription> subscriptions) {
-		this.subscriptions = subscriptions;
-	}
 
 	/**
 	 * 
