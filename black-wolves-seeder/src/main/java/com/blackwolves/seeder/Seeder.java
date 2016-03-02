@@ -326,7 +326,7 @@ public class Seeder implements Runnable {
 		try {
 
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			logger.info("Getting to the url: " + yahooUrl);
+			logger.info("Getting to the URL: " + yahooUrl);
 			driver.get(yahooUrl);
 			getScreenShot(driver, "loginAttempt+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 
@@ -334,11 +334,22 @@ public class Seeder implements Runnable {
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
 
-			logger.info("Introducing password: " + seed[1]);
-			WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-			human.type(passwordInput, seed[1]);
-
-			logger.info("Clicking login button");
+			if(driver.findElements(By.id("login-passwd")).size() > 0) {
+				logger.info("Introducing password: " + seed[1]);
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed[1]);
+			}else if (driver.findElements(By.id("login-signin")).size() > 0) {
+				
+				logger.info("Clicking CONTINUE button");
+				driver.findElement(By.id("login-signin")).click();
+				
+				Thread.sleep(YahooRunnable.randInt(1500, 2500));
+				
+				logger.info("Introducing password: " + seed[1]);
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed[1]);
+			}
+			logger.info("Clicking LOGIN button");
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 			} else {
