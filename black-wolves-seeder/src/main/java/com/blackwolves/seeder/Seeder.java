@@ -328,7 +328,6 @@ public class Seeder implements Runnable {
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			logger.info("Getting to the URL: " + yahooUrl);
 			driver.get(yahooUrl);
-			getScreenShot(driver, "loginAttempt+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
@@ -351,6 +350,7 @@ public class Seeder implements Runnable {
 				
 			}
 			logger.info("Clicking LOGIN button");
+			getScreenShot(driver, "clickingLogin+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 			} else {
@@ -383,7 +383,6 @@ public class Seeder implements Runnable {
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
 				checkMultipleAccountsPanel(driver);
-
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
@@ -391,11 +390,8 @@ public class Seeder implements Runnable {
 				logger.info("*************  Phone validation. Going to URL  **************");
 				driver.get("http://mail.yahoo.com");
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
-			}
-
-			else {
-				 getScreenShot(driver, YahooRunnable.randInt(1, 100) +
-				 "newVersion");
+			}else {
+				 getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
 				logger.info("**********   There is a new yahoo version in town  **********");
 			}
 		} catch (InterruptedException e) {
