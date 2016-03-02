@@ -19,4 +19,5 @@ public interface Constant {
 	public static final String ONE = "one";
 	public static final String DESTROYER = "destroyer";
 	public static final String SENDER = "sender";
+	public static final String CONTINUE = "Continue";
 }

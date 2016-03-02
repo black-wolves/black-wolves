@@ -334,12 +334,7 @@ public class Seeder implements Runnable {
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
 
-			if(driver.findElements(By.id("login-passwd")).size() > 0) {
-				logger.info("Introducing password: " + seed[1]);
-				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-				human.type(passwordInput, seed[1]);
-			}else if (driver.findElements(By.id("login-signin")).size() > 0) {
-				
+			if(driver.findElements(By.id("login-signin")).size() > 0 && Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText())) {
 				logger.info("Clicking CONTINUE button");
 				driver.findElement(By.id("login-signin")).click();
 				
@@ -348,6 +343,12 @@ public class Seeder implements Runnable {
 				logger.info("Introducing password: " + seed[1]);
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed[1]);
+				
+			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
+				logger.info("Introducing password: " + seed[1]);
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed[1]);
+				
 			}
 			logger.info("Clicking LOGIN button");
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
