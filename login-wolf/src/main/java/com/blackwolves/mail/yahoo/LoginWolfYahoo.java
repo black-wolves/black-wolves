@@ -1,5 +1,6 @@
 package com.blackwolves.mail.yahoo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -94,7 +95,7 @@ public class LoginWolfYahoo implements Callable<List<String[]>>{
 				--seedsToGo;
 				continue;
 			} catch (MessagingException e) {
-				String[] newSeed = {seed[0], seed[1], String.valueOf("-1"), String.valueOf("-1"), "true"};
+				String[] newSeed = {seed[0], seed[1], String.valueOf("-1"), String.valueOf("-1"), "false"};
 				result.add(newSeed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
