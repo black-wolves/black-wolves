@@ -377,15 +377,16 @@ public class Seeder implements Runnable {
 	 */
 	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 		try {
+			getScreenShot(driver, "_validatingYahooVersion+"+ ModernYahooRunnable.randInt(0, 10000));
 			logger.info("**********   VALIDATING YAHOO VERSION  **********");
 			Thread.sleep(5000);
-			getScreenShot(driver, "validatingYahooVersion+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
+			getScreenShot(driver, "validatingYahooVersion+"+ ModernYahooRunnable.randInt(0, 10000));
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
 				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
-				getScreenShot(driver, "newYahoo2Version+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
+				getScreenShot(driver, "newYahoo2Version+"+ ModernYahooRunnable.randInt(0, 10000));
 				checkMultipleAccountsPanel(driver);
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
