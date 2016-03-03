@@ -62,13 +62,13 @@ public class LoginWolfYahoo implements Callable<List<String[]>>{
 				logger.info("Connected to " + seed[0] + " with pass: " + seed[1]);
 				
 				Folder inbox = store.getFolder(Constant.Yahoo.INBOX);
-				inbox.open(Folder.READ_WRITE);
+				inbox.open(Folder.READ_ONLY);
 				int inboxCount = inbox.getMessageCount();
 				inbox.close(true);
 				logger.info("Inbox folder closed");
 				
 				Folder spam = store.getFolder(Constant.Yahoo.SPAM);
-				spam.open(Folder.READ_WRITE);
+				spam.open(Folder.READ_ONLY);
 				int spamCount = spam.getMessageCount();
 				spam.close(true);
 				logger.info("Spam folder closed");
