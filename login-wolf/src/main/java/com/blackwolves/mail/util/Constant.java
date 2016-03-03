@@ -9,7 +9,7 @@ public interface Constant {
 	public static final String FALSE = "false";
 	public static final String BLANK_SPACE = " ";
 	public static final int MAX_SPAM = 20;
-	public static final int DEFAULT_THREADS = 20;
+	public static final int DEFAULT_THREADS = 25;
 
 	public interface Yahoo{
 		public static final String IMAP_YAHOO = "imap.mail.yahoo.com";

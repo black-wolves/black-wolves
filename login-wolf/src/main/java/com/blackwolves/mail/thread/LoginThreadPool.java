@@ -41,16 +41,21 @@ public class LoginThreadPool {
 
 		String inputFileName = args[0];
 		String outputFileName = args[1];
+
+		int threads = Constant.DEFAULT_THREADS;
+		if(args[2] !=null){
+			threads = Integer.valueOf(args[2]);
+		}
 		
 		clearFileContent(outputFileName);
 		clearFileContent("specific.csv");
 
 		logger.info("Generating contacts list");
 		List<String[]> contacts = generateSeedsList(inputFileName);
-		List<List<String[]>> subLists = ListUtils.partition(contacts, contacts.size()/Constant.DEFAULT_THREADS);
+		List<List<String[]>> subLists = ListUtils.partition(contacts, contacts.size()/threads);
 		logger.info("Contact lists generated");
 		
-		ExecutorService executor = Executors.newFixedThreadPool(Constant.DEFAULT_THREADS);
+		ExecutorService executor = Executors.newFixedThreadPool(threads);
 		List<Future<List<String[]>>> list = new ArrayList<Future<List<String[]>>>();
 		int count = 1;
 		for (List<String[]> subList : subLists) {
