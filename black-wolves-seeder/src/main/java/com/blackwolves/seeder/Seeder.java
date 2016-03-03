@@ -379,6 +379,7 @@ public class Seeder implements Runnable {
 		try {
 			logger.info("**********   VALIDATING YAHOO VERSION  **********");
 			Thread.sleep(5000);
+			getScreenShot(driver, "validatingYahooVersion+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
 				handler = new OldYahooRunnable(driver, seed, human, logger);
