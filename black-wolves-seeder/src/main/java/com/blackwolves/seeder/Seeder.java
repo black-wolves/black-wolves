@@ -354,6 +354,7 @@ public class Seeder implements Runnable {
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(YahooRunnable.randInt(1000, 2000));
+				logger.info("Logged in!!!");
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
@@ -377,7 +378,8 @@ public class Seeder implements Runnable {
 	 */
 	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 		try {
-			Thread.sleep(10000);
+			logger.info("**********   VALIDATING YAHOO VERSION  **********");
+			Thread.sleep(5000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
 				handler = new OldYahooRunnable(driver, seed, human, logger);
