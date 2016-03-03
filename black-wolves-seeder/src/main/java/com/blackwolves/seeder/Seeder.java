@@ -352,7 +352,8 @@ public class Seeder implements Runnable {
 			logger.info("Clicking LOGIN button");
 			getScreenShot(driver, "clickingLogin+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
-				driver.findElement(By.id("login-signin")).click();
+				List<WebElement> logins = driver.findElements(By.id("login-signin"));
+				logins.get(1).click();
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
