@@ -350,7 +350,6 @@ public class Seeder implements Runnable {
 				
 			}
 			logger.info("Clicking LOGIN button");
-//			getScreenShot(driver, "clickingLogin+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(YahooRunnable.randInt(1000, 2000));
@@ -385,6 +384,7 @@ public class Seeder implements Runnable {
 				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
+				getScreenShot(driver, "newYahoo2Version+"+ Integer.toString(ModernYahooRunnable.randInt(0, 10000)));
 				checkMultipleAccountsPanel(driver);
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
@@ -412,6 +412,7 @@ public class Seeder implements Runnable {
 	}
 
 	private void checkMultipleAccountsPanel(WebDriver driver) {
+		logger.info("**********   Checking multiple accounts Panel Found   **********");
 		if (driver.findElements(By.id("imapInOnboardDlg")).size() > 0) {
 			logger.info("**********   Multiple accounts Panel Found   **********");
 			if (driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).isDisplayed()) {
