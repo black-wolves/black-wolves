@@ -52,6 +52,9 @@ public class LoginThreadPool {
 
 		logger.info("Generating contacts list");
 		List<String[]> contacts = generateSeedsList(inputFileName);
+		if(contacts.size()<threads){
+			threads = contacts.size();
+		}
 		List<List<String[]>> subLists = ListUtils.partition(contacts, contacts.size()/threads);
 		logger.info("Contact lists generated");
 		
