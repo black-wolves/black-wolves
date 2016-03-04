@@ -43,7 +43,7 @@ public class LoginThreadPool {
 		String outputFileName = args[1];
 
 		int threads = Constant.DEFAULT_THREADS;
-		if(args[2] !=null){
+		if(args.length > 2){
 			threads = Integer.valueOf(args[2]);
 		}
 		
