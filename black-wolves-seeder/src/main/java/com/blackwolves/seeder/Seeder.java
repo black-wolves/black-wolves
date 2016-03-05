@@ -353,7 +353,7 @@ public class Seeder implements Runnable {
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(YahooRunnable.randInt(1000, 2000));
-				logger.info("Logged in!!!");
+				logger.info("LOGGED IN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
@@ -377,27 +377,24 @@ public class Seeder implements Runnable {
 	 */
 	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
 		try {
-			getScreenShot(driver, "_validatingYahooVersion+"+ ModernYahooRunnable.randInt(0, 10000));
-			logger.info("**********   VALIDATING YAHOO VERSION  **********");
+			logger.info("Validating yahoo version");
 			Thread.sleep(5000);
-			getScreenShot(driver, "validatingYahooVersion+"+ ModernYahooRunnable.randInt(0, 10000));
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("**********   Old yahoo version   **********");
 				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
-				getScreenShot(driver, "newYahoo2Version+"+ ModernYahooRunnable.randInt(0, 10000));
 				checkMultipleAccountsPanel(driver);
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("**********   New yahoo version   **********");
 			} else if (driver.findElements(By.id("comm-channel-module")).size() > 0) {
-				logger.info("*************  Phone validation. Going to URL  **************");
+				logger.info("**********   Phone validation. Going to UR   **********");
 				driver.get("http://mail.yahoo.com");
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			}else {
 				 getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
-				logger.info("**********   There is a new yahoo version in town  **********");
+				logger.info("**********   There is a new yahoo version in town   **********");
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
