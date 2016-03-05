@@ -29,13 +29,12 @@ public class SeederThreadPool {
 		if (Constant.MULTIPLE.equals(args[0])) {
 			logger.info("Starting multiple SeederThreadPool");
 			List<String[]> seeds = new ArrayList<String[]>();
-			if(args.length == 4 && Constant.SENDER.equals(args[3])){
+			if(args.length == 3 && Constant.SENDER.equals(args[2])){
 				seeds = YahooRunnable.generateSeedsList("seeds_sender.csv");
 			}else{
 				seeds = YahooRunnable.generateSeedsList("seeds.csv");
 			}
 
-			// int seedsToProcess = Integer.valueOf(args[1]);
 			executor = Executors.newFixedThreadPool(seeds.size());
 
 			processSeeds(args, executor, seeds.size(), seeds, Constant.MULTIPLE);
@@ -87,18 +86,13 @@ public class SeederThreadPool {
 
 		for (int i = 0; i <= seedsToProcess - 1; i++) {
 			String[] seed = seeds.get(i);
-			// List<String> usedSeeds = YahooRunnable.readSeedsFromFile();
-			// if(!usedSeeds.contains(seed[0])){
 			MDC.put("logFileName", seed[0]);
-			Seeder seeder = new Seeder(seed, logger, args[2], type);
+			Seeder seeder = new Seeder(seed, logger, args[1], type);
 			Runnable worker = seeder;
 			YahooRunnable.writeSeedToFile(seed[0]);
 			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
 			executor.execute(worker);
-		} // else{
-			// logger.info("Seeder is already in the used file");
-		// }
-		// }
+		}
 	}
 
 	/**

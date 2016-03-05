@@ -60,7 +60,6 @@ public class LoginThreadPool {
 		
 		ExecutorService executor = Executors.newFixedThreadPool(threads);
 		List<Future<List<String[]>>> list = new ArrayList<Future<List<String[]>>>();
-		int count = 1;
 		for (List<String[]> subList : subLists) {
 			Callable<List<String[]>> worker = new LoginWolfYahoo(subList);
 			Future<List<String[]>> submit = executor.submit(worker);
