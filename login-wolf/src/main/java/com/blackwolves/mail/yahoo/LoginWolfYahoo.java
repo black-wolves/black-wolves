@@ -95,7 +95,7 @@ public class LoginWolfYahoo implements Callable<List<String[]>>{
 				--seedsToGo;
 				continue;
 			} catch (MessagingException e) {
-				String[] newSeed = {seed[0], seed[1], String.valueOf("-1"), String.valueOf("-1"), "false"};
+				String[] newSeed = {seed[0], seed[1], String.valueOf("-1"), String.valueOf("-1"), "true"};
 				result.add(newSeed);
 				logger.error("Error processing seed: " + seed[0] + " with pass: " + seed[1]);
 				logger.error(e.getMessage(), e);
