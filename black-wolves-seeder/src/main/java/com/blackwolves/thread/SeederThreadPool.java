@@ -53,8 +53,12 @@ public class SeederThreadPool {
 			List<String[]> seeds = YahooRunnable.generateSeedsList("specific.csv");
 
 			int seedsToProcess = seeds.size();
-			executor = Executors.newFixedThreadPool(seedsToProcess);
-			processSeeds(args, executor, seedsToProcess, seeds, Constant.DESTROYER);
+			if(seeds == null || seeds.size() == 0){
+				logger.info("There are no seeds to load!");
+			}else{
+				executor = Executors.newFixedThreadPool(seedsToProcess);
+				processSeeds(args, executor, seedsToProcess, seeds, Constant.DESTROYER);
+			}
 		}
 		else if (Constant.ONE.equals(args[0])) {
 			logger.info("Starting one SeederThreadPool");
@@ -87,7 +91,7 @@ public class SeederThreadPool {
 		for (int i = 0; i <= seedsToProcess - 1; i++) {
 			String[] seed = seeds.get(i);
 			MDC.put("logFileName", seed[0]);
-			Seeder seeder = new Seeder(seed, logger, args[1], type);
+			Seeder seeder = new Seeder(seed, logger, args[2], type);
 			Runnable worker = seeder;
 			YahooRunnable.writeSeedToFile(seed[0]);
 			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);

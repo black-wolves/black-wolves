@@ -411,9 +411,9 @@ public class Seeder implements Runnable {
 	}
 
 	private void checkMultipleAccountsPanel(WebDriver driver) {
-		logger.info("**********   Checking multiple accounts Panel Found   **********");
+		logger.info("Checking multiple accounts Panel Found");
 		if (driver.findElements(By.id("imapInOnboardDlg")).size() > 0) {
-			logger.info("**********   Multiple accounts Panel Found   **********");
+			logger.info("Multiple accounts Panel Found");
 			if (driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).isDisplayed()) {
 				driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).click();
 			}
