@@ -548,30 +548,24 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(1000, 2000));
 
-			driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
-			Thread.sleep(randInt(1000, 2000));
-
-			if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
-				logger.info("Conversation mode is on. Turning off. Aprox 15 seconds");
-
-				driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
-				Thread.sleep(randInt(500, 2000));
-
-				driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
-				Thread.sleep(randInt(5000, 10000));
-
+			if(driver.findElement(By.xpath("//div[@id='yucs-help_inner']")).getText().isEmpty()){
+				driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
+				Thread.sleep(randInt(1000, 2000));
+				if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
+					logger.info("Conversation mode is on. Turning off. Aprox 15 seconds");
+					
+					driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
+					Thread.sleep(randInt(500, 2000));
+					
+					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
+					Thread.sleep(randInt(3000, 7000));
+				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			logger.info("InterruptedException");
-		}
-
-		catch (NoSuchElementException e) {
-			// TODO Auto-generated catch block
+		} catch (NoSuchElementException e) {
 			logger.info("NoSuchElementException");
-		}
-
-		catch (ElementNotVisibleException e) {
+		} catch (ElementNotVisibleException e) {
 			logger.info("ElementNotVisibleException");
 		}
 
