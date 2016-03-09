@@ -8,7 +8,9 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
@@ -22,6 +24,8 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  *
  */
 public class ModernYahooRunnable extends YahooRunnable {
+	
+	boolean exception = false;
 
 	public ModernYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
 		super(driver, seed, human, logger);
@@ -41,10 +45,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
-
+			
 			for (int j = 0; j < percentage; j++) {
 
 				try {
+					if (exception){
+						exception = false;
+						logger.info("There was an exception, we are going to inbox");
+						driver.findElement(By.className("inbox-label")).click();
+					}
+					
+					checkForInboxReloadError();
+					
 					if (driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0) {
 						List notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
 						WebElement dialog = (WebElement) notifications.get(0);
@@ -66,47 +78,55 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("Getting the random message");
 						WebElement currentMsg = inboxMsgs.get(randomPosition);
 
-						// if (isWarmupDomain(true, currentMsg)) {
+						WebElement subj = currentMsg.findElement(By.className("subj"));
+						
+						if(subj.getLocation().y > 0){
+							logger.info("$$$$$$$$$$ Clicking in Msg : " + currentMsg.getText());
+							subj.click();
+							
+							clickShowImages("show-text");
+							clickRandomLink();
 
-						logger.info(" ################# Clicking in Msg : " + currentMsg.getText());
-						//logMails(currentMsg.getText().substring(0, 12));
-
-						currentMsg.findElement(By.className("subj")).click();
-						clickShowImages("show-text");
-						clickRandomLink();
-			
-
-					//	moveMessageToAllFolder();
-						scrollToBottom(driver);
-						Thread.sleep(randInt(2500, 3500));
+							scrollToBottom(driver);
+							Thread.sleep(randInt(2500, 3500));
+						}else{
+							logger.info("Location y is negative, not entering msg: " + currentMsg.getText());
+						}
+						
 						logger.info("Going back to inbox");
 						driver.findElement(By.className("inbox-label")).click();
 
-						checkForInboxReloadError();
-						
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
 				} catch (InterruptedException e) {
 					logger.error("InterruptedException");
-					driver.findElement(By.className("inbox-label")).click();
-					checkForInboxReloadError();
+					exception = true;
+					continue;
 				} catch (NoSuchElementException e) {
 					logger.error("NoSuchElementException");
-					driver.findElement(By.className("inbox-label")).click();
-					checkForInboxReloadError();
+					exception = true;
+					continue;
 				} catch (StaleElementReferenceException e) {
 					logger.error("StaleElementReferenceException");
-					driver.findElement(By.className("inbox-label")).click();
-					checkForInboxReloadError();
+					exception = true;
+					continue;
 				} catch (ElementNotVisibleException e) {
 					logger.error("ElementNotVisibleException");
-					driver.findElement(By.className("inbox-label")).click();
-					checkForInboxReloadError();
+					exception = true;
+					continue;
 				} catch (ElementNotFoundException e) {
 					logger.error("ElementNotFoundException");
-					driver.findElement(By.className("inbox-label")).click();
-					checkForInboxReloadError();
+					exception = true;
+					continue;
+				} catch (UnhandledAlertException e) {
+					logger.error("UnhandledAlertException");
+					exception = true;
+					continue;
+				} catch (WebDriverException e) {
+					logger.error("WebDriverException");
+					exception = true;
+					continue;
 				}
 			}
 		} else {
@@ -136,19 +156,22 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("Replying the email");
 			Thread.sleep(randInt(1500, 2500));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
-					.findElement(By.tagName("a"));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
@@ -176,19 +199,22 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("Forwarding the email");
 			Thread.sleep(randInt(2000, 3000));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
-					.findElement(By.tagName("a"));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 
 	}
@@ -236,15 +262,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 					.findElement(By.className("default")).findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
@@ -275,15 +305,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("**********   No links found or none available  **********");
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
@@ -300,15 +334,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Message moved!!");
 			Thread.sleep(randInt(2000, 3000));
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 
 	}
@@ -333,15 +371,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 
 	}
@@ -391,15 +433,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
@@ -419,15 +465,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 		return false;
 	}
@@ -446,15 +496,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 					Thread.sleep(randInt(2000, 3000));
 				}
 			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("InterruptedException");
 			} catch (NoSuchElementException e) {
-				logger.error("NoSuchelementException");
+				logger.error("NoSuchElementException");
 			} catch (StaleElementReferenceException e) {
 				logger.error("StaleElementReferenceException");
 			} catch (ElementNotVisibleException e) {
 				logger.error("ElementNotVisibleException");
 			} catch (ElementNotFoundException e) {
 				logger.error("ElementNotFoundException");
+			} catch (UnhandledAlertException e) {
+				logger.error("UnhandledAlertException");
+			} catch (WebDriverException e) {
+				logger.error("WebDriverException");
 			}
 		}
 	}
@@ -519,15 +573,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 						}
 
 					} catch (InterruptedException e) {
-						logger.error(e.getMessage(), e);
+						logger.error("InterruptedException");
 					} catch (NoSuchElementException e) {
-						logger.error("NoSuchelementException");
+						logger.error("NoSuchElementException");
 					} catch (StaleElementReferenceException e) {
 						logger.error("StaleElementReferenceException");
 					} catch (ElementNotVisibleException e) {
 						logger.error("ElementNotVisibleException");
 					} catch (ElementNotFoundException e) {
 						logger.error("ElementNotFoundException");
+					} catch (UnhandledAlertException e) {
+						logger.error("UnhandledAlertException");
+					} catch (WebDriverException e) {
+						logger.error("WebDriverException");
 					}
 				}
 
@@ -562,11 +620,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.info("InterruptedException");
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.info("NoSuchElementException");
+			logger.error("NoSuchElementException");
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.info("ElementNotVisibleException");
+			logger.error("ElementNotVisibleException");
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 
 	}
@@ -588,15 +654,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 		return false;
 	}
@@ -623,15 +693,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			return true;
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 
 		return false;
@@ -670,17 +744,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 			// return false;
 			// }
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
-		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 		driver.findElement(By.id("spam-label")).click();
 		return false;
@@ -709,15 +785,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 					Thread.sleep(randInt(2000, 3000));
 				}
 			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
+				logger.error("InterruptedException");
 			} catch (NoSuchElementException e) {
-				logger.error("NoSuchelementException");
+				logger.error("NoSuchElementException");
 			} catch (StaleElementReferenceException e) {
 				logger.error("StaleElementReferenceException");
 			} catch (ElementNotVisibleException e) {
 				logger.error("ElementNotVisibleException");
 			} catch (ElementNotFoundException e) {
 				logger.error("ElementNotFoundException");
+			} catch (UnhandledAlertException e) {
+				logger.error("UnhandledAlertException");
+			} catch (WebDriverException e) {
+				logger.error("WebDriverException");
 			}
 		}
 	}
@@ -749,15 +829,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 					.findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
@@ -799,15 +883,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 					.findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
@@ -834,102 +922,106 @@ public class ModernYahooRunnable extends YahooRunnable {
 				WebElement yucsHelp = driver.findElement(By.id("yucs-help"));
 				myMouse.moveToElement(yucsHelp).build().perform();
 				logger.info("Moving to configuration wheel");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement inboxLabel = driver.findElement(By.className("inbox-label"));
 				myMouse.moveToElement(inboxLabel).build().perform();
 				logger.info("Moving to inbox");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement multitask = driver.findElement(By.id("multitask"));
 				myMouse.moveToElement(multitask).build().perform();
 				logger.info("Moving to multitask");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement spamLabel = driver.findElement(By.id("spam-label"));
 				myMouse.moveToElement(spamLabel).build().perform();
 				logger.info("Moving to spam");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement yucsHomeLink = driver.findElement(By.id("yucs-home_link"));
 				myMouse.moveToElement(yucsHomeLink).build().perform();
 				logger.info("Moving to Home");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement typeaheadInput = driver.findElement(By.className("typeahead-input"));
 				myMouse.moveToElement(typeaheadInput).build().perform();
 				logger.info("Moving to search box");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement uhWrapper = driver.findElement(By.xpath("//*[@id='uhWrapper']/table/tbody/tr/td/a"));
 				myMouse.moveToElement(uhWrapper).build().perform();
 				logger.info("Moving to yahoo icon");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement yucsProfile = driver.findElement(By.id("yucs-profile"));
 				myMouse.moveToElement(yucsProfile).build().perform();
 				logger.info("Moving to Profile");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement smartviews = driver.findElement(By.id("smartviews"));
 				myMouse.moveToElement(smartviews).build().perform();
 				logger.info("Moving to smartviews");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement trash = driver.findElement(By.className("trash"));
 				myMouse.moveToElement(trash).build().perform();
 				logger.info("Moving to trash");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement sent = driver.findElement(By.className("sent"));
 				myMouse.moveToElement(sent).build().perform();
 				logger.info("Moving to sent");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement drafts = driver.findElement(By.className("drafts"));
 				myMouse.moveToElement(drafts).build().perform();
 				logger.info("Moving to drafts");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement compose = driver.findElement(By.id("Compose"));
 				myMouse.moveToElement(compose).build().perform();
 				logger.info("Moving to compose");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement mailSearchBtn = driver.findElement(By.id("mail-search-btn"));
 				myMouse.moveToElement(mailSearchBtn).build().perform();
 				logger.info("Moving to mailSearchBtn");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 			if (throwDice()) {
 				WebElement webSearchBtn = driver.findElement(By.id("web-search-btn"));
 				myMouse.moveToElement(webSearchBtn).build().perform();
 				logger.info("Moving to webSearchBtn");
-				Thread.sleep(randInt(1000, 5000));
+				Thread.sleep(randInt(1500, 3500));
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException");
 		} catch (NoSuchElementException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("NoSuchElementException");
 		} catch (StaleElementReferenceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("StaleElementReferenceException");
 		} catch (ElementNotVisibleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotVisibleException");
 		} catch (ElementNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("ElementNotFoundException");
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException");
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException");
 		}
 	}
 
