@@ -16,7 +16,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.slf4j.Logger;
 
-import com.blackwolves.persistence.util.Constant;
+import com.blackwolves.seeder.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -100,31 +100,31 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
 				} catch (InterruptedException e) {
-					logger.error("InterruptedException");
+					logger.error("InterruptedException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (NoSuchElementException e) {
-					logger.error("NoSuchElementException");
+					logger.error("NoSuchElementException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (StaleElementReferenceException e) {
-					logger.error("StaleElementReferenceException");
+					logger.error("StaleElementReferenceException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (ElementNotVisibleException e) {
-					logger.error("ElementNotVisibleException");
+					logger.error("ElementNotVisibleException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (ElementNotFoundException e) {
-					logger.error("ElementNotFoundException");
+					logger.error("ElementNotFoundException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (UnhandledAlertException e) {
-					logger.error("UnhandledAlertException");
+					logger.error("UnhandledAlertException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (WebDriverException e) {
-					logger.error("WebDriverException");
+					logger.error("WebDriverException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				}

@@ -1,4 +1,4 @@
-package com.blackwolves.persistence.util;
+package com.blackwolves.seeder.util;
 
 public interface Constant {
 
@@ -20,4 +20,9 @@ public interface Constant {
 	public static final String DESTROYER = "destroyer";
 	public static final String SENDER = "sender";
 	public static final String CONTINUE = "Continue";
+	
+	public interface FactSlides{
+		public static final String TCI_IMAGES = "/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo/images/";
+		public static final String TCI_DOWNLOAD = "/Users/gastondapice/images/";
+	}
 }

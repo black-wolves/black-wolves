@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.blackwolves.persistence.util.Constant;
 import com.blackwolves.seeder.Seeder;
 import com.blackwolves.seeder.YahooRunnable;
+import com.blackwolves.seeder.util.Constant;
 
 /**
  * @author gastondapice

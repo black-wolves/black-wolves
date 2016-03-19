@@ -29,8 +29,7 @@ import org.slf4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.blackwolves.persistence.entity.Seed;
-import com.blackwolves.persistence.util.Constant;
+import com.blackwolves.seeder.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -44,8 +43,6 @@ public class Seeder implements Runnable {
 	private YahooRunnable handler;
 
 	private Human human;
-
-	private Seed dbSeed;
 
 	private String[] seed;
 
@@ -73,7 +70,6 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		logger.info("Entering first do while");
-		dbSeed = new Seed(seed[0], seed[1]);
 
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
@@ -121,7 +117,7 @@ public class Seeder implements Runnable {
 			logger.info("Finished!!");
 
 		} else {
-			logAttempts(dbSeed.getEmail() + "," + dbSeed.getPassword() + "  was not able to connect");
+			logAttempts(seed[0] + "," + seed[1] + "  was not able to connect");
 			logger.info("New Interface detected.Exiting");
 		}
 		driver.close();
@@ -183,7 +179,6 @@ public class Seeder implements Runnable {
 		for (int i = 1; i < seeds.size(); i++) {
 			try {
 				seed = seeds.get(i);
-				dbSeed = new Seed(seed[0], seed[1]);
 
 				WebDriver driver = createWebDriver();
 
@@ -206,10 +201,10 @@ public class Seeder implements Runnable {
 				logger.debug(" Suscription successful: " + seed[0]);
 				driver.quit();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} catch (NoSuchElementException e) {
-				System.out.println("The seed " + seed[0] + " failed to suscribed");
+				logger.error("The seed " + seed[0] + " failed to suscribed");
+				logger.error(e.getMessage(), e);
 			}
 
 		}

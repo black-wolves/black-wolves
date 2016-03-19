@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.blackwolves.persistence.util.Constant;
+import com.blackwolves.seeder.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -289,6 +289,14 @@ public abstract class YahooRunnable {
 	    Object element = trigger(String.format(script, url));
 	    if (element instanceof WebElement) {
 	        WebElement anchor = (WebElement) element;
+	        logger.info("Text: " + anchor.getText());
+	        logger.info("TageName: " + anchor.getTagName());
+	        logger.info("Location: " + anchor.getLocation());
+	        logger.info("Size: " + anchor.getSize());
+	        logger.info("Rect: " + anchor.getRect());
+	        logger.info("Displayed: " + anchor.isDisplayed());
+	        logger.info("Enabled: " + anchor.isEnabled());
+	        logger.info("Selected: " + anchor.isSelected());
 	        anchor.click();
 	        trigger("var a=arguments[0];a.parentNode.removeChild(a);", anchor);
 	    } else {

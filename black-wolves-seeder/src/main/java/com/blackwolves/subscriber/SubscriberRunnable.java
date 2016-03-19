@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.blackwolves.persistence.entity.Seed;
 import com.blackwolves.seeder.YahooRunnable;
 
 /**
@@ -41,7 +40,7 @@ public class SubscriberRunnable {
 		for (int i = 0; i <= seeds.size() -1; i++) {
 			String[] seed = seeds.get(i);
 			MDC.put("logFileName", seed[0]);
-			Subscriber subscriber = new Subscriber(new Seed(seed[0], seed[1]));
+			Subscriber subscriber = new Subscriber(seed);
 			Runnable worker = subscriber;
 			logger.info("Executing thread: " + i + " with seed: " + seed[0] + " " + seed[1]);
 			executor.execute(worker);
