@@ -23,6 +23,6 @@ public interface Constant {
 	
 	public interface FactSlides{
 		public static final String TCI_IMAGES = "/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo/images/";
-		public static final String TCI_DOWNLOAD = "/Users/gastondapice/images/";
+		public static final String TCI_DOWNLOAD = "/Users/gastondapice/Downloads/images/";
 	}
 }
