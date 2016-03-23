@@ -20,6 +20,7 @@ public interface Constant {
 	public static final String DESTROYER = "destroyer";
 	public static final String SENDER = "sender";
 	public static final String CONTINUE = "Continue";
+	public static final String Next = "Next";
 	
 	public interface FactSlides{
 		public static final String TCI_IMAGES = "/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo/images/";

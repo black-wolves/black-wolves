@@ -328,7 +328,7 @@ public class Seeder implements Runnable {
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
 
-			if(driver.findElements(By.id("login-signin")).size() > 0 && Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText())) {
+			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
 				logger.info("Clicking CONTINUE button");
 				driver.findElement(By.id("login-signin")).click();
 				
