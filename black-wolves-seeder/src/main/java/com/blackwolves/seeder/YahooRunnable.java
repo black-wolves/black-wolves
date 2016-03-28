@@ -77,14 +77,16 @@ public abstract class YahooRunnable {
 		String[] seed = this.seed.split(",");
 		
 		try {
-			if(order.contains("inbox")){
-				logger.info("Processing inbox");
-				processInbox(seed);
-			}
 			if (order.contains("spam")) {
 				logger.info("Processing spam....");
 				processSpam(seed);
 			}
+			
+			if(order.contains("inbox")){
+				logger.info("Processing inbox");
+				processInbox(seed);
+			}
+			
 						
 			
 		} catch (NoSuchElementException e) {

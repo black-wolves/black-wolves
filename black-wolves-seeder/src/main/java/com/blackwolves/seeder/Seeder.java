@@ -92,28 +92,8 @@ public class Seeder implements Runnable {
 			// newAddToAddressBook(driver);
 
 			handler.setOrder(order);
-			int count = 1;
-			do {
-				handler.runProcess();
-				if (Constant.SPECIFIC.equals(type) || Constant.MULTIPLE.equals(type)) {
-					try {
-						Thread.sleep(60000);
-					} catch (InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						continue;
-					}
-
-				} else if (Constant.DESTROYER.equals(type)) {
-					try {
-						Thread.sleep(10000);
-					} catch (InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						continue;
-					}
-				}
-				logger.info("Count Specific" + count);
-				++count;
-			} while (count <= 50);
+			handler.runProcess();
+		
 			logger.info("Finished!!");
 
 		} else {
