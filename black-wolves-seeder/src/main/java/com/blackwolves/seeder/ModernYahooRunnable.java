@@ -24,7 +24,7 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  *
  */
 public class ModernYahooRunnable extends YahooRunnable {
-	
+
 	boolean exception = false;
 
 	public ModernYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
@@ -45,18 +45,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
-			
+
 			for (int j = 0; j < percentage; j++) {
 
 				try {
-					if (exception){
+					if (exception) {
 						exception = false;
 						logger.info("There was an exception, we are going to inbox");
 						driver.findElement(By.className("inbox-label")).click();
 					}
-					
+
 					checkForInboxReloadError();
-					
+
 					if (driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0) {
 						List notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
 						WebElement dialog = (WebElement) notifications.get(0);
@@ -79,52 +79,62 @@ public class ModernYahooRunnable extends YahooRunnable {
 						WebElement currentMsg = inboxMsgs.get(randomPosition);
 
 						WebElement subj = currentMsg.findElement(By.className("subj"));
-						
-						if(subj.getLocation().y > 0){
+
+						if (subj.getLocation().y > 0) {
 							logger.info("$$$$$$$$$$ Clicking in Msg : " + currentMsg.getText());
 							subj.click();
-							
+
 							clickShowImages("show-text");
 							clickRandomLink();
 
 							scrollToBottom(driver);
 							Thread.sleep(randInt(2500, 3500));
-						}else{
+						} else {
 							logger.info("Location y is negative, not entering msg: " + currentMsg.getText());
 						}
-						
+
 						logger.info("Going back to inbox");
+
+						archiveMsg();
+
 						driver.findElement(By.className("inbox-label")).click();
 
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
 				} catch (InterruptedException e) {
-					logger.error("InterruptedException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("InterruptedException for seed: " + seed + " " + e.getMessage() + " " + e.getCause()
+							+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (NoSuchElementException e) {
-					logger.error("NoSuchElementException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("NoSuchElementException for seed: " + seed + " " + e.getMessage() + " " + e.getCause()
+							+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (StaleElementReferenceException e) {
-					logger.error("StaleElementReferenceException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("StaleElementReferenceException for seed: " + seed + " " + e.getMessage() + " "
+							+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (ElementNotVisibleException e) {
-					logger.error("ElementNotVisibleException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("ElementNotVisibleException for seed: " + seed + " " + e.getMessage() + " "
+							+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (ElementNotFoundException e) {
-					logger.error("ElementNotFoundException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("ElementNotFoundException for seed: " + seed + " " + e.getMessage() + " "
+							+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (UnhandledAlertException e) {
-					logger.error("UnhandledAlertException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("UnhandledAlertException for seed: " + seed + " " + e.getMessage() + " " + e.getCause()
+							+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				} catch (WebDriverException e) {
-					logger.error("WebDriverException for seed: " + seed + " " + e.getMessage() + " " + e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					logger.error("WebDriverException for seed: " + seed + " " + e.getMessage() + " " + e.getCause()
+							+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 					exception = true;
 					continue;
 				}
@@ -133,6 +143,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Inbox Folder is empty.");
 		}
 
+	}
+
+	private void archiveMsg() {
+		if (randInt(0, 10) <= 6) {
+			logger.info("Archiving Msg");
+			driver.findElement(By.id("btn-archive")).click();
+		}
 	}
 
 	@Override
@@ -156,7 +173,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("Replying the email");
 			Thread.sleep(randInt(1500, 2500));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
+					.findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException");
@@ -199,7 +217,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("Forwarding the email");
 			Thread.sleep(randInt(2000, 3000));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default")).findElement(By.tagName("a"));
+			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
+					.findElement(By.tagName("a"));
 			send.click();
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException");
@@ -290,17 +309,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("Links found");
 				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
 				int randomLinkNo = randInt(0, linksToGo.size() - 1);
-				//String aUrl = linksToGo.get(randomLinkNo).getAttribute("href");
-				//if (aUrl != null) {
-					//if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
-				//		logger.info("It is an Unsubscribe link!! - we are not clicking it" + aUrl);
-				//	} else {
-					//	logger.info("It's a good link, click it!! " + aUrl);
-						linksToGo.get(0).click();
-						switchToNewWindow();
-						switchToPreviousWindow();
-				//	}
-			//	}
+				// String aUrl =
+				// linksToGo.get(randomLinkNo).getAttribute("href");
+				// if (aUrl != null) {
+				// if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
+				// logger.info("It is an Unsubscribe link!! - we are not
+				// clicking it" + aUrl);
+				// } else {
+				// logger.info("It's a good link, click it!! " + aUrl);
+				linksToGo.get(0).click();
+				switchToNewWindow();
+				switchToPreviousWindow();
+				// }
+				// }
 			} else {
 				logger.info("**********   No links found or none available  **********");
 			}
@@ -542,10 +563,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 				logger.info("Checking all NOT SPAM");
 				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
-				if(!checkbox.isSelected()){
+				if (!checkbox.isSelected()) {
 					checkbox.click();
 				}
-				
+
 				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();
 
 			}
@@ -606,15 +627,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(1000, 2000));
 
-			if(driver.findElement(By.xpath("//div[@id='yucs-help_inner']")).getText().isEmpty()){
+			if (driver.findElement(By.xpath("//div[@id='yucs-help_inner']")).getText().isEmpty()) {
 				driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
 				Thread.sleep(randInt(1000, 2000));
 				if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
 					logger.info("Conversation mode is on. Turning off. Aprox 15 seconds");
-					
+
 					driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
 					Thread.sleep(randInt(500, 2000));
-					
+
 					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
 					Thread.sleep(randInt(3000, 7000));
 				}
@@ -1028,6 +1049,5 @@ public class ModernYahooRunnable extends YahooRunnable {
 	public static void scrollToBottom(WebDriver driver) {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
 	}
-
 
 }
