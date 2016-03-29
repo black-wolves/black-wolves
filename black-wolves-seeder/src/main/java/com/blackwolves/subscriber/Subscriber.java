@@ -78,6 +78,7 @@ public class Subscriber implements Runnable {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
+			logger.info("Closing driver");
 			driver.close();
 			driver.quit();
 		}
