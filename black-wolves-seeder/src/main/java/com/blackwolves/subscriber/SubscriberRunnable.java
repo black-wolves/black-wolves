@@ -25,7 +25,7 @@ public class SubscriberRunnable {
 	public static void main(String[] args) {
 		logger.info("Starting Subscriber...");
 		List<String[]> seeds = YahooRunnable.generateSeedsList("subscriber.csv");
-		ExecutorService executor = Executors.newFixedThreadPool(seeds.size());
+		ExecutorService executor = Executors.newFixedThreadPool(10);
 		for (int i = 0; i < seeds.size()-1; i++) {
 			logger.info("Count is: "+i);
 			subscribeToNewsletters(seeds,i ,executor);
