@@ -36,12 +36,12 @@ public class Subscriber implements Runnable {
 		caps.setCapability("resolution", "1280x800");
 		WebDriver driver = new FirefoxDriver(caps);
 		try {
-			// subscribeToSkimm(seed, driver);
-			// subscribeToMatterMark(seed, driver);
-			// subscribeFashionMagazine(seed, driver);
-			// subscribeToGolfSmith(seed, driver);
-			// subscribeToFetch(seed, driver);
-			// subscribeToReDef(seed,driver);
+			 subscribeToSkimm(seed, driver);
+			 subscribeToMatterMark(seed, driver);
+			 subscribeFashionMagazine(seed, driver);
+			 subscribeToGolfSmith(seed, driver);
+			 subscribeToFetch(seed, driver);
+			 subscribeToReDef(seed,driver);
 		}
 
 		catch (NoSuchElementException e) {
@@ -62,7 +62,7 @@ public class Subscriber implements Runnable {
 		logger.info("Subscribing to LongReads");
 		driver.get(url);
 		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(seed[1]);
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
 		driver.findElement(By.xpath("//div[@id='button']/input")).click();
 		;
 		Thread.sleep(3000);
@@ -73,7 +73,7 @@ public class Subscriber implements Runnable {
 		logger.info("Subscribing to ReDef");
 		driver.get(url);
 		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(seed[1]);
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
 		driver.findElement(By.xpath("//div[@id='button']/input")).click();
 		Thread.sleep(3000);
 	}
@@ -84,7 +84,7 @@ public class Subscriber implements Runnable {
 		logger.info("Subscribing to The Fetch");
 		driver.get(url);
 		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(seed[1]);
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
 		driver.findElement(By.name("email")).submit();
 		Thread.sleep(3000);
 	}
@@ -95,7 +95,7 @@ public class Subscriber implements Runnable {
 		logger.info("Subscribing to The Skimm");
 		driver.get(url);
 		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(seed[1]);
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
 		driver.findElement(By.name("email")).submit();
 		Thread.sleep(3000);
 	}
@@ -105,7 +105,7 @@ public class Subscriber implements Runnable {
 		String url = "http://mattermark.com/app/Newsletter";
 		logger.info("Subscribing to Mattermark");
 		driver.get(url);
-		driver.findElement(By.id("free_email")).sendKeys(seed[1]);
+		driver.findElement(By.id("free_email")).sendKeys(seed[0]);
 		driver.findElement(By.id("free_email")).submit();
 		Thread.sleep(3000);
 
@@ -117,7 +117,7 @@ public class Subscriber implements Runnable {
 		logger.info("Subscribing to Fashion Magazine");
 		driver.get(url);
 		driver.findElement(By.name("input_1")).clear();
-		driver.findElement(By.name("input_1")).sendKeys(seed[1]);
+		driver.findElement(By.name("input_1")).sendKeys(seed[0]);
 		driver.findElement(By.name("input_1")).submit();
 		if (driver.getPageSource().contains("Thanks")) {
 			logger.info("Fashion Magazine Subscription succesful.");
@@ -130,7 +130,7 @@ public class Subscriber implements Runnable {
 		String url = "http://digg.com/";
 		logger.info("Subscribing to Digg");
 		driver.get(url);
-		driver.findElement(By.name("email")).sendKeys(seed[1]);
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
 		driver.findElement(By.id("daily-digg-email-submit-btn")).click();
 		if (driver.getPageSource().contains("Thanks for subscribing!")) {
 			logger.info("Digg Subscription succesful.");
@@ -144,7 +144,7 @@ public class Subscriber implements Runnable {
 		logger.info("Subscribing to GolfSmith");
 		driver.get(url);
 		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(seed[1]);
+		driver.findElement(By.name("email")).sendKeys(seed[0]);
 		driver.findElement(By.id("submitAddress_footer")).submit();
 		Thread.sleep(3000);
 	}
