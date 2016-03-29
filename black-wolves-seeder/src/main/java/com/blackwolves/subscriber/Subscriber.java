@@ -64,13 +64,12 @@ public class Subscriber implements Runnable {
 			subscribeToNyTimesRandom(seed, opinion, driver);
 			subscribeToNyTimesRandom(seed, europe, driver);
 			subscribeToNyTimesRandom(seed, asia, driver);
-
-			// subscribeToSkimm(seed, driver);
-			// subscribeToMatterMark(seed, driver);
-			// subscribeFashionMagazine(seed, driver);
-			// subscribeToGolfSmith(seed, driver);
-			// subscribeToFetch(seed, driver);
-			// subscribeToReDef(seed,driver);
+			subscribeToSkimm(seed, driver);
+			subscribeToMatterMark(seed, driver);
+			subscribeFashionMagazine(seed, driver);
+			subscribeToGolfSmith(seed, driver);
+			subscribeToFetch(seed, driver);
+			subscribeToReDef(seed, driver);
 		}
 
 		catch (NoSuchElementException e) {
@@ -85,23 +84,24 @@ public class Subscriber implements Runnable {
 	}
 
 	private void subscribeToNyTimesRandom(String[] seed, String url, WebDriver driver) {
-		logger.info("Subscribing to NYTimes Randomly");
-		driver.get(url);
-		try {
-			Thread.sleep(2000);
-			List<WebElement> fields = driver.findElements(By.xpath("//div[@class='filedElements']/input"));
-			if (fields.size() > 0) {
-				fields.get(0).clear();
-				fields.get(0).sendKeys(seed[0]);
-				driver.findElement(By.xpath("//button[@class='applicationButton']")).click();
+		if (Math.random() < 0.5) {
+			logger.info("Subscribing to NYTimes Randomly");
+			driver.get(url);
+			try {
 				Thread.sleep(2000);
+				List<WebElement> fields = driver.findElements(By.xpath("//div[@class='filedElements']/input"));
+				if (fields.size() > 0) {
+					fields.get(0).clear();
+					fields.get(0).sendKeys(seed[0]);
+					driver.findElement(By.xpath("//button[@class='applicationButton']")).click();
+					Thread.sleep(2000);
 
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
 	}
 
 	// Works! :)

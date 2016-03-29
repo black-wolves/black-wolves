@@ -26,7 +26,18 @@ public class SubscriberRunnable {
 		logger.info("Starting Subscriber...");
 		List<String[]> seeds = YahooRunnable.generateSeedsList("subscriber.csv");
 		ExecutorService executor = Executors.newFixedThreadPool(seeds.size());
-		subscribeToNewsletters(seeds,executor);
+		for (int i = 0; i < seeds.size()-1; i++) {
+			logger.info("Count is: "+i);
+			subscribeToNewsletters(seeds,i ,executor);
+			try {
+				Thread.sleep(300000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			i=i+5;
+			
+		}
 		
 		
 		if (executor != null) {
@@ -38,8 +49,9 @@ public class SubscriberRunnable {
 		}
 	}
 	
-	private static void subscribeToNewsletters(List<String[]> seeds, ExecutorService executor) {
-		for (int i = 0; i <= seeds.size() -1; i++) {
+	private static void subscribeToNewsletters(List<String[]> seeds,int index, ExecutorService executor) {
+		int limit = index+10;
+		for (int i = index; i <= limit; i++) {
 			String[] seed = seeds.get(i);
 			MDC.put("logFileName", seed[0]);
 			Subscriber subscriber = new Subscriber(seed);
