@@ -34,28 +34,23 @@ public class SubscriberRunnable {
 			i = i + 49;
 			if (executor != null) {
 				executor.shutdown();
-				while (!executor.isTerminated()) {
-					try {
-						
-						executor.awaitTermination(5, TimeUnit.MINUTES);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				try {
+					executor.awaitTermination(5, TimeUnit.MINUTES);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					if (!executor.isTerminated()) {
+						logger.info("******************* cancel non-finished tasks**********************");
 					}
-					finally {
-					    if (!executor.isTerminated()) {
-					        logger.info("******************* cancel non-finished tasks**********************");
-					    }
-					    executor.shutdownNow();
-					    logger.info("shutdown finished");
-					}
+					executor.shutdownNow();
+					logger.info("shutdown finished");
 				}
 			}
 
 		}
 		logger.info("Finished all threads");
 
-		
 	}
 
 	private static void subscribeToNewsletters(List<String[]> seeds, int index, ExecutorService executor) {
