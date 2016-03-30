@@ -35,7 +35,19 @@ public class SubscriberRunnable {
 			if (executor != null) {
 				executor.shutdown();
 				while (!executor.isTerminated()) {
-					
+					try {
+						executor.awaitTermination(300000, TimeUnit.SECONDS);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					finally {
+					    if (!executor.isTerminated()) {
+					        logger.info("******************* cancel non-finished tasks**********************");
+					    }
+					    executor.shutdownNow();
+					    logger.info("shutdown finished");
+					}
 				}
 			}
 
