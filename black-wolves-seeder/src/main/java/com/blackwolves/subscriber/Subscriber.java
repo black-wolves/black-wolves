@@ -51,7 +51,12 @@ public class Subscriber implements Runnable {
 		caps.setCapability("resolution", "1280x800");
 		WebDriver driver = new FirefoxDriver(caps);
 		try {
-
+			subscribeToSkimm(seed, driver);
+			subscribeToMatterMark(seed, driver);
+			subscribeFashionMagazine(seed, driver);
+			subscribeToGolfSmith(seed, driver);
+			subscribeToFetch(seed, driver);
+			subscribeToReDef(seed, driver);
 			subscribeToNyTimesRandom(seed, liveStyle, driver);
 			subscribeToNyTimesRandom(seed, bits, driver);
 			subscribeToNyTimesRandom(seed, cooking, driver);
@@ -64,12 +69,7 @@ public class Subscriber implements Runnable {
 			subscribeToNyTimesRandom(seed, opinion, driver);
 			subscribeToNyTimesRandom(seed, europe, driver);
 			subscribeToNyTimesRandom(seed, asia, driver);
-			subscribeToSkimm(seed, driver);
-			subscribeToMatterMark(seed, driver);
-			subscribeFashionMagazine(seed, driver);
-			subscribeToGolfSmith(seed, driver);
-			subscribeToFetch(seed, driver);
-			subscribeToReDef(seed, driver);
+			
 		}
 
 		catch (NoSuchElementException e) {
@@ -85,7 +85,7 @@ public class Subscriber implements Runnable {
 
 	private void subscribeToNyTimesRandom(String[] seed, String url, WebDriver driver) {
 		if (Math.random() < 0.5) {
-			logger.info("Subscribing"+ seed[0]+" to NYTimes Randomly");
+			logger.info("Subscribing: "+ seed[0]+" to NYTimes Randomly");
 			driver.get(url);
 			try {
 				Thread.sleep(5000);
