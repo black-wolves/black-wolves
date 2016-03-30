@@ -51,7 +51,6 @@ public class Subscriber implements Runnable {
 		caps.setCapability("resolution", "1280x800");
 		WebDriver driver = new FirefoxDriver(caps);
 		try {
-			subscribeToSkimm(seed, driver);
 			subscribeToMatterMark(seed, driver);
 			subscribeFashionMagazine(seed, driver);
 			subscribeToGolfSmith(seed, driver);
@@ -66,6 +65,7 @@ public class Subscriber implements Runnable {
 			subscribeToNyTimesRandom(seed, today, driver);
 			subscribeToNyTimesRandom(seed, firstDraft, driver);
 			subscribeToNyTimesRandom(seed, dealBook, driver);
+			subscribeToSkimm(seed, driver);
 			subscribeToNyTimesRandom(seed, opinion, driver);
 			subscribeToNyTimesRandom(seed, europe, driver);
 			subscribeToNyTimesRandom(seed, asia, driver);
