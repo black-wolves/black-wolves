@@ -85,6 +85,7 @@ public class Subscriber implements Runnable {
 
 	private void subscribeToNyTimesRandom(String[] seed, String url, WebDriver driver) {
 		if (Math.random() < 0.5) {
+			logger.info("Subscribing to NYTimes Randomly");
 			driver.get(url);
 			try {
 				Thread.sleep(2000);
