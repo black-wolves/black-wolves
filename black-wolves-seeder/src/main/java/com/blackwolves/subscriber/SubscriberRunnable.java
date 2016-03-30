@@ -36,7 +36,7 @@ public class SubscriberRunnable {
 				executor.shutdown();
 				while (!executor.isTerminated()) {
 					try {
-						executor.awaitTermination(300000, TimeUnit.SECONDS);
+						executor.awaitTermination(5, TimeUnit.MINUTES);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
