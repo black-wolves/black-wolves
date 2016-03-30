@@ -85,16 +85,16 @@ public class Subscriber implements Runnable {
 
 	private void subscribeToNyTimesRandom(String[] seed, String url, WebDriver driver) {
 		if (Math.random() < 0.5) {
-			logger.info("Subscribing to NYTimes Randomly");
+			logger.info("Subscribing"+ seed[0]+" to NYTimes Randomly");
 			driver.get(url);
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 				List<WebElement> fields = driver.findElements(By.xpath("//div[@class='filedElements']/input"));
 				if (fields.size() > 0) {
 					fields.get(0).clear();
 					fields.get(0).sendKeys(seed[0]);
 					driver.findElement(By.xpath("//button[@class='applicationButton']")).click();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 
 				}
 			} catch (InterruptedException e) {
