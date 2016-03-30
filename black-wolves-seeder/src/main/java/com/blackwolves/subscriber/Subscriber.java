@@ -88,13 +88,13 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing to NYTimes Randomly");
 			driver.get(url);
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				List<WebElement> fields = driver.findElements(By.xpath("//div[@class='filedElements']/input"));
 				if (fields.size() > 0) {
 					fields.get(0).clear();
 					fields.get(0).sendKeys(seed[0]);
 					driver.findElement(By.xpath("//button[@class='applicationButton']")).click();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 
 				}
 			} catch (InterruptedException e) {
