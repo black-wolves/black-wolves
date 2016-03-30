@@ -18,26 +18,35 @@ public class SubscriberRunnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscriberRunnable.class);
 
-
 	public SubscriberRunnable() {
 	}
 
 	public static void main(String[] args) {
 		logger.info("Starting Subscriber...");
+		int index = Integer.parseInt(args[0]);
 		List<String[]> seeds = YahooRunnable.generateSeedsList("subscriber.csv");
-		ExecutorService executor = Executors.newFixedThreadPool(seeds.size());
-		subscribeToNewsletters(seeds, executor);
-		if (executor != null) {
-			executor.shutdown();
-			while (!executor.isTerminated()) {
+		ExecutorService executor = null;
+		for (int i = index; i < seeds.size() - 1; i++) {
+			executor = Executors.newFixedThreadPool(10);
+			logger.info("Count is: " + i);
+			subscribeToNewsletters(seeds, i, executor);
+			i = i + 9;
+			if (executor != null) {
+				executor.shutdown();
+				while (!executor.isTerminated()) {
 
+				}
 			}
-			logger.info("Finished all threads");
+
 		}
+		logger.info("Finished all threads");
+
+		
 	}
-	
-	private static void subscribeToNewsletters(List<String[]> seeds, ExecutorService executor) {
-		for (int i = 0; i <= seeds.size() -1; i++) {
+
+	private static void subscribeToNewsletters(List<String[]> seeds, int index, ExecutorService executor) {
+		int limit = index + 10;
+		for (int i = index; i <= limit; i++) {
 			String[] seed = seeds.get(i);
 			MDC.put("logFileName", seed[0]);
 			Subscriber subscriber = new Subscriber(seed);
