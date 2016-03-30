@@ -16,6 +16,15 @@
 
 	<dependencies>
 	
+		<!-- MySQL driver -->
+	
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.38</version>
+		</dependency>
+				
+	
 		<!-- Bridge logging from JCL to SLF4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
