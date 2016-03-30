@@ -69,7 +69,7 @@ public class Subscriber implements Runnable {
 			subscribeToNyTimesRandom(seed, opinion, driver);
 			subscribeToNyTimesRandom(seed, europe, driver);
 			subscribeToNyTimesRandom(seed, asia, driver);
-			
+
 		}
 
 		catch (NoSuchElementException e) {
@@ -85,7 +85,7 @@ public class Subscriber implements Runnable {
 
 	private void subscribeToNyTimesRandom(String[] seed, String url, WebDriver driver) {
 		if (Math.random() < 0.5) {
-			logger.info("Subscribing: "+ seed[0]+" to NYTimes Randomly");
+			logger.info("Subscribing: " + seed[0] + " to NYTimes Randomly");
 			driver.get(url);
 			try {
 				Thread.sleep(5000);
@@ -139,13 +139,15 @@ public class Subscriber implements Runnable {
 
 	// Works! :)
 	private void subscribeToSkimm(String[] seed, WebDriver driver) throws InterruptedException {
-		String url = "http://www.theskimm.com/";
-		logger.info("Subscribing to The Skimm");
-		driver.get(url);
-		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(seed[0]);
-		driver.findElement(By.name("email")).submit();
-		Thread.sleep(3000);
+		if (Math.random() < 0.5) {
+			String url = "http://www.theskimm.com/";
+			logger.info("Subscribing to The Skimm");
+			driver.get(url);
+			driver.findElement(By.name("email")).clear();
+			driver.findElement(By.name("email")).sendKeys(seed[0]);
+			driver.findElement(By.name("email")).submit();
+			Thread.sleep(3000);
+		}
 	}
 
 	// Works :)
