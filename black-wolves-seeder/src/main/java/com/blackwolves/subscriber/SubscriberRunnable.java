@@ -30,7 +30,7 @@ public class SubscriberRunnable {
 			executor = Executors.newFixedThreadPool(10);
 			logger.info("Count is: " + i);
 			subscribeToNewsletters(seeds, i, executor);
-			i = i + 10;
+			i = i + 9;
 			if (executor != null) {
 				executor.shutdown();
 				while (!executor.isTerminated()) {
