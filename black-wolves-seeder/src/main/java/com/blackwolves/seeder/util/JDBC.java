@@ -64,19 +64,49 @@ public class JDBC {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage(), e);
-				}
+			closeStatementAndConnection(dbConnection, statement);
+		}
+	}
+
+	/**
+	 * Creates the connection to the database
+	 * @return
+	 */
+	private static Connection getDBConnection() {
+		Connection dbConnection = null;
+		try {
+			Class.forName(DB_DRIVER);
+		} catch (ClassNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		}
+		try {
+			dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,DB_PASSWORD);
+			return dbConnection;
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return dbConnection;
+
+	}
+	
+	/**
+	 * @param dbConnection
+	 * @param statement
+	 */
+	private static void closeStatementAndConnection(Connection dbConnection,
+			Statement statement) {
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error(e.getMessage(), e);
 			}
-			if (dbConnection != null) {
-				try {
-					dbConnection.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage(), e);
-				}
+		}
+		if (dbConnection != null) {
+			try {
+				dbConnection.close();
+			} catch (SQLException e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -118,26 +148,5 @@ public class JDBC {
 			return ", OPENED = OPENED + " + openCount;
 		}
 		return Constant.EMPTY_STRING;
-	}
-
-	/**
-	 * Creates the connection to the database
-	 * @return
-	 */
-	private static Connection getDBConnection() {
-		Connection dbConnection = null;
-		try {
-			Class.forName(DB_DRIVER);
-		} catch (ClassNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		}
-		try {
-			dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,DB_PASSWORD);
-			return dbConnection;
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return dbConnection;
-
 	}
 }
