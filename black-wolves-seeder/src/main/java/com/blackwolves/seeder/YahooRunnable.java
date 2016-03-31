@@ -39,9 +39,9 @@ public abstract class YahooRunnable {
 
 	protected static Logger logger;
 
-	protected static double PERCENTAGE = 1; //generateDoubleRandom(0.2, 0.4);
+	protected static double PERCENTAGE = generateDoubleRandom(0.2, 0.4);
 	
-	protected String seed = "";
+	protected Seed seed;
 	
 	protected String order = "";
 	
@@ -60,7 +60,7 @@ public abstract class YahooRunnable {
 	 * @param human
 	 * @param logger2 
 	 */
-	public YahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
+	public YahooRunnable(WebDriver driver, Seed seed, Human human, Logger logger) {
 		this.driver = driver;
 		this.seed = seed;
 		this.mouse = new Actions(driver);
@@ -74,24 +74,13 @@ public abstract class YahooRunnable {
 	 * @param logger 
 	 */
 	public void runProcess() {
-		String[] seed = this.seed.split(",");
 		
-		try {
-			if (order.contains("spam")) {
-				logger.info("Processing spam....");
-				processSpam(seed);
-			}
+		logger.info("Processing inbox");
+		processInbox(seed);
+		
+//		logger.info("Processing spam....");
+//		processSpam(seed);
 			
-			if(order.contains("inbox")){
-				logger.info("Processing inbox");
-				processInbox(seed);
-			}
-			
-						
-			
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		}
 	}
 
 	/**
@@ -240,9 +229,9 @@ public abstract class YahooRunnable {
 		return (Math.random() * (max - min) + min);
 	}
 	
-	public abstract void processInbox(String[] seed);
+	public abstract void processInbox(Seed seed);
 
-	public abstract void processSpam(String[] seed);
+	public abstract void processSpam(Seed seed);
 
 	public abstract void replyToEmail();
 	

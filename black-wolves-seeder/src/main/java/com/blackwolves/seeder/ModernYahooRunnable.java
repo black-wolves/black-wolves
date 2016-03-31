@@ -13,10 +13,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.slf4j.Logger;
 
 import com.blackwolves.seeder.util.Constant;
+import com.blackwolves.seeder.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -27,12 +27,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	boolean exception = false;
 
-	public ModernYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
+	public ModernYahooRunnable(WebDriver driver, Seed seed, Human human, Logger logger) {
 		super(driver, seed, human, logger);
 	}
 
 	@Override
-	public void processInbox(String[] seed) {
+	public void processInbox(Seed seed) {
 
 		checkWelcomeDialog();
 		validateOkayModal();
@@ -48,6 +48,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			for (int j = 0; j < percentage; j++) {
 
+				boolean opened = false;
+				boolean clicked = false;
 				try {
 					if (exception) {
 						exception = false;
@@ -58,7 +60,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 					checkForInboxReloadError();
 
 					if (driver.findElements(By.className("onboarding-notif-close-btn")).size() > 0) {
-						List notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
+						List<WebElement> notifications = driver.findElements(By.className("onboarding-notif-close-btn"));
 						WebElement dialog = (WebElement) notifications.get(0);
 						dialog.click();
 					}
@@ -78,30 +80,44 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("Getting the random message");
 						WebElement currentMsg = inboxMsgs.get(randomPosition);
 
-						WebElement subj = currentMsg.findElement(By.className("subj"));
-
-						if (subj.getLocation().y > 0) {
-							logger.info("$$$$$$$$$$ Clicking in Msg : " + currentMsg.getText());
-							subj.click();
-
-							clickShowImages("show-text");
-							clickRandomLink();
-
-							scrollToBottom(driver);
-							Thread.sleep(randInt(2500, 3500));
+						WebElement from = currentMsg.findElement(By.className("from"));
+						WebElement subject = currentMsg.findElement(By.className("subj"));
+						String fromText = from.getText();
+						String subjectText = subject.getText();
+						if (from.getLocation().y > 0) {
+								logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
+								from.click();
+								if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
+									opened = true;
+									if(Math.random() <= 0.8){
+										clickShowImages("show-text");
+										clickRandomLink();
+										clicked = true;
+									}
+								}else if(!opened && Math.random() <= 0.35){
+									clickShowImages("show-text");
+									clickRandomLink();
+								}
+								scrollToBottom(driver);
+								Thread.sleep(randInt(2500, 3500));
 						} else {
-							logger.info("Location y is negative, not entering msg: " + currentMsg.getText());
+							logger.info("Location y is negative, not entering msg: " + fromText + " - " + subjectText);
+						}
+						
+						if(opened){
+							logger.info("Saving message stats into database");
+							JDBC.updateSeed(seed.getUser(), 1, clicked?1:0, 0);
 						}
 
-						logger.info("Going back to inbox");
-
 						archiveMsg();
-
+						
+						logger.info("Going back to inbox");
 						driver.findElement(By.className("inbox-label")).click();
 
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
+					
 				} catch (InterruptedException e) {
 					logger.error("InterruptedException for seed: " + seed + " " + e.getMessage() + " " + e.getCause()
 							+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
@@ -146,7 +162,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private void archiveMsg() {
-		if (randInt(0, 10) <= 6) {
+		if(Math.random() <= 0.5){
 			logger.info("Archiving Msg");
 			driver.findElement(By.id("btn-archive")).click();
 		}
@@ -541,79 +557,76 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 * selenium.WebDriver, java.lang.String[])
 	 */
 	@Override
-	public void processSpam(String[] seed) {
+	public void processSpam(Seed seed) {
 
-		try {
-			logger.info("Process Spam");
-
-			if (Constant.SPECIFIC.equals(Seeder.type) || Constant.DESTROYER.equals(Seeder.type)) {
-
-				logger.info("RemoveConversationMailView");
-				removeConversationMailView();
-			}
-
-		} catch (MoveTargetOutOfBoundsException e) {
-			logger.info("Process Spam MoveTargetOutOfBoundsException ");
-		}
-
-		if (validateSpamFolder()) {
-			logger.info("There are msgs in the spam folder, go get them Tiger!");
-			logger.info("Seeder type: " + Seeder.type);
-			if (Constant.SPECIFIC.equals(Seeder.type) || Constant.DESTROYER.equals(Seeder.type)) {
-
-				logger.info("Checking all NOT SPAM");
-				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
-				if (!checkbox.isSelected()) {
-					checkbox.click();
-				}
-
-				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();
-
-			}
-
-			else if (Constant.MULTIPLE.equals(Seeder.type)) {
-				List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
-
-				logger.info("Percentage is " + PERCENTAGE);
-				int percentage = (int) (spamMsgs.size() * PERCENTAGE);
-
-				if (percentage > 10) {
-					percentage = 3;
-				}
-
-				for (int j = 0; j < percentage; j++) {
-
-					try {
-						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
-						int chances = randInt(0, 10);
-						Thread.sleep(randInt(2000, 3000));
-						if (chances <= 8) {
-							normalNotSpam();
-						} else {
-							dragAndDropNotSpam();
-						}
-
-					} catch (InterruptedException e) {
-						logger.error("InterruptedException");
-					} catch (NoSuchElementException e) {
-						logger.error("NoSuchElementException");
-					} catch (StaleElementReferenceException e) {
-						logger.error("StaleElementReferenceException");
-					} catch (ElementNotVisibleException e) {
-						logger.error("ElementNotVisibleException");
-					} catch (ElementNotFoundException e) {
-						logger.error("ElementNotFoundException");
-					} catch (UnhandledAlertException e) {
-						logger.error("UnhandledAlertException");
-					} catch (WebDriverException e) {
-						logger.error("WebDriverException");
-					}
-				}
-
-			}
-		} else {
-			logger.info("Spam Folder is empty! UOHOOO!");
-		}
+//		try {
+//			logger.info("Process Spam");
+//
+//			if (Constant.SPECIFIC.equals(Seeder.type) || Constant.DESTROYER.equals(Seeder.type)) {
+//
+//				logger.info("RemoveConversationMailView");
+//				removeConversationMailView();
+//			}
+//
+//		} catch (MoveTargetOutOfBoundsException e) {
+//			logger.info("Process Spam MoveTargetOutOfBoundsException ");
+//		}
+//
+//		if (validateSpamFolder()) {
+//			logger.info("There are msgs in the spam folder, go get them Tiger!");
+//			logger.info("Seeder type: " + Seeder.type);
+//			if (Constant.SPECIFIC.equals(Seeder.type) || Constant.DESTROYER.equals(Seeder.type)) {
+//
+//				logger.info("Checking all NOT SPAM");
+//				WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
+//				if (!checkbox.isSelected()) {
+//					checkbox.click();
+//				}
+//
+//				driver.findElement(By.xpath("//*[@id='btn-not-spam']")).click();
+//
+//			}else if (Constant.MULTIPLE.equals(Seeder.type)) {
+//				List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
+//
+//				logger.info("Percentage is " + PERCENTAGE);
+//				int percentage = (int) (spamMsgs.size() * PERCENTAGE);
+//
+//				if (percentage > 10) {
+//					percentage = 3;
+//				}
+//
+//				for (int j = 0; j < percentage; j++) {
+//
+//					try {
+//						logger.info(j + " emails not spammed " + (percentage - j) + " emails to go");
+//						int chances = randInt(0, 10);
+//						Thread.sleep(randInt(2000, 3000));
+//						if (chances <= 8) {
+//							normalNotSpam();
+//						} else {
+//							dragAndDropNotSpam();
+//						}
+//
+//					} catch (InterruptedException e) {
+//						logger.error("InterruptedException");
+//					} catch (NoSuchElementException e) {
+//						logger.error("NoSuchElementException");
+//					} catch (StaleElementReferenceException e) {
+//						logger.error("StaleElementReferenceException");
+//					} catch (ElementNotVisibleException e) {
+//						logger.error("ElementNotVisibleException");
+//					} catch (ElementNotFoundException e) {
+//						logger.error("ElementNotFoundException");
+//					} catch (UnhandledAlertException e) {
+//						logger.error("UnhandledAlertException");
+//					} catch (WebDriverException e) {
+//						logger.error("WebDriverException");
+//					}
+//				}
+//			}
+//		} else {
+//			logger.info("Spam Folder is empty! UOHOOO!");
+//		}
 	}
 
 	private void removeConversationMailView() {

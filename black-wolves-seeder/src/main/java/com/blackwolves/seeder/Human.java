@@ -29,9 +29,8 @@ public abstract class Human {
 	 * @param mySeed
 	 * @return
 	 */
-	public String generateRandomTo(String mySeed) {
-		String[] s = mySeed.split(",");
-		String myMail = s[0];
+	public String generateRandomTo(Seed mySeed) {
+		String myMail = mySeed.getUser();
 		List<String[]> seeds = YahooRunnable.generateSeedsList("seeds.csv");
 		String to = Constant.EMPTY_STRING;
 		do {

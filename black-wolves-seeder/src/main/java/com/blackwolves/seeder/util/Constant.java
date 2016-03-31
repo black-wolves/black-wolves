@@ -26,4 +26,21 @@ public interface Constant {
 		public static final String TCI_IMAGES = "/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo/images/";
 		public static final String TCI_DOWNLOAD = "/Users/gastondapice/Downloads/images/";
 	}
+	
+	public interface FEEDER{
+		public static final String MAIL_COUNT = "MAIL_COUNT";
+		public static final String OPENED = "OPENED";
+		public static final String CLICKED = "CLICKED";
+		public static final String SPAMMED = "SPAMMED";
+		public static final String FEEDER_UPDATED_DATE = "FEEDER_UPDATED_DATE";
+		public static final String SEEDER_UPDATED_DATE= "SEEDER_UPDATED_DATE";
+		public static final String SEED = "SEED";
+		public static final String PASSWORD = "PASSWORD";
+		public static final String FULL_SEED = "FULL_SEED";
+		
+	}
+	
+	public interface FROM{
+		public static final String ENTREPRENEUR = "Entrepreneur";
+	}
 }

@@ -43,26 +43,22 @@ public class Seeder implements Runnable {
 	private YahooRunnable handler;
 
 	private Human human;
-
-	private String[] seed;
-
-	private String order;
-
-	public static String type;
+	
+	private Seed seed;
 
 	public Seeder() {
+		
 	}
 
-	public Seeder(String[] seed, Logger logger, String order, String type) {
-		logger.info("Seeder constructor");
+	public Seeder(Seed seed, Logger logger) {
 		this.seed = seed;
 		this.logger = logger;
-		this.order = order;
-		Seeder.type = type;
 	}
 
+	/**
+	 * 
+	 */
 	public void run() {
-		// addPermittedSender();
 		checkMail();
 	}
 
@@ -74,49 +70,71 @@ public class Seeder implements Runnable {
 		WebDriver driver = createWebDriver();
 		logger.info("Firefox Created");
 
-		// visitSomewhereBefore(driver);
-
 		human = generateRandomHumanUser();
 
 		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
 
-		handler = validateYahooVersion(driver, seed[0] + "," + seed[1]);
+		handler = validateYahooVersion(driver, seed);
 
 		if (handler != null) {
-			//
-			// addToAddressBook(driver);
-			//
-			// createNewFolder(driver);
-			//
-			//
-			// newAddToAddressBook(driver);
-
-			handler.setOrder(order);
 			handler.runProcess();
 		
 			logger.info("Finished!!");
 
 		} else {
-			logAttempts(seed[0] + "," + seed[1] + "  was not able to connect");
+			logAttempts(seed.getUser() + "," + seed.getPassword() + "  was not able to connect");
 			logger.info("New Interface detected.Exiting");
 		}
 		driver.close();
 		driver.quit();
-		YahooRunnable.deleteSeedFromFile(seed[0]);
 	}
-
-	private void newAddToAddressBook(WebDriver driver) {
+	
+	/**
+	 * @param yahooUrl
+	 * @param seed
+	 * @param driver
+	 * @param session
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	private void yahooLogin(String yahooUrl, Seed seed, WebDriver driver) {
+		logger.info("Trying to login in....");
 		try {
-			WebElement contacts = driver.findElement(By.xpath("//*[@id='nav']/ul/li[2]/a"));
-			contacts.click();
-			WebElement div = driver.findElement(By.xpath("//*[@id='paneshell']/div"));
-			Actions myMouse = new Actions(driver);
-			myMouse.moveToElement(div).build().perform();
-			myMouse.click();
-			myMouse.click().build().perform();
-			myMouse.moveByOffset(86, 266);
-			div.click();
 
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
+			logger.info("Getting to the URL: " + yahooUrl);
+			driver.get(yahooUrl);
+
+			logger.info("Introducing username: " + seed.getUser());
+			WebElement accountInput = driver.findElement(By.id("login-username"));
+			human.type(accountInput, seed.getUser());
+
+			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
+				logger.info("Clicking CONTINUE button");
+				driver.findElement(By.id("login-signin")).click();
+				
+				Thread.sleep(YahooRunnable.randInt(1500, 2500));
+				
+				logger.info("Introducing password: " + seed.getPassword());
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed.getPassword());
+				
+			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
+				logger.info("Introducing password: " + seed.getPassword());
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed.getPassword());
+				
+			}
+			logger.info("Clicking LOGIN button");
+			if (driver.findElements(By.id("login-signin")).size() > 0) {
+				driver.findElement(By.id("login-signin")).click();
+				Thread.sleep(YahooRunnable.randInt(1000, 2000));
+				logger.info("LOGGED IN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			} else {
+				logger.info("Already logged in..Moving forward!");
+			}
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
 		} catch (NoSuchElementException e) {
 			logger.error("NoSuchelementException");
 		} catch (StaleElementReferenceException e) {
@@ -126,7 +144,6 @@ public class Seeder implements Runnable {
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException");
 		}
-
 	}
 
 	private void visitSomewhereBefore(WebDriver driver) {
@@ -151,62 +168,6 @@ public class Seeder implements Runnable {
 			logger.info("***************** Cookies? :" + cookie.getName());
 
 		}
-	}
-
-	private void addPermittedSender() {
-
-		List<String[]> seeds = generateList("/Users/danigrane/Downloads/Madrivo/seeds/", "seeds2.csv");
-		for (int i = 1; i < seeds.size(); i++) {
-			try {
-				seed = seeds.get(i);
-
-				WebDriver driver = createWebDriver();
-
-				human = generateRandomHumanUser();
-
-				yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
-				Thread.sleep(5000);
-
-				driver.get("https://edit.yahoo.com/commchannel/manage");
-
-				driver.findElement(By.id("addLink")).click();
-				Thread.sleep(3000);
-
-				driver.findElement(By.id("addCommStr")).clear();
-				driver.findElement(By.id("addCommStr")).sendKeys("postmaster@betoacostadalefuncionanamelamily.ro");
-				driver.findElement(By.id("saveLink")).click();
-				Thread.sleep(3000);
-				driver.findElement(By.id("yui-gen1-button")).click();
-				Thread.sleep(2000);
-				logger.debug(" Suscription successful: " + seed[0]);
-				driver.quit();
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-			} catch (NoSuchElementException e) {
-				logger.error("The seed " + seed[0] + " failed to suscribed");
-				logger.error(e.getMessage(), e);
-			}
-
-		}
-	}
-
-	private int getPidFromFile(String myEmail) {
-		List<String[]> pids = new ArrayList<String[]>();
-		try {
-			CSVReader pidsReader = new CSVReader(new FileReader(Constant.ROUTE + "pids.txt"));
-			pids = pidsReader.readAll();
-			pidsReader.close();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		for (String[] s : pids) {
-			if (s[0].equals(myEmail)) {
-				return Integer.valueOf(s[1]);
-			}
-		}
-		return 0;
 	}
 
 	/**
@@ -289,68 +250,11 @@ public class Seeder implements Runnable {
 	}
 
 	/**
-	 * @param yahooUrl
-	 * @param seed
-	 * @param driver
-	 * @param session
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	private void yahooLogin(String yahooUrl, String[] seed, WebDriver driver) {
-		logger.info("Trying to login in....");
-		try {
-
-			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			logger.info("Getting to the URL: " + yahooUrl);
-			driver.get(yahooUrl);
-
-			logger.info("Introducing username: " + seed[0]);
-			WebElement accountInput = driver.findElement(By.id("login-username"));
-			human.type(accountInput, seed[0]);
-
-			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
-				logger.info("Clicking CONTINUE button");
-				driver.findElement(By.id("login-signin")).click();
-				
-				Thread.sleep(YahooRunnable.randInt(1500, 2500));
-				
-				logger.info("Introducing password: " + seed[1]);
-				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-				human.type(passwordInput, seed[1]);
-				
-			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
-				logger.info("Introducing password: " + seed[1]);
-				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-				human.type(passwordInput, seed[1]);
-				
-			}
-			logger.info("Clicking LOGIN button");
-			if (driver.findElements(By.id("login-signin")).size() > 0) {
-				driver.findElement(By.id("login-signin")).click();
-				Thread.sleep(YahooRunnable.randInt(1000, 2000));
-				logger.info("LOGGED IN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			} else {
-				logger.info("Already logged in..Moving forward!");
-			}
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		}
-	}
-
-	/**
 	 * 
 	 * @param driver
 	 * @param seed
 	 */
-	private YahooRunnable validateYahooVersion(WebDriver driver, String seed) {
+	private YahooRunnable validateYahooVersion(WebDriver driver, Seed seed) {
 		try {
 			logger.info("Validating yahoo version");
 			Thread.sleep(5000);
@@ -601,20 +505,5 @@ public class Seeder implements Runnable {
 			e.printStackTrace();
 		}
 
-	}
-
-	/**
-	 * @return the seed
-	 */
-	public String[] getSeed() {
-		return seed;
-	}
-
-	/**
-	 * @param seed
-	 *            the seed to set
-	 */
-	public void setSeed(String[] seed) {
-		this.seed = seed;
 	}
 }

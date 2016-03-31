@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 public class OldYahooRunnable extends YahooRunnable{
 
 	
-	public OldYahooRunnable(WebDriver driver, String seed, Human human, Logger logger) {
+	public OldYahooRunnable(WebDriver driver, Seed seed, Human human, Logger logger) {
 		super(driver, seed, human, logger);
 	}
 
@@ -34,7 +34,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processInbox(String[] seed) {
+	public void processInbox(Seed seed) {
 		if (driver.findElements(By.id("inbox")).size() > 0) {
 
 			logger.info("Getting the Inbox Url");
@@ -84,7 +84,7 @@ public class OldYahooRunnable extends YahooRunnable{
 	 */
 	
 	@Override
-	public void processSpam(String[] seed) {
+	public void processSpam(Seed seed) {
 		if (driver.findElements(By.id("bulk")).size() > 0) {
 
 			logger.info("Getting the Bulk Url");
