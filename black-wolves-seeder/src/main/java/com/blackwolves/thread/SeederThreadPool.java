@@ -36,11 +36,14 @@ public class SeederThreadPool {
 			double loginPercentage = YahooRunnable.generateDoubleRandom(0.3, 0.6);
 			
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
-	//		int sampleSeeds = 1;
 	
+			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
+			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
-			logger.info("Processing "+ finalSeeds.size()+" seeds");
+			
+			logger.info("Processing " + finalSeeds.size() + " seeds");
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
+			
 			processSeeds(executor, finalSeeds.size(), finalSeeds);
 			if (executor != null) {
 				executor.shutdown();
