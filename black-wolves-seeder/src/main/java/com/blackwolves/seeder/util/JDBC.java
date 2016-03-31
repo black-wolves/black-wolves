@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,19 +33,22 @@ public class JDBC {
 	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
 	private static final String DB_USER = "mailinglocaweb";
 	private static final String DB_PASSWORD = "3H8osZA3";
+	private static final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
 	
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //		updateSeed("gastondapice@yaoo.com", 20, 2, 1);
-//		getStats();
+		getStats();
 //		getLastUpdatedSeeds();
-//	}
+	}
 	
 	public static Map<String, Object> getStats() {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
+		Timestamp now = new java.sql.Timestamp(calendar.getTime().getTime());
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
+		c.add(Calendar.HOUR, -1);
+		Timestamp oneHourAgo = new Timestamp(c.getTime().getTime());
 		
 		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + oneHourAgo + "' AND '" + now + "'";
 		Map<String, Object> map = null;
@@ -93,10 +97,10 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+		Timestamp now = new java.sql.Timestamp(calendar.getTime().getTime());
 
 		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
-				+ " SET SEEDER_UPDATED_DATE = '" + currentTimestamp + "'"
+				+ " SET SEEDER_UPDATED_DATE = '" + now + "'"
 				+ openSql(openCount)
 				+ clickSql(clickCount)
 				+ spamSql(spamCount)
