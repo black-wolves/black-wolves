@@ -13,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,23 +36,13 @@ public class JDBC {
 	private static final String DB_USER = "mailinglocaweb";
 	private static final String DB_PASSWORD = "3H8osZA3";
 	
+	private static final String SDF = "yyyy-M-dd HH:mm:ss";
+	private static final String GMT_3 = "GMT-3";
+	
 	public static void main(String[] args) throws ParseException {
 //		updateSeed("gastondapice@yaoo.com", 20, 2, 1);
-		getStats();
+//		getStats();
 //		getLastUpdatedSeeds();
-		
-		
-//		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-//		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
-//		
-//		
-//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
-//		TimeZone tz = TimeZone.getTimeZone("GMT+2");
-//		formatter.setTimeZone(tz);
-//		
-//		System.out.println(formatter.format(now));
-//		System.out.println(formatter.format(oneHourAgo));
-		
 	}
 	
 	public static Map<String, Object> getStats() {
@@ -63,8 +52,8 @@ public class JDBC {
 		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
-		TimeZone tz = TimeZone.getTimeZone("GMT-3");
+		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
+		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 
 		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "'";
@@ -116,8 +105,8 @@ public class JDBC {
 		
 		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
-		TimeZone tz = TimeZone.getTimeZone("GMT-3");
+		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
+		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 
 		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
@@ -233,7 +222,11 @@ public class JDBC {
 		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
 		
-		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + oneHourAgo + "' AND '" + now + "'";
+		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
+		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		formatter.setTimeZone(tz);
+		
+		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "'";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
