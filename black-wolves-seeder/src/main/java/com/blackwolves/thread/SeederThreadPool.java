@@ -35,8 +35,8 @@ public class SeederThreadPool {
 			
 			double loginPercentage = YahooRunnable.generateDoubleRandom(0.3, 0.6);
 			
-	//		int sampleSeeds = (int) (seeds.size() * loginPercentage);
-			int sampleSeeds = 1;
+			int sampleSeeds = (int) (seeds.size() * loginPercentage);
+	//		int sampleSeeds = 1;
 	
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
 	
