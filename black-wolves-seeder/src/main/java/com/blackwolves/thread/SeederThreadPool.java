@@ -42,7 +42,6 @@ public class SeederThreadPool {
 			logger.info("Processing "+ finalSeeds.size()+" seeds");
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
 			processSeeds(executor, finalSeeds.size(), finalSeeds);
-	
 			if (executor != null) {
 				executor.shutdown();
 	
