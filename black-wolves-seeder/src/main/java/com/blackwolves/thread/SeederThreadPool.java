@@ -42,6 +42,10 @@ public class SeederThreadPool {
 			logger.info("Processing "+ finalSeeds.size()+" seeds");
 
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
+<<<<<<< HEAD
+=======
+			logger.info("Processing "+ finalSeeds.size()+" seeds");
+>>>>>>> branch 'no-quit' of https://github.com/black-wolves/black-wolves
 			processSeeds(executor, finalSeeds.size(), finalSeeds);
 	
 			if (executor != null) {
