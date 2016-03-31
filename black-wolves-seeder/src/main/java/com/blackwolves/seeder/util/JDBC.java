@@ -9,8 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,24 +36,38 @@ public class JDBC {
 	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
 	private static final String DB_USER = "mailinglocaweb";
 	private static final String DB_PASSWORD = "3H8osZA3";
-	private static final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 //		updateSeed("gastondapice@yaoo.com", 20, 2, 1);
 		getStats();
 //		getLastUpdatedSeeds();
+		
+		
+//		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+//		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
+//		
+//		
+//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
+//		TimeZone tz = TimeZone.getTimeZone("GMT+2");
+//		formatter.setTimeZone(tz);
+//		
+//		System.out.println(formatter.format(now));
+//		System.out.println(formatter.format(oneHourAgo));
+		
 	}
 	
 	public static Map<String, Object> getStats() {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		Timestamp now = new java.sql.Timestamp(calendar.getTime().getTime());
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
-		c.add(Calendar.HOUR, -1);
-		Timestamp oneHourAgo = new Timestamp(c.getTime().getTime());
+		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
 		
-		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + oneHourAgo + "' AND '" + now + "'";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
+		TimeZone tz = TimeZone.getTimeZone("GMT-3");
+		formatter.setTimeZone(tz);
+
+		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "'";
 		Map<String, Object> map = null;
 		try {
 			dbConnection = getDBConnection();
@@ -97,10 +114,14 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		Timestamp now = new java.sql.Timestamp(calendar.getTime().getTime());
+		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
+		TimeZone tz = TimeZone.getTimeZone("GMT-3");
+		formatter.setTimeZone(tz);
 
 		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
-				+ " SET SEEDER_UPDATED_DATE = '" + now + "'"
+				+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 				+ openSql(openCount)
 				+ clickSql(clickCount)
 				+ spamSql(spamCount)
