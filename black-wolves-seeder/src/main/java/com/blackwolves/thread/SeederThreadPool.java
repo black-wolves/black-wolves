@@ -39,9 +39,9 @@ public class SeederThreadPool {
 	//		int sampleSeeds = 1;
 	
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
-	
+			logger.info("Processing "+ finalSeeds.size()+" seeds");
+
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
-			
 			processSeeds(executor, finalSeeds.size(), finalSeeds);
 	
 			if (executor != null) {
