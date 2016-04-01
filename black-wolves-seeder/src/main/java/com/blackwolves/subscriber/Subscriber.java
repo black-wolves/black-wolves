@@ -10,6 +10,7 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -56,6 +57,7 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		seed.setSubscription(new String());
 		try {
+			subscribeToNBCNews(seed, driver);
 
 			if (Math.random() < 0.35) {
 				subscribeToNYDailyNews(seed, driver);
@@ -176,6 +178,8 @@ public class Subscriber implements Runnable {
 
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 	}
 
@@ -199,6 +203,8 @@ public class Subscriber implements Runnable {
 			Thread.sleep(1000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 
 	}
@@ -235,6 +241,8 @@ public class Subscriber implements Runnable {
 			Thread.sleep(1000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 
 	}
@@ -259,6 +267,8 @@ public class Subscriber implements Runnable {
 			Thread.sleep(1000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 	}
 
@@ -291,6 +301,8 @@ public class Subscriber implements Runnable {
 
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 
 	}
@@ -315,6 +327,8 @@ public class Subscriber implements Runnable {
 			Thread.sleep(2000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 	}
 
@@ -342,6 +356,8 @@ public class Subscriber implements Runnable {
 		} catch (InterruptedException | NoSuchElementException e) {
 
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 	}
 
@@ -362,6 +378,9 @@ public class Subscriber implements Runnable {
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 		}
+		catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
+		}
 	}
 
 	private void subscribeToNBCNews(Seed seed, WebDriver driver) {
@@ -374,11 +393,14 @@ public class Subscriber implements Runnable {
 			email.clear();
 			email.sendKeys(seed.getUser());
 			WebElement submit = driver.findElement(By.className("j-submit"));
+			Thread.sleep(3000);
 			submit.click();
 			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}
+		catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 	}
 
@@ -400,6 +422,9 @@ public class Subscriber implements Runnable {
 			seed.setSubscription(seed.getSubscription().concat(site));
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}
+		catch (WebDriverException e) {
+			logger.info("Element in " + url + "is not clickable. Please review" );
 		}
 
 	}
