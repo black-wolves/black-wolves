@@ -40,9 +40,10 @@ public class JDBC {
 	private static final String GMT_3 = "GMT-3";
 	
 	public static void main(String[] args) throws ParseException {
-//		updateSeed("gastondapice@yaoo.com", 20, 2, 1);
+//		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
 //		getStats();
 //		getLastUpdatedSeeds();
+//		getSeedsWithNoSubscriptions(10000);
 	}
 	
 	public static Map<String, Object> getStats() {
@@ -89,6 +90,36 @@ public class JDBC {
 			closeStatementAndConnection(dbConnection, statement);
 		}
 		return map;
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @throws SQLException
+	 */
+	public static void updateSubscription(Seed seed) {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
+				+ " SET SUBSCRIPTION = '" + seed.getSubscription() + "'"
+				+ " WHERE SEED = '" + seed.getUser() + "'";
+
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+
+			logger.info(updateSQL);
+
+			statement.execute(updateSQL);
+
+			logger.info("Seed updated to FEEDER table!");
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}		
 	}
 	
 	/**
@@ -244,7 +275,8 @@ public class JDBC {
 				int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
 				Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
 				Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
-				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate);
+				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
+				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate,subscriptions);
 				seeds.add(seed);
 			}
 
@@ -257,5 +289,47 @@ public class JDBC {
 		}
 		return seeds;
 	}
+	
+	public static List<Seed> getSeedsWithNoSubscriptions(int index) {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
+		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		formatter.setTimeZone(tz);
+		
+		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER.ID >= "+index+"  AND FEEDER.SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 25  ";
+		List<Seed> seeds = new ArrayList<Seed>();
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+
+			logger.info(selectSQL);
+
+			ResultSet rs = statement.executeQuery(selectSQL);
+			while(rs.next()){
+				String user = rs.getString(Constant.FEEDER.SEED);
+				String password = rs.getString(Constant.FEEDER.PASSWORD);
+				int mailCount = rs.getInt(Constant.FEEDER.MAIL_COUNT);
+				int opened = rs.getInt(Constant.FEEDER.OPENED);
+				int clicked = rs.getInt(Constant.FEEDER.CLICKED);
+				int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
+				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
+				Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
+				Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
+				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate,subscriptions);
+				seeds.add(seed);
+			}
+
+			logger.info( seeds.size() + " seeds selected from FEEDER table!");
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}
+		return seeds;
+	}
+
 
 }

@@ -37,6 +37,7 @@ public interface Constant {
 		public static final String SEED = "SEED";
 		public static final String PASSWORD = "PASSWORD";
 		public static final String FULL_SEED = "FULL_SEED";
+		public static final String SUBSCRIPTION = "SUBSCRIPTION";
 		
 	}
 	

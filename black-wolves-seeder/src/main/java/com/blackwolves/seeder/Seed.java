@@ -19,6 +19,7 @@ public class Seed {
 	private int spammed;
 	private Timestamp feederUpdatedDate;
 	private Timestamp seederUpdatedDate;
+	private String subscription = new String();
 	
 	/**
 	 * @param user
@@ -29,10 +30,11 @@ public class Seed {
 	 * @param spammed
 	 * @param feederUpdatedDate
 	 * @param seederUpdatedDate
+	 * @param subscriptions 
 	 */
 	public Seed(String user, String password, int mailCount, int opened,
 			int clicked, int spammed, Timestamp feederUpdatedDate,
-			Timestamp seederUpdatedDate) {
+			Timestamp seederUpdatedDate, String subscription) {
 		this.user = user;
 		this.password = password;
 		this.mailCount = mailCount;
@@ -41,6 +43,7 @@ public class Seed {
 		this.spammed = spammed;
 		this.feederUpdatedDate = feederUpdatedDate;
 		this.seederUpdatedDate = seederUpdatedDate;
+		this.subscription = subscription;
 	}
 	/**
 	 * @return the user
@@ -138,5 +141,12 @@ public class Seed {
 	public void setSeederUpdatedDate(Timestamp seederUpdatedDate) {
 		this.seederUpdatedDate = seederUpdatedDate;
 	}
+	public String getSubscription() {
+		return subscription;
+	}
+	public void setSubscription(String subscription) {
+		this.subscription = subscription;
+	}
+
 	
 }
