@@ -3,10 +3,13 @@
  */
 package com.blackwolves.seeder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
@@ -225,45 +228,56 @@ public class OldYahooRunnable extends YahooRunnable{
 	}
 
 	@Override
-	public void replyToEmail() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void replyToEmailFromSubList() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void forwardEmail() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void forwardEmailFromSubList() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendEmail() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void clickSpam() {
-		// TODO Auto-generated method stub
 		
 	}
+	
+	public void visitSomewhereBefore(WebDriver driver) {
+		String[] sites = new String[10];
+		sites[0] = "http://lanacion.com";
+		sites[1] = "http://ole.com.ar";
+		sites[2] = "http://marca.com";
+		sites[3] = "http://dig.com";
+		sites[4] = "http://yahoo.com";
+		sites[5] = "http://google.com";
+		sites[6] = "http://clarin.com";
+		sites[7] = "http://amazon.com";
+		sites[8] = "http://ebay.com";
+		sites[9] = "http://mcdonalds.com";
+		int random = ModernYahooRunnable.randInt(0, 9);
+		logger.info("***************** Visiting :" + sites[random]);
+		driver.get(sites[random]);
 
-	@Override
-	public void moveMessageToAllFolder() {
-		// TODO Auto-generated method stub
-		
+		Set<Cookie> allCookies = driver.manage().getCookies();
+
+		for (Cookie cookie : allCookies) {
+			logger.info("***************** Cookies? :" + cookie.getName());
+
+		}
+	}
+	
+	/**
+	 * Calculates the hours of difference between the two given dates
+	 * 
+	 * @param from
+	 * @param to
+	 * @return int
+	 */
+	public int calculateDifferenceBetweenDates(Date from, Date to) {
+		long diff = to.getTime() - from.getTime();
+		int diffHours = (int) (diff / (60 * 60 * 1000));
+		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		// int diffMin = (int) (diff / (60 * 1000));
+		// int diffSec = (int) (diff / (1000));
+		return diffHours;
 	}
 
+	public int calculateDifferenceBetweenDatesInMinutes(Date from, Date to) {
+		long diff = to.getTime() - from.getTime();
+		// int diffHours = (int) (diff / (60 * 60 * 1000));
+		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		int diffMin = (int) (diff / (60 * 1000));
+		// int diffSec = (int) (diff / (1000));
+		return diffMin;
+	}
 }

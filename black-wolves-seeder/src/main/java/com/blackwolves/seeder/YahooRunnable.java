@@ -1,12 +1,8 @@
 package com.blackwolves.seeder;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,10 +27,10 @@ import com.blackwolves.seeder.util.Constant;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
- * @author danigrane
+ * 
+ * @author gastondapice
  *
  */
-
 public abstract class YahooRunnable {
 
 	protected static Logger logger;
@@ -42,8 +38,6 @@ public abstract class YahooRunnable {
 	protected static double PERCENTAGE = generateDoubleRandom(0.2, 0.4);
 	
 	protected Seed seed;
-	
-	protected String order = "";
 	
 	protected Human human;
 
@@ -66,7 +60,7 @@ public abstract class YahooRunnable {
 		this.mouse = new Actions(driver);
 		this.jse = (JavascriptExecutor) driver;
 		this.human = human;
-		this.logger = logger;
+		YahooRunnable.logger = logger;
 	}
 
 	/**
@@ -97,55 +91,6 @@ public abstract class YahooRunnable {
 		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
-	}
-	
-	/**
-	 * @return
-	 */
-	public static List<String[]> generateIpsList() {
-		List<String[]> ips = new ArrayList<String[]>();
-		try {
-			CSVReader ipsReader = new CSVReader(new FileReader(Constant.ROUTE + "ip_curl.txt"));
-			ips = ipsReader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return ips;
-	}
-
-	/**
-	 * @return
-	 */
-	public static List<String[]> generateSeedsList(String fileName) {
-		List<String[]> seeds = new ArrayList<String[]>();
-		try {
-			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));
-			seeds = seedsReader.readAll();
-			seedsReader.close();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return seeds;
-	}
-	
-	/**
-	 * @return
-	 */
-	public static List<String[]> generateDomainsList() {
-		List<String[]> domains = new ArrayList<String[]>();
-		try {
-			CSVReader domainsReader = new CSVReader(new FileReader(Constant.ROUTE + "domains.txt"));
-			domains = domainsReader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-		return domains;
 	}
 
 	/**
@@ -233,21 +178,21 @@ public abstract class YahooRunnable {
 
 	public abstract void processSpam(Seed seed);
 
-	public abstract void replyToEmail();
-	
-	public abstract void forwardEmail();
-	
-	public abstract void sendEmail();
-	
-	public abstract void moveMessageToAllFolder();
-	
 	public abstract void clickSpam();
 	
 	public abstract void clickRandomLink();
 	
-	public abstract void replyToEmailFromSubList();
+//	public abstract void replyToEmail();
 	
-	public abstract void forwardEmailFromSubList();
+//	public abstract void forwardEmail();
+	
+//	public abstract void sendEmail();
+	
+//	public abstract void moveMessageToAllFolder();
+	
+//	public abstract void replyToEmailFromSubList();
+	
+//	public abstract void forwardEmailFromSubList();
 	
 	/**
 	 * Executes a script on an element
@@ -339,76 +284,22 @@ public abstract class YahooRunnable {
 	    	logger.error(e.getMessage(), e);
 	    }
 	}
-
-	public void setOrder(String order) {
-		this.order = order;
-		
-	}
 	
-	public double getPERCENTAGE() {
-		return PERCENTAGE;
-	}
-
-	public static void setPERCENTAGE(double pERCENTAGE) {
-		PERCENTAGE = pERCENTAGE;
-	}
-	
-	public static void writeSeedToFile(String seed) {
-		PrintWriter pw = null;
+	/**
+	 * @return
+	 */
+	public static List<String[]> generateSeedsList(String fileName) {
+		List<String[]> seeds = new ArrayList<String[]>();
 		try {
-			List<String> usedSeeds = readSeedsFromFile();
-			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
-			for (String usedSeed : usedSeeds) {
-				pw.write(usedSeed);
-				pw.write("\n");
-			}
-			pw.write(seed);
+			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));
+			seeds = seedsReader.readAll();
+			seedsReader.close();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-		} finally{
-			if(pw!=null){
-				pw.close();
-			}
 		}
-	}
-
-	public static List<String> readSeedsFromFile() {
-		List<String> list = null;
-		try {
-			File file = new File(Constant.ROUTE + "in-use-seeds.txt");
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			list = new ArrayList<String>();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				list.add(line);
-			}
-			fileReader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-	
-	public static void deleteSeedFromFile(String seed) {
-		PrintWriter pw = null;
-		try {
-			List<String> usedSeeds = readSeedsFromFile();
-			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
-			for (String usedSeed : usedSeeds) {
-				if(!seed.equals(usedSeed)){
-					pw.write(usedSeed);
-					pw.write("\n");
-				}
-			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		} finally{
-			if(pw!=null){
-				pw.close();
-			}
-		}
+		return seeds;
 	}
 	
 }

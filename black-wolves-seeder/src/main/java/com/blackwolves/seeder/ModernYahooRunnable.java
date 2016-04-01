@@ -1,11 +1,11 @@
 package com.blackwolves.seeder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.UnhandledAlertException;
@@ -20,7 +20,8 @@ import com.blackwolves.seeder.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
- * @author danigrane
+ * 
+ * @author gastondapice
  *
  */
 public class ModernYahooRunnable extends YahooRunnable {
@@ -33,7 +34,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	@Override
 	public void processInbox(Seed seed) {
-
+		
 		checkWelcomeDialog();
 		validateOkayModal();
 		moveMouse();
@@ -42,7 +43,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			logger.info("There are msgs in the inbox folder, start working!!");
 			List<WebElement> inboxMsgs = driver.findElements(By.className("list-view-item"));
-
+			
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 
@@ -50,6 +51,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 				boolean opened = false;
 				boolean clicked = false;
+				
 				try {
 					if (exception) {
 						exception = false;
@@ -71,49 +73,51 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 						logger.info("list-view-item found");
 						inboxMsgs = driver.findElements(By.className("list-view-item"));
-
-						logger.info("Obtaining a random message position so it can be open");
-						int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
-
-						Thread.sleep(randInt(2500, 3500));
-
-						logger.info("Getting the random message");
-						WebElement currentMsg = inboxMsgs.get(randomPosition);
-
-						WebElement from = currentMsg.findElement(By.className("from"));
-						WebElement subject = currentMsg.findElement(By.className("subj"));
-						String fromText = from.getText();
-						String subjectText = subject.getText();
-						if (from.getLocation().y > 0) {
-								logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
-								from.click();
-								if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
-									opened = true;
-									if(Math.random() <= 0.8){
+						WebElement currentMsg = null;
+						if(findMyMessage()){
+							currentMsg = findMyMsg(inboxMsgs); 
+						}else{
+							logger.info("Obtaining a random message position so it can be open");
+							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
+	
+							logger.info("Getting the random message");
+							currentMsg = inboxMsgs.get(randomPosition);
+						}
+						if(currentMsg != null){
+							WebElement from = currentMsg.findElement(By.className("from"));
+							WebElement subject = currentMsg.findElement(By.className("subj"));
+							String fromText = from.getText();
+							String subjectText = subject.getText();
+							if (from.getLocation().y > 0) {
+									logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
+									from.click();
+									if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
+										opened = true;
+										if(Math.random() <= 0.8){
+											clickShowImages("show-text");
+											clickRandomLink();
+											clicked = true;
+										}
+									}else if(!opened && Math.random() <= 0.35){
 										clickShowImages("show-text");
 										clickRandomLink();
-										clicked = true;
 									}
-								}else if(!opened && Math.random() <= 0.35){
-									clickShowImages("show-text");
-									clickRandomLink();
-								}
-								scrollToBottom(driver);
-								Thread.sleep(randInt(2500, 3500));
-						} else {
-							logger.info("Location y is negative, not entering msg: " + fromText + " - " + subjectText);
+									scrollToBottom(driver);
+									Thread.sleep(randInt(2500, 3500));
+							} else {
+								logger.info("Location y is negative, not entering msg: " + fromText + " - " + subjectText);
+							}
+							
+							if(opened){
+								logger.info("Saving message stats into database");
+								JDBC.updateSeed(seed.getUser(), 1, clicked?1:0, 0);
+							}
+	
+							archiveMsg();
+							
+							logger.info("Going back to inbox");
+							driver.findElement(By.className("inbox-label")).click();
 						}
-						
-						if(opened){
-							logger.info("Saving message stats into database");
-							JDBC.updateSeed(seed.getUser(), 1, clicked?1:0, 0);
-						}
-
-						archiveMsg();
-						
-						logger.info("Going back to inbox");
-						driver.findElement(By.className("inbox-label")).click();
-
 					} else {
 						logger.info("**********   No mlink found or no messages available   **********");
 					}
@@ -161,157 +165,20 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	}
 
+	private boolean findMyMessage() {
+		if(Math.random() <= 0.5){
+			return true;
+		}
+		return false;
+	}
+
 	private void archiveMsg() {
 		if(Math.random() <= 0.5){
 			logger.info("Archiving Msg");
 			driver.findElement(By.id("btn-archive")).click();
 		}
 	}
-
-	@Override
-	public void replyToEmail() {
-		try {
-			logger.info("Clicking the reply button");
-			Thread.sleep(randInt(1500, 2500));
-			WebElement reply = driver.findElement(By.id("btn-reply-sender"));
-			reply.click();
-
-			Thread.sleep(randInt(1500, 2500));
-			WebElement quickReply = driver.findElement(By.className("quickReply"));
-
-			Thread.sleep(randInt(1500, 2500));
-			JavascriptExecutor jse = (JavascriptExecutor) driver;
-			String body = human.generateRandomBody();
-			jse.executeScript(
-					"document.getElementById('rtetext').getElementsByTagName('p')[0].outerHTML = \" " + body + " \";");
-			logger.info("Filling body field");
-			Thread.sleep(randInt(1500, 2500));
-
-			logger.info("Replying the email");
-			Thread.sleep(randInt(1500, 2500));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
-					.findElement(By.tagName("a"));
-			send.click();
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException");
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException");
-		}
-	}
-
-	@Override
-	public void forwardEmail() {
-		try {
-			logger.info("Clicking the forward button");
-			Thread.sleep(randInt(2000, 3000));
-			WebElement forward = driver.findElement(By.id("btn-forward"));
-			forward.click();
-
-			String to = human.generateRandomTo(seed);
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement quickReply = driver.findElement(By.className("quickReply"));
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement toInput = quickReply.findElement(By.id("to-field"));
-
-			logger.info("Filling to field");
-			Thread.sleep(randInt(2000, 3000));
-			human.type(toInput, to);
-			Thread.sleep(randInt(2000, 3000));
-			toInput.sendKeys(Keys.TAB);
-
-			logger.info("Forwarding the email");
-			Thread.sleep(randInt(2000, 3000));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
-					.findElement(By.tagName("a"));
-			send.click();
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException");
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException");
-		}
-
-	}
-
-	@Override
-	public void sendEmail() {
-		try {
-			logger.info("Clicking compose button");
-			Thread.sleep(randInt(2000, 3000));
-			WebElement compose = driver.findElement(By.className("btn-compose"));
-			compose.click();
-
-			String to = human.generateRandomTo(seed);
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement fullCompose = driver.findElement(By.className("full-compose"));
-
-			Thread.sleep(randInt(1500, 2500));
-			WebElement toInput = fullCompose.findElement(By.id("to-field"));
-			logger.info("Filling to field");
-			Thread.sleep(randInt(1500, 2500));
-			human.type(toInput, to);
-			Thread.sleep(randInt(1500, 2500));
-			toInput.sendKeys(Keys.TAB);
-
-			Thread.sleep(randInt(1500, 2500));
-			WebElement subjectInput = fullCompose.findElement(By.id("subject-field"));
-			logger.info("Filling subject field");
-			Thread.sleep(randInt(1500, 2500));
-			human.type(subjectInput, human.generateRandomSubject());
-			Thread.sleep(randInt(1500, 2500));
-			subjectInput.sendKeys(Keys.TAB);
-
-			Thread.sleep(randInt(1500, 2500));
-			JavascriptExecutor jse = (JavascriptExecutor) driver;
-			String body = human.generateRandomBody();
-			jse.executeScript(
-					"document.getElementById('rtetext').getElementsByTagName('p')[0].outerHTML = \" " + body + " \";");
-			logger.info("Filling body field");
-			Thread.sleep(randInt(1500, 2500));
-
-			logger.info("Sending the email");
-			Thread.sleep(randInt(1500, 2500));
-			WebElement send = fullCompose.findElement(By.className("bottomToolbar"))
-					.findElement(By.className("default")).findElement(By.tagName("a"));
-			send.click();
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException");
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException");
-		}
-	}
+	
 
 	@Override
 	public void clickRandomLink() {
@@ -325,19 +192,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 				logger.info("Links found");
 				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
 				int randomLinkNo = randInt(0, linksToGo.size() - 1);
-				// String aUrl =
-				// linksToGo.get(randomLinkNo).getAttribute("href");
-				// if (aUrl != null) {
-				// if (aUrl.contains("unsub") || aUrl.contains("yahoo")) {
-				// logger.info("It is an Unsubscribe link!! - we are not
-				// clicking it" + aUrl);
-				// } else {
-				// logger.info("It's a good link, click it!! " + aUrl);
 				linksToGo.get(0).click();
 				switchToNewWindow();
 				switchToPreviousWindow();
-				// }
-				// }
 			} else {
 				logger.info("**********   No links found or none available  **********");
 			}
@@ -356,36 +213,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (WebDriverException e) {
 			logger.error("WebDriverException");
 		}
-	}
-
-	@Override
-	public void moveMessageToAllFolder() {
-		try {
-			logger.info("Clicking move button");
-			Thread.sleep(randInt(1000, 2000));
-			driver.findElement(By.id("btn-move")).click();
-			logger.info("Moving message to All folder");
-			Thread.sleep(randInt(1500, 2500));
-			driver.findElement(By.id("menu-move")).findElement(By.id("menu-move-folder")).findElement(By.tagName("li"))
-					.click();
-			logger.info("Message moved!!");
-			Thread.sleep(randInt(2000, 3000));
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException");
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException");
-		}
-
 	}
 
 	@Override
@@ -423,27 +250,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.error("WebDriverException");
 		}
 
-	}
-
-	private boolean isWarmupDomain(boolean inbox, WebElement msg) {
-		String address = msg.findElement(By.className("flex")).findElement(By.className("from")).getAttribute("title");
-		logger.info("Address from message is: " + address);
-		String[] s = address.split("@");
-		String domain = s.length > 1 ? s[1] : s[0];
-		logger.info("Domain to validate: " + domain);
-		List<String[]> domains = generateDomainsList();
-		for (String[] d : domains) {
-			if (domain.equals(d[0])) {
-				logger.info("Is a warmup domain, we move forward :D");
-				return true;
-			}
-		}
-		if (inbox && (domain.endsWith("yahoo.com") || domain.endsWith(".ro"))) {
-			logger.info("Is a yahoo or a .ro domain, we move forward :D");
-			return true;
-		}
-		logger.info("Is not a warmup domain!!!");
-		return false;
 	}
 
 	private void validateOkayModal() {
@@ -836,103 +642,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 	}
 
-	// NOT WORKING
-	@Override
-	public void replyToEmailFromSubList() {
-		logger.info("Clicking the reply button from sublist");
-		try {
-			// String body = human.generateRandomBody(driver, wait);
-			// Thread.sleep(randInt(2000, 3000));
-
-			Thread.sleep(randInt(2000, 3000));
-			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
-			WebElement reply = elements.get(2);
-			reply.click();
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement quickReply = driver.findElement(By.className("quickReply"));
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-			bodyMail.click();
-			// human.type(bodyMail, body);
-
-			logger.info("Replying the email from sublist");
-			Thread.sleep(randInt(2000, 3000));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
-					.findElement(By.tagName("a"));
-			send.click();
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException");
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException");
-		}
-	}
-
-	// NOT WORKING
-	@Override
-	public void forwardEmailFromSubList() {
-		logger.info("Clicking the forward button from sublist");
-		try {
-			// String body = human.generateRandomBody(driver);
-			// Thread.sleep(randInt(2000, 3000));
-
-			Thread.sleep(randInt(2000, 3000));
-			List<WebElement> elements = driver.findElement(By.className("addconvtitle")).findElements(By.tagName("a"));
-			WebElement forward = elements.get(2);
-			forward.click();
-
-			String to = human.generateRandomTo(seed);
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement quickReply = driver.findElement(By.className("quickReply"));
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement toInput = quickReply.findElement(By.id("to-field"));
-
-			logger.info("Filling to field");
-			Thread.sleep(randInt(2000, 3000));
-			human.type(toInput, to);
-			Thread.sleep(randInt(2000, 3000));
-			toInput.sendKeys(Keys.TAB);
-
-			Thread.sleep(randInt(2000, 3000));
-			WebElement bodyMail = quickReply.findElement(By.id("rtetext"));
-			bodyMail.click();
-			// human.type(bodyMail, body);
-
-			logger.info("Forwarding the email from sublist");
-			Thread.sleep(randInt(2000, 3000));
-			WebElement send = quickReply.findElement(By.className("bottomToolbar")).findElement(By.className("default"))
-					.findElement(By.tagName("a"));
-			send.click();
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException");
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException");
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException");
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException");
-		}
-	}
-
 	public void moveMouse() {
 		try {
 			logger.info("Enters to move mouse");
@@ -1061,6 +770,44 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	public static void scrollToBottom(WebDriver driver) {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
+	}
+	
+	private WebElement findMyMsgBySearchBox() {
+		WebElement searchBox = driver.findElement(By.className("typeahead-input-usertext"));
+		String searchString = "From: Entrepreneur is: unread";
+		human.type(searchBox, searchString);
+		WebElement searchButton = driver.findElement(By.id("mail-search-btn"));
+		searchButton.click();
+		List<WebElement> myMessages = new ArrayList<WebElement>();
+		if(driver.findElements(By.className("message-list-group")).size() > 0){
+			myMessages = driver.findElements(By.className("message-list-group"));
+		}
+		if(myMessages.isEmpty()){
+			return null;
+		}
+		int randomPosition = obtainRandomMsgsPosition(myMessages);
+		
+		logger.info("Getting my message randomly");
+		return myMessages.get(randomPosition);
+	}
+	
+	private WebElement findMyMsg(List<WebElement> inboxMsgs) {
+		logger.info("Finding my message");
+		List<WebElement> myMessages = new ArrayList<WebElement>();
+		for (WebElement webElement : inboxMsgs) {
+			WebElement from = webElement.findElement(By.className("from"));
+			String fromText = from.getText();
+			if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
+				myMessages.add(webElement);
+			}
+		}
+		if(myMessages.isEmpty()){
+			return null;
+		}
+		int randomPosition = obtainRandomMsgsPosition(myMessages);
+		
+		logger.info("Getting my message randomly");
+		return myMessages.get(randomPosition);
 	}
 
 }
