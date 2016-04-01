@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.blackwolves.seeder.Seed;
+import com.blackwolves.seeder.Seeder;
 import com.blackwolves.seeder.YahooRunnable;
 import com.blackwolves.seeder.util.JDBC;
 
@@ -57,37 +58,40 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		seed.setSubscription(new String());
 		try {
+			subscribeToTheGolfChannel(seed, driver);
+			subscribeToForbes(seed, driver);
 
-			if (Math.random() < 0.35) {
-				subscribeToNYDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToSoccerWire(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToTheGolfChannel(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToDetroitDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToSanAntonioNews(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToBostonMagazine(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToTheHerald(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToNBCNews(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.35) {
-				subscribeToForbes(seed, driver);
-			}
+
+//			if (Math.random() < 0.35) {
+//				subscribeToNYDailyNews(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToSoccerWire(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToTheGolfChannel(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToDetroitDailyNews(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToSanAntonioNews(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToBostonMagazine(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToTheHerald(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToNBCNews(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToDailyNews(seed, driver);
+//			}
+//			if (Math.random() < 0.35) {
+//				subscribeToForbes(seed, driver);
+//			}
 			// if (Math.random() < 0.3) {
 			// subscribeToMatterMark(seed, driver);
 			// }
@@ -202,8 +206,14 @@ public class Subscriber implements Runnable {
 			Thread.sleep(1000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+			Seeder.getScreenShot(driver, seed.getUser()+"such");
+			logger.info("Saving screenshot as /var/www/errors/"+seed.getUser()+"such" );
+
 		}catch (WebDriverException e) {
-			logger.info("Element in " + url + "is not clickable. Please review" );
+			logger.info("Element in " + url + "is not clickable. Saving screenshot as /var/www/errors/"+seed.getUser() );
+			Seeder.getScreenShot(driver, seed.getUser());
+
+
 		}
 
 	}
@@ -410,7 +420,9 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			// Going 2 times so we can avoid Quote of the day
+			Thread.sleep(3000);
 			driver.get(url);
+			Thread.sleep(1000);
 
 			WebElement email = driver.findElement(By.id("Email"));
 			email.clear();
@@ -423,7 +435,9 @@ public class Subscriber implements Runnable {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 		}
 		catch (WebDriverException e) {
-			logger.info("Element in " + url + "is not clickable. Please review" );
+			logger.info("Element in " + url + "is not clickable. Saving screenshot as /var/www/errors/"+seed.getUser() );
+			Seeder.getScreenShot(driver, seed.getUser());
+			
 		}
 
 	}

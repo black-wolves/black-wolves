@@ -245,16 +245,13 @@ public class Seeder implements Runnable {
 		}
 	}
 
-	public void getScreenShot(WebDriver driver, String name) {
-		logger.info("****************TAKING SCREENSHOT!*****************");
+	public static void getScreenShot(WebDriver driver, String name) {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// Now you can do whatever you need to do with it, for example copy
 		// somewhere
 		try {
-
 			FileUtils.copyFile(scrFile, new File("/var/www/errors/" + name + ".jpg"));
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
 		}
 
 	}
