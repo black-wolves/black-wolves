@@ -57,7 +57,6 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		seed.setSubscription(new String());
 		try {
-			subscribeToNBCNews(seed, driver);
 
 			if (Math.random() < 0.35) {
 				subscribeToNYDailyNews(seed, driver);
