@@ -149,6 +149,9 @@ public class Subscriber implements Runnable {
 			// if (Math.random() < 0.3) {
 			// subscribeToGolfSmith(seed, driver);
 			// }
+			if (seed.getSubscription().equals("")) {
+				logger.info("*************Error Saving subscriptions of "+ seed.getUser());
+			}
 			JDBC.updateSubscription(seed);
 
 		} catch (Exception e) {
