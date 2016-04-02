@@ -33,7 +33,7 @@ public class SeederThreadPool {
 		do{
 			List<Seed> seeds = JDBC.getLastUpdatedSeeds();
 			
-			double loginPercentage = YahooRunnable.generateDoubleRandom(0.3, 0.6);
+			double loginPercentage = YahooRunnable.generateDoubleRandom(1, 1);
 			
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 	

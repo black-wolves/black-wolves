@@ -46,9 +46,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 			
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
-
+			boolean foundMyMsg = false;
 			for (int j = 0; j < percentage; j++) {
-
 				boolean opened = false;
 				boolean clicked = false;
 				
@@ -74,8 +73,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("list-view-item found");
 						inboxMsgs = driver.findElements(By.className("list-view-item"));
 						WebElement currentMsg = null;
-						if(findMyMessage()){
+						if(findMyMessage() && !foundMyMsg){
 							currentMsg = findMyMsg(inboxMsgs); 
+							foundMyMsg = true;
 						}else{
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
@@ -88,9 +88,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 							WebElement subject = currentMsg.findElement(By.className("subj"));
 							String fromText = from.getText();
 							String subjectText = subject.getText();
-							if (from.getLocation().y > 0) {
+							currentMsg.click();
+						//	if (from.getLocation().y > 0) {
 									logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
-									from.click();
+						//			from.click();
 									if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
 										opened = true;
 										if(Math.random() <= 0.8){
@@ -104,9 +105,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 									}
 									scrollToBottom(driver);
 									Thread.sleep(randInt(2500, 3500));
-							} else {
-								logger.info("Location y is negative, not entering msg: " + fromText + " - " + subjectText);
-							}
+						//	} else {
+						//		logger.info("Location y is negative, not entering msg: " + fromText + " - " + subjectText);
+						//	}
 							
 							if(opened){
 								logger.info("Saving message stats into database");
@@ -166,7 +167,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findMyMessage() {
-		if(Math.random() <= 0.2){
+		if(Math.random() <= 0.3){
 			return true;
 		}
 		return false;
@@ -799,6 +800,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			String fromText = from.getText();
 			if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
 				myMessages.add(webElement);
+				break;
 			}
 		}
 		if(myMessages.isEmpty()){
