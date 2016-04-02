@@ -177,8 +177,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	private void archiveMsg() {
 		if(Math.random() <= 0.5){
-			logger.info("Archiving Msg");
-			driver.findElement(By.id("btn-archive")).click();
+			WebElement archive = driver.findElement(By.id("btn-archive"));
+			if(archive!=null && archive.isDisplayed()){
+				logger.info("Archiving Msg");
+				archive.click();
+			}else{
+				logger.info("Archiving is not displayed");
+			}
 		}
 	}
 	
