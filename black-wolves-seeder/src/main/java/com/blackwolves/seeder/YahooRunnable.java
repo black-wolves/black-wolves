@@ -126,7 +126,9 @@ public abstract class YahooRunnable {
 					WebElement a = showImage.findElement(By.tagName("a"));
 					mouse.moveToElement(a);
 					logger.info("clicking!");
-
+					logger.info("Image Displayed: " + a.isDisplayed());
+					logger.info("Image Enabled: " + a.isEnabled());
+					logger.info("Image Selected: " + a.isSelected());
 					a.click();
 					logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
 					Thread.sleep(randInt(3000, 5000));

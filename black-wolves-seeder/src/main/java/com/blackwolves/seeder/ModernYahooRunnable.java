@@ -184,14 +184,28 @@ public class ModernYahooRunnable extends YahooRunnable {
 			if (div.findElements(By.tagName("a")).size() > 0) {
 				logger.info("Links found");
 				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-				if(linksToGo.get(0)!=null){
-					WebElement link = linksToGo.get(0);
-					logger.info("Displayed: " + link.isDisplayed());
-					logger.info("Enabled: " + link.isEnabled());
-					logger.info("Selected: " + link.isSelected());
-					linksToGo.get(0).click();
-					switchToNewWindow();
-					switchToPreviousWindow();
+				if(!linksToGo.isEmpty()){
+					boolean keepGoing = false;
+					int count = 0;
+					do{
+						WebElement link = linksToGo.get(count);
+						if(link!=null && link.isDisplayed()){
+							String url = link.getAttribute("href");
+							if (url.contains("unsub") || url.contains("yahoo") || url.contains("subsc")) {
+								logger.info("It is an Unsubscribe link!! - we are not clicking it" + url);
+							} else {
+								logger.info("It's a good link, click it!! " + url);
+								link.click();
+								switchToNewWindow();
+								switchToPreviousWindow();
+							}
+						}else{
+							if(count < linksToGo.size()){
+								keepGoing = true;
+								count++;
+							}
+						}
+					}while(keepGoing);
 				}
 			} else {
 				logger.info("**********   No links found or none available  **********");
