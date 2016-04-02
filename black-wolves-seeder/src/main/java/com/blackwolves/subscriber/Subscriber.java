@@ -59,9 +59,12 @@ public class Subscriber implements Runnable {
 		caps.setCapability("binary", "/usr/bin/wires-0.3.0-linux64");
 		caps.setCapability("resolution", "1280x800");
 		WebDriver driver = new FirefoxDriver(caps);
-		seed.setSubscription(new String());
 		try {
-			
+			seed.setSubscription(new String("1"));
+			JDBC.updateSubscription(seed);
+			seed.setSubscription(new String(""));
+
+
 			if (Math.random() < 0.3) {
 				subscribeToNYDailyNews(seed, driver);
 			}
