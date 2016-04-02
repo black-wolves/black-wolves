@@ -27,7 +27,9 @@ public class SubscriberRunnable {
 	public static void main(String[] args) {
 		logger.info("Starting Subscriber...");
 		int index = Integer.parseInt(args[0]);
-		List<Seed> seeds = JDBC.getSeedsWithNoSubscriptions(index);
+		List<Seed> seeds = JDBC.getSeedsWithNoSubscriptions(index);		
+		logger.info("Working with "+seeds.size() + " seeds");
+
 		ExecutorService executor = null;
 			executor = Executors.newFixedThreadPool(seeds.size());
 			subscribeToNewsletters(seeds, executor);
@@ -46,7 +48,7 @@ public class SubscriberRunnable {
 					logger.info("shutdown finished");
 				}
 
-		}
+		} 
 		logger.info("Finished all threads");
 
 	}

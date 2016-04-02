@@ -72,7 +72,7 @@ public class Subscriber implements Runnable {
 				subscribeToSoccerWire(seed, driver);
 			}
 			if (Math.random() < 0.2) {
-				subscribeToTheGolfChannel(seed, driver);
+				//subscribeToTheGolfChannel(seed, driver);
 			}
 			if (Math.random() < 0.3) {
 				subscribeToDetroitDailyNews(seed, driver);
