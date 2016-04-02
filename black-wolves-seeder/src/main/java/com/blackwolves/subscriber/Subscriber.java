@@ -150,7 +150,8 @@ public class Subscriber implements Runnable {
 			// subscribeToGolfSmith(seed, driver);
 			// }
 			if (seed.getSubscription().equals("")) {
-				logger.info("*************Error Saving subscriptions of "+ seed.getUser());
+				logger.info("saving SanAntonioNews by default");
+				subscribeToSanAntonioNews(seed,driver);		
 			}
 			JDBC.updateSubscription(seed);
 
