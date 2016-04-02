@@ -129,9 +129,13 @@ public abstract class YahooRunnable {
 					logger.info("Image Enabled: " + a.isEnabled());
 					logger.info("Image Selected: " + a.isSelected());
 					logger.info("clicking!");
-					a.click();
-					logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
-					Thread.sleep(randInt(3000, 5000));
+					if(a!=null && a.isDisplayed()){
+						a.click();
+						logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
+						Thread.sleep(randInt(3000, 5000));
+					}else{
+						logger.info("Show images not displayed");
+					}
 					ModernYahooRunnable.scrollToBottom(driver);
 				}else{
 					logger.info("No Images to click");
