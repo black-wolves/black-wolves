@@ -184,10 +184,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 			if (div.findElements(By.tagName("a")).size() > 0) {
 				logger.info("Links found");
 				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-				int randomLinkNo = randInt(0, linksToGo.size() - 1);
-				linksToGo.get(0).click(); //TODO
-				switchToNewWindow();
-				switchToPreviousWindow();
+				if(linksToGo.get(0)!=null){
+					WebElement link = linksToGo.get(0);
+					logger.info("Displayed: " + link.isDisplayed());
+					logger.info("Enabled: " + link.isEnabled());
+					logger.info("Selected: " + link.isSelected());
+					linksToGo.get(0).click();
+					switchToNewWindow();
+					switchToPreviousWindow();
+				}
 			} else {
 				logger.info("**********   No links found or none available  **********");
 			}
