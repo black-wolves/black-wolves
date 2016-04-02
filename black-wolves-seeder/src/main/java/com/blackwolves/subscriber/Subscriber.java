@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.blackwolves.seeder.Seed;
-import com.blackwolves.seeder.Seeder;
 import com.blackwolves.seeder.YahooRunnable;
 import com.blackwolves.seeder.util.JDBC;
 
@@ -213,12 +212,12 @@ public class Subscriber implements Runnable {
 			Thread.sleep(1000);
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			Seeder.getScreenShot(driver, seed.getUser()+"such");
+			YahooRunnable.getScreenShot(driver, seed.getUser()+"such");
 			logger.info("Saving screenshot as /var/www/errors/"+seed.getUser()+"such" );
 
 		}catch (WebDriverException e) {
 			logger.info("Element in " + url + "is not clickable. Saving screenshot as /var/www/errors/"+seed.getUser() );
-			Seeder.getScreenShot(driver, seed.getUser());
+			YahooRunnable.getScreenShot(driver, seed.getUser());
 
 
 		}
@@ -441,7 +440,7 @@ public class Subscriber implements Runnable {
 		}
 		catch (Exception e) {
 			logger.info("Element in " + url + " not found. Saving screenshot as /var/www/errors/"+seed.getUser() );
-			Seeder.getScreenShot(driver, seed.getUser());
+			YahooRunnable.getScreenShot(driver, seed.getUser());
 			
 		}
 

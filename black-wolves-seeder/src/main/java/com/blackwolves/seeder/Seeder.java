@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -129,15 +128,26 @@ public class Seeder implements Runnable {
 				logger.info("Already logged in..Moving forward!");
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
+					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
+					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
+					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		}
 	}
 
@@ -218,19 +228,30 @@ public class Seeder implements Runnable {
 				driver.get("http://mail.yahoo.com");
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			}else {
-				 getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
+				 YahooRunnable.getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
 				logger.info("==========   There is a new yahoo version in town   ==========");
 			}
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchelementException");
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException");
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
+					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException");
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
+					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException");
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
+					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
+					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
 		}
 		return handler;
 	}
@@ -243,17 +264,6 @@ public class Seeder implements Runnable {
 				driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).click();
 			}
 		}
-	}
-
-	public static void getScreenShot(WebDriver driver, String name) {
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		// Now you can do whatever you need to do with it, for example copy
-		// somewhere
-		try {
-			FileUtils.copyFile(scrFile, new File("/var/www/errors/" + name + ".jpg"));
-		} catch (IOException e) {
-		}
-
 	}
 
 	public List<String[]> generateList(String route, String file) {
@@ -296,7 +306,7 @@ public class Seeder implements Runnable {
 
 	}
 
-	public static void logAttempts(String log) {
+	public void logAttempts(String log) {
 		File file = new File("/var/www/total.txt");
 		FileWriter fw;
 		String newline = System.getProperty("line.separator");
@@ -308,8 +318,7 @@ public class Seeder implements Runnable {
 
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 	}
