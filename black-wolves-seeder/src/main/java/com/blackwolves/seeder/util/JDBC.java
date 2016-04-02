@@ -43,7 +43,7 @@ public class JDBC {
 //		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
 //		getStats();
 //		getLastUpdatedSeeds();
-//		getSeedsWithNoSubscriptions(10000);
+		getSeedsWithNoSubscriptions(9994,10000);
 	}
 	
 	public static Map<String, Object> getStats() {
@@ -290,7 +290,7 @@ public class JDBC {
 		return seeds;
 	}
 	
-	public static List<Seed> getSeedsWithNoSubscriptions(int index) {
+	public static List<Seed> getSeedsWithNoSubscriptions(int index, int top) {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
@@ -298,7 +298,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER.ID >= "+index+"  AND FEEDER.SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 20";
+		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+" AND FEEDER.SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 20";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();

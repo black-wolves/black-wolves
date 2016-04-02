@@ -27,8 +27,8 @@ public class SubscriberRunnable {
 	public static void main(String[] args) {
 		logger.info("Starting Subscriber...");
 		int index = args.length>0?Integer.parseInt(args[0]):0;
-		
-		List<Seed> seeds = JDBC.getSeedsWithNoSubscriptions(index);		
+		int top = args.length>1?Integer.parseInt(args[1]):99999;
+		List<Seed> seeds = JDBC.getSeedsWithNoSubscriptions(index,top);		
 		logger.info("Working with "+seeds.size() + " seeds");
 
 		ExecutorService executor = null;
