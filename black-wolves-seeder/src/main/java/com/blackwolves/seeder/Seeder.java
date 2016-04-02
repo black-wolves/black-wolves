@@ -210,7 +210,7 @@ public class Seeder implements Runnable {
 			Thread.sleep(5000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("----------   Old yahoo version   ----------");
-				handler = new OldYahooRunnable(driver, seed, human, logger);
+//				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
 				logger.info("**********   New yahoo 2 version   **********");
 				checkMultipleAccountsPanel(driver);

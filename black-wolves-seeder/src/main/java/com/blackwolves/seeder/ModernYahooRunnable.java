@@ -84,19 +84,29 @@ public class ModernYahooRunnable extends YahooRunnable {
 							currentMsg = inboxMsgs.get(randomPosition);
 						}
 						if(currentMsg != null){
+							
 							WebElement from = currentMsg.findElement(By.className("from"));
 							WebElement subject = currentMsg.findElement(By.className("subj"));
 							String fromText = from.getText();
 							String subjectText = subject.getText();
+							
 							if (from.getLocation().y > 0) {
 									logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
+									
+									logger.info("From Displayed: " + from.isDisplayed());
+									logger.info("From Enabled: " + from.isEnabled());
+									logger.info("From Selected: " + from.isSelected());
+									
+									logger.info("Subject Displayed: " + subject.isDisplayed());
+									logger.info("Subject Enabled: " + subject.isEnabled());
+									logger.info("Subject Selected: " + subject.isSelected());
+
 									subject.click();
 									if(Constant.FROM.ENTREPRENEUR.equals(fromText)){
 										opened = true;
 										if(Math.random() <= 0.8){
 											clickShowImages("show-text");
-											clickRandomLink();
-											clicked = true;
+											clicked = clickRandomLink();
 										}
 									}else if(!opened && Math.random() <= 0.25){
 										clickShowImages("show-text");
@@ -174,7 +184,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 	
 
 	@Override
-	public void clickRandomLink() {
+	public boolean clickRandomLink() {
+		boolean clicked = false;
 		try {
 			logger.info("Getting the content of the message");
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
@@ -198,6 +209,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 								link.click();
 								switchToNewWindow();
 								switchToPreviousWindow();
+								clicked = true;
+								keepGoing = false;
 							}
 						}else{
 							if(count < linksToGo.size()){
@@ -226,6 +239,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		} catch (WebDriverException e) {
 			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
 		}
+		return clicked;
 	}
 
 	@Override
