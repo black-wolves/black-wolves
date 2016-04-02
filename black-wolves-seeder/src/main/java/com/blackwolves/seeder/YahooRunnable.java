@@ -138,26 +138,26 @@ public abstract class YahooRunnable {
 				logger.info("**********   No show images button found or there is none   **********");
 			}
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		}
 	}
 	
@@ -270,26 +270,26 @@ public abstract class YahooRunnable {
 		    driver.switchTo().window(newTab);
 		    Thread.sleep(randInt(5000, 10000));
 	    } catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		}
 	    
 	}
@@ -310,26 +310,26 @@ public abstract class YahooRunnable {
 		    driver.switchTo().window(newTab);
 		    Thread.sleep(randInt(5000, 10000));
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (StaleElementReferenceException e) {
 			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (ElementNotVisibleException e) {
 			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (ElementNotFoundException e) {
 			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " "
-					+ e.getCause() + " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+					, e); 
 		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " + e.getCause()
-					+ " " + e.getLocalizedMessage() + " " + e.getSuppressed());
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+					
 		}
 	}
 	
