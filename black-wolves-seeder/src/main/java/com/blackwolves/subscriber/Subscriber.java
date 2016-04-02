@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -60,6 +61,7 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		seed.setSubscription(new String());
 		try {
+			subscribeToForbes(seed,driver);
 			if (Math.random() < 0.35) {
 				subscribeToNYDailyNews(seed, driver);
 			}
@@ -425,9 +427,8 @@ public class Subscriber implements Runnable {
 			        ExpectedConditions.visibilityOfElementLocated(By.id("Email")));
 			email.clear();
 			email.sendKeys(seed.getUser());
-			WebElement submit = driver.findElement(By.className("mktoButtonRow"));
+			email.sendKeys(Keys.RETURN);
 			Thread.sleep(1000);
-			submit.click();
 			seed.setSubscription(seed.getSubscription().concat(site));
 		} catch (InterruptedException | NoSuchElementException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);

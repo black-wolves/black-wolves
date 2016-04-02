@@ -298,7 +298,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER.ID >= "+index+"  AND FEEDER.SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 10  ";
+		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER.ID >= "+index+"  AND FEEDER.SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 1  ";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
