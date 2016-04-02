@@ -33,11 +33,17 @@ public class SeederThreadPool {
 		do{
 			List<Seed> seeds = JDBC.getLastUpdatedSeeds();
 			
+			logger.info("Last updated seeds size: " + seeds.size() + " seeds");
+			
 			double loginPercentage = YahooRunnable.generateDoubleRandom(0.3, 0.6);
 			
+			logger.info("Login percentage: " + loginPercentage);
+			
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
-	
+			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
+			
+			logger.info("Sample seeds: " + sampleSeeds);
 			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
 			
@@ -80,6 +86,7 @@ public class SeederThreadPool {
 	}
 
 	private static void processSeeds(ExecutorService executor, int size, List<Seed> finalSeeds) {
+		logger.info("Processing seeds before the for");
 		for (int i = 0; i < finalSeeds.size(); i++) {
 			Seed seed = finalSeeds.get(i);
 			MDC.put("logFileName", seed.getUser());
