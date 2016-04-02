@@ -61,35 +61,34 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		seed.setSubscription(new String());
 		try {
-			subscribeToForbes(seed,driver);
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToNYDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToSoccerWire(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.2) {
 				subscribeToTheGolfChannel(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToDetroitDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToSanAntonioNews(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToBostonMagazine(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToTheHerald(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToNBCNews(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.35) {
+			if (Math.random() < 0.3) {
 				subscribeToForbes(seed, driver);
 			}
 			// if (Math.random() < 0.3) {
@@ -350,7 +349,6 @@ public class Subscriber implements Runnable {
 			WebElement email = driver.findElement(By.name("email"));
 			email.clear();
 			email.sendKeys(seed.getUser());
-
 			List<WebElement> checkboxes = driver.findElements(By.xpath("//input[@name='newsletter_lists']"));
 			for (int i = 0; i < checkboxes.size(); i++) {
 				if (Math.random() > 0.4) {
