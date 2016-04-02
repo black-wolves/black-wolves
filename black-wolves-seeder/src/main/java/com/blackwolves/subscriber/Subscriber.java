@@ -61,6 +61,7 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		seed.setSubscription(new String());
 		try {
+			
 			if (Math.random() < 0.3) {
 				subscribeToNYDailyNews(seed, driver);
 			}
@@ -417,10 +418,10 @@ public class Subscriber implements Runnable {
 		try {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
-			// Going 2 times so we can avoid Quote of the day
-			driver.get(url);
-
 			WebDriverWait wait = new WebDriverWait(driver, 15);
+			WebElement continueBtn = wait.until(
+			        ExpectedConditions.visibilityOfElementLocated(By.className("continue-button")));
+			continueBtn.click();
 			WebElement email = wait.until(
 			        ExpectedConditions.visibilityOfElementLocated(By.id("Email")));
 			email.clear();
