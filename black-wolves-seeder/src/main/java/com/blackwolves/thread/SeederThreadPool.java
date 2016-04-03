@@ -81,6 +81,7 @@ public class SeederThreadPool {
 		logger.info("Open Rate is: " + openRate);
 		
 		if(openRate > randomGoal){
+			logger.info("OpenRate is greater than goal.We are on track!");
 			return true;
 		}
 		return false;
