@@ -257,9 +257,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE  SEED='bdchon@yahoo.com' AND FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "' ORDER BY FEEDER_UPDATED_DATE DESC LIMIT 20";
-//		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE SEED='bdchon@yahoo.com'";
-
+		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "' ORDER BY FEEDER_UPDATED_DATE DESC LIMIT 20";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
