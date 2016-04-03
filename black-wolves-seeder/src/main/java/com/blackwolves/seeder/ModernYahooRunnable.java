@@ -50,6 +50,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 			for (int j = 0; j < percentage; j++) {
 				boolean opened = false;
 				boolean clicked = false;
+				boolean spam = false;
+
 
 				try {
 					if (exception) {
@@ -74,10 +76,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 						logger.info("list-view-item found");
 						inboxMsgs = driver.findElements(By.className("list-view-item"));
 						WebElement currentMsg = null;
+						//Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMyMsg(inboxMsgs);
+							currentMsg = findMessage(inboxMsgs,Constant.FROM.ENTREPRENEUR);
 							foundMyMsg = true;
-						} else {
+						} 
+						//Or a SpamMsg to give the seed reputation. 0.02 chances
+						else if(findSpamMessage()){
+							currentMsg =  findMessage(inboxMsgs, Constant.FROM.SPAM);
+							spam =true;
+						}
+						//Or just any Msg
+						else {
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
 
@@ -90,13 +100,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							WebElement subject = currentMsg.findElement(By.className("subj"));
 							String fromText = from.getText();
 							String subjectText = subject.getText();
-							// if (from.getLocation().y > 0) {
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
-							// from.click();
-
-//							logger.info("From Displayed: " + from.isDisplayed());
-//							logger.info("From Enabled: " + from.isEnabled());
-//							logger.info("From Selected: " + from.isSelected());
 							currentMsg.click();
 
 							if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
@@ -105,20 +109,23 @@ public class ModernYahooRunnable extends YahooRunnable {
 									clickShowImages("show-text");
 									clicked = clickRandomLink();
 								}
-							} else if (!opened && Math.random() <= 0.25) {
+							} else if (spam) {
+								opened = true;
+								spam = true;
+								logger.info("Marking Msg as Spam");
+								clickSpam();
+							} 
+							
+							else if (!opened && Math.random() <= 0.25) {
 								clickShowImages("show-text");
 								clickRandomLink();
 							}
 							scrollToBottom(driver);
 							Thread.sleep(randInt(2500, 3500));
-							// } else {
-							// logger.info("Location y is negative, not entering
-							// msg: " + fromText + " - " + subjectText);
-							// }
 
 							if (opened) {
 								logger.info("Saving message stats into database");
-								JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, 0);
+								JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam?1:0);
 							}
 
 							archiveMsg();
@@ -174,12 +181,19 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findMyMessage() {
-		if (Math.random() <= 0.4) {
+		if (Math.random() <= 0.3) {
 			return true;
 		}
 		return false;
 	}
 
+	private boolean findSpamMessage() {
+		if (Math.random() <= 0.1) {
+			return true;
+		}
+		return false;
+	}
+	
 	private void archiveMsg() {
 		if (Math.random() <= 0.5) {
 			WebElement archive = driver.findElement(By.id("btn-archive"));
@@ -937,13 +951,13 @@ public class ModernYahooRunnable extends YahooRunnable {
 		return myMessages.get(randomPosition);
 	}
 
-	private WebElement findMyMsg(List<WebElement> inboxMsgs) {
-		logger.info("Finding my message");
+	private WebElement findMessage(List<WebElement> inboxMsgs,String msgfrom) {
+		logger.info("Finding message "+msgfrom);
 		List<WebElement> myMessages = new ArrayList<WebElement>();
 		for (WebElement webElement : inboxMsgs) {
 			WebElement from = webElement.findElement(By.className("from"));
 			String fromText = from.getText();
-			if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
+			if (msgfrom.equals(fromText)) {
 				myMessages.add(webElement);
 				break;
 			}
