@@ -94,9 +94,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
 							// from.click();
 
-							logger.info("From Displayed: " + from.isDisplayed());
-							logger.info("From Enabled: " + from.isEnabled());
-							logger.info("From Selected: " + from.isSelected());
+//							logger.info("From Displayed: " + from.isDisplayed());
+//							logger.info("From Enabled: " + from.isEnabled());
+//							logger.info("From Selected: " + from.isSelected());
 							currentMsg.click();
 
 							if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
@@ -209,9 +209,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 					int count = 0;
 					do {
 						WebElement link = linksToGo.get(count);
-						logger.info("Link Displayed: " + link.isDisplayed());
-						logger.info("Link Enabled: " + link.isEnabled());
-						logger.info("Link Selected: " + link.isSelected());
+//						logger.info("Link Displayed: " + link.isDisplayed());
+//						logger.info("Link Enabled: " + link.isEnabled());
+//						logger.info("Link Selected: " + link.isSelected());
 						if (link != null && link.isDisplayed()) {
 							String url = link.getAttribute("href");
 							if (url.contains("unsub") || url.contains("yahoo") || url.contains("subsc")) {
