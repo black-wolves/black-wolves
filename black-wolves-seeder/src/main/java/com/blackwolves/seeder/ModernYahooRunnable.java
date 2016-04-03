@@ -96,11 +96,12 @@ public class ModernYahooRunnable extends YahooRunnable {
 						}
 						
 						if (currentMsg != null) {
+							WebElement subject = currentMsg.findElement(By.className("subj"));
+
 
 							WebElement from = currentMsg.findElement(By.className("from"));
-							WebElement subject = currentMsg.findElement(By.className("subj"));
-							String fromText = from.getText();
-							String subjectText = subject.getText();
+							final String fromText = from.getText();
+							final String subjectText = subject.getText();
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
 							subject.click();
 
