@@ -72,9 +72,9 @@ public class SeederThreadPool {
 		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
 		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
 		
-		double openRate = opened/mailCount;
-		double clickRate = clicked/mailCount;
-		double spamRate = spammed/mailCount;
+		double openRate = (double)opened/(double)mailCount;
+		double clickRate = (double)clicked/(double)mailCount;
+		double spamRate = (double)spammed/(double)mailCount;
 		
 		double randomGoal = YahooRunnable.generateDoubleRandom(0.2, 0.08);
 		logger.info("Random goal is: " + randomGoal);
