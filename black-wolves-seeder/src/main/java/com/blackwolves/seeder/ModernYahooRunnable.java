@@ -102,7 +102,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							String fromText = from.getText();
 							String subjectText = subject.getText();
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
-							currentMsg.click();
+							subject.click();
 
 							if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
 								opened = true;
