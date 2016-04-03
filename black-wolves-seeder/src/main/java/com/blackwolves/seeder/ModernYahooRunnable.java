@@ -94,6 +94,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Getting the random message");
 							currentMsg = inboxMsgs.get(randomPosition);
 						}
+						
 						if (currentMsg != null) {
 
 							WebElement from = currentMsg.findElement(By.className("from"));
@@ -120,7 +121,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								clickShowImages("show-text");
 								clickRandomLink();
 							}
-							scrollToBottom(driver);
+						//	scrollToBottom(driver);
 							Thread.sleep(randInt(2500, 3500));
 
 							if (opened) {
@@ -188,7 +189,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findSpamMessage() {
-		if (Math.random() <= 0.1) {
+		if (Math.random() <= 0.05) {
 			return true;
 		}
 		return false;
