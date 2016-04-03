@@ -101,7 +101,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 							if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
 								opened = true;
-								if (Math.random() <= 0.8) {
+								if (Math.random() <= 0.6) {
 									clickShowImages("show-text");
 									clicked = clickRandomLink();
 								}
@@ -174,7 +174,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findMyMessage() {
-		if (Math.random() <= 0.6) {
+		if (Math.random() <= 0.4) {
 			return true;
 		}
 		return false;

@@ -76,8 +76,9 @@ public class SeederThreadPool {
 		double clickRate = clicked/mailCount;
 		double spamRate = spammed/mailCount;
 		
-		double randomGoal = YahooRunnable.generateDoubleRandom(0.35, 0.08);
+		double randomGoal = YahooRunnable.generateDoubleRandom(0.2, 0.08);
 		logger.info("Random goal is: " + randomGoal);
+		logger.info("Open Rate is: " + openRate);
 		
 		if(openRate > randomGoal){
 			return true;
