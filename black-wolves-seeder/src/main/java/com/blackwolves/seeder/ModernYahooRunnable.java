@@ -49,6 +49,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 			boolean foundMyMsg = false;
+			
+			//This case is for mailboxes with less than 4 emails.
+			if(inboxMsgs.size()>0 && inboxMsgs.size()<=4)
+			{
+				logger.info("Less than 4 emails in inbox.");
+				percentage=inboxMsgs.size();
+			}
+			
 			for (int j = 0; j < percentage; j++) {
 				boolean opened = false;
 				boolean clicked = false;
@@ -823,91 +831,91 @@ public class ModernYahooRunnable extends YahooRunnable {
 				WebElement yucsHelp = driver.findElement(By.id("yucs-help"));
 				myMouse.moveToElement(yucsHelp).build().perform();
 				logger.info("Moving to configuration wheel");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(1500, 1500));
 			}
 			if (throwDice()) {
 				WebElement inboxLabel = driver.findElement(By.className("inbox-label"));
 				myMouse.moveToElement(inboxLabel).build().perform();
 				logger.info("Moving to inbox");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(1500, 1500));
 			}
 			if (throwDice()) {
 				WebElement multitask = driver.findElement(By.id("multitask"));
 				myMouse.moveToElement(multitask).build().perform();
 				logger.info("Moving to multitask");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(1500, 1500));
 			}
 			if (throwDice()) {
 				WebElement spamLabel = driver.findElement(By.id("spam-label"));
 				myMouse.moveToElement(spamLabel).build().perform();
 				logger.info("Moving to spam");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement yucsHomeLink = driver.findElement(By.id("yucs-home_link"));
 				myMouse.moveToElement(yucsHomeLink).build().perform();
 				logger.info("Moving to Home");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement typeaheadInput = driver.findElement(By.className("typeahead-input"));
 				myMouse.moveToElement(typeaheadInput).build().perform();
 				logger.info("Moving to search box");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement uhWrapper = driver.findElement(By.xpath("//*[@id='uhWrapper']/table/tbody/tr/td/a"));
 				myMouse.moveToElement(uhWrapper).build().perform();
 				logger.info("Moving to yahoo icon");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement yucsProfile = driver.findElement(By.id("yucs-profile"));
 				myMouse.moveToElement(yucsProfile).build().perform();
 				logger.info("Moving to Profile");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement smartviews = driver.findElement(By.id("smartviews"));
 				myMouse.moveToElement(smartviews).build().perform();
 				logger.info("Moving to smartviews");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement trash = driver.findElement(By.className("trash"));
 				myMouse.moveToElement(trash).build().perform();
 				logger.info("Moving to trash");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement sent = driver.findElement(By.className("sent"));
 				myMouse.moveToElement(sent).build().perform();
 				logger.info("Moving to sent");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement drafts = driver.findElement(By.className("drafts"));
 				myMouse.moveToElement(drafts).build().perform();
 				logger.info("Moving to drafts");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement compose = driver.findElement(By.id("Compose"));
 				myMouse.moveToElement(compose).build().perform();
 				logger.info("Moving to compose");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement mailSearchBtn = driver.findElement(By.id("mail-search-btn"));
 				myMouse.moveToElement(mailSearchBtn).build().perform();
 				logger.info("Moving to mailSearchBtn");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 			if (throwDice()) {
 				WebElement webSearchBtn = driver.findElement(By.id("web-search-btn"));
 				myMouse.moveToElement(webSearchBtn).build().perform();
 				logger.info("Moving to webSearchBtn");
-				Thread.sleep(randInt(1500, 3500));
+				Thread.sleep(randInt(500, 1500));
 			}
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
