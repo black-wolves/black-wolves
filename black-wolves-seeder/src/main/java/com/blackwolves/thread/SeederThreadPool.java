@@ -41,7 +41,7 @@ public class SeederThreadPool {
 			
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 			
-			sampleSeeds = sampleSeeds<35?sampleSeeds:35;
+			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
 			
 			logger.info("Sample seeds: " + sampleSeeds);
 			
