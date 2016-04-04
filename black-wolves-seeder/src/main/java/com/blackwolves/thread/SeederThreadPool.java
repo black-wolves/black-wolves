@@ -35,13 +35,13 @@ public class SeederThreadPool {
 			
 			logger.info("Last updated seeds size: " + seeds.size() + " seeds");
 			
-			double loginPercentage = YahooRunnable.generateDoubleRandom(0.3,0.6);
+			double loginPercentage = YahooRunnable.generateDoubleRandom(0.4,0.6);
 			
 			logger.info("Login percentage: " + loginPercentage);
 			
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 			
-			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
+			sampleSeeds = sampleSeeds<25?sampleSeeds:25;
 			
 			logger.info("Sample seeds: " + sampleSeeds);
 			
@@ -81,7 +81,7 @@ public class SeederThreadPool {
 		logger.info("Open Rate is: " + openRate);
 		
 		if(openRate > randomGoal){
-			logger.info("OpenRate is greater than goal.We are on track!");
+			logger.info("OpenRate is greater than goal. We are on track!");
 			return true;
 		}
 		return false;

@@ -13,6 +13,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import com.blackwolves.seeder.util.Constant;
@@ -103,6 +105,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 							final String fromText = from.getText();
 							final String subjectText = subject.getText();
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
+							
+							WebDriverWait wait = new WebDriverWait(driver, 15); wait.until(ExpectedConditions.elementToBeClickable(subject)); 
 							subject.click();
 
 							if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
