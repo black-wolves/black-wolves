@@ -3,6 +3,9 @@
  */
 package com.blackwolves.thread;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +50,9 @@ public class SeederThreadPool {
 			logger.info("Sample seeds: " + sampleSeeds);
 			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
+			
+			logger.info("Writing seeds to file /var/www/in-use-seeds.txt");
+			writeSeedsToFile(finalSeeds);
 			
 			logger.info("Updating seeds IN_USE to TRUE");
 			JDBC.updateSeeds(finalSeeds, true);
@@ -103,6 +109,23 @@ public class SeederThreadPool {
 			Runnable worker = seeder;
 			logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword());
 			executor.execute(worker);
+		}
+	}
+	
+	public static void writeSeedsToFile(List<Seed> seeds) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
+			for (Seed seed : seeds) {
+				pw.write(seed.getUser());
+				pw.write("\n");
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			if(pw!=null){
+				pw.close();
+			}
 		}
 	}
 }
