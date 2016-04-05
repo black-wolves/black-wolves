@@ -42,7 +42,7 @@ public class SeederThreadPool {
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
-			
+		//    sampleSeeds = 1;	
 			logger.info("Sample seeds: " + sampleSeeds);
 			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
@@ -76,7 +76,7 @@ public class SeederThreadPool {
 		double clickRate = (double)clicked/(double)mailCount;
 		double spamRate = (double)spammed/(double)mailCount;
 		
-		double randomGoal = YahooRunnable.generateDoubleRandom(0.2, 0.08);
+		double randomGoal = YahooRunnable.generateDoubleRandom(0.35, 0.15);
 		logger.info("Random goal is: " + randomGoal);
 		logger.info("Open Rate is: " + openRate);
 		
