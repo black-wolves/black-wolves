@@ -42,10 +42,13 @@ public class SeederThreadPool {
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
-		//    sampleSeeds = 1;	
+
 			logger.info("Sample seeds: " + sampleSeeds);
 			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
+			
+			logger.info("Updating seeds IN_USE to TRUE");
+			JDBC.updateSeeds(finalSeeds, true);
 			
 			logger.info("Processing " + finalSeeds.size() + " seeds");
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
@@ -60,6 +63,9 @@ public class SeederThreadPool {
 				logger.info("Finished all threads");
 			}
 			
+			logger.info("Updating seeds IN_USE to FALSE");
+			JDBC.updateSeeds(finalSeeds, false);
+			
 			goal = checkGoal();
 		}while(!goal);
 		
@@ -69,12 +75,12 @@ public class SeederThreadPool {
 		Map<String, Object> stats = JDBC.getStats();
 		int mailCount = (int) stats.get(Constant.FEEDER.MAIL_COUNT);
 		int opened = (int) stats.get(Constant.FEEDER.OPENED);
-		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
-		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
+//		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
+//		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
 		
 		double openRate = (double)opened/(double)mailCount;
-		double clickRate = (double)clicked/(double)mailCount;
-		double spamRate = (double)spammed/(double)mailCount;
+//		double clickRate = (double)clicked/(double)mailCount;
+//		double spamRate = (double)spammed/(double)mailCount;
 		
 		double randomGoal = YahooRunnable.generateDoubleRandom(0.35, 0.15);
 		logger.info("Random goal is: " + randomGoal);
