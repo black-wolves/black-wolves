@@ -361,7 +361,7 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		String selectSQL = "SELECT OPENED from mailinglocaweb.FEEDER ORDER BY OPENED DESC LIMIT 1";
+		String selectSQL = "SELECT MIN(OPENED) from mailinglocaweb.FEEDER ORDER BY OPENED DESC LIMIT 1";
 		
 		int opened = 0;
 		
