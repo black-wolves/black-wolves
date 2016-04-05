@@ -24,6 +24,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -41,9 +43,9 @@ public abstract class YahooRunnable {
 	protected static Logger logger;
 
 	protected static double PERCENTAGE = generateDoubleRandom(0.1, 0.25);
-	
+
 	protected Seed seed;
-	
+
 	protected Human human;
 
 	protected WebDriver driver;
@@ -54,10 +56,11 @@ public abstract class YahooRunnable {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param driver
 	 * @param seed
 	 * @param human
-	 * @param logger2 
+	 * @param logger2
 	 */
 	public YahooRunnable(WebDriver driver, Seed seed, Human human, Logger logger) {
 		this.driver = driver;
@@ -70,30 +73,33 @@ public abstract class YahooRunnable {
 
 	/**
 	 * Starts the wolf seeder process
-	 * @param logger 
+	 * 
+	 * @param logger
 	 */
 	public void runProcess() {
-		
+
 		logger.info("Processing inbox");
 		processInbox(seed);
-		
-//		logger.info("Processing spam....");
-//		processSpam(seed);
-			
+
+		// logger.info("Processing spam....");
+		// processSpam(seed);
+
 	}
 
 	/**
 	 * Throw dices to get random results
+	 * 
 	 * @return boolean
 	 */
 	public static boolean throwDice() {
 		int dice = randInt(1, 6);
 		return dice == 3;
 	}
-	
+
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
-		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
+		// nextInt is normally exclusive of the top value, so add 1 to make it
+		// inclusive
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
@@ -105,7 +111,7 @@ public abstract class YahooRunnable {
 	 */
 	protected int obtainRandomMsgsPosition(List<WebElement> msgs) {
 		logger.info("The msgs.size() is: " + msgs.size());
-		int randomPosition = randInt(0, msgs.size()>= 50?49:msgs.size()==0?0:msgs.size()-1);		
+		int randomPosition = randInt(0, msgs.size() >= 10 ? 10 : msgs.size() == 0 ? 0 : msgs.size() - 1);
 		logger.info("The random position is: " + randomPosition);
 		return randomPosition;
 	}
@@ -116,9 +122,9 @@ public abstract class YahooRunnable {
 	 * @throws InterruptedException
 	 */
 	protected void clickShowImages(String className) {
-		try{
+		try {
 			if (validateInboxShowImagesButton(className)) {
-				if(driver.findElements(By.className("show-text")).size() > 0){
+				if (driver.findElements(By.className("show-text")).size() > 0) {
 					logger.info("Getting the show images div");
 					List<WebElement> divs = driver.findElements(By.className("show-text"));
 					WebElement showImage = divs.get(0);
@@ -129,38 +135,46 @@ public abstract class YahooRunnable {
 					logger.info("Image Enabled: " + a.isEnabled());
 					logger.info("Image Selected: " + a.isSelected());
 					logger.info("clicking!");
-					if(a!=null && a.isDisplayed()){
+					if (a != null && a.isDisplayed()) {
 						a.click();
-						logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
+						logger.info(
+								"**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
 						Thread.sleep(randInt(3000, 5000));
-					}else{
+					} else {
 						logger.info("Show images not displayed");
 					}
 					ModernYahooRunnable.scrollToBottom(driver);
-				}else{
+				} else {
 					logger.info("No Images to click");
 				}
 			} else {
 				logger.info("**********   No show images button found or there is none   **********");
 			}
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-					
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param className
@@ -175,9 +189,10 @@ public abstract class YahooRunnable {
 		}
 		return driver.findElements(By.className(className)).size() > 0;
 	}
-	
+
 	/**
 	 * Generates a random value of type doulbe
+	 * 
 	 * @param max
 	 * @param min
 	 * @return double
@@ -189,137 +204,162 @@ public abstract class YahooRunnable {
 		}
 		return (Math.random() * (max - min) + min);
 	}
-	
+
 	public abstract void processInbox(Seed seed);
 
 	public abstract void processSpam(Seed seed);
 
 	public abstract void clickSpam();
-	
+
 	public abstract boolean clickRandomLink();
-	
-//	public abstract void replyToEmail();
-	
-//	public abstract void forwardEmail();
-	
-//	public abstract void sendEmail();
-	
-//	public abstract void moveMessageToAllFolder();
-	
-//	public abstract void replyToEmailFromSubList();
-	
-//	public abstract void forwardEmailFromSubList();
-	
+
+	// public abstract void replyToEmail();
+
+	// public abstract void forwardEmail();
+
+	// public abstract void sendEmail();
+
+	// public abstract void moveMessageToAllFolder();
+
+	// public abstract void replyToEmailFromSubList();
+
+	// public abstract void forwardEmailFromSubList();
+
 	/**
 	 * Executes a script on an element
-	 * @note Really should only be used when the web driver is sucking at exposing
-	 * functionality natively
-	 * @param script The script to execute
-	 * @param element The target of the script, referenced as arguments[0]
+	 * 
+	 * @note Really should only be used when the web driver is sucking at
+	 *       exposing functionality natively
+	 * @param script
+	 *            The script to execute
+	 * @param element
+	 *            The target of the script, referenced as arguments[0]
 	 */
 	public void trigger(String script, WebElement element) {
-	    ((JavascriptExecutor)driver).executeScript(script, element);
+		((JavascriptExecutor) driver).executeScript(script, element);
 	}
 
-	/** Executes a script
-	 * @note Really should only be used when the web driver is sucking at exposing
-	 * functionality natively
-	 * @param script The script to execute
+	/**
+	 * Executes a script
+	 * 
+	 * @note Really should only be used when the web driver is sucking at
+	 *       exposing functionality natively
+	 * @param script
+	 *            The script to execute
 	 */
 	public Object trigger(String script) {
-	    return ((JavascriptExecutor)driver).executeScript(script);
+		return ((JavascriptExecutor) driver).executeScript(script);
 	}
 
 	/**
 	 * Opens a new tab for the given URL
-	 * @param url The URL to 
-	 * @throws JavaScriptException If unable to open tab
+	 * 
+	 * @param url
+	 *            The URL to
+	 * @throws JavaScriptException
+	 *             If unable to open tab
 	 */
 	public void openTab(String url) {
 		logger.info("Opening link in new window");
-	    String script = "var d=document,a=d.createElement('a');a.target='_blank';a.href='%s';a.innerHTML='.';d.body.appendChild(a);return a";
-	    Object element = trigger(String.format(script, url));
-	    if (element instanceof WebElement) {
-	        WebElement anchor = (WebElement) element;
-	        logger.info("Text: " + anchor.getText());
-	        logger.info("TageName: " + anchor.getTagName());
-	        logger.info("Location: " + anchor.getLocation());
-	        logger.info("Size: " + anchor.getSize());
-	        logger.info("Rect: " + anchor.getRect());
-	        logger.info("Displayed: " + anchor.isDisplayed());
-	        logger.info("Enabled: " + anchor.isEnabled());
-	        logger.info("Selected: " + anchor.isSelected());
-	        anchor.click();
-	        trigger("var a=arguments[0];a.parentNode.removeChild(a);", anchor);
-	    } else {
-	        throw new JavaScriptException(element, "Unable to open tab", 1);
-	    }       
+		String script = "var d=document,a=d.createElement('a');a.target='_blank';a.href='%s';a.innerHTML='.';d.body.appendChild(a);return a";
+		Object element = trigger(String.format(script, url));
+		if (element instanceof WebElement) {
+			WebElement anchor = (WebElement) element;
+			logger.info("Text: " + anchor.getText());
+			logger.info("TageName: " + anchor.getTagName());
+			logger.info("Location: " + anchor.getLocation());
+			logger.info("Size: " + anchor.getSize());
+			logger.info("Rect: " + anchor.getRect());
+			logger.info("Displayed: " + anchor.isDisplayed());
+			logger.info("Enabled: " + anchor.isEnabled());
+			logger.info("Selected: " + anchor.isSelected());
+			anchor.click();
+			trigger("var a=arguments[0];a.parentNode.removeChild(a);", anchor);
+		} else {
+			throw new JavaScriptException(element, "Unable to open tab", 1);
+		}
 	}
-	
+
 	/**
 	 * Switches to the non-current window
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	public void switchToNewWindow() {
-	    try{
+		try {
 			Set<String> handles = driver.getWindowHandles();
-		    String current = driver.getWindowHandle();
-		    handles.remove(current);
-		    String newTab = handles.iterator().next();
-		    logger.info("Switching to new window");
-		    driver.switchTo().window(newTab);
-		    Thread.sleep(randInt(5000, 10000));
-	    } catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			String current = driver.getWindowHandle();
+			handles.remove(current);
+			String newTab = handles.iterator().next();
+			logger.info("Switching to new window");
+			driver.switchTo().window(newTab);
+			Thread.sleep(randInt(5000, 10000));
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-					
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		}
 	}
-	
+
 	/**
 	 * Switches to the non-current window
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	public void switchToPreviousWindow() {
-		try{	
+		try {
 			Set<String> handles = driver.getWindowHandles();
-		    String current = driver.getWindowHandle();
-		    handles.remove(current);
-		    String newTab = handles.iterator().next();
-		    logger.info("Closing new window");
-		    driver.close();
-		    logger.info("Switching back to yahoo");
-		    driver.switchTo().window(newTab);
-		    Thread.sleep(randInt(5000, 10000));
+			String current = driver.getWindowHandle();
+			handles.remove(current);
+			String newTab = handles.iterator().next();
+			logger.info("Closing new window");
+			driver.close();
+			logger.info("Switching back to yahoo");
+			driver.switchTo().window(newTab);
+			Thread.sleep(randInt(5000, 10000));
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
 		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-					
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -336,7 +376,7 @@ public abstract class YahooRunnable {
 		}
 		return seeds;
 	}
-	
+
 	public static void getScreenShot(WebDriver driver, String name) {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// Now you can do whatever you need to do with it, for example copy
@@ -348,5 +388,15 @@ public abstract class YahooRunnable {
 		}
 
 	}
-	
+
+	public static boolean isClickable(WebDriver driver, WebElement webElement) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 15);
+			wait.until(ExpectedConditions.elementToBeClickable(webElement));
+			return true;
+		} catch (WebDriverException e) {
+			return false;
+		}
+	}
+
 }

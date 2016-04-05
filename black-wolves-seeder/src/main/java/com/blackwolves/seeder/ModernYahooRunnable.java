@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import com.blackwolves.seeder.util.Constant;
 import com.blackwolves.seeder.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 /**
  * 
@@ -37,7 +38,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	@Override
 	public void processInbox(Seed seed) {
 
-		checkWelcomeDialog();
+		// checkWelcomeDialog();
 		validateOkayModal();
 		moveMouse();
 
@@ -49,20 +50,18 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Percentage is " + PERCENTAGE);
 			int percentage = (int) (inboxMsgs.size() * PERCENTAGE);
 			boolean foundMyMsg = false;
-			
-			//This case is for mailboxes with less than 4 emails.
-			if(inboxMsgs.size()>0 && inboxMsgs.size()<=4)
-			{
+
+			// This case is for mailboxes with less than 4 emails.
+			if (inboxMsgs.size() > 0 && inboxMsgs.size() <= 4) {
 				logger.info("Less than 4 emails in inbox.");
-				percentage=inboxMsgs.size();
+				percentage = inboxMsgs.size();
 			}
-			
+
 			for (int j = 0; j < percentage; j++) {
 				boolean opened = false;
 				boolean clicked = false;
 				boolean spam = false;
-
-
+				WebElement currentMsg = null;
 				try {
 					if (exception) {
 						exception = false;
@@ -82,21 +81,21 @@ public class ModernYahooRunnable extends YahooRunnable {
 					Thread.sleep(randInt(2500, 3500));
 
 					if (driver.findElements(By.className("list-view-item")).size() > 0) {
-
 						logger.info("list-view-item found");
 						inboxMsgs = driver.findElements(By.className("list-view-item"));
-						WebElement currentMsg = null;
-						//Looking for MyMessage
+						currentMsg = null;
+						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs,Constant.FROM.ENTREPRENEUR);
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.ENTREPRENEUR);
 							foundMyMsg = true;
-						} 
-						//Or a SpamMsg to give the seed reputation. 0.02 chances
-						else if(findSpamMessage()){
-							currentMsg =  findMessage(inboxMsgs, Constant.FROM.SPAM);
-							spam =true;
 						}
-						//Or just any Msg
+						// Or a SpamMsg to give the seed reputation. 0.02
+						// chances
+						else if (findSpamMessage()) {
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.SPAM);
+							spam = true;
+						}
+						// Or just any Msg
 						else {
 							logger.info("Obtaining a random message position so it can be open");
 							int randomPosition = obtainRandomMsgsPosition(inboxMsgs);
@@ -104,51 +103,55 @@ public class ModernYahooRunnable extends YahooRunnable {
 							logger.info("Getting the random message");
 							currentMsg = inboxMsgs.get(randomPosition);
 						}
-						
-						if (currentMsg != null) {
-							WebElement subject = currentMsg.findElement(By.className("subj"));
 
+						if (currentMsg != null) {
 
 							WebElement from = currentMsg.findElement(By.className("from"));
 							final String fromText = from.getText();
-							final String subjectText = subject.getText();
-							logger.info("$$$$$$$$$$ Opening Message from: " + fromText + " Subject: " + subjectText);
-							
-							WebDriverWait wait = new WebDriverWait(driver, 15); wait.until(ExpectedConditions.elementToBeClickable(subject)); 
-							subject.click();
-
-							if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
-								opened = true;
-								if (Math.random() <= 0.6) {
-									clickShowImages("show-text");
-									clicked = clickRandomLink();
+							// final String subjectText = subject.getText();
+							logger.info("$$$$$$$$$$ Opening Message from: " + fromText);
+							if (isClickable(driver, currentMsg)) {
+								logger.info("Will click at  X: "+ currentMsg.getLocation().getX() + " and Y:"+ currentMsg.getLocation().getY());
+								currentMsg.click();
+								if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
+									opened = true;
+									if (Math.random() <= 0.6) {
+										clickShowImages("show-text");
+										clicked = clickRandomLink();
+									}
+								} else if (spam) {
+									opened = true;
+									spam = true;
+									logger.info("Marking Msg as Spam");
+									clickSpam();
 								}
-							} else if (spam) {
-								opened = true;
-								spam = true;
-								logger.info("Marking Msg as Spam");
-								clickSpam();
-							} 
-							
-							else if (!opened && Math.random() <= 0.25) {
-								clickShowImages("show-text");
-								clickRandomLink();
+
+								else if (!opened && Math.random() <= 0.25) {
+									clickShowImages("show-text");
+									// clickRandomLink();
+								}
+								// scrollToBottom(driver);
+								Thread.sleep(randInt(2500, 3500));
+
+								if (opened) {
+									logger.info("Saving message stats into database");
+									JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam ? 1 : 0);
+								}
+
+								archiveMsg();
+
+								logger.info("Going back to inbox");
+								driver.findElement(By.className("inbox-label")).click();
+							} else {
+								logger.info("Msg is not clickable. Refreshing Page");
+
 							}
-						//	scrollToBottom(driver);
-							Thread.sleep(randInt(2500, 3500));
 
-							if (opened) {
-								logger.info("Saving message stats into database");
-								JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam?1:0);
-							}
-
-							archiveMsg();
-
-							logger.info("Going back to inbox");
-							driver.findElement(By.className("inbox-label")).click();
 						}
+
 					} else {
-						logger.info("**********   No mlink found or no messages available   **********");
+						logger.info("**********   Element is not clickable, Refreshing page.   **********");
+
 					}
 
 				} catch (InterruptedException e) {
@@ -207,7 +210,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		}
 		return false;
 	}
-	
+
 	private void archiveMsg() {
 		if (Math.random() <= 0.5) {
 			WebElement archive = driver.findElement(By.id("btn-archive"));
@@ -237,9 +240,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 					int count = 0;
 					do {
 						WebElement link = linksToGo.get(count);
-//						logger.info("Link Displayed: " + link.isDisplayed());
-//						logger.info("Link Enabled: " + link.isEnabled());
-//						logger.info("Link Selected: " + link.isSelected());
+						// logger.info("Link Displayed: " + link.isDisplayed());
+						// logger.info("Link Enabled: " + link.isEnabled());
+						// logger.info("Link Selected: " + link.isSelected());
 						if (link != null && link.isDisplayed()) {
 							String url = link.getAttribute("href");
 							if (url.contains("unsub") || url.contains("yahoo") || url.contains("subsc")) {
@@ -253,12 +256,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 								keepGoing = false;
 							}
 						} else {
-							if (count < linksToGo.size()-1) {
+							if (count < linksToGo.size() - 1) {
 								keepGoing = true;
 								count++;
-							}
-							else {
-								keepGoing =  false;
+							} else {
+								keepGoing = false;
 							}
 						}
 					} while (keepGoing);
@@ -965,24 +967,16 @@ public class ModernYahooRunnable extends YahooRunnable {
 		return myMessages.get(randomPosition);
 	}
 
-	private WebElement findMessage(List<WebElement> inboxMsgs,String msgfrom) {
-		logger.info("Finding message "+msgfrom);
-		List<WebElement> myMessages = new ArrayList<WebElement>();
+	private WebElement findMessage(List<WebElement> inboxMsgs, String msgfrom) {
+		logger.info("Finding message " + msgfrom);
 		for (WebElement webElement : inboxMsgs) {
 			WebElement from = webElement.findElement(By.className("from"));
 			String fromText = from.getText();
 			if (msgfrom.equals(fromText)) {
-				myMessages.add(webElement);
-				break;
+				return webElement;
 			}
 		}
-		if (myMessages.isEmpty()) {
-			return null;
-		}
-		int randomPosition = obtainRandomMsgsPosition(myMessages);
-
-		logger.info("Getting my message randomly");
-		return myMessages.get(randomPosition);
+		return null;
 	}
 
 }
