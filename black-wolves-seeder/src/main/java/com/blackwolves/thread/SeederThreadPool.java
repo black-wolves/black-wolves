@@ -27,10 +27,11 @@ public class SeederThreadPool {
 	private static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 
 	public static void main(String[] args) {
-		ExecutorService executor = null;
-		
 		boolean goal = false;
+		
 		do{
+			ExecutorService executor = null;
+			
 			List<Seed> seeds = JDBC.getLastUpdatedSeeds();
 			
 			logger.info("Last updated seeds size: " + seeds.size() + " seeds");
