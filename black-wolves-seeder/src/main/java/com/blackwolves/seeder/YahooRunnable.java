@@ -207,7 +207,7 @@ public abstract class YahooRunnable {
 
 	public abstract void processInbox(Seed seed);
 
-	public abstract void processSpam(Seed seed);
+//	public abstract void processSpam(Seed seed);
 
 	public abstract void clickSpam();
 

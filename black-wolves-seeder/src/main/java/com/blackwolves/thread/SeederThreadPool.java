@@ -3,6 +3,9 @@
  */
 package com.blackwolves.thread;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -27,10 +30,11 @@ public class SeederThreadPool {
 	private static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 
 	public static void main(String[] args) {
-		ExecutorService executor = null;
-		
 		boolean goal = false;
+		
 		do{
+			ExecutorService executor = null;
+			
 			List<Seed> seeds = JDBC.getLastUpdatedSeeds();
 			
 			logger.info("Last updated seeds size: " + seeds.size() + " seeds");
@@ -42,10 +46,16 @@ public class SeederThreadPool {
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
-		//    sampleSeeds = 1;	
+
 			logger.info("Sample seeds: " + sampleSeeds);
 			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
+			
+			logger.info("Writing seeds to file /var/www/in-use-seeds.txt");
+			writeSeedsToFile(finalSeeds);
+			
+			logger.info("Updating seeds IN_USE to TRUE");
+			JDBC.updateSeeds(finalSeeds, true);
 			
 			logger.info("Processing " + finalSeeds.size() + " seeds");
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
@@ -60,6 +70,9 @@ public class SeederThreadPool {
 				logger.info("Finished all threads");
 			}
 			
+			logger.info("Updating seeds IN_USE to FALSE");
+			JDBC.updateSeeds(finalSeeds, false);
+			
 			goal = checkGoal();
 		}while(!goal);
 		
@@ -69,12 +82,12 @@ public class SeederThreadPool {
 		Map<String, Object> stats = JDBC.getStats();
 		int mailCount = (int) stats.get(Constant.FEEDER.MAIL_COUNT);
 		int opened = (int) stats.get(Constant.FEEDER.OPENED);
-		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
-		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
+//		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
+//		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
 		
 		double openRate = (double)opened/(double)mailCount;
-		double clickRate = (double)clicked/(double)mailCount;
-		double spamRate = (double)spammed/(double)mailCount;
+//		double clickRate = (double)clicked/(double)mailCount;
+//		double spamRate = (double)spammed/(double)mailCount;
 		
 		double randomGoal = YahooRunnable.generateDoubleRandom(0.35, 0.15);
 		logger.info("Random goal is: " + randomGoal);
@@ -96,6 +109,23 @@ public class SeederThreadPool {
 			Runnable worker = seeder;
 			logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword());
 			executor.execute(worker);
+		}
+	}
+	
+	public static void writeSeedsToFile(List<Seed> seeds) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new FileWriter(Constant.ROUTE + "in-use-seeds.txt"));
+			for (Seed seed : seeds) {
+				pw.write(seed.getUser());
+				pw.write("\n");
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			if(pw!=null){
+				pw.close();
+			}
 		}
 	}
 }

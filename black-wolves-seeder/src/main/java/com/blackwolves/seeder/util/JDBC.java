@@ -42,10 +42,79 @@ public class JDBC {
 	public static void main(String[] args) throws ParseException {
 //		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
 //		getStats();
-//		getLastUpdatedSeeds();
-		getSeedsForSubscriptions(9994,10000);
+		getLastUpdatedSeeds();
+//		getSeedsForSubscriptions(9994,10000);
 	}
 	
+	public static List<Seed> getLastUpdatedSeeds() {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
+		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		formatter.setTimeZone(tz);
+		
+		List<Seed> seeds = new ArrayList<Seed>();
+		try {
+			boolean keepGoing = false;
+			int count = getLessOpenedCount();
+			
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+			do {
+//				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = " + count + " AND IN_USE = 0 AND (SEEDER_UPDATED_DATE IS NULL OR SEEDER_UPDATED_DATE NOT BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "') ORDER BY SEEDER_UPDATED_DATE DESC LIMIT 100";
+				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = " + count + " AND IN_USE = 0 LIMIT 100";
+				
+				logger.info(selectSQL);
+				
+				Timestamp now2 = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+
+				ResultSet rs = statement.executeQuery(selectSQL);
+				if(rs.next()){
+					keepGoing = false;
+					do{
+						String user = rs.getString(Constant.FEEDER.SEED);
+						String password = rs.getString(Constant.FEEDER.PASSWORD);
+						int mailCount = rs.getInt(Constant.FEEDER.MAIL_COUNT);
+						int opened = rs.getInt(Constant.FEEDER.OPENED);
+						int clicked = rs.getInt(Constant.FEEDER.CLICKED);
+						int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
+						Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
+						Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
+						String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
+						Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate,subscriptions);
+						seeds.add(seed);
+					}while(rs.next());
+				}else if(differenceBetweenTimestamps(now, now2) >= 1){
+					keepGoing = false;
+				}else{
+					keepGoing = true;
+					count++;
+				}
+
+				logger.info("Seed selected from FEEDER table!");
+			} while (keepGoing);
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}
+		return seeds;
+	}
+	
+	private static int differenceBetweenTimestamps(Timestamp now, Timestamp now2) {
+		long diff = now2.getTime() - now.getTime();
+		// int diffHours = (int) (diff / (60 * 60 * 1000));
+		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		int diffMin = (int) (diff / (60 * 1000));
+		// int diffSec = (int) (diff / (1000));
+		return diffMin;
+	}
+
 	public static Map<String, Object> getStats() {
 		Connection dbConnection = null;
 		Statement statement = null;
@@ -129,7 +198,7 @@ public class JDBC {
 	 * @param click
 	 * @throws SQLException
 	 */
-	public static void updateSeed(String user, int openCount, int clickCount, int spamCount){
+	public static void updateSeed(String user, int openCount, int clickCount, int spamCount, boolean inUse){
 
 		Connection dbConnection = null;
 		Statement statement = null;
@@ -142,6 +211,7 @@ public class JDBC {
 
 		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
 				+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
+				+ " , IN_USE = "+ inUse
 				+ openSql(openCount)
 				+ clickSql(clickCount)
 				+ spamSql(spamCount)
@@ -246,51 +316,7 @@ public class JDBC {
 		return Constant.EMPTY_STRING;
 	}
 
-	public static List<Seed> getLastUpdatedSeeds() {
-		Connection dbConnection = null;
-		Statement statement = null;
-		
-		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
-		
-		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
-		TimeZone tz = TimeZone.getTimeZone(GMT_3);
-		formatter.setTimeZone(tz);
-		
-		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = 0 AND SEEDER_UPDATED_DATE NOT BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "' ORDER BY SEEDER_UPDATED_DATE DESC";
-		//String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = 0 AND SEEDER_UPDATED_DATE IS NULL LIMIT 1";
-		List<Seed> seeds = new ArrayList<Seed>();
-		try {
-			dbConnection = getDBConnection();
-			statement = dbConnection.createStatement();
 
-			logger.info(selectSQL);
-
-			ResultSet rs = statement.executeQuery(selectSQL);
-			while(rs.next()){
-				String user = rs.getString(Constant.FEEDER.SEED);
-				String password = rs.getString(Constant.FEEDER.PASSWORD);
-				int mailCount = rs.getInt(Constant.FEEDER.MAIL_COUNT);
-				int opened = rs.getInt(Constant.FEEDER.OPENED);
-				int clicked = rs.getInt(Constant.FEEDER.CLICKED);
-				int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
-				Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
-				Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
-				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
-				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate,subscriptions);
-				seeds.add(seed);
-			}
-
-			logger.info("Seed selected from FEEDER table!");
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			closeStatementAndConnection(dbConnection, statement);
-		}
-		return seeds;
-	}
-	
 	public static List<Seed> getSeedsForSubscriptions(int index, int top) {
 		Connection dbConnection = null;
 		Statement statement = null;
@@ -330,6 +356,71 @@ public class JDBC {
 			closeStatementAndConnection(dbConnection, statement);
 		}
 		return seeds;
+	}
+	
+	public static int getLessOpenedCount() {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		String selectSQL = "SELECT MIN(OPENED) AS OPENED from mailinglocaweb.FEEDER";
+		
+		int opened = 0;
+		
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+
+			logger.info(selectSQL);
+
+			ResultSet rs = statement.executeQuery(selectSQL);
+			if(rs.next()){
+				opened = rs.getInt(Constant.FEEDER.OPENED);
+			}
+
+			logger.info("Less opened count is: " + opened);
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}
+		return opened;
+	}
+
+	public static void updateSeeds(List<Seed> seeds, boolean inUse) {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
+		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		formatter.setTimeZone(tz);
+
+
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+			
+			for (Seed seed : seeds) {
+				String updateSQL = "UPDATE mailinglocaweb.FEEDER"
+						+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
+						+ " , IN_USE = "+ inUse
+						+ " WHERE SEED = '" + seed.getUser() + "'";
+
+				logger.info(updateSQL);
+
+				statement.execute(updateSQL);
+			}
+
+			logger.info("Seeds updated to FEEDER table!");
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}
+		
 	}
 
 
