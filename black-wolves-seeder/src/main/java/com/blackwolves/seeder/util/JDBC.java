@@ -43,7 +43,7 @@ public class JDBC {
 //		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
 //		getStats();
 //		getLastUpdatedSeeds();
-		getSeedsWithForSubscriptions(9994,10000);
+		getSeedsForSubscriptions(9994,10000);
 	}
 	
 	public static Map<String, Object> getStats() {
@@ -290,7 +290,7 @@ public class JDBC {
 		return seeds;
 	}
 	
-	public static List<Seed> getSeedsWithForSubscriptions(int index, int top) {
+	public static List<Seed> getSeedsForSubscriptions(int index, int top) {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
