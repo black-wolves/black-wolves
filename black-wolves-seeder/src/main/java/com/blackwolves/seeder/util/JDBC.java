@@ -361,7 +361,7 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		String selectSQL = "SELECT MIN(OPENED) from mailinglocaweb.FEEDER";
+		String selectSQL = "SELECT MIN(OPENED) AS OPENED from mailinglocaweb.FEEDER";
 		
 		int opened = 0;
 		
