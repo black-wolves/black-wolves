@@ -1,6 +1,5 @@
 package com.blackwolves.seeder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -13,14 +12,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import com.blackwolves.seeder.util.Constant;
 import com.blackwolves.seeder.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 /**
  * 
