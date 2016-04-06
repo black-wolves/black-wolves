@@ -46,8 +46,8 @@ public class JDBC {
 	
 	public static void main(String[] args) throws ParseException {
 //		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
-		getStats();
-//		getLastUpdatedSeeds();
+//		getStats();
+		getLastUpdatedSeeds();
 //		getSeedsForSubscriptions(9994,10000);
 	}
 	
@@ -71,7 +71,7 @@ public class JDBC {
 			statement = dbConnection.createStatement();
 			do {
 				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = " + count + " AND IN_USE = 0 AND (SEEDER_UPDATED_DATE IS NULL OR SEEDER_UPDATED_DATE NOT BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "') ORDER BY SEEDER_UPDATED_DATE DESC LIMIT 100";
-//				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = " + count + " AND IN_USE = 0 LIMIT 100";
+//				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE SEED = 'pqguqvh@yahoo.com' AND IN_USE = 0 LIMIT 100";
 				
 				logger.info(selectSQL);
 				

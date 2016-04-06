@@ -66,40 +66,40 @@ public class Subscriber implements Runnable {
 			JDBC.updateSubscription(seed);
 			seed.setSubscription(currentSubs);
 
-			if (Math.random() < 0.4) {
+			if (Math.random() < 1) {
 				subscribeToHoustonCron(seed, driver);
 
 			}
 
 			// subscribeToNBCSanDiego(seed, driver);
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToNYDailyNews(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToSoccerWire(seed, driver);
 			 }
-			 if (Math.random() < 0.2) {
+			// if (Math.random() < 0.2) {
 			 //subscribeToTheGolfChannel(seed, driver);
-			 }
-			 if (Math.random() < 0.3) {
+			// }
+			 if (Math.random() < 1) {
 			 subscribeToDetroitDailyNews(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToSanAntonioNews(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToBostonMagazine(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToTheHerald(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToNBCNews(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToDailyNews(seed, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 1) {
 			 subscribeToForbes(seed, driver);
 			 }
 			// if (Math.random() < 0.3) {

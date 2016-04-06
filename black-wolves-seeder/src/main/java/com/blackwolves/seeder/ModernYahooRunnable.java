@@ -82,8 +82,17 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.ENTREPRENEUR);
 							foundMyMsg = true;
+							logger.info("Searching IGN..");
+
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.IGN);
+							if(currentMsg==null)
+							{
+								logger.info("IGN Not found. Looking for Entrepreneur..");
+								currentMsg = findMessage(inboxMsgs, Constant.FROM.ENTREPRENEUR);
+								foundMyMsg = true;
+
+							}
 						}
 						// Or a SpamMsg to give the seed reputation. 0.02
 						// chances
@@ -110,7 +119,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:"
 										+ currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
+								if (Constant.FROM.ENTREPRENEUR.equals(fromText) | fromText.contains(Constant.FROM.IGN)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");
@@ -322,7 +331,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findMyMessage() {
-		if (Math.random() <= 0.3) {
+		if (Math.random() <= 1.3) {
 			return true;
 		}
 		return false;
@@ -733,7 +742,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		for (WebElement webElement : inboxMsgs) {
 			WebElement from = webElement.findElement(By.className("from"));
 			String fromText = from.getText();
-			if (msgfrom.equals(fromText)) {
+			if (fromText.contains(msgfrom) ) {
 				return webElement;
 			}
 		}
