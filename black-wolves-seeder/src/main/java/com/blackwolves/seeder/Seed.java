@@ -17,6 +17,7 @@ public class Seed {
 	private int opened;
 	private int clicked;
 	private int spammed;
+	private int notSpammed;
 	private Timestamp feederUpdatedDate;
 	private Timestamp seederUpdatedDate;
 	private String subscription = new String();
@@ -33,7 +34,7 @@ public class Seed {
 	 * @param subscriptions 
 	 */
 	public Seed(String user, String password, int mailCount, int opened,
-			int clicked, int spammed, Timestamp feederUpdatedDate,
+			int clicked, int spammed,int notSpammed ,Timestamp feederUpdatedDate,
 			Timestamp seederUpdatedDate, String subscription) {
 		this.user = user;
 		this.password = password;
@@ -146,6 +147,12 @@ public class Seed {
 	}
 	public void setSubscription(String subscription) {
 		this.subscription = subscription;
+	}
+	public int getNotSpammed() {
+		return notSpammed;
+	}
+	public void setNotSpammed(int notSpammed) {
+		this.notSpammed = notSpammed;
 	}
 
 	

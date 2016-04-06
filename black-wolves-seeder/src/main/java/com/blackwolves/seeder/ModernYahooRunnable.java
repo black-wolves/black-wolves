@@ -107,7 +107,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 							// final String subjectText = subject.getText();
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText);
 							if (isClickable(driver, currentMsg)) {
-								logger.info("Will click at  X: "+ currentMsg.getLocation().getX() + " and Y:"+ currentMsg.getLocation().getY());
+								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:"
+										+ currentMsg.getLocation().getY());
 								currentMsg.click();
 								if (Constant.FROM.ENTREPRENEUR.equals(fromText)) {
 									opened = true;
@@ -132,9 +133,8 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 								if (opened) {
 									logger.info("Saving message stats into database");
-									JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam?1:0, true);
+									JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam ? 1 : 0,0, true);
 								}
-
 
 								archiveMsg();
 
@@ -143,7 +143,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							} else {
 								logger.info("Msg is not clickable. Refreshing Page");
 							}
-						
+
 						}
 
 					} else {
@@ -192,6 +192,133 @@ public class ModernYahooRunnable extends YahooRunnable {
 			logger.info("Inbox Folder is empty.");
 		}
 
+	}
+
+	public void processSpam(Seed seed) {
+
+		try {
+			logger.info("Process Spam");
+			if (validateSpamFolder()) {
+				if (normalNotSpam()) {
+					logger.info("Msg found adding to NOT_SPAM");
+					JDBC.updateSeed(seed.getUser(), 1, 0, 0, 1, false);
+				}
+				else {
+					logger.info("Msg not found in SPAM.");
+				}
+			}
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		}
+	}
+
+	/**
+	 * @param driver
+	 * @param spamFolder
+	 * @return
+	 */
+	public boolean validateSpamFolder() {
+		logger.info("Entering validateSpamFolder ");
+		try {
+			if (driver.findElements(By.id("spam-label")).size() > 0) {
+				WebElement spam = driver.findElement(By.id("spam-label"));
+				spam.click();
+				Thread.sleep(randInt(2000, 3000));
+				if (driver.findElements(By.className("list-view-item")).size() > 0) {
+					return true;
+				}
+			}
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		}
+		return false;
+	}
+
+	public boolean normalNotSpam() {
+		try {
+			List<WebElement> spamMsgs = driver.findElements(By.className("list-view-item"));
+
+			Thread.sleep(randInt(2000, 3000));
+
+			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.ENTREPRENEUR);
+			if (currentMsg != null) {
+
+				logger.info("Opening the spam message");
+				currentMsg.findElement(By.className("subj")).click();
+
+				Thread.sleep(randInt(1000, 2000));
+
+				clickShowImages("show-text");
+				Thread.sleep(randInt(1000, 2000));
+				scrollToBottom(driver);
+				// REMOVED CLICK FROM LIST SINCE IT IS BREAKING IN THE SERVER
+				logger.info("******** Clicking the not spam MAIN button ***********");
+				driver.findElement(By.id("main-btn-spam")).click();
+				Thread.sleep(randInt(2500, 3500));
+				return true;
+			}
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
+					+ seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
+					+ " " + e.getMessage() + " ", e);
+		}
+		driver.findElement(By.id("spam-label")).click();
+		return false;
 	}
 
 	private boolean findMyMessage() {

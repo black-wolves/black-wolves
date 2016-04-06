@@ -39,13 +39,15 @@ public class SeederThreadPool {
 			
 			logger.info("Last updated seeds size: " + seeds.size() + " seeds");
 			
-			double loginPercentage = YahooRunnable.generateDoubleRandom(0.4,0.6);
+			double loginPercentage = YahooRunnable.generateDoubleRandom(1,1);
 			
 			logger.info("Login percentage: " + loginPercentage);
 			
 			int sampleSeeds = (int) (seeds.size() * loginPercentage);
 			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
+
+//			sampleSeeds = 1;
 
 			logger.info("Sample seeds: " + sampleSeeds);
 			

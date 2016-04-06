@@ -38,6 +38,7 @@ public interface Constant {
 		public static final String PASSWORD = "PASSWORD";
 		public static final String FULL_SEED = "FULL_SEED";
 		public static final String SUBSCRIPTION = "SUBSCRIPTION";
+		public static final String NOT_SPAM = "NOT_SPAM";
 		
 	}
 	

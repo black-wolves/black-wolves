@@ -31,15 +31,15 @@ public class JDBC {
 
 	private static final Logger logger = LoggerFactory.getLogger(JDBC.class);
 	
-//	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-//	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
-//	private static final String DB_USER = "mailinglocaweb";
-//	private static final String DB_PASSWORD = "3H8osZA3";
-	
 	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
-	private static final String DB_USER = "obcabril_root";
-	private static final String DB_PASSWORD = "Daniel123";
+	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
+	private static final String DB_USER = "mailinglocaweb";
+	private static final String DB_PASSWORD = "3H8osZA3";
+	
+//	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+//	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
+//	private static final String DB_USER = "obcabril_root";
+//	private static final String DB_PASSWORD = "Daniel123";
 	
 	private static final String SDF = "yyyy-M-dd HH:mm:ss";
 	private static final String GMT_3 = "GMT-3";
@@ -87,10 +87,12 @@ public class JDBC {
 						int opened = rs.getInt(Constant.FEEDER.OPENED);
 						int clicked = rs.getInt(Constant.FEEDER.CLICKED);
 						int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
+						int notSpam = rs.getInt(Constant.FEEDER.NOT_SPAM);
+
 						Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
 						Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
 						String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
-						Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate,subscriptions);
+						Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, notSpam, feederUpdatedDate, seederUpdatedDate,subscriptions);
 						seeds.add(seed);
 					}while(rs.next());
 				}else if(differenceBetweenTimestamps(now, now2) >= 1){
@@ -203,7 +205,7 @@ public class JDBC {
 	 * @param click
 	 * @throws SQLException
 	 */
-	public static void updateSeed(String user, int openCount, int clickCount, int spamCount, boolean inUse){
+	public static void updateSeed(String user, int openCount, int clickCount, int spamCount, int notSpamCount ,boolean inUse){
 
 		Connection dbConnection = null;
 		Statement statement = null;
@@ -220,6 +222,7 @@ public class JDBC {
 				+ openSql(openCount)
 				+ clickSql(clickCount)
 				+ spamSql(spamCount)
+				+ notSpamSql(notSpamCount)
 				+ " WHERE SEED = '" + user + "'";
 
 		try {
@@ -280,6 +283,19 @@ public class JDBC {
 				logger.error(e.getMessage(), e);
 			}
 		}
+	}
+	
+	/**
+	 * Checks the count number if it is > 0 it will add the sql 
+	 * sentence to update the NOT_SPAM column
+	 * @param notSpamCount
+	 * @return
+	 */
+	private static String notSpamSql(int notSpamCount) {
+		if(notSpamCount > 0){
+			return ", NOT_SPAM = NOT_SPAM + " + notSpamCount;
+		}
+		return Constant.EMPTY_STRING;
 	}
 
 	/**
@@ -346,10 +362,11 @@ public class JDBC {
 				int opened = rs.getInt(Constant.FEEDER.OPENED);
 				int clicked = rs.getInt(Constant.FEEDER.CLICKED);
 				int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
+				int notSpam = rs.getInt(Constant.FEEDER.NOT_SPAM);
 				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
 				Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
 				Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
-				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, feederUpdatedDate, seederUpdatedDate,subscriptions);
+				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, notSpam, feederUpdatedDate, seederUpdatedDate,subscriptions);
 				seeds.add(seed);
 			}
 
