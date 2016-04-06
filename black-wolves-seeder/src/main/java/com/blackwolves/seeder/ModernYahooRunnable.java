@@ -118,13 +118,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 								} else if (spam) {
 									opened = true;
 									spam = true;
-									logger.info("Marking Msg as Spam");
+									logger.info("Marking Msg as Spam And refreshing page");
 									clickSpam();
+									driver.navigate().refresh();
 								}
 
-								else if (!opened && Math.random() <= 0.25) {
+								else if (!opened && Math.random() <= 0.2) {
 									clickShowImages("show-text");
-									// clickRandomLink();
+									clickRandomLink();
 								}
 								// scrollToBottom(driver);
 								Thread.sleep(randInt(2500, 3500));
