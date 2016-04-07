@@ -30,9 +30,9 @@ public class SeederThreadPool {
 	private static Logger logger = LoggerFactory.getLogger(SeederThreadPool.class);
 
 	public static void main(String[] args) {
-		boolean goal = false;
+		//boolean goal = false;
 		
-		do{
+		//do{
 			ExecutorService executor = null;
 			
 			List<Seed> seeds = JDBC.getLastUpdatedSeeds();
@@ -71,8 +71,8 @@ public class SeederThreadPool {
 			logger.info("Updating seeds IN_USE to FALSE");
 			JDBC.updateSeeds(finalSeeds, false);
 			
-			goal = checkGoal();
-		}while(!goal);
+			//goal = checkGoal();
+		//}while(!goal);
 		
 	}
 
