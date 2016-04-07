@@ -82,17 +82,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.TIME);
 							foundMyMsg = true;
-							logger.info("Searching IGN..");
 
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.IGN);
-							if(currentMsg==null)
-							{
-								logger.info("IGN Not found. Looking for Entrepreneur..");
-								currentMsg = findMessage(inboxMsgs, Constant.FROM.ENTREPRENEUR);
-								foundMyMsg = true;
-
-							}
 						}
 						// Or a SpamMsg to give the seed reputation. 0.02
 						// chances
@@ -110,16 +102,14 @@ public class ModernYahooRunnable extends YahooRunnable {
 						}
 
 						if (currentMsg != null) {
-
 							WebElement from = currentMsg.findElement(By.className("from"));
 							final String fromText = from.getText();
-							// final String subjectText = subject.getText();
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText);
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:"
 										+ currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (Constant.FROM.ENTREPRENEUR.equals(fromText) | fromText.contains(Constant.FROM.IGN)) {
+								if (Constant.FROM.TIME.equals(fromText)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");
@@ -142,7 +132,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 								if (opened) {
 									logger.info("Saving message stats into database");
-									JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam ? 1 : 0,0, true);
+									JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam ? 1 : 0, 0, true);
 								}
 
 								archiveMsg();
@@ -152,7 +142,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 							} else {
 								logger.info("Msg is not clickable. Refreshing Page");
 							}
-
 						}
 
 					} else {
@@ -211,8 +200,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 				if (normalNotSpam()) {
 					logger.info("Msg found adding to NOT_SPAM");
 					JDBC.updateSeed(seed.getUser(), 1, 0, 0, 1, false);
-				}
-				else {
+				} else {
 					logger.info("Msg not found in SPAM.");
 				}
 			}
@@ -742,7 +730,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		for (WebElement webElement : inboxMsgs) {
 			WebElement from = webElement.findElement(By.className("from"));
 			String fromText = from.getText();
-			if (fromText.contains(msgfrom) ) {
+			if (msgfrom.contains(fromText)) {
 				return webElement;
 			}
 		}
