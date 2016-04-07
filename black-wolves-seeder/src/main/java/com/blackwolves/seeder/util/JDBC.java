@@ -386,7 +386,7 @@ public class JDBC {
 		return opened;
 	}
 
-	public static void updateSeeds(List<Seed> seeds, boolean inUse) {
+	public static void updateSeeds(List<Seed> seeds, boolean loggedIn, boolean inUse) {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
@@ -405,7 +405,7 @@ public class JDBC {
 				String updateSQL = "UPDATE mailinglocaweb.FEEDER"
 						+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 						+ " , IN_USE = "+ inUse
-						+ " , LOGGED_IN = LOGGED_IN + 1"
+						+ loggedInSql(loggedIn)
 						+ " WHERE SEED = '" + seed.getUser() + "'";
 
 				logger.info(updateSQL);
@@ -423,5 +423,10 @@ public class JDBC {
 		
 	}
 
-
+	private static String loggedInSql(boolean loggedIn) {
+		if(loggedIn){
+			return ", LOGGED_IN = LOGGED_IN + 1";
+		}
+		return Constant.EMPTY_STRING;
+	}
 }

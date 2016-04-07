@@ -104,8 +104,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							final String fromText = from.getText();
 							logger.info("$$$$$$$$$$ Opening Message from: " + fromText);
 							if (isClickable(driver, currentMsg)) {
-								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:"
-										+ currentMsg.getLocation().getY());
+								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
 								if (Constant.FROM.TIME.equals(fromText)) {
 									opened = true;

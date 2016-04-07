@@ -53,7 +53,7 @@ public class SeederThreadPool {
 			writeSeedsToFile(finalSeeds);
 			
 			logger.info("Updating seeds IN_USE to TRUE");
-			JDBC.updateSeeds(finalSeeds, true);
+			JDBC.updateSeeds(finalSeeds, true, true);
 			
 			logger.info("Processing " + finalSeeds.size() + " seeds");
 			executor = Executors.newFixedThreadPool(finalSeeds.size());
@@ -69,7 +69,7 @@ public class SeederThreadPool {
 			}
 			
 			logger.info("Updating seeds IN_USE to FALSE");
-			JDBC.updateSeeds(finalSeeds, false);
+			JDBC.updateSeeds(finalSeeds, false, false);
 			
 			//goal = checkGoal();
 		//}while(!goal);

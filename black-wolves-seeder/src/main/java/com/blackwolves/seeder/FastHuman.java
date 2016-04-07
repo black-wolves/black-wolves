@@ -14,7 +14,6 @@ public class FastHuman extends Human {
 	
 	public FastHuman() {
 		super();
-		logger.info("Fast Human Created");
 	}
 
 	@Override

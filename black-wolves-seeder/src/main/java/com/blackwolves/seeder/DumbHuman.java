@@ -14,7 +14,6 @@ import org.openqa.selenium.WebElement;
 public class DumbHuman extends Human {
 
 	public DumbHuman() {
-		logger.info("DumbHuman Created");
 	}
 
 	@Override

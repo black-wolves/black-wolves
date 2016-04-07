@@ -12,7 +12,6 @@ import org.openqa.selenium.WebElement;
 public class AverageHuman extends Human {
 	
 	public AverageHuman() {
-		logger.info("AvergaHuman Created");
 	}
 
 	@Override
