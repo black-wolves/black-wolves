@@ -130,9 +130,6 @@ public abstract class YahooRunnable {
 
 					WebElement a = showImage.findElement(By.tagName("a"));
 					mouse.moveToElement(a);
-					logger.info("Image Displayed: " + a.isDisplayed());
-					logger.info("Image Enabled: " + a.isEnabled());
-					logger.info("Image Selected: " + a.isSelected());
 					logger.info("clicking!");
 					if (a != null && a.isDisplayed()) {
 						a.click();
@@ -256,14 +253,6 @@ public abstract class YahooRunnable {
 		Object element = trigger(String.format(script, url));
 		if (element instanceof WebElement) {
 			WebElement anchor = (WebElement) element;
-			logger.info("Text: " + anchor.getText());
-			logger.info("TageName: " + anchor.getTagName());
-			logger.info("Location: " + anchor.getLocation());
-			logger.info("Size: " + anchor.getSize());
-			logger.info("Rect: " + anchor.getRect());
-			logger.info("Displayed: " + anchor.isDisplayed());
-			logger.info("Enabled: " + anchor.isEnabled());
-			logger.info("Selected: " + anchor.isSelected());
 			anchor.click();
 			trigger("var a=arguments[0];a.parentNode.removeChild(a);", anchor);
 		} else {

@@ -322,9 +322,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 					int count = 0;
 					do {
 						WebElement link = linksToGo.get(count);
-						// logger.info("Link Displayed: " + link.isDisplayed());
-						// logger.info("Link Enabled: " + link.isEnabled());
-						// logger.info("Link Selected: " + link.isSelected());
 						if (link != null && link.isDisplayed()) {
 							String url = link.getAttribute("href");
 							if (url.contains("unsub") || url.contains("yahoo") || url.contains("subsc")) {
