@@ -405,6 +405,7 @@ public class JDBC {
 				String updateSQL = "UPDATE mailinglocaweb.FEEDER"
 						+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 						+ " , IN_USE = "+ inUse
+						+ " , LOGGED_IN = LOGGED_IN + 1"
 						+ " WHERE SEED = '" + seed.getUser() + "'";
 
 				logger.info(updateSQL);
