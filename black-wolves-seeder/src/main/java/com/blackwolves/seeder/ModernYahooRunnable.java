@@ -289,7 +289,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findSpamMessage() {
-		if (Math.random() <= 0.05) {
+		if (Math.random() <= 0.025) {
 			return true;
 		}
 		return false;
