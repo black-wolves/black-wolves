@@ -106,7 +106,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (Constant.FROM.TIME.equals(fromText)) {
+								if (fromText.contains(Constant.FROM.TIME)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");
@@ -629,7 +629,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		for (WebElement webElement : inboxMsgs) {
 			WebElement from = webElement.findElement(By.className("from"));
 			String fromText = from.getText();
-			if (msgfrom.contains(fromText)) {
+			if (fromText.contains(msgfrom)) {
 				return webElement;
 			}
 		}
