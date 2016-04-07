@@ -37,8 +37,6 @@ public class SeederThreadPool {
 			
 			List<Seed> seeds = JDBC.getLastUpdatedSeeds();
 			
-			logger.info("Last updated seeds size: " + seeds.size() + " seeds");
-			
 			double loginPercentage = YahooRunnable.generateDoubleRandom(0.4,0.6);
 			
 			logger.info("Login percentage: " + loginPercentage);
@@ -49,8 +47,6 @@ public class SeederThreadPool {
 
 //			sampleSeeds = 1;
 
-			logger.info("Sample seeds: " + sampleSeeds);
-			
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
 			
 			logger.info("Writing seeds to file /var/www/in-use-seeds.txt");

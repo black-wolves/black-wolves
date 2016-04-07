@@ -59,10 +59,8 @@ public class Seeder implements Runnable {
 	/**
 	 */
 	private void checkMail() {
-		logger.info("Entering first do while");
 
 		WebDriver driver = createWebDriver();
-		logger.info("Firefox Created");
 
 		human = generateRandomHumanUser();
 
@@ -96,30 +94,24 @@ public class Seeder implements Runnable {
 		try {
 
 			Thread.sleep(YahooRunnable.randInt(2500, 3500));
-			logger.info("Getting to the URL: " + yahooUrl);
 			driver.get(yahooUrl);
 
-			logger.info("Introducing username: " + seed.getUser());
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed.getUser());
 
 			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
-				logger.info("Clicking CONTINUE button");
 				driver.findElement(By.id("login-signin")).click();
 				
 				Thread.sleep(YahooRunnable.randInt(1500, 2500));
 				
-				logger.info("Introducing password: " + seed.getPassword());
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
 				
 			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
-				logger.info("Introducing password: " + seed.getPassword());
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
 				
 			}
-			logger.info("Clicking LOGIN button");
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(YahooRunnable.randInt(1000, 2000));
@@ -139,7 +131,6 @@ public class Seeder implements Runnable {
 			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
 		} catch (UnhandledAlertException e) {
 			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-					
 		} catch (WebDriverException e) {
 			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
 		}
@@ -185,11 +176,11 @@ public class Seeder implements Runnable {
 		WebDriver driver = new FirefoxDriver(capabilities);
 
 		driver.manage().window().maximize();
+		logger.info("Firefox Created");
 		return driver;
 	}
 
 	private Human generateRandomHumanUser() {
-		logger.info("Random Human generation started");
 		int number = YahooRunnable.randInt(0, 10);
 		if (number <= 3) {
 			return new DumbHuman();
@@ -206,13 +197,12 @@ public class Seeder implements Runnable {
 	 */
 	private YahooRunnable validateYahooVersion(WebDriver driver, Seed seed) {
 		try {
-			logger.info("Validating yahoo version");
 			Thread.sleep(5000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("----------   Old yahoo version   ----------");
 //				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
-				logger.info("**********   New yahoo 2 version   **********");
+				logger.info("**********   New YAHOO 2 version   **********");
 				checkMultipleAccountsPanel(driver);
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
@@ -223,7 +213,7 @@ public class Seeder implements Runnable {
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			}else {
 				 YahooRunnable.getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
-				logger.info("==========   There is a new yahoo version in town   ==========");
+				logger.info("==========   THERE IS A NEW YAHOO VERSION IN TOWN   ==========");
 			}
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
@@ -237,7 +227,6 @@ public class Seeder implements Runnable {
 			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
 		} catch (UnhandledAlertException e) {
 			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-					
 		} catch (WebDriverException e) {
 			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
 		}
@@ -245,7 +234,6 @@ public class Seeder implements Runnable {
 	}
 
 	private void checkMultipleAccountsPanel(WebDriver driver) {
-		logger.info("Checking multiple accounts Panel Found");
 		if (driver.findElements(By.id("imapInOnboardDlg")).size() > 0) {
 			logger.info("Multiple accounts Panel Found");
 			if (driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).isDisplayed()) {
