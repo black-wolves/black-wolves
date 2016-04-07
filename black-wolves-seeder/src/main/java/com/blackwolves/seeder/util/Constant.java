@@ -45,6 +45,6 @@ public interface Constant {
 	public interface FROM{
 		public static final String ENTREPRENEUR = "Entrepreneur";
 		public static final String SPAM = "Golfsmith";
-		public static final String TIME = "TIME";
+		public static final String JERRY = "Jerry Seinfeld";
 	}
 }

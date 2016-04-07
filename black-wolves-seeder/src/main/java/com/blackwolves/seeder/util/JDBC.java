@@ -37,7 +37,7 @@ public class JDBC {
 	private static final String DB_PASSWORD = "3H8osZA3";
 	
 //	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-//	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
+//	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_seeds";
 //	private static final String DB_USER = "obcabril_root";
 //	private static final String DB_PASSWORD = "Daniel123";
 	
@@ -68,6 +68,8 @@ public class JDBC {
 			String selectSQL = "SELECT * FROM "
 					+ "(SELECT * FROM FEEDER WHERE FEEDER_UPDATED_DATE IS NOT NULL order by FEEDER_UPDATED_DATE DESC) x "
 					+ "ORDER BY x.SEEDER_UPDATED_DATE ASC LIMIT 50";
+			
+//			String selectSQL =  "SELECT * FROM mailinglocaweb.FEEDER  where SEED='voxackkhzzc@yahoo.com'";
 			
 			logger.info(selectSQL);
 			
