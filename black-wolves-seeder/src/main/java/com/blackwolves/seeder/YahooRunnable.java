@@ -80,12 +80,12 @@ public abstract class YahooRunnable {
 
 		logger.info("Processing inbox");
 		processInbox(seed);
-		logger.info("Processing spam....");
-		 if (Math.random() <=  0.1) {
-			 processSpam(seed);
+		if (Math.random() <= 0.05) {
+			logger.info("Processing spam....");
+			processSpam(seed);
 		}
 
-		 if (Math.random() <=  0.2) {
+		if (Math.random() <= 0.2) {
 			processInbox(seed);
 		}
 	}
