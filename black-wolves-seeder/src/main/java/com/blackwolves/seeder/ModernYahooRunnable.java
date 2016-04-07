@@ -282,7 +282,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findMyMessage() {
-		if (Math.random() <= 1.3) {
+		if (Math.random() <= 0.3) {
 			return true;
 		}
 		return false;
