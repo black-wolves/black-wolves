@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -46,6 +47,17 @@ public class OldMethods {
 	protected WebDriver driver;
 	protected Human human;
 	protected Seed seed;
+	
+	private static int differenceBetweenTimestamps(Timestamp now, Timestamp now2) {
+//		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+//		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
+		long diff = now2.getTime() - now.getTime();
+		// int diffHours = (int) (diff / (60 * 60 * 1000));
+		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		int diffMin = (int) (diff / (60 * 1000));
+		// int diffSec = (int) (diff / (1000));
+		return diffMin;
+	}
 
 	public void replyToEmail() {
 		try {

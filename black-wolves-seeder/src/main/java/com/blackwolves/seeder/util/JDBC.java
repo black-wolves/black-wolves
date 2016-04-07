@@ -55,55 +55,41 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
-		
 		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 		
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
-			boolean keepGoing = false;
-			int count = getLessOpenedCount();
-			
+
 			dbConnection = getDBConnection();
 			statement = dbConnection.createStatement();
-			do {
-				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE OPENED = " + count + " AND IN_USE = 0 AND (SEEDER_UPDATED_DATE IS NULL OR SEEDER_UPDATED_DATE NOT BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "') ORDER BY SEEDER_UPDATED_DATE DESC LIMIT 100";
-//				String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE SEED = 'pqguqvh@yahoo.com' AND IN_USE = 0 LIMIT 100";
-				
-				logger.info(selectSQL);
-				
-				Timestamp now2 = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+			
+			String selectSQL = "SELECT * FROM "
+					+ "(SELECT * FROM FEEDER WHERE FEEDER_UPDATED_DATE IS NOT NULL order by FEEDER_UPDATED_DATE DESC) x "
+					+ "ORDER BY x.SEEDER_UPDATED_DATE ASC LIMIT 100";
+			
+			logger.info(selectSQL);
+			
+			ResultSet rs = statement.executeQuery(selectSQL);
+			while(rs.next()){
+				String user = rs.getString(Constant.FEEDER.SEED);
+				String password = rs.getString(Constant.FEEDER.PASSWORD);
+				int mailCount = rs.getInt(Constant.FEEDER.MAIL_COUNT);
+				int opened = rs.getInt(Constant.FEEDER.OPENED);
+				int clicked = rs.getInt(Constant.FEEDER.CLICKED);
+				int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
+				int notSpam = rs.getInt(Constant.FEEDER.NOT_SPAM);
 
-				ResultSet rs = statement.executeQuery(selectSQL);
-				if(rs.next()){
-					keepGoing = false;
-					do{
-						String user = rs.getString(Constant.FEEDER.SEED);
-						String password = rs.getString(Constant.FEEDER.PASSWORD);
-						int mailCount = rs.getInt(Constant.FEEDER.MAIL_COUNT);
-						int opened = rs.getInt(Constant.FEEDER.OPENED);
-						int clicked = rs.getInt(Constant.FEEDER.CLICKED);
-						int spammed = rs.getInt(Constant.FEEDER.SPAMMED);
-						int notSpam = rs.getInt(Constant.FEEDER.NOT_SPAM);
+				Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
+				Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
+				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
+				Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, notSpam, feederUpdatedDate, seederUpdatedDate,subscriptions);
+				seeds.add(seed);
+			}
 
-						Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
-						Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
-						String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
-						Seed seed = new Seed(user, password, mailCount, opened, clicked, spammed, notSpam, feederUpdatedDate, seederUpdatedDate,subscriptions);
-						seeds.add(seed);
-					}while(rs.next());
-				}else if(differenceBetweenTimestamps(now, now2) >= 1){
-					keepGoing = false;
-				}else{
-					keepGoing = true;
-					count++;
-				}
-
-				logger.info("Seed selected from FEEDER table!");
-			} while (keepGoing);
+			logger.info("Seed selected from FEEDER table!");
+			
 
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
@@ -113,27 +99,18 @@ public class JDBC {
 		return seeds;
 	}
 	
-	private static int differenceBetweenTimestamps(Timestamp now, Timestamp now2) {
-		long diff = now2.getTime() - now.getTime();
-		// int diffHours = (int) (diff / (60 * 60 * 1000));
-		// int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-		int diffMin = (int) (diff / (60 * 1000));
-		// int diffSec = (int) (diff / (1000));
-		return diffMin;
-	}
-
 	public static Map<String, Object> getStats() {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
+//		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+//		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
 		
 		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 
-		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "'";
+		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER";// WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "'";
 		Map<String, Object> map = null;
 		try {
 			dbConnection = getDBConnection();
