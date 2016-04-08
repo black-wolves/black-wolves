@@ -541,6 +541,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 //		}
 //	}
 
+
 	public void moveMouse() {
 		try {
 			logger.info("Enters to move mouse");
