@@ -31,15 +31,15 @@ public class JDBC {
 
 	private static final Logger logger = LoggerFactory.getLogger(JDBC.class);
 	
-//	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-//	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
-//	private static final String DB_USER = "mailinglocaweb";
-//	private static final String DB_PASSWORD = "3H8osZA3";
-	
 	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
-	private static final String DB_USER = "obcabril_root";
-	private static final String DB_PASSWORD = "Daniel123";
+	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
+	private static final String DB_USER = "mailinglocaweb";
+	private static final String DB_PASSWORD = "3H8osZA3";
+	
+//	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+//	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
+//	private static final String DB_USER = "obcabril_root";
+//	private static final String DB_PASSWORD = "Daniel123";
 	
 	private static final String SDF = "yyyy-M-dd HH:mm:ss";
 	private static final String GMT_3 = "GMT-3";

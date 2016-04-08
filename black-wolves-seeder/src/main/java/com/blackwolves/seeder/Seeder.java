@@ -59,6 +59,9 @@ public class Seeder implements Runnable {
 	/**
 	 */
 	private void checkMail() {
+		
+//		seed.setUser("gastondapice@yahoo.com");
+//		seed.setPassword("wolf2015.6");
 
 		WebDriver driver = createWebDriver();
 
