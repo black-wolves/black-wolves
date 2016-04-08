@@ -46,5 +46,7 @@ public interface Constant {
 		public static final String ENTREPRENEUR = "Entrepreneur";
 		public static final String SPAM = "Golfsmith";
 		public static final String JERRY = "Jerry Seinfeld";
+		public static final String NYTIMES = "NYTimes. com";
+
 	}
 }
