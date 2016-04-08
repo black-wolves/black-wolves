@@ -5,7 +5,6 @@ package com.blackwolves.seeder.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,8 +27,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 import com.blackwolves.seeder.Human;
 import com.blackwolves.seeder.Seed;
 import com.blackwolves.seeder.YahooRunnable;
@@ -48,7 +45,7 @@ public class OldMethods {
 	protected Human human;
 	protected Seed seed;
 	
-	private static int differenceBetweenTimestamps(Timestamp now, Timestamp now2) {
+	public static int differenceBetweenTimestamps(Timestamp now, Timestamp now2) {
 //		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 //		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
 		long diff = now2.getTime() - now.getTime();
@@ -358,14 +355,14 @@ public class OldMethods {
 	 */
 	public static List<String[]> generateIpsList() {
 		List<String[]> ips = new ArrayList<String[]>();
-		try {
-			CSVReader ipsReader = new CSVReader(new FileReader(Constant.ROUTE + "ip_curl.txt"));
-			ips = ipsReader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+//		try {
+//			CSVReader ipsReader = new CSVReader(new FileReader(Constant.ROUTE + "ip_curl.txt"));
+//			ips = ipsReader.readAll();
+//		} catch (FileNotFoundException e) {
+//			logger.error(e.getMessage(), e);
+//		} catch (IOException e) {
+//			logger.error(e.getMessage(), e);
+//		}
 		return ips;
 	}
 
@@ -374,14 +371,14 @@ public class OldMethods {
 	 */
 	public static List<String[]> generateDomainsList() {
 		List<String[]> domains = new ArrayList<String[]>();
-		try {
-			CSVReader domainsReader = new CSVReader(new FileReader(Constant.ROUTE + "domains.txt"));
-			domains = domainsReader.readAll();
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+//		try {
+//			CSVReader domainsReader = new CSVReader(new FileReader(Constant.ROUTE + "domains.txt"));
+//			domains = domainsReader.readAll();
+//		} catch (FileNotFoundException e) {
+//			logger.error(e.getMessage(), e);
+//		} catch (IOException e) {
+//			logger.error(e.getMessage(), e);
+//		}
 		return domains;
 	}
 	
@@ -464,67 +461,67 @@ public class OldMethods {
 	 * 
 	 */
 	public void addToAddressBook(WebDriver driver) {
-		List<String[]> domains = this.generateDomainsList();
-		WebElement element;
-		for (String[] d : domains) {
-			try {
-				if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
-					logger.info("Adding domains to address book");
-					element = driver.findElement(By.className("list-view-item-container"))
-							.findElement(By.className("first"));
-					rightClick(driver, element);
-					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-					WebElement menu = driver.findElement(By.id("menu-msglist"));
-
-					List<WebElement> li = menu.findElements(By.className("onemsg"));
-					WebElement addContact = li.get(3);
-					addContact.click();
-					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-
-					WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
-
-					WebElement givenName = modal.findElement(By.id("givenName"));
-					givenName.clear();
-					human.type(givenName, d[0]);
-					givenName.sendKeys(Keys.TAB);
-					WebElement middleName = modal.findElement(By.id("middleName"));
-					middleName.clear();
-					WebElement familyName = modal.findElement(By.id("familyName"));
-					familyName.clear();
-					WebElement email = modal.findElement(By.className("field-lg"));
-					email.clear();
-					human.type(email, "newsletter@" + d[0]);
-					email.sendKeys(Keys.TAB);
-					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-					WebElement save = modal.findElement(By.id("saveModalOverlay"));
-					save.click();
-					Thread.sleep(YahooRunnable.randInt(2500, 3500));
-					if (driver.findElements(By.className("error")).size() > 0) {
-						WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
-						cancel.click();
-						logger.info("Contact was not added: " + d[0]);
-						Thread.sleep(YahooRunnable.randInt(2500, 3500));
-					} else {
-						WebElement done = driver.findElement(By.id("doneModalOverlay"));
-						done.click();
-						logger.info("Contact added: " + d[0]);
-						Thread.sleep(YahooRunnable.randInt(2500, 3500));
-					}
-				} else {
-					logger.info("No emails in inbox, we can't add the domains to the address book");
-				}
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-			} catch (NoSuchElementException e) {
-				logger.error("NoSuchelementException");
-			} catch (StaleElementReferenceException e) {
-				logger.error("StaleElementReferenceException");
-			} catch (ElementNotVisibleException e) {
-				logger.error("ElementNotVisibleException");
-			} catch (ElementNotFoundException e) {
-				logger.error("ElementNotFoundException");
-			}
-		}
+//		List<String[]> domains = this.generateDomainsList();
+//		WebElement element;
+//		for (String[] d : domains) {
+//			try {
+//				if (driver.findElements(By.className("list-view-item-container")).size() > 0) {
+//					logger.info("Adding domains to address book");
+//					element = driver.findElement(By.className("list-view-item-container"))
+//							.findElement(By.className("first"));
+//					rightClick(driver, element);
+//					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+//					WebElement menu = driver.findElement(By.id("menu-msglist"));
+//
+//					List<WebElement> li = menu.findElements(By.className("onemsg"));
+//					WebElement addContact = li.get(3);
+//					addContact.click();
+//					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+//
+//					WebElement modal = driver.findElement(By.id("modal-kiosk-addcontact"));
+//
+//					WebElement givenName = modal.findElement(By.id("givenName"));
+//					givenName.clear();
+//					human.type(givenName, d[0]);
+//					givenName.sendKeys(Keys.TAB);
+//					WebElement middleName = modal.findElement(By.id("middleName"));
+//					middleName.clear();
+//					WebElement familyName = modal.findElement(By.id("familyName"));
+//					familyName.clear();
+//					WebElement email = modal.findElement(By.className("field-lg"));
+//					email.clear();
+//					human.type(email, "newsletter@" + d[0]);
+//					email.sendKeys(Keys.TAB);
+//					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+//					WebElement save = modal.findElement(By.id("saveModalOverlay"));
+//					save.click();
+//					Thread.sleep(YahooRunnable.randInt(2500, 3500));
+//					if (driver.findElements(By.className("error")).size() > 0) {
+//						WebElement cancel = driver.findElement(By.id("cancelModalOverlay"));
+//						cancel.click();
+//						logger.info("Contact was not added: " + d[0]);
+//						Thread.sleep(YahooRunnable.randInt(2500, 3500));
+//					} else {
+//						WebElement done = driver.findElement(By.id("doneModalOverlay"));
+//						done.click();
+//						logger.info("Contact added: " + d[0]);
+//						Thread.sleep(YahooRunnable.randInt(2500, 3500));
+//					}
+//				} else {
+//					logger.info("No emails in inbox, we can't add the domains to the address book");
+//				}
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage(), e);
+//			} catch (NoSuchElementException e) {
+//				logger.error("NoSuchelementException");
+//			} catch (StaleElementReferenceException e) {
+//				logger.error("StaleElementReferenceException");
+//			} catch (ElementNotVisibleException e) {
+//				logger.error("ElementNotVisibleException");
+//			} catch (ElementNotFoundException e) {
+//				logger.error("ElementNotFoundException");
+//			}
+//		}
 	}
 
 	public void createNewFolder(WebDriver driver) {
@@ -766,55 +763,6 @@ public class OldMethods {
 //			logger.info("Spam Folder is empty! UOHOOO!");
 //		}
 	}
-
-//	public void removeConversationMailView() {
-//
-//		try {
-//			Actions myMouse = new Actions(driver);
-//
-//			WebElement settings = driver.findElement(By.id("yucs-help"));
-//			myMouse.moveToElement(settings).build().perform();
-//			logger.info("Moving to configuration wheel");
-//
-//			Thread.sleep(randInt(1000, 2000));
-//
-//			if (driver.findElement(By.xpath("//div[@id='yucs-help_inner']")).getText().isEmpty()) {
-//				driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
-//				Thread.sleep(randInt(1000, 2000));
-//				if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
-//					logger.info("Conversation mode is on. Turning off. Aprox 15 seconds");
-//
-//					driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
-//					Thread.sleep(randInt(500, 2000));
-//
-//					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
-//					Thread.sleep(randInt(3000, 7000));
-//				}
-//			}
-//		} catch (InterruptedException e) {
-//			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
-//					+ " " + e.getMessage() + " ", e);
-//		} catch (NoSuchElementException e) {
-//			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
-//					+ " " + e.getMessage() + " ", e);
-//		} catch (StaleElementReferenceException e) {
-//			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: "
-//					+ seed.getPassword() + " " + e.getMessage() + " ", e);
-//		} catch (ElementNotVisibleException e) {
-//			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: "
-//					+ seed.getPassword() + " " + e.getMessage() + " ", e);
-//		} catch (ElementNotFoundException e) {
-//			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: "
-//					+ seed.getPassword() + " " + e.getMessage() + " ", e);
-//		} catch (UnhandledAlertException e) {
-//			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
-//					+ " " + e.getMessage() + " ", e);
-//
-//		} catch (WebDriverException e) {
-//			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword()
-//					+ " " + e.getMessage() + " ", e);
-//		}
-//	}
 
 	/**
 	 * @param driver

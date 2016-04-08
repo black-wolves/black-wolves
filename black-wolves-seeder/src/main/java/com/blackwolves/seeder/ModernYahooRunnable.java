@@ -81,7 +81,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.JERRY);
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.NYTIMES);
 							foundMyMsg = true;
 
 						}
@@ -106,7 +106,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.JERRY)) {
+								if (fromText.contains(Constant.FROM.NYTIMES)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");
@@ -245,7 +245,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(2000, 3000));
 
-			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.JERRY);
+			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.NYTIMES);
 			if (currentMsg != null) {
 
 				logger.info("Opening the spam message");
@@ -491,6 +491,49 @@ public class ModernYahooRunnable extends YahooRunnable {
 			} catch (WebDriverException e) {
 				logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
 			}
+		}
+	}
+	
+	private void removeConversationMailView() {
+
+		try {
+			Actions myMouse = new Actions(driver);
+
+			WebElement settings = driver.findElement(By.id("yucs-help"));
+			myMouse.moveToElement(settings).build().perform();
+			logger.info("Moving to configuration wheel");
+			Thread.sleep(randInt(2000, 3000));
+			if (driver.findElement(By.xpath("//div[@id='yucs-help_inner']")).getText().isEmpty()) {
+				driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
+				if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
+					logger.info("Conversation mode is on. Turning off.");
+					driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
+					Thread.sleep(randInt(2000, 3000));
+					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
+					Thread.sleep(randInt(2000, 3000));
+				}
+			}
+			if(driver.findElements(By.className("selectable")).size() > 0){
+				
+			}
+//	selectable 6li a 
+//	options-show-images
+//	<option value="1">Niciodată, implicit</option>
+//	<option value="0" selected="selected">Întotdeauna, mai puţin în folderul Spam</option>
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
 		}
 	}
 
