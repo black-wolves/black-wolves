@@ -31,15 +31,17 @@ public class JDBC {
 
 	private static final Logger logger = LoggerFactory.getLogger(JDBC.class);
 	
-	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
-	private static final String DB_USER = "mailinglocaweb";
-	private static final String DB_PASSWORD = "3H8osZA3";
-	
 //	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-//	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
-//	private static final String DB_USER = "obcabril_root";
-//	private static final String DB_PASSWORD = "Daniel123";
+//	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
+//	private static final String DB_USER = "mailinglocaweb";
+//	private static final String DB_PASSWORD = "3H8osZA3";
+//	private static final String DB_NAME = "mailinglocaweb";
+	
+	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
+	private static final String DB_USER = "obcabril_root";
+	private static final String DB_PASSWORD = "Daniel123";
+	private static final String DB_NAME = "obcabril_usa_seeds";
 	
 	private static final String SDF = "yyyy-M-dd HH:mm:ss";
 	private static final String GMT_3 = "GMT-3";
@@ -69,7 +71,7 @@ public class JDBC {
 					+ "(SELECT * FROM FEEDER WHERE FEEDER_UPDATED_DATE IS NOT NULL order by FEEDER_UPDATED_DATE DESC) x "
 					+ "ORDER BY x.SEEDER_UPDATED_DATE ASC LIMIT 100";
 			
-//			String selectSQL =  "SELECT * FROM mailinglocaweb.FEEDER  where SEED='voxackkhzzc@yahoo.com'";
+//			String selectSQL =  "SELECT * FROM FEEDER  where SEED='voxackkhzzc@yahoo.com'";
 			
 			logger.info(selectSQL);
 			
@@ -156,7 +158,7 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
+		String updateSQL = "UPDATE " + DB_NAME + ".FEEDER"
 				+ " SET SUBSCRIPTION = '" + seed.getSubscription() + "'"
 				+ " WHERE SEED = '" + seed.getUser() + "'";
 
@@ -195,7 +197,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 
-		String updateSQL = "UPDATE mailinglocaweb.FEEDER"
+		String updateSQL = "UPDATE " + DB_NAME + ".FEEDER"
 				+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 				+ " , IN_USE = "+ inUse
 				+ openSql(openCount)
@@ -325,7 +327,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * from mailinglocaweb.FEEDER WHERE  FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+"  ORDER BY FEEDER.ID ASC LIMIT 15";
+		String selectSQL = "SELECT * FROM FEEDER WHERE  FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+"  ORDER BY FEEDER.ID ASC LIMIT 15";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
@@ -363,7 +365,7 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		String selectSQL = "SELECT MIN(OPENED) AS OPENED from mailinglocaweb.FEEDER";
+		String selectSQL = "SELECT MIN(OPENED) AS OPENED FROM FEEDER";
 		
 		int opened = 0;
 		
@@ -404,7 +406,7 @@ public class JDBC {
 			statement = dbConnection.createStatement();
 			
 			for (Seed seed : seeds) {
-				String updateSQL = "UPDATE mailinglocaweb.FEEDER"
+				String updateSQL = "UPDATE " + DB_NAME + ".FEEDER"
 						+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 						+ " , IN_USE = "+ inUse
 						+ loggedInSql(loggedIn)
