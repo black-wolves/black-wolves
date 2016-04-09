@@ -60,10 +60,10 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		driver.manage().window().maximize();
 		try {
-			String currentSubs = seed.getSubscription();
+		//	String currentSubs = seed.getSubscription();
 			seed.setSubscription(new String("1"));
 			JDBC.updateSubscription(seed);
-			seed.setSubscription(currentSubs);
+//			seed.setSubscription(currentSubs);
 
 			if (Math.random() < 0.3) {
 				subscribeToHoustonCron(seed, driver);
