@@ -60,8 +60,8 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		
-		seed.setUser("elianaworkmanctc@yahoo.com");
-		seed.setPassword("MmW9HrG4ONb");
+//		seed.setUser("elianaworkmanctc@yahoo.com");
+//		seed.setPassword("MmW9HrG4ONb");
 
 		WebDriver driver = createWebDriver();
 

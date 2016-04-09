@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,7 +46,7 @@ public class SeederThreadPool {
 			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
 
-			sampleSeeds = 1;
+//			sampleSeeds = 1;
 
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
 			
@@ -78,27 +77,27 @@ public class SeederThreadPool {
 		
 	}
 
-	private static boolean checkGoal() {
-		Map<String, Object> stats = JDBC.getStats();
-		int mailCount = (int) stats.get(Constant.FEEDER.MAIL_COUNT);
-		int opened = (int) stats.get(Constant.FEEDER.OPENED);
-//		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
-//		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
-		
-		double openRate = (double)opened/(double)mailCount;
-//		double clickRate = (double)clicked/(double)mailCount;
-//		double spamRate = (double)spammed/(double)mailCount;
-		
-		double randomGoal = YahooRunnable.generateDoubleRandom(0.35, 0.15);
-		logger.info("Random goal is: " + randomGoal);
-		logger.info("Open Rate is: " + openRate);
-		
-		if(openRate > randomGoal){
-			logger.info("OpenRate is greater than goal. We are on track!");
-			return true;
-		}
-		return false;
-	}
+//	private static boolean checkGoal() {
+//		Map<String, Object> stats = JDBC.getStats();
+//		int mailCount = (int) stats.get(Constant.FEEDER.MAIL_COUNT);
+//		int opened = (int) stats.get(Constant.FEEDER.OPENED);
+////		int clicked = (int) stats.get(Constant.FEEDER.CLICKED);
+////		int spammed = (int) stats.get(Constant.FEEDER.SPAMMED);
+//		
+//		double openRate = (double)opened/(double)mailCount;
+////		double clickRate = (double)clicked/(double)mailCount;
+////		double spamRate = (double)spammed/(double)mailCount;
+//		
+//		double randomGoal = YahooRunnable.generateDoubleRandom(0.35, 0.15);
+//		logger.info("Random goal is: " + randomGoal);
+//		logger.info("Open Rate is: " + openRate);
+//		
+//		if(openRate > randomGoal){
+//			logger.info("OpenRate is greater than goal. We are on track!");
+//			return true;
+//		}
+//		return false;
+//	}
 
 	private static void processSeeds(ExecutorService executor, int size, List<Seed> finalSeeds) {
 		logger.info("Processing seeds before the for");
