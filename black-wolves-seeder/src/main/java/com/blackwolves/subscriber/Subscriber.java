@@ -69,7 +69,7 @@ public class Subscriber implements Runnable {
 			}
 			seed.setSubscription(currentSubs);
 
-			if (Math.random() < 1.3) {
+			if (Math.random() < 0.3) {
 				subscribeToHoustonCron(seed, driver);
 
 			}
