@@ -47,7 +47,7 @@ public class SeederThreadPool {
 			
 			sampleSeeds = sampleSeeds<50?sampleSeeds:50;
 
-//			sampleSeeds = 1;
+			sampleSeeds = 1;
 
 			List<Seed> finalSeeds = seeds.subList(0, sampleSeeds);
 			

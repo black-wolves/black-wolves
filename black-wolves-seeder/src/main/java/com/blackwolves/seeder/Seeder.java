@@ -60,8 +60,8 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		
-//		seed.setUser("gastondapice@yahoo.com");
-//		seed.setPassword("wolf2015.6");
+		seed.setUser("elianaworkmanctc@yahoo.com");
+		seed.setPassword("MmW9HrG4ONb");
 
 		WebDriver driver = createWebDriver();
 
@@ -118,7 +118,6 @@ public class Seeder implements Runnable {
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(YahooRunnable.randInt(1000, 2000));
-				logger.info("LOGGED IN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
@@ -203,18 +202,24 @@ public class Seeder implements Runnable {
 			Thread.sleep(5000);
 			if (driver.findElements(By.className("uh-srch-btn")).size() > 0) {
 				logger.info("----------   Old yahoo version   ----------");
-//				handler = new OldYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("UHSearchProperty")).size() > 0) {
-				logger.info("**********   New YAHOO 2 version   **********");
+				logger.info("LOGGED IN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				checkMultipleAccountsPanel(driver);
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("mail-search-btn")).size() > 0) {
 				logger.info("##########   New yahoo version   ##########");
 			} else if (driver.findElements(By.id("comm-channel-module")).size() > 0) {
-				logger.info("**********   Phone validation. Going to URL   **********");
+				logger.info("LOGGED IN and phone validation found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				driver.get("http://mail.yahoo.com");
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
-			}else {
+			} else if (driver.findElements(By.id("skipbtn")).size() > 0) {
+				logger.info("LOGGED IN and Don’t get locked out of your account, clicking skip button!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				driver.findElement(By.id("skipbtn")).click();
+				handler = new ModernYahooRunnable(driver, seed, human, logger);
+			} else {
+				if(driver.findElements(By.id("mbr-bd")).size() > 0){
+					logger.info("==========   Not able to login, validate accout by phone   ==========");
+				}
 				 YahooRunnable.getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
 				logger.info("==========   THERE IS A NEW YAHOO VERSION IN TOWN   ==========");
 			}
