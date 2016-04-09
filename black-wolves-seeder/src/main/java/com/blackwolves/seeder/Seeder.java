@@ -96,28 +96,29 @@ public class Seeder implements Runnable {
 		logger.info("Trying to login in....");
 		try {
 
-			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			driver.get(yahooUrl);
+			Thread.sleep(YahooRunnable.randInt(2500, 3500));
 
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed.getUser());
 
 			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
 				driver.findElement(By.id("login-signin")).click();
-				
-				Thread.sleep(YahooRunnable.randInt(1500, 2500));
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 				
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 				
 			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 				
 			}
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
-				Thread.sleep(YahooRunnable.randInt(1000, 2000));
+				Thread.sleep(YahooRunnable.randInt(2500, 3500));
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}

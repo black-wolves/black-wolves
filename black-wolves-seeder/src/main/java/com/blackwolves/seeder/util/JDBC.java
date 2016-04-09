@@ -49,7 +49,7 @@ public class JDBC {
 	public static void main(String[] args) throws ParseException {
 //		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
 //		getStats();
-		getLastUpdatedSeeds();
+//		getLastUpdatedSeeds();
 //		getSeedsForSubscriptions(9994,10000);
 	}
 	
