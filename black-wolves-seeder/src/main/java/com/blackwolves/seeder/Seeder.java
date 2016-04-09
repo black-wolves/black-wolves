@@ -60,8 +60,8 @@ public class Seeder implements Runnable {
 	 */
 	private void checkMail() {
 		
-//		seed.setUser("elianaworkmanctc@yahoo.com");
-//		seed.setPassword("MmW9HrG4ONb");
+//		seed.setUser("millisentcorralryj@yahoo.com");
+//		seed.setPassword("dke74NVY4OXi");
 
 		WebDriver driver = createWebDriver();
 
@@ -213,7 +213,7 @@ public class Seeder implements Runnable {
 				driver.get("http://mail.yahoo.com");
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if (driver.findElements(By.id("skipbtn")).size() > 0) {
-				logger.info("LOGGED IN and Don’t get locked out of your account, clicking skip button!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				logger.info("LOGGED IN and Dont get locked out of your account, clicking skip button!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				driver.findElement(By.id("skipbtn")).click();
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else {
