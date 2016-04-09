@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -329,7 +328,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToDetroitDailyNews(Seed seed, WebDriver driver) {
 		String url = "https://account.detroitnews.com/newsletters/";
 		String site = "DetroitDailyNews,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription() !=null && !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
