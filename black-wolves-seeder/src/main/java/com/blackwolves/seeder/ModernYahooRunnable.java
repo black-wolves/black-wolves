@@ -82,7 +82,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.JERRY);
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.NYTIMES);
 							foundMyMsg = true;
 
 						}
@@ -107,7 +107,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.JERRY)) {
+								if (fromText.contains(Constant.FROM.NYTIMES)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");

@@ -66,96 +66,95 @@ public class Subscriber implements Runnable {
 			JDBC.updateSubscription(seed);
 			seed.setSubscription(currentSubs);
 
-			if (Math.random() < 1) {
+			if (Math.random() < 0.3) {
 				subscribeToHoustonCron(seed, driver);
 
 			}
-
-			// subscribeToNBCSanDiego(seed, driver);
-			 if (Math.random() < 1) {
-			 subscribeToNYDailyNews(seed, driver);
-			 }
-			 if (Math.random() < 1) {
-			 subscribeToSoccerWire(seed, driver);
-			 }
+			if (Math.random() < 0.3) {
+				subscribeToNYDailyNews(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToSoccerWire(seed, driver);
+			}
 			// if (Math.random() < 0.2) {
-			 //subscribeToTheGolfChannel(seed, driver);
+			// subscribeToNBCSanDiego(seed, driver);
+			// subscribeToTheGolfChannel(seed, driver);
 			// }
-			 if (Math.random() < 1) {
-			 subscribeToDetroitDailyNews(seed, driver);
+			if (Math.random() < 0.3) {
+				subscribeToDetroitDailyNews(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToSanAntonioNews(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToBostonMagazine(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToTheHerald(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToNBCNews(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToDailyNews(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToForbes(seed, driver);
+			}
+			 if (Math.random() < 0.3) {
+			 subscribeToMatterMark(seed, driver);
 			 }
-			 if (Math.random() < 1) {
-			 subscribeToSanAntonioNews(seed, driver);
+			 if (Math.random() < 0.3) {
+			 subscribeFashionMagazine(seed, driver);
 			 }
-			 if (Math.random() < 1) {
-			 subscribeToBostonMagazine(seed, driver);
+			 if (Math.random() < 0.3) {
+			 subscribeToFetch(seed, driver);
 			 }
-			 if (Math.random() < 1) {
-			 subscribeToTheHerald(seed, driver);
+			 if (Math.random() < 0.3) {
+			 subscribeToReDef(seed, driver);
 			 }
-			 if (Math.random() < 1) {
-			 subscribeToNBCNews(seed, driver);
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, liveStyle, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, bits, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, cooking, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, news, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, headlines, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, afterNoon, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, today, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, firstDraft, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, dealBook, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToSkimm(seed, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, opinion, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, europe, driver);
+//			 }
+//			 if (Math.random() < 0.3) {
+//			 subscribeToNyTimesRandom(seed, asia, driver);
+//			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToGolfSmith(seed, driver);
 			 }
-			 if (Math.random() < 1) {
-			 subscribeToDailyNews(seed, driver);
-			 }
-			 if (Math.random() < 1) {
-			 subscribeToForbes(seed, driver);
-			 }
-			// if (Math.random() < 0.3) {
-			// subscribeToMatterMark(seed, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeFashionMagazine(seed, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToFetch(seed, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToReDef(seed, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, liveStyle, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, bits, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, cooking, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, news, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, headlines, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, afterNoon, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, today, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, firstDraft, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, dealBook, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToSkimm(seed, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, opinion, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, europe, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, asia, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToGolfSmith(seed, driver);
-			// }
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
 				subscribeToSanAntonioNews(seed, driver);
@@ -521,7 +520,7 @@ public class Subscriber implements Runnable {
 			} catch (WebDriverException e) {
 				logger.info("Element in " + url + "is not clickable. Please review");
 			}
-		}else {
+		} else {
 			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
 		}
 	}
@@ -546,7 +545,7 @@ public class Subscriber implements Runnable {
 			} catch (WebDriverException e) {
 				logger.info("Element in " + url + "is not clickable. Please review");
 			}
-		}else {
+		} else {
 			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
 		}
 	}
@@ -573,9 +572,9 @@ public class Subscriber implements Runnable {
 				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 			} catch (Exception e) {
 				logger.info("Element in " + url + " not found. Saving screenshot as /var/www/errors/" + seed.getUser());
-			//	YahooRunnable.getScreenShot(driver, seed.getUser());
+				// YahooRunnable.getScreenShot(driver, seed.getUser());
 			}
-		}else {
+		} else {
 			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
 		}
 
@@ -600,7 +599,7 @@ public class Subscriber implements Runnable {
 			} catch (NoSuchElementException | InterruptedException e) {
 				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 			}
-		}else {
+		} else {
 			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
 		}
 	}
