@@ -60,12 +60,16 @@ public class Subscriber implements Runnable {
 		WebDriver driver = new FirefoxDriver(caps);
 		driver.manage().window().maximize();
 		try {
-		//	String currentSubs = seed.getSubscription();
+			String currentSubs = seed.getSubscription();
 			seed.setSubscription(new String("1"));
 			JDBC.updateSubscription(seed);
-//			seed.setSubscription(currentSubs);
+			if (currentSubs == null) {
+				currentSubs =  new String();
 
-			if (Math.random() < 0.3) {
+			}
+			seed.setSubscription(currentSubs);
+
+			if (Math.random() < 1.3) {
 				subscribeToHoustonCron(seed, driver);
 
 			}
@@ -100,60 +104,60 @@ public class Subscriber implements Runnable {
 			if (Math.random() < 0.3) {
 				subscribeToForbes(seed, driver);
 			}
-			 if (Math.random() < 0.3) {
-			 subscribeToMatterMark(seed, driver);
-			 }
-			 if (Math.random() < 0.3) {
-			 subscribeFashionMagazine(seed, driver);
-			 }
-			 if (Math.random() < 0.3) {
-			 subscribeToFetch(seed, driver);
-			 }
-			 if (Math.random() < 0.3) {
-			 subscribeToReDef(seed, driver);
-			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, liveStyle, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, bits, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, cooking, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, news, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, headlines, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, afterNoon, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, today, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, firstDraft, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, dealBook, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToSkimm(seed, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, opinion, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, europe, driver);
-//			 }
-//			 if (Math.random() < 0.3) {
-//			 subscribeToNyTimesRandom(seed, asia, driver);
-//			 }
-			 if (Math.random() < 0.3) {
-			 subscribeToGolfSmith(seed, driver);
-			 }
+			if (Math.random() < 0.3) {
+				subscribeToMatterMark(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeFashionMagazine(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToFetch(seed, driver);
+			}
+			if (Math.random() < 0.3) {
+				subscribeToReDef(seed, driver);
+			}
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, liveStyle, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, bits, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, cooking, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, news, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, headlines, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, afterNoon, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, today, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, firstDraft, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, dealBook, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToSkimm(seed, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, opinion, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, europe, driver);
+			// }
+			// if (Math.random() < 0.3) {
+			// subscribeToNyTimesRandom(seed, asia, driver);
+			// }
+			if (Math.random() < 0.3) {
+				subscribeToGolfSmith(seed, driver);
+			}
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
 				subscribeToSanAntonioNews(seed, driver);
@@ -172,7 +176,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToHoustonCron(Seed seed, WebDriver driver) {
 		String url = "http://www.chron.com/newsletters/";
 		String site = "HoustonCron,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() || !seed.getSubscription().contains(site)) {
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
 				driver.get(url);
@@ -221,7 +225,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToNBCSanDiego(Seed seed, WebDriver driver) {
 		String url = "http://www.nbcsandiego.com/newsletters/";
 		String site = "NBCSanDiego,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
 				driver.get(url);
@@ -258,7 +262,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToSoccerWire(Seed seed, WebDriver driver) {
 		String url = "http://www.soccerwire.com/category/news/leagues/mls/";
 		String site = "SoccerWire,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
 				driver.get(url);
@@ -291,7 +295,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToTheGolfChannel(Seed seed, WebDriver driver) {
 		String url = "http://email.thegolfchannel.com/golfchan3/golfchan_reg.action";
 		String site = "TheGolfChannel,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -328,7 +332,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToDetroitDailyNews(Seed seed, WebDriver driver) {
 		String url = "https://account.detroitnews.com/newsletters/";
 		String site = "DetroitDailyNews,";
-		if (seed.getSubscription() !=null && !seed.getSubscription().contains(site)) {
+		if (seed.getSubscription() != null && !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -371,7 +375,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToNYDailyNews(Seed seed, WebDriver driver) {
 		String url = "http://link.nydailynews.com/join/4xm/newslettersignup-desktop";
 		String site = "NYDailyNews,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -400,7 +404,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToDailyNews(Seed seed, WebDriver driver) {
 		String url = "http://www.dailynews.com/email_signup";
 		String site = "DailyNews,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
 				driver.get(url);
@@ -438,7 +442,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToSanAntonioNews(Seed seed, WebDriver driver) {
 		String url = "http://www.mysanantonio.com/news/local/";
 		String site = "SanAntonioNews,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -468,7 +472,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToBostonMagazine(Seed seed, WebDriver driver) {
 		String url = "http://www.bostonmagazine.com/newsletters/";
 		String site = "BostonMagazine,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -501,7 +505,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToTheHerald(Seed seed, WebDriver driver) {
 		String url = "https://affiliates.eblastengine.com/Widgets/EmailSignup.aspx?wcguid=3E8B8709-AF46-4F2C-AFBA-2D662DFCC337";
 		String site = "TheHerald,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -527,7 +531,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToNBCNews(Seed seed, WebDriver driver) {
 		String url = "http://www.nbcnews.com/";
 		String site = "NBCNews,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -552,7 +556,7 @@ public class Subscriber implements Runnable {
 	private void subscribeToForbes(Seed seed, WebDriver driver) {
 		String url = "http://www.forbes.com/";
 		String site = "Forbes,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			try {
 				logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -581,7 +585,7 @@ public class Subscriber implements Runnable {
 
 	private void subscribeToNyTimesRandom(Seed seed, String url, WebDriver driver) {
 		String site = "NYTimes,";
-		if (!seed.getSubscription().contains(site)) {
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
 
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
