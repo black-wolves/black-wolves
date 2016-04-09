@@ -502,12 +502,15 @@ public class ModernYahooRunnable extends YahooRunnable {
 			WebElement settings = driver.findElement(By.id("yucs-help"));
 			myMouse.moveToElement(settings).build().perform();
 			Thread.sleep(randInt(1000, 2000));
+			settings = driver.findElement(By.id("yucs-help"));
 			myMouse.moveToElement(settings).build().perform();
+			Thread.sleep(randInt(1000, 2000));
 			logger.info("Moving to configuration wheel");
 			Thread.sleep(randInt(1000, 2000));
 			if (driver.findElements(By.xpath("//div[@id='yucs-help_inner']")).size() > 0) {
-				Thread.sleep(randInt(1000, 2000));
+				settings = driver.findElement(By.id("yucs-help"));
 				myMouse.moveToElement(settings).build().perform();
+				Thread.sleep(randInt(1000, 2000));
 				driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
 				Thread.sleep(randInt(1000, 2000));
 				if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
