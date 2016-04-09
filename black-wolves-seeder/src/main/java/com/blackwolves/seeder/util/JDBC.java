@@ -327,7 +327,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * FROM FEEDER WHERE  FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+"  ORDER BY FEEDER.ID ASC LIMIT 15";
+		String selectSQL = "SELECT * FROM FEEDER WHERE  FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+" AND SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 15";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
