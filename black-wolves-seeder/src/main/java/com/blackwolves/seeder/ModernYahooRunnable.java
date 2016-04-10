@@ -246,7 +246,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(2000, 3000));
 
-			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.JERRY);
+			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.YAHOO_MAIL);
 			if (currentMsg != null) {
 
 				logger.info("Opening the spam message");
