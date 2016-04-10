@@ -83,7 +83,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
 							currentMsg = findMessage(inboxMsgs, Constant.FROM.YAHOO_MAIL);
-							foundMyMsg = true;
+							if (currentMsg != null) {
+								foundMyMsg = true;
+							}
 
 						}
 						// Or a SpamMsg to give the seed reputation. 0.02
