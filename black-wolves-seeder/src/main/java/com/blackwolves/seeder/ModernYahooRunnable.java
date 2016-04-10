@@ -84,6 +84,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 						if (findMyMessage() && !foundMyMsg) {
 							currentMsg = findMessage(inboxMsgs, Constant.FROM.YAHOO_MAIL);
 							if (currentMsg != null) {
+								logger.info(" #########  MAIL "+Constant.FROM.YAHOO_MAIL +" FOUND AT INBOX ##############");
 								foundMyMsg = true;
 							}
 
