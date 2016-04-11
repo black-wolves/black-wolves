@@ -82,8 +82,11 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.NYTIMES);
-							foundMyMsg = true;
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.YAHOO_MAIL);
+							if (currentMsg != null) {
+								logger.info(" #########  MAIL "+Constant.FROM.YAHOO_MAIL +" FOUND AT INBOX ##############");
+								foundMyMsg = true;
+							}
 
 						}
 						// Or a SpamMsg to give the seed reputation. 0.02
@@ -107,7 +110,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.NYTIMES)) {
+								if (fromText.contains(Constant.FROM.YAHOO_MAIL)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");
@@ -246,7 +249,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(2000, 3000));
 
-			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.JERRY);
+			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.YAHOO_MAIL);
 			if (currentMsg != null) {
 
 				logger.info("Opening the spam message");
@@ -290,7 +293,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private boolean findSpamMessage() {
-		if (Math.random() <= 0.4) {
+		if (Math.random() <= 0.1) {
 			return true;
 		}
 		return false;
@@ -511,26 +514,28 @@ public class ModernYahooRunnable extends YahooRunnable {
 				settings = driver.findElement(By.id("yucs-help"));
 				myMouse.moveToElement(settings).build().perform();
 				Thread.sleep(randInt(1000, 2000));
-				driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
-				Thread.sleep(randInt(1000, 2000));
-				if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
-					logger.info("Conversation mode is on. Turning off.");
-					driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
+				if(driver.findElements((By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a"))).size() > 0){
+					driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
 					Thread.sleep(randInt(1000, 2000));
-					if(driver.findElements(By.className("selectable")).size() > 0){
+					if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
+						logger.info("Conversation mode is on. Turning off.");
+						driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
+						Thread.sleep(randInt(1000, 2000));
+						if(driver.findElements(By.className("selectable")).size() > 0){
+							driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
+							Thread.sleep(randInt(1000, 2000));
+							driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
+							Thread.sleep(randInt(1000, 2000));
+						}
+					}else if(driver.findElements(By.className("selectable")).size() > 0){
 						driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
 						Thread.sleep(randInt(1000, 2000));
 						driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
 						Thread.sleep(randInt(1000, 2000));
 					}
-				}else if(driver.findElements(By.className("selectable")).size() > 0){
-					driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
-					Thread.sleep(randInt(1000, 2000));
-					driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
+					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
 					Thread.sleep(randInt(1000, 2000));
 				}
-				driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
-				Thread.sleep(randInt(1000, 2000));
 			}
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
