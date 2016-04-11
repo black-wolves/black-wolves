@@ -42,6 +42,7 @@ public interface Constant {
 		
 		public static final String SDF = "yyyy-M-dd HH:mm:ss";
 		public static final String GMT_3 = "GMT-3";
+		public static final String HOME = "HOME";
 	}
 	
 	public interface FactSlides{
