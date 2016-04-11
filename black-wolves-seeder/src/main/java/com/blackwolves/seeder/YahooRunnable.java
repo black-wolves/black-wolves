@@ -83,9 +83,9 @@ public abstract class YahooRunnable {
 //			processSpam(seed);
 	//	}
 //
-		if (Math.random() <= 0.2) {
-			processInbox(seed);
-		}
+//		if (Math.random() <= 0.2) {
+//			processInbox(seed);
+//		}
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class JDBC {
 			
 			String selectSQL = "SELECT * FROM "
 					+ "(SELECT * FROM FEEDER WHERE FEEDER_UPDATED_DATE IS NOT NULL order by FEEDER_UPDATED_DATE DESC) x "
-					+ "ORDER BY x.SEEDER_UPDATED_DATE ASC LIMIT 25";
+					+ "ORDER BY x.SEEDER_UPDATED_DATE ASC LIMIT 40";
 			
 //			String selectSQL =  "SELECT * FROM FEEDER  where SEED='voxackkhzzc@yahoo.com'";
 			
