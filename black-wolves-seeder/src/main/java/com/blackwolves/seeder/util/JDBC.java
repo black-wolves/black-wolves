@@ -3,6 +3,11 @@
  */
 package com.blackwolves.seeder.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -31,20 +36,7 @@ public class JDBC {
 
 	private static final Logger logger = LoggerFactory.getLogger(JDBC.class);
 	
-	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
-	private static final String DB_USER = "mailinglocaweb";
-	private static final String DB_PASSWORD = "3H8osZA3";
-	private static final String DB_NAME = "mailinglocaweb";
-	
-//	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-//	private static final String DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
-//	private static final String DB_USER = "obcabril_root";
-//	private static final String DB_PASSWORD = "Daniel123";
-//	private static final String DB_NAME = "obcabril_usa_seeds";
-	
-	private static final String SDF = "yyyy-M-dd HH:mm:ss";
-	private static final String GMT_3 = "GMT-3";
+	private static BufferedReader reader;
 	
 	public static void main(String[] args) throws ParseException {
 //		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
@@ -57,8 +49,8 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
-		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.JDBC.SDF);
+		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 		
 		List<Seed> seeds = new ArrayList<Seed>();
@@ -110,8 +102,8 @@ public class JDBC {
 //		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 //		Timestamp oneHourAgo = new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000));
 		
-		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
-		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.JDBC.SDF);
+		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 
 		String selectSQL = "SELECT SUM(MAIL_COUNT) AS MAIL_COUNT, SUM(OPENED) AS OPENED, SUM(CLICKED) AS CLICKED, SUM(SPAMMED) AS SPAMMED FROM FEEDER";// WHERE FEEDER_UPDATED_DATE BETWEEN '" + formatter.format(oneHourAgo) + "' AND '" + formatter.format(now) + "'";
@@ -158,7 +150,7 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		String updateSQL = "UPDATE " + DB_NAME + ".FEEDER"
+		String updateSQL = "UPDATE FEEDER"
 				+ " SET SUBSCRIPTION = '" + seed.getSubscription() + "'"
 				+ " WHERE SEED = '" + seed.getUser() + "'";
 
@@ -193,11 +185,11 @@ public class JDBC {
 		
 		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 		
-		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
-		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.JDBC.SDF);
+		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 
-		String updateSQL = "UPDATE " + DB_NAME + ".FEEDER"
+		String updateSQL = "UPDATE FEEDER"
 				+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 				+ " , IN_USE = "+ inUse
 				+ openSql(openCount)
@@ -229,13 +221,31 @@ public class JDBC {
 	 */
 	private static Connection getDBConnection() {
 		Connection dbConnection = null;
+		String connection = null;
+		String user = null;
+		String password = null;
+		String db = getDbSetup();
+		switch (db) {
+		case Constant.JDBC.RO_DB:
+			connection = Constant.JDBC.RO_DB_CONNECTION;
+			user = Constant.JDBC.RO_DB_USER;
+			password = Constant.JDBC.RO_DB_PASSWORD;
+			break;
+		case Constant.JDBC.US_DB:
+			connection = Constant.JDBC.US_DB_CONNECTION;
+			user = Constant.JDBC.US_DB_USER;
+			password = Constant.JDBC.US_DB_PASSWORD;
+			break;
+		default:
+			break;
+		}
 		try {
-			Class.forName(DB_DRIVER);
+			Class.forName(Constant.JDBC.DB_DRIVER);
 		} catch (ClassNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		}
 		try {
-			dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,DB_PASSWORD);
+			dbConnection = DriverManager.getConnection(connection, user,password);
 			return dbConnection;
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
@@ -244,6 +254,25 @@ public class JDBC {
 
 	}
 	
+	private static String getDbSetup() {
+		String db = null;
+		try {
+			reader = new BufferedReader(new FileReader(new File(Constant.JDBC.WOLF_CONFIG_ROUTE)));
+			for(String line = reader.readLine(); line != null; line = reader.readLine()){
+				if(line.contains(Constant.JDBC.SEEDER_DB)){
+					String[] s = line.split("=");
+					db = s[1];
+					break;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return db;
+	}
+
 	/**
 	 * @param dbConnection
 	 * @param statement
@@ -323,8 +352,8 @@ public class JDBC {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
-		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
-		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.JDBC.SDF);
+		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 		
 		String selectSQL = "SELECT * FROM FEEDER WHERE  FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+" AND SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 15";
@@ -396,8 +425,8 @@ public class JDBC {
 		
 		Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 		
-		SimpleDateFormat formatter = new SimpleDateFormat(SDF);
-		TimeZone tz = TimeZone.getTimeZone(GMT_3);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.JDBC.SDF);
+		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 
 
@@ -406,7 +435,7 @@ public class JDBC {
 			statement = dbConnection.createStatement();
 			
 			for (Seed seed : seeds) {
-				String updateSQL = "UPDATE " + DB_NAME + ".FEEDER"
+				String updateSQL = "UPDATE FEEDER"
 						+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
 						+ " , IN_USE = "+ inUse
 						+ loggedInSql(loggedIn)
