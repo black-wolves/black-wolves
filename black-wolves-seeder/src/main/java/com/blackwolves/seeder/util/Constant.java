@@ -22,6 +22,28 @@ public interface Constant {
 	public static final String CONTINUE = "Continue";
 	public static final String Next = "Next";
 	
+	public interface JDBC{
+		public static final String SEEDER_DB = "SEEDER_DB";
+		public static final String RO_DB = "ro";
+		public static final String US_DB = "us";
+		public static final String USER_HOME = "user.home";
+		public static final String PROFILE = ".profile";
+		public static final String BASHRC = ".bashrc";
+		
+		public static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+		
+		public static final String RO_DB_CONNECTION = "jdbc:mysql://190.228.29.59:3306/mailinglocaweb";
+		public static final String RO_DB_USER = "mailinglocaweb";
+		public static final String RO_DB_PASSWORD = "3H8osZA3";
+		
+		public static final String US_DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
+		public static final String US_DB_USER = "obcabril_root";
+		public static final String US_DB_PASSWORD = "Daniel123";
+		
+		public static final String SDF = "yyyy-M-dd HH:mm:ss";
+		public static final String GMT_3 = "GMT-3";
+	}
+	
 	public interface FactSlides{
 		public static final String TCI_IMAGES = "/Users/gastondapice/Dropbox/Black Wolves/sites/TheCoolInfo/images/";
 		public static final String TCI_DOWNLOAD = "/Users/gastondapice/Downloads/images/";
