@@ -257,7 +257,7 @@ public class JDBC {
 	private static String getDbSetup() {
 		String db = null;
 		try {
-			reader = new BufferedReader(new FileReader(new File(new File(System.getProperty(Constant.JDBC.HOME)), Constant.JDBC.BASHRC)));
+			reader = new BufferedReader(new FileReader(new File(Constant.JDBC.BASHRC_ROUTE)));
 			for(String line = reader.readLine(); line != null; line = reader.readLine()){
 				if(line.contains(Constant.JDBC.SEEDER_DB)){
 					String[] s = line.split("=");
