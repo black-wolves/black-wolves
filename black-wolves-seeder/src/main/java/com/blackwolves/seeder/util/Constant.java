@@ -26,9 +26,6 @@ public interface Constant {
 		public static final String SEEDER_DB = "SEEDER_DB";
 		public static final String RO_DB = "ro";
 		public static final String US_DB = "us";
-		public static final String USER_HOME = "user.home";
-		public static final String PROFILE = ".profile";
-		public static final String BASHRC = ".bashrc";
 		
 		public static final String DB_DRIVER = "com.mysql.jdbc.Driver";
 		
@@ -43,7 +40,7 @@ public interface Constant {
 		public static final String SDF = "yyyy-M-dd HH:mm:ss";
 		public static final String GMT_3 = "GMT-3";
 		public static final String HOME = "HOME";
-		public static final String BASHRC_ROUTE = "/root/.bashrc";
+		public static final String WOLF_CONFIG_ROUTE = "/root/blackwolves/wolf_config.txt";
 	}
 	
 	public interface FactSlides{
