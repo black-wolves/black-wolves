@@ -143,9 +143,9 @@ public class Subscriber implements Runnable {
 			 if (Math.random() < 0.3) {
 			 subscribeToNyTimesRandom(seed, dealBook, driver);
 			 }
-			 if (Math.random() < 0.3) {
-			 subscribeToSkimm(seed, driver);
-			 }
+			// if (Math.random() < 0.3) {
+			// subscribeToSkimm(seed, driver);
+			// }
 			 if (Math.random() < 0.3) {
 			 subscribeToNyTimesRandom(seed, opinion, driver);
 			 }
@@ -585,8 +585,6 @@ public class Subscriber implements Runnable {
 
 	private void subscribeToNyTimesRandom(Seed seed, String url, WebDriver driver) {
 		String site = "NYTimes,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			try {
@@ -602,9 +600,6 @@ public class Subscriber implements Runnable {
 			} catch (NoSuchElementException | InterruptedException e) {
 				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
 	}
 
 	// Works! :)
