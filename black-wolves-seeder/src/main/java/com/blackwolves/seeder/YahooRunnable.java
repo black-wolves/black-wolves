@@ -77,16 +77,10 @@ public abstract class YahooRunnable {
 	 * @param logger
 	 */
 	public void runProcess() {
-
 		processInbox(seed);
-	//	if (Math.random() <= 0.5) {
-//			processSpam(seed);
-	//	}
-//
-//		if (Math.random() <= 0.2) {
-//			processInbox(seed);
-//		}
-	}
+		processSpam(seed);
+
+		}
 
 	/**
 	 * Throw dices to get random results

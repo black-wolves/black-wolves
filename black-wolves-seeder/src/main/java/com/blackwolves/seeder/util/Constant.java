@@ -68,7 +68,9 @@ public interface Constant {
 		public static final String SPAM = "Golfsmith";
 		public static final String JERRY = "Jerry Seinfeld";
 		public static final String NYTIMES = "NYTimes. com";
-		public static final String YAHOO_MAIL = "Yahoo";
+		public static final String YAHOO = "Yahoo";
+		public static final String LGE = "Experts";
+
 
 		
 	}

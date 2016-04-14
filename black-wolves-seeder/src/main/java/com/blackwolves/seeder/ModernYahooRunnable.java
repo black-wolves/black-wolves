@@ -82,9 +82,9 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.YAHOO_MAIL);
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.LGE);
 							if (currentMsg != null) {
-								logger.info(" #########  MAIL "+Constant.FROM.YAHOO_MAIL +" FOUND AT INBOX ##############");
+								logger.info(" #########  MAIL "+Constant.FROM.LGE +" FOUND AT INBOX ##############");
 								foundMyMsg = true;
 							}
 
@@ -110,7 +110,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.YAHOO_MAIL)) {
+								if (fromText.contains(Constant.FROM.LGE)) {
 									opened = true;
 									if (Math.random() <= 0.6) {
 										clickShowImages("show-text");
@@ -249,7 +249,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(2000, 3000));
 
-			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.YAHOO_MAIL);
+			WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.LGE);
 			if (currentMsg != null) {
 
 				logger.info("Opening the spam message");

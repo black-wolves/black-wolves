@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.blackwolves.seeder.Seed;
-import com.blackwolves.seeder.YahooRunnable;
 import com.blackwolves.seeder.util.JDBC;
 
 /**
