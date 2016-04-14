@@ -69,92 +69,92 @@ public class Subscriber implements Runnable {
 			}
 			seed.setSubscription(currentSubs);
 
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToHoustonCron(seed, driver);
 
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToNYDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToSoccerWire(seed, driver);
 			}
 			// if (Math.random() < 0.2) {
 			// subscribeToNBCSanDiego(seed, driver);
 			// subscribeToTheGolfChannel(seed, driver);
 			// }
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToDetroitDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToSanAntonioNews(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToBostonMagazine(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToTheHerald(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToNBCNews(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToForbes(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToMatterMark(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeFashionMagazine(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToFetch(seed, driver);
 			}
-			if (Math.random() < 0.3) {
+			if (Math.random() < 0.45) {
 				subscribeToReDef(seed, driver);
 			}
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, liveStyle, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, bits, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, cooking, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, news, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, headlines, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, afterNoon, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, today, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, firstDraft, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, dealBook, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToSkimm(seed, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, opinion, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, europe, driver);
-			// }
-			// if (Math.random() < 0.3) {
-			// subscribeToNyTimesRandom(seed, asia, driver);
-			// }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, liveStyle, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, bits, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, cooking, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, news, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, headlines, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, afterNoon, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, today, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, firstDraft, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, dealBook, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToSkimm(seed, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, opinion, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, europe, driver);
+			 }
+			 if (Math.random() < 0.3) {
+			 subscribeToNyTimesRandom(seed, asia, driver);
+			 }
 			if (Math.random() < 0.3) {
 				subscribeToGolfSmith(seed, driver);
 			}
