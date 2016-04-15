@@ -78,7 +78,7 @@ public abstract class YahooRunnable {
 	 */
 	public void runProcess() {
 		processInbox(seed);
-		processSpam(seed);
+	//	processSpam(seed);
 
 		}
 
