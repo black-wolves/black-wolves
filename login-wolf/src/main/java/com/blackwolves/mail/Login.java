@@ -100,7 +100,9 @@ public class Login implements Runnable {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(randInt(2500, 3500));
 				if(driver.findElements(By.id("mbr-login-error")).size() > 0){
-					return;
+					if(!driver.findElement(By.id("mbr-login-error")).getText().isEmpty()){
+						return;
+					}
 				}
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
@@ -135,62 +137,6 @@ public class Login implements Runnable {
 		}
 	}
 	
-	private void removeConversationMailView(WebDriver driver) {
-
-		try {
-			Actions myMouse = new Actions(driver);
-			WebElement settings = driver.findElement(By.id("yucs-help"));
-			myMouse.moveToElement(settings).build().perform();
-			Thread.sleep(randInt(1000, 2000));
-			settings = driver.findElement(By.id("yucs-help"));
-			myMouse.moveToElement(settings).build().perform();
-			Thread.sleep(randInt(1000, 2000));
-			logger.info("Moving to configuration wheel");
-			Thread.sleep(randInt(1000, 2000));
-			if (driver.findElements(By.xpath("//div[@id='yucs-help_inner']")).size() > 0) {
-				settings = driver.findElement(By.id("yucs-help"));
-				myMouse.moveToElement(settings).build().perform();
-				Thread.sleep(randInt(1000, 2000));
-				if(driver.findElements((By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a"))).size() > 0){
-					driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
-					Thread.sleep(randInt(1000, 2000));
-					if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
-						logger.info("Conversation mode is on. Turning off.");
-						driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
-						Thread.sleep(randInt(1000, 2000));
-						if(driver.findElements(By.className("selectable")).size() > 0){
-							driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
-							Thread.sleep(randInt(1000, 2000));
-							driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
-							Thread.sleep(randInt(1000, 2000));
-						}
-					}else if(driver.findElements(By.className("selectable")).size() > 0){
-						driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
-						Thread.sleep(randInt(1000, 2000));
-						driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
-						Thread.sleep(randInt(1000, 2000));
-					}
-					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
-					Thread.sleep(randInt(1000, 2000));
-				}
-			}
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
-		}
-	}
-
 	/**
 	 * 
 	 * @param driver
@@ -251,6 +197,62 @@ public class Login implements Runnable {
 			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
 		}
 		return false;
+	}
+	
+	private void removeConversationMailView(WebDriver driver) {
+
+		try {
+			Actions myMouse = new Actions(driver);
+			WebElement settings = driver.findElement(By.id("yucs-help"));
+			myMouse.moveToElement(settings).build().perform();
+			Thread.sleep(randInt(1000, 2000));
+			settings = driver.findElement(By.id("yucs-help"));
+			myMouse.moveToElement(settings).build().perform();
+			Thread.sleep(randInt(1000, 2000));
+			logger.info("Moving to configuration wheel");
+			Thread.sleep(randInt(1000, 2000));
+			if (driver.findElements(By.xpath("//div[@id='yucs-help_inner']")).size() > 0) {
+				settings = driver.findElement(By.id("yucs-help"));
+				myMouse.moveToElement(settings).build().perform();
+				Thread.sleep(randInt(1000, 2000));
+				if(driver.findElements((By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a"))).size() > 0){
+					driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
+					Thread.sleep(randInt(1000, 2000));
+					if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
+						logger.info("Conversation mode is on. Turning off.");
+						driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
+						Thread.sleep(randInt(1000, 2000));
+						if(driver.findElements(By.className("selectable")).size() > 0){
+							driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
+							Thread.sleep(randInt(1000, 2000));
+							driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
+							Thread.sleep(randInt(1000, 2000));
+						}
+					}else if(driver.findElements(By.className("selectable")).size() > 0){
+						driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
+						Thread.sleep(randInt(1000, 2000));
+						driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
+						Thread.sleep(randInt(1000, 2000));
+					}
+					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
+					Thread.sleep(randInt(1000, 2000));
+				}
+			}
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		}
 	}
 
 	private void checkMultipleAccountsPanel(WebDriver driver) {
