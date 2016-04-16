@@ -9,7 +9,8 @@ public interface Constant {
 	public static final String FALSE = "false";
 	public static final String BLANK_SPACE = " ";
 	public static final int MAX_SPAM = 20;
-	public static final int DEFAULT_THREADS = 1000;
+	public static final int DEFAULT_THREADS = 25;
+	public static final String VALIDATE = "validate";
 
 	public interface Yahoo{
 		public static final String IMAP_YAHOO = "imap.mail.yahoo.com";
@@ -26,6 +27,11 @@ public interface Constant {
 		public static final String CONTENT_TRANSFER_ENCODING = "7bit";
 	}
 	
+	public static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
+	public static final String CONTINUE = "Continue";
+	public static final String Next = "Next";
+	public static final String ERROR_TEXT_1 = "The email and password you entered";
+	public static final String ERROR_TEXT_2 = "Sorry, we don";
 	
 	
 }

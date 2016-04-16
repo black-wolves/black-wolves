@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.mail.thread;
 
 import java.io.BufferedReader;
@@ -22,9 +19,12 @@ import java.util.concurrent.Future;
 import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+import com.blackwolves.mail.Login;
+import com.blackwolves.mail.Seed;
 import com.blackwolves.mail.util.Constant;
 import com.blackwolves.mail.util.SeedComparator;
 import com.blackwolves.mail.yahoo.LoginWolfYahoo;
@@ -39,49 +39,97 @@ public class LoginThreadPool {
 
 	public static void main(String[] args) {
 
-		String inputFileName = args[0];
-		String outputFileName = args[1];
-
-		int threads = Constant.DEFAULT_THREADS;
-		if(args.length > 2){
-			threads = Integer.valueOf(args[2]);
-		}
+		if(Constant.VALIDATE.equals(args[0])){
+			
+			ExecutorService executor = null;
+			
+			List<Seed> finalSeeds = getSeedsList("final_seeds.txt");
+			int seedsSize = finalSeeds.size();
+			
+			for (int i = 0; i < seedsSize; ) {
+				int jSize = calculate_i(finalSeeds.size(), i);
+				executor = Executors.newFixedThreadPool(jSize);
+				
+				logger.info("Processing seeds before the for");
+				for (int j = 0; j < jSize; j++, i++) {
+					Seed seed = finalSeeds.get(i);
+					MDC.put("logFileName", seed.getUser());
+					Login seeder = new Login(seed, logger);
+					Runnable worker = seeder;
+					logger.info("Executing thread: " + j + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (seedsSize-i));
+					executor.execute(worker);
+				}
+				
+				if (executor != null) {
+					executor.shutdown();
 		
-		clearFileContent(outputFileName);
-		clearFileContent("specific.csv");
-
-		logger.info("Generating contacts list");
-		List<String[]> contacts = generateSeedsList(inputFileName);
-		if(contacts.size()<threads){
-			threads = contacts.size();
-		}
-		List<List<String[]>> subLists = ListUtils.partition(contacts, contacts.size()/threads);
-		logger.info("Contact lists generated");
+					while (!executor.isTerminated()) {
 		
-		ExecutorService executor = Executors.newFixedThreadPool(threads);
-		List<Future<List<String[]>>> list = new ArrayList<Future<List<String[]>>>();
-		for (List<String[]> subList : subLists) {
-			Callable<List<String[]>> worker = new LoginWolfYahoo(subList);
-			Future<List<String[]>> submit = executor.submit(worker);
-			list.add(submit);
-		}
-
-		List<String[]> activeSeeds = new ArrayList<String[]>();
-		List<String[]> activeSeedsWithSpam = new ArrayList<String[]>();
-		List<String[]> inactiveSeeds = new ArrayList<String[]>();
-		for (Future<List<String[]>> future : list) {
-			processResults(future, outputFileName, activeSeeds, activeSeedsWithSpam, inactiveSeeds);
-		}
-		
-		printResults(activeSeeds, activeSeedsWithSpam, inactiveSeeds);
-		
-		if (executor != null) {
-			executor.shutdown();
-			while (!executor.isTerminated()) {
-
+					}
+					logger.info("Finished all threads");
+				}
+				
 			}
-			logger.info("Finished all threads");
+			
+		}else{
+			// arguments to test this part
+			//seeds.csv seeds_bun.csv 1
+			String inputFileName = args[0];
+			String outputFileName = args[1];
+
+			int threads = Constant.DEFAULT_THREADS;
+			if(args.length > 2){
+				threads = Integer.valueOf(args[2]);
+			}
+			
+			clearFileContent(outputFileName);
+			clearFileContent("specific.csv");
+
+			logger.info("Generating contacts list");
+			List<String[]> contacts = generateSeedsList(inputFileName);
+			if(contacts.size()<threads){
+				threads = contacts.size();
+			}
+			List<List<String[]>> subLists = ListUtils.partition(contacts, contacts.size()/threads);
+			logger.info("Contact lists generated");
+			
+			ExecutorService executor = Executors.newFixedThreadPool(threads);
+			List<Future<List<String[]>>> list = new ArrayList<Future<List<String[]>>>();
+			for (List<String[]> subList : subLists) {
+				Callable<List<String[]>> worker = new LoginWolfYahoo(subList);
+				Future<List<String[]>> submit = executor.submit(worker);
+				list.add(submit);
+			}
+
+			List<String[]> activeSeeds = new ArrayList<String[]>();
+			List<String[]> activeSeedsWithSpam = new ArrayList<String[]>();
+			List<String[]> inactiveSeeds = new ArrayList<String[]>();
+			for (Future<List<String[]>> future : list) {
+				processResults(future, outputFileName, activeSeeds, activeSeedsWithSpam, inactiveSeeds);
+			}
+			
+			printResults(activeSeeds, activeSeedsWithSpam, inactiveSeeds);
+			
+			if (executor != null) {
+				executor.shutdown();
+				while (!executor.isTerminated()) {
+
+				}
+				logger.info("Finished all threads");
+			}
 		}
+	}
+
+	/**
+	 * @param i 
+	 * @param seedsSize 
+	 * @return
+	 */
+	private static int calculate_i(int seedsSize, int i) {
+		if(seedsSize-i > 50){
+			return 50;
+		}
+		return seedsSize-i;
 	}
 
 	/**
@@ -159,11 +207,36 @@ public class LoginThreadPool {
 	/**
 	 * @return
 	 */
-	private static List<String[]> generateSeedsList(String fileName) {
+	@SuppressWarnings("resource")
+	private static List<Seed> getSeedsList(String fileName) {
+		List<String[]> seeds = new ArrayList<String[]>();
+		List<Seed> finalSeeds = new ArrayList<Seed>();
+		try {
+			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));
+			seeds = seedsReader.readAll();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		for (String[] s : seeds) {
+			Seed seed = new Seed(s[0], s[1], s[0]+","+s[1]);
+			finalSeeds.add(seed);
+		}
+		return finalSeeds;
+	}
+	
+	/**
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public static List<String[]> generateSeedsList(String fileName) {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
 			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));
 			seeds = seedsReader.readAll();
+			seedsReader.close();
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
