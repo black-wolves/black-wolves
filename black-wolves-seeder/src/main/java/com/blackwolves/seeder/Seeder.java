@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -39,6 +40,8 @@ public class Seeder implements Runnable {
 	private Human human;
 	
 	private Seed seed;
+	
+	private String invalidMessage;
 
 	public Seeder() {
 		
@@ -218,10 +221,24 @@ public class Seeder implements Runnable {
 				driver.findElement(By.id("skipbtn")).click();
 				handler = new ModernYahooRunnable(driver, seed, human, logger);
 			} else if(driver.findElements(By.id("mbr-bd")).size() > 0){
-				logger.info("==========   Not able to login, validate accout by phone   ==========");
+				invalidMessage = "Not able to login, validate accout by phone";
+				logger.info("==========   "+ invalidMessage +"   ==========");
+			} else if(driver.findElements(By.id("mbr-login-error")).size() > 0){
+				String error = driver.findElement(By.id("mbr-login-error")).getText();
+				if(error.contains(Constant.ERROR_TEXT_1)){
+					invalidMessage = "Not able to login, The email and password you entered dont match.";
+					logger.info("==========   "+ invalidMessage +"   ==========");
+				} else if(error.contains(Constant.ERROR_TEXT_2)){
+					invalidMessage = "Sorry, we dont recognize this email.";
+				} else{
+					invalidMessage = "mbr-login-error not found";
+					 logger.info("==========   "+ invalidMessage +"   ==========");
+					 YahooRunnable.getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion" + UUID.randomUUID());
+				}
 			} else{
-				 YahooRunnable.getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion");
-				logger.info("==========   THERE IS A NEW YAHOO VERSION IN TOWN   ==========");
+				invalidMessage = "THERE IS A NEW YAHOO VERSION IN TOWN";
+				 logger.info("==========   "+ invalidMessage +"   ==========");
+				 YahooRunnable.getScreenShot(driver, YahooRunnable.randInt(1, 100) + "newVersion" + UUID.randomUUID());
 			}
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);

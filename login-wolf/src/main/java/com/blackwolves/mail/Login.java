@@ -79,12 +79,10 @@ public class Login implements Runnable {
 	}
 
 	/**
+	 * 
 	 * @param yahooUrl
 	 * @param seed
 	 * @param driver
-	 * @param session
-	 * @throws IOException
-	 * @throws InterruptedException
 	 */
 	private void yahooLogin(String yahooUrl, Seed seed, WebDriver driver) {
 		logger.info("Trying to login in....");

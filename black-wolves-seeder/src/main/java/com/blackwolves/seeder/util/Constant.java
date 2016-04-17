@@ -21,6 +21,8 @@ public interface Constant {
 	public static final String SENDER = "sender";
 	public static final String CONTINUE = "Continue";
 	public static final String Next = "Next";
+	public static final String ERROR_TEXT_1 = "The email and password you entered";
+	public static final String ERROR_TEXT_2 = "Sorry, we don";
 	
 	public interface JDBC{
 		public static final String SEEDER_DB = "SEEDER_DB";
