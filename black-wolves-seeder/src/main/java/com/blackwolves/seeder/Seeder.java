@@ -7,8 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -67,6 +69,7 @@ public class Seeder implements Runnable {
 
 		human = generateRandomHumanUser();
 
+		visitSomewhereBefore(driver);
 		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
 
 		handler = validateYahooVersion(driver, seed);
@@ -289,6 +292,30 @@ public class Seeder implements Runnable {
 		return uas[ModernYahooRunnable.randInt(0, 8)];
 
 	}
+	
+	public void visitSomewhereBefore(WebDriver driver) {
+	String[] sites = new String[10];
+	sites[0] = "http://lanacion.com";
+	sites[1] = "http://ole.com.ar";
+	sites[2] = "http://marca.com";
+	sites[3] = "http://dig.com";
+	sites[4] = "http://yahoo.com";
+	sites[5] = "http://google.com";
+	sites[6] = "http://clarin.com";
+	sites[7] = "http://amazon.com";
+	sites[8] = "http://ebay.com";
+	sites[9] = "http://mcdonalds.com";
+	int random = ModernYahooRunnable.randInt(0, 9);
+	logger.info("***************** Visiting :" + sites[random]);
+	driver.get(sites[random]);
+
+	Set<Cookie> allCookies = driver.manage().getCookies();
+
+	for (Cookie cookie : allCookies) {
+		logger.info("***************** Cookies? :" + cookie.getName());
+
+	}
+}
 
 	public void logAttempts(String log) {
 		File file = new File("/var/www/total.txt");
