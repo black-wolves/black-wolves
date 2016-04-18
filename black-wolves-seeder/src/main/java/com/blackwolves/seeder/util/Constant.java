@@ -42,7 +42,7 @@ public interface Constant {
 		public static final String SDF = "yyyy-M-dd HH:mm:ss";
 		public static final String GMT_3 = "GMT-3";
 		public static final String HOME = "HOME";
-		public static final String WOLF_CONFIG_ROUTE = "/root/blackwolves/wolf_config.txt";
+		public static final String WOLF_CONFIG_ROUTE = "/var/www/blackwolves/wolf_config.txt";
 	}
 	
 	public interface FactSlides{
