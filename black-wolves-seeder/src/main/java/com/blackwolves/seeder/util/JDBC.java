@@ -236,6 +236,11 @@ public class JDBC {
 			user = Constant.JDBC.US_DB_USER;
 			password = Constant.JDBC.US_DB_PASSWORD;
 			break;
+		case Constant.JDBC.CAB_DB:
+			connection = Constant.JDBC.CAB_DB_CONNECTION;
+			user = Constant.JDBC.CAB_DB_USER;
+			password = Constant.JDBC.CAB_DB_PASSWORD;
+			break;
 		default:
 			break;
 		}

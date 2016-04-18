@@ -28,6 +28,7 @@ public interface Constant {
 		public static final String SEEDER_DB = "SEEDER_DB";
 		public static final String RO_DB = "ro";
 		public static final String US_DB = "us";
+		public static final String CAB_DB = "cab";
 		
 		public static final String DB_DRIVER = "com.mysql.jdbc.Driver";
 		
@@ -38,6 +39,10 @@ public interface Constant {
 		public static final String US_DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_usa_seeds";
 		public static final String US_DB_USER = "obcabril_root";
 		public static final String US_DB_PASSWORD = "Daniel123";
+		
+		public static final String CAB_DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_seeds";
+		public static final String CAB_DB_USER = "obcabril_root";
+		public static final String CAB_DB_PASSWORD = "Daniel123";
 		
 		public static final String SDF = "yyyy-M-dd HH:mm:ss";
 		public static final String GMT_3 = "GMT-3";
