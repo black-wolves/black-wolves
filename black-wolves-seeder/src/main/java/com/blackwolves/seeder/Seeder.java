@@ -325,13 +325,6 @@ public class Seeder implements Runnable {
 	int random = ModernYahooRunnable.randInt(0, 9);
 	logger.info("***************** Visiting :" + sites[random]);
 	driver.get(sites[random]);
-
-	Set<Cookie> allCookies = driver.manage().getCookies();
-
-	for (Cookie cookie : allCookies) {
-		logger.info("***************** Cookies? :" + cookie.getName());
-
-	}
 }
 
 	public void logAttempts(String log) {
