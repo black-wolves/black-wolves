@@ -69,13 +69,13 @@ public class Subscriber implements Runnable {
 			}
 			seed.setSubscription(currentSubs);
 			
-			if (Math.random() < 0.5) {
-				subscribeToHoustonCron(seed, driver);
-
-			}
-			if (Math.random() < 0.5) {
-				subscribeToNYDailyNews(seed, driver);
-			}
+//			if (Math.random() < 0.5) {
+//				subscribeToHoustonCron(seed, driver);
+//
+//			}
+//			if (Math.random() < 0.5) {
+//				subscribeToNYDailyNews(seed, driver);
+//			}
 			if (Math.random() < 0.5) {
 				subscribeToSoccerWire(seed, driver);
 			}
@@ -83,12 +83,12 @@ public class Subscriber implements Runnable {
 			// subscribeToNBCSanDiego(seed, driver);
 			// subscribeToTheGolfChannel(seed, driver);
 			// }
-			if (Math.random() < 0.5) {
-				subscribeToDetroitDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToSanAntonioNews(seed, driver);
-			}
+//			if (Math.random() < 0.5) {
+//				subscribeToDetroitDailyNews(seed, driver);
+//			}
+//			if (Math.random() < 0.5) {
+//				subscribeToSanAntonioNews(seed, driver);
+//			}
 			if (Math.random() < 0.5) {
 				subscribeToBostonMagazine(seed, driver);
 			}
@@ -113,9 +113,9 @@ public class Subscriber implements Runnable {
 			if (Math.random() < 0.5) {
 				subscribeToFetch(seed, driver);
 			}
-			if (Math.random() < 0.5) {
-				subscribeToReDef(seed, driver);
-			}
+//			if (Math.random() < 0.5) {
+//				subscribeToReDef(seed, driver);
+//			}
 			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, liveStyle, driver);
 			 }
@@ -156,11 +156,11 @@ public class Subscriber implements Runnable {
 			 subscribeToNyTimesRandom(seed, asia, driver);
 			 }
 			if (Math.random() < 0.5) {
-				subscribeToGolfSmith(seed, driver);
+		//		subscribeToGolfSmith(seed, driver);
 			}
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
-				subscribeToSanAntonioNews(seed, driver);
+		//		subscribeToSanAntonioNews(seed, driver);
 			}
 			JDBC.updateSubscription(seed);
 
