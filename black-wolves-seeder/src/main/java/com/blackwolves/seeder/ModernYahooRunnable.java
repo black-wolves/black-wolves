@@ -112,7 +112,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								currentMsg.click();
 								if (fromText.contains(Constant.FROM.LGE)) {
 									opened = true;
-									if (Math.random() <= 0.6) {
+									if (Math.random() <= 0.2) {
 										clickShowImages("show-text");
 										clicked = clickRandomLink();
 									}
@@ -300,7 +300,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 	}
 
 	private void archiveMsg() {
-		if (Math.random() <= 0.5) {
+		if (Math.random() <= 0.8) {
 			WebElement archive = driver.findElement(By.id("btn-archive"));
 			if (archive != null && archive.isDisplayed()) {
 				logger.info("Archiving Msg");
