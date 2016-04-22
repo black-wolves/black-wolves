@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.blackwolves.mail.util.Constant;
+import com.blackwolves.mail.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -42,6 +43,8 @@ public class Login implements Runnable {
 	private Seed seed;
 	
 	private String invalidMessage;
+	
+	private boolean mailChanged;
 
 	public Login() {
 		
@@ -56,8 +59,6 @@ public class Login implements Runnable {
 	 * 
 	 */
 	public void run() {
-//		seed.setUser("aaanrwb@yahoo.com");
-//		seed.setPassword("@Ra!Y%UcS@j4477");
 
 		WebDriver driver = createWebDriver();
 
@@ -66,8 +67,12 @@ public class Login implements Runnable {
 		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
 
 		if (validateYahooVersion(driver, seed)) {
-			removeConversationMailView(driver);
+			if(mailChanged){
+				JDBC.updateSeed(seed);
+			}
 			writeSeedToFile(seed, true);
+			removeConversationMailView(driver);
+			
 			logger.info("Finished!!");
 
 		} else {
@@ -89,14 +94,14 @@ public class Login implements Runnable {
 		try {
 
 			driver.get(yahooUrl);
-			Thread.sleep(randInt(2500, 3500));
+			Thread.sleep(randInt(2000, 3000));
 
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed.getUser());
 
 			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
 				driver.findElement(By.id("login-signin")).click();
-				Thread.sleep(randInt(2500, 3500));
+				Thread.sleep(randInt(2000, 3000));
 				if(driver.findElements(By.id("mbr-login-error")).size() > 0){
 					if(!driver.findElement(By.id("mbr-login-error")).getText().isEmpty()){
 						return;
@@ -104,19 +109,41 @@ public class Login implements Runnable {
 				}
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
-				Thread.sleep(randInt(2500, 3500));
+				Thread.sleep(randInt(2000, 3000));
 				
 			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
-				Thread.sleep(randInt(2500, 3500));
+				Thread.sleep(randInt(2000, 3000));
 				
 			}
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
-				Thread.sleep(randInt(2500, 3500));
+				Thread.sleep(randInt(2000, 3000));
+				if(driver.findElements(By.id("mbr-login-error")).size() > 0){
+					if(!driver.findElement(By.id("mbr-login-error")).getText().isEmpty()){
+						return;
+					}
+				}
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed.getPassword());
+				Thread.sleep(randInt(2000, 3000));
+			}
+			if (driver.findElements(By.id("login-signin")).size() > 0) {
+				driver.findElement(By.id("login-signin")).click();
+				Thread.sleep(randInt(2000, 3000));
 			} else {
 				logger.info("Already logged in..Moving forward!");
+			}
+			if (driver.findElements(By.id("IAgreeBtnNew")).size() > 0) {
+				mailChanged = true;
+				String newUser = seed.getUser();
+				if (driver.findElements(By.id("IAgreeBtnNew")).size() > 0) {
+					newUser = driver.findElement(By.id("ymemformfield")).getText();
+				}
+				seed.setNewUser(newUser);
+				driver.findElement(By.id("IAgreeBtnNew")).click();
+				Thread.sleep(randInt(2000, 3000));
 			}
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);

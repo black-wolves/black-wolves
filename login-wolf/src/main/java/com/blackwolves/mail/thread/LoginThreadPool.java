@@ -44,6 +44,14 @@ public class LoginThreadPool {
 			ExecutorService executor = null;
 			
 			List<Seed> finalSeeds = getSeedsList("final_seeds.txt");
+			
+//			String user = "auowusx@yahoo.com";
+//			String password = "3C*g%qsg2b4J3aQ";
+//			String fullSeed = user + "," + password;
+//			List<Seed> finalSeeds = new ArrayList<Seed>();
+//			Seed s = new Seed(user, password, fullSeed);
+//			finalSeeds.add(s);
+			
 			int seedsSize = finalSeeds.size();
 			
 			for (int i = 0; i < seedsSize; ) {

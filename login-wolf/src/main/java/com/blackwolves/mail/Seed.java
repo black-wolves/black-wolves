@@ -19,6 +19,7 @@ public class Seed {
 	private Timestamp feederUpdatedDate;
 	private Timestamp seederUpdatedDate;
 	private String subscription = new String();
+	private String newUser;
 	
 	/**
 	 * @param user
@@ -209,6 +210,20 @@ public class Seed {
 	 */
 	public void setSubscription(String subscription) {
 		this.subscription = subscription;
+	}
+
+	/**
+	 * @return the newUser
+	 */
+	public String getNewUser() {
+		return newUser;
+	}
+
+	/**
+	 * @param newUser the newUser to set
+	 */
+	public void setNewUser(String newUser) {
+		this.newUser = newUser;
 	}
 	
 }
