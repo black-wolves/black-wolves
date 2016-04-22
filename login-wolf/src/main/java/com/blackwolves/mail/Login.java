@@ -245,15 +245,17 @@ public class Login implements Runnable {
 				if(driver.findElements((By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a"))).size() > 0){
 					driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
 					Thread.sleep(randInt(1000, 2000));
-					if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
-						logger.info("Conversation mode is on. Turning off.");
-						driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
-						Thread.sleep(randInt(1000, 2000));
-						if(driver.findElements(By.className("selectable")).size() > 0){
-							driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
+					if(driver.findElements(By.xpath("//input[@id='options-enableConv']")).size() > 0){
+						if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
+							logger.info("Conversation mode is on. Turning off.");
+							driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
 							Thread.sleep(randInt(1000, 2000));
-							driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
-							Thread.sleep(randInt(1000, 2000));
+							if(driver.findElements(By.className("selectable")).size() > 0){
+								driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
+								Thread.sleep(randInt(1000, 2000));
+								driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
+								Thread.sleep(randInt(1000, 2000));
+							}
 						}
 					}else if(driver.findElements(By.className("selectable")).size() > 0){
 						driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
