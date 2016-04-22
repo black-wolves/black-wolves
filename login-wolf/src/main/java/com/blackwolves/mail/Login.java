@@ -263,10 +263,14 @@ public class Login implements Runnable {
 						}
 					}
 					if(driver.findElements(By.className("selectable")).size() > 0){
-						driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
-						Thread.sleep(randInt(1000, 2000));
-						driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
-						Thread.sleep(randInt(1000, 2000));
+						if(driver.findElements(By.xpath("//ul[@class='selectable']/li[6]/a")).size() > 0){
+							driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
+							Thread.sleep(randInt(1000, 2000));
+							if(driver.findElements(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).size() > 0){
+								driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
+								Thread.sleep(randInt(1000, 2000));
+							}
+						}
 					}
 					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
 					Thread.sleep(randInt(1000, 2000));
