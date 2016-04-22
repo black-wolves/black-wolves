@@ -144,6 +144,8 @@ public class Login implements Runnable {
 					newUser = driver.findElement(By.id("ymemformfield")).getText();
 				}
 				seed.setNewUser(newUser);
+				String newFullSeed = seed.getNewUser() + "," + seed.getPassword();
+				seed.setFullSeed(newFullSeed);
 				driver.findElement(By.id("IAgreeBtnNew")).click();
 				Thread.sleep(randInt(2000, 3000));
 			}

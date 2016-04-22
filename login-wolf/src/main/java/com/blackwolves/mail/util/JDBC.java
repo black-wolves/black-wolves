@@ -44,6 +44,7 @@ public class JDBC {
 		
 		String updateSQL = "UPDATE FEEDER"
 				+ " SET SEED = '" + seed.getNewUser() + "'"
+				+ " SET FULL_SEED = '" + seed.getFullSeed() + "'"
 				+ " WHERE SEED = '" + seed.getUser() + "'";
 
 		try {
