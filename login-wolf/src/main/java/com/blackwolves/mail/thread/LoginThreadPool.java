@@ -113,6 +113,7 @@ public class LoginThreadPool {
 		
 		do{
 			int size = finalSeeds.size();
+			logger.info("Final Seeds size: " + size);
 			executor = Executors.newFixedThreadPool(size);
 			
 			logger.info("Processing seeds before the for");
