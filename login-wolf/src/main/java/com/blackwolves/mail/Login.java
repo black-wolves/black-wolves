@@ -125,9 +125,11 @@ public class Login implements Runnable {
 						return;
 					}
 				}
-				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
-				human.type(passwordInput, seed.getPassword());
-				Thread.sleep(randInt(2000, 3000));
+				if (driver.findElements(By.id("login-signin")).size() > 0) {
+					WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+					human.type(passwordInput, seed.getPassword());
+					Thread.sleep(randInt(2000, 3000));
+				}
 			}
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
