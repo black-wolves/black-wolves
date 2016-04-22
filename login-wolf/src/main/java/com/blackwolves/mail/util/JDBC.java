@@ -10,9 +10,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +44,13 @@ public class JDBC {
 	 * @param seed
 	 * @throws SQLException
 	 */
-	public static void updateSeed(Seed seed) {
+	public static void updateSeed(Seed seed, boolean mailChanged) {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
 		String updateSQL = "UPDATE FEEDER"
-				+ " SET SEED = '" + seed.getNewUser() + "'"
-				+ " SET FULL_SEED = '" + seed.getFullSeed() + "'"
+				+ " SET VALIDATED = 1"
+				+ mailChangeSQL(seed, mailChanged)
 				+ " WHERE SEED = '" + seed.getUser() + "'";
 
 		try {
@@ -62,6 +68,56 @@ public class JDBC {
 		} finally {
 			closeStatementAndConnection(dbConnection, statement);
 		}		
+	}
+	
+	private static String mailChangeSQL(Seed seed, boolean mailChanged) {
+		if(mailChanged){
+			return " , SEED = '" + seed.getNewUser() + "' , FULL_SEED = '" + seed.getFullSeed() + "'";
+		}
+		return Constant.EMPTY_STRING;
+	}
+	
+	public static List<Seed> get50NonValidatedSeeds() {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.JDBC.SDF);
+		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
+		formatter.setTimeZone(tz);
+		
+		List<Seed> seeds = new ArrayList<Seed>();
+		try {
+
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+			
+			String selectSQL = "SELECT * FROM FEEDER WHERE VALIDATE = 0 LIMIT 50";
+			
+//			String selectSQL =  "SELECT * FROM FEEDER  where SEED='voxackkhzzc@yahoo.com'";
+			
+			logger.info(selectSQL);
+			
+			ResultSet rs = statement.executeQuery(selectSQL);
+			while(rs.next()){
+				String user = rs.getString(Constant.FEEDER.SEED);
+				String password = rs.getString(Constant.FEEDER.PASSWORD);
+				String fullSeed = rs.getString(Constant.FEEDER.FULL_SEED);
+				Timestamp feederUpdatedDate = rs.getTimestamp(Constant.FEEDER.FEEDER_UPDATED_DATE);
+				Timestamp seederUpdatedDate = rs.getTimestamp(Constant.FEEDER.SEEDER_UPDATED_DATE);
+				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
+				Seed seed = new Seed(user, password, fullSeed, feederUpdatedDate, seederUpdatedDate, subscriptions);
+				seeds.add(seed);
+			}
+
+			logger.info("Seed selected from FEEDER table!");
+			
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}
+		return seeds;
 	}
 	
 	/**

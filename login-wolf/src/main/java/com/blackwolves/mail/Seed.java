@@ -59,6 +59,26 @@ public class Seed {
 	}
 
 	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @param fullSeed
+	 * @param feederUpdatedDate
+	 * @param seederUpdatedDate
+	 * @param subscription
+	 */
+	public Seed(String user, String password, String fullSeed,
+			Timestamp feederUpdatedDate, Timestamp seederUpdatedDate,
+			String subscription) {
+		this.user = user;
+		this.password = password;
+		this.fullSeed = fullSeed;
+		this.feederUpdatedDate = feederUpdatedDate;
+		this.seederUpdatedDate = seederUpdatedDate;
+		this.subscription = subscription;
+	}
+
+	/**
 	 * @return the user
 	 */
 	public String getUser() {

@@ -59,4 +59,19 @@ public interface Constant {
 		public static final String WOLF_CONFIG_ROUTE = "/var/www/blackwolves/wolf_config.txt";
 	}
 	
+	public interface FEEDER{
+		public static final String MAIL_COUNT = "MAIL_COUNT";
+		public static final String OPENED = "OPENED";
+		public static final String CLICKED = "CLICKED";
+		public static final String SPAMMED = "SPAMMED";
+		public static final String FEEDER_UPDATED_DATE = "FEEDER_UPDATED_DATE";
+		public static final String SEEDER_UPDATED_DATE= "SEEDER_UPDATED_DATE";
+		public static final String SEED = "SEED";
+		public static final String PASSWORD = "PASSWORD";
+		public static final String FULL_SEED = "FULL_SEED";
+		public static final String SUBSCRIPTION = "SUBSCRIPTION";
+		public static final String NOT_SPAM = "NOT_SPAM";
+		public static final String FILE = "file";
+	}
+	
 }

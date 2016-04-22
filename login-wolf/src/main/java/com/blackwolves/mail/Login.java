@@ -68,11 +68,13 @@ public class Login implements Runnable {
 
 		if (validateYahooVersion(driver, seed)) {
 			if(mailChanged){
-				JDBC.updateSeed(seed);
+				JDBC.updateSeed(seed, mailChanged);
 			}
 			writeSeedToFile(seed, true);
 			removeConversationMailView(driver);
-			
+			if(!mailChanged){
+				JDBC.updateSeed(seed, mailChanged);
+			}
 			logger.info("Finished!!");
 
 		} else {
@@ -259,7 +261,8 @@ public class Login implements Runnable {
 								Thread.sleep(randInt(1000, 2000));
 							}
 						}
-					}else if(driver.findElements(By.className("selectable")).size() > 0){
+					}
+					if(driver.findElements(By.className("selectable")).size() > 0){
 						driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
 						Thread.sleep(randInt(1000, 2000));
 						driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();

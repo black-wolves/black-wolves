@@ -26,6 +26,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.blackwolves.mail.Login;
 import com.blackwolves.mail.Seed;
 import com.blackwolves.mail.util.Constant;
+import com.blackwolves.mail.util.JDBC;
 import com.blackwolves.mail.util.SeedComparator;
 import com.blackwolves.mail.yahoo.LoginWolfYahoo;
 
@@ -41,44 +42,11 @@ public class LoginThreadPool {
 
 		if(Constant.VALIDATE.equals(args[0])){
 			
-			ExecutorService executor = null;
-			
-			List<Seed> finalSeeds = getSeedsList("final_seeds.txt");
-			
-//			String user = "auowusx@yahoo.com";
-//			String password = "3C*g%qsg2b4J3aQ";
-//			String fullSeed = user + "," + password;
-//			List<Seed> finalSeeds = new ArrayList<Seed>();
-//			Seed s = new Seed(user, password, fullSeed);
-//			finalSeeds.add(s);
-			
-			int seedsSize = finalSeeds.size();
-			
-			for (int i = 0; i < seedsSize; ) {
-				int jSize = calculate_i(finalSeeds.size(), i);
-				executor = Executors.newFixedThreadPool(jSize);
-				
-				logger.info("Processing seeds before the for");
-				for (int j = 0; j < jSize; j++, i++) {
-					Seed seed = finalSeeds.get(i);
-					MDC.put("logFileName", seed.getUser());
-					Login seeder = new Login(seed, logger);
-					Runnable worker = seeder;
-					logger.info("Executing thread: " + j + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (seedsSize-i));
-					executor.execute(worker);
-				}
-				
-				if (executor != null) {
-					executor.shutdown();
-		
-					while (!executor.isTerminated()) {
-		
-					}
-					logger.info("Finished all threads");
-				}
-				
+			if(args.length > 1 && Constant.FEEDER.FILE.equals(args[1])){
+				processSeedsFromFile();
+			}else{
+				processSeedsFromDB();
 			}
-			
 		}else{
 			// arguments to test this part
 			//seeds.csv seeds_bun.csv 1
@@ -125,6 +93,90 @@ public class LoginThreadPool {
 				}
 				logger.info("Finished all threads");
 			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private static void processSeedsFromDB() {
+		ExecutorService executor;
+		List<Seed> finalSeeds;
+		finalSeeds = JDBC.get50NonValidatedSeeds();
+		
+//		String user = "auowusx@yahoo.com";
+//		String password = "3C*g%qsg2b4J3aQ";
+//		String fullSeed = user + "," + password;
+//		List<Seed> finalSeeds = new ArrayList<Seed>();
+//		Seed s = new Seed(user, password, fullSeed);
+//		finalSeeds.add(s);
+		
+		do{
+			int size = finalSeeds.size();
+			executor = Executors.newFixedThreadPool(size);
+			
+			logger.info("Processing seeds before the for");
+			for (int i = 0; i < size; i++) {
+				Seed seed = finalSeeds.get(i);
+				MDC.put("logFileName", seed.getUser());
+				Login seeder = new Login(seed, logger);
+				Runnable worker = seeder;
+				logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (size-i));
+				executor.execute(worker);
+			}
+			
+			if (executor != null) {
+				executor.shutdown();
+
+				while (!executor.isTerminated()) {
+
+				}
+				logger.info("Finished all threads");
+			}
+			finalSeeds = JDBC.get50NonValidatedSeeds();
+		}while(!finalSeeds.isEmpty());
+	}
+
+	/**
+	 * 
+	 */
+	private static void processSeedsFromFile() {
+		ExecutorService executor;
+		List<Seed> finalSeeds;
+		finalSeeds = getSeedsList("final_seeds.txt");
+		
+//		String user = "auowusx@yahoo.com";
+//		String password = "3C*g%qsg2b4J3aQ";
+//		String fullSeed = user + "," + password;
+//		List<Seed> finalSeeds = new ArrayList<Seed>();
+//		Seed s = new Seed(user, password, fullSeed);
+//		finalSeeds.add(s);
+		
+		int seedsSize = finalSeeds.size();
+		
+		for (int i = 0; i < seedsSize; ) {
+			int jSize = calculate_i(finalSeeds.size(), i);
+			executor = Executors.newFixedThreadPool(jSize);
+			
+			logger.info("Processing seeds before the for");
+			for (int j = 0; j < jSize; j++, i++) {
+				Seed seed = finalSeeds.get(i);
+				MDC.put("logFileName", seed.getUser());
+				Login seeder = new Login(seed, logger);
+				Runnable worker = seeder;
+				logger.info("Executing thread: " + j + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (seedsSize-i));
+				executor.execute(worker);
+			}
+			
+			if (executor != null) {
+				executor.shutdown();
+
+				while (!executor.isTerminated()) {
+
+				}
+				logger.info("Finished all threads");
+			}
+			
 		}
 	}
 
