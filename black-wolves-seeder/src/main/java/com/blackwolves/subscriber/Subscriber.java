@@ -68,99 +68,99 @@ public class Subscriber implements Runnable {
 
 			}
 			seed.setSubscription(currentSubs);
-
-			if (Math.random() < 0.45) {
-				subscribeToHoustonCron(seed, driver);
-
-			}
-			if (Math.random() < 0.45) {
-				subscribeToNYDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.45) {
+			
+//			if (Math.random() < 0.5) {
+//				subscribeToHoustonCron(seed, driver);
+//
+//			}
+//			if (Math.random() < 0.5) {
+//				subscribeToNYDailyNews(seed, driver);
+//			}
+			if (Math.random() < 0.5) {
 				subscribeToSoccerWire(seed, driver);
 			}
 			// if (Math.random() < 0.2) {
 			// subscribeToNBCSanDiego(seed, driver);
 			// subscribeToTheGolfChannel(seed, driver);
 			// }
-			if (Math.random() < 0.45) {
-				subscribeToDetroitDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.45) {
-				subscribeToSanAntonioNews(seed, driver);
-			}
-			if (Math.random() < 0.45) {
+//			if (Math.random() < 0.5) {
+//				subscribeToDetroitDailyNews(seed, driver);
+//			}
+//			if (Math.random() < 0.5) {
+//				subscribeToSanAntonioNews(seed, driver);
+//			}
+			if (Math.random() < 0.5) {
 				subscribeToBostonMagazine(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeToTheHerald(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeToNBCNews(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeToDailyNews(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeToForbes(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeToMatterMark(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeFashionMagazine(seed, driver);
 			}
-			if (Math.random() < 0.45) {
+			if (Math.random() < 0.5) {
 				subscribeToFetch(seed, driver);
 			}
-			if (Math.random() < 0.45) {
-				subscribeToReDef(seed, driver);
-			}
-			 if (Math.random() < 0.3) {
+//			if (Math.random() < 0.5) {
+//				subscribeToReDef(seed, driver);
+//			}
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, liveStyle, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, bits, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, cooking, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, news, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, headlines, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, afterNoon, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, today, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, firstDraft, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, dealBook, driver);
 			 }
-			// if (Math.random() < 0.3) {
+			// if (Math.random() < 0.5) {
 			// subscribeToSkimm(seed, driver);
 			// }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, opinion, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, europe, driver);
 			 }
-			 if (Math.random() < 0.3) {
+			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, asia, driver);
 			 }
-			if (Math.random() < 0.3) {
-				subscribeToGolfSmith(seed, driver);
+			if (Math.random() < 0.5) {
+		//		subscribeToGolfSmith(seed, driver);
 			}
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
-				subscribeToSanAntonioNews(seed, driver);
+		//		subscribeToSanAntonioNews(seed, driver);
 			}
 			JDBC.updateSubscription(seed);
 
@@ -173,6 +173,33 @@ public class Subscriber implements Runnable {
 		}
 	}
 
+	
+	
+	private void subscribeToIGN(Seed seed, WebDriver driver) {
+		String url = "http://www.ign.com/articles/2015/06/04/sign-up-for-ign-newsletters";
+		String site = "IGN,";
+		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
+
+			try {
+				logger.info("Subscribing " + seed.getUser() + " to " + site);
+				driver.get(url);
+				WebElement email = driver.findElement(By.className("email-input"));
+				email.clear();
+				email.sendKeys(seed.getUser());
+				WebElement submit = driver.findElement(By.className("email-submit"));
+				Thread.sleep(3000);
+				submit.click();
+				seed.setSubscription(seed.getSubscription().concat(site));
+			} catch (InterruptedException | NoSuchElementException e) {
+				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+			} catch (WebDriverException e) {
+				logger.info("Element in " + url + "is not clickable. Please review");
+			}
+		} else {
+			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
+		}
+	}
+	
 	private void subscribeToHoustonCron(Seed seed, WebDriver driver) {
 		String url = "http://www.chron.com/newsletters/";
 		String site = "HoustonCron,";
