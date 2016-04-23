@@ -91,7 +91,7 @@ public class JDBC {
 			dbConnection = getDBConnection();
 			statement = dbConnection.createStatement();
 			
-			String selectSQL = "SELECT * FROM FEEDER WHERE VALIDATED = 0 LIMIT 50";
+			String selectSQL = "SELECT * FROM FEEDER WHERE VALIDATED = 0 ORDER BY RAND() LIMIT 50";
 			
 //			String selectSQL =  "SELECT * FROM FEEDER  where SEED='voxackkhzzc@yahoo.com'";
 			
