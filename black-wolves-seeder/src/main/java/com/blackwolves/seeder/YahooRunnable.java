@@ -78,7 +78,7 @@ public abstract class YahooRunnable {
 	 */
 	public void runProcess() {
 		processInbox(seed);
-		if (Math.random() < 0.5) {
+		if (Math.random() < 0.1) {
 			processSpam(seed);
 		}
 	}
