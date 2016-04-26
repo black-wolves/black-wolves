@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.seeder;
 
 import java.sql.Timestamp;
@@ -13,6 +10,7 @@ public class Seed {
 
 	private String user;
 	private String password;
+	private String fullSeed;
 	private int mailCount;
 	private int opened;
 	private int clicked;
@@ -21,6 +19,7 @@ public class Seed {
 	private Timestamp feederUpdatedDate;
 	private Timestamp seederUpdatedDate;
 	private String subscription = new String();
+	private String newUser;
 	
 	/**
 	 * @param user
@@ -46,114 +45,205 @@ public class Seed {
 		this.seederUpdatedDate = seederUpdatedDate;
 		this.subscription = subscription;
 	}
+	
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @param fullSeed
+	 */
+	public Seed(String user, String password, String fullSeed) {
+		this.user = user;
+		this.password = password;
+		this.fullSeed = fullSeed;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @param fullSeed
+	 * @param feederUpdatedDate
+	 * @param seederUpdatedDate
+	 * @param subscription
+	 */
+	public Seed(String user, String password, String fullSeed,
+			Timestamp feederUpdatedDate, Timestamp seederUpdatedDate,
+			String subscription) {
+		this.user = user;
+		this.password = password;
+		this.fullSeed = fullSeed;
+		this.feederUpdatedDate = feederUpdatedDate;
+		this.seederUpdatedDate = seederUpdatedDate;
+		this.subscription = subscription;
+	}
+
 	/**
 	 * @return the user
 	 */
 	public String getUser() {
 		return user;
 	}
+
 	/**
 	 * @param user the user to set
 	 */
 	public void setUser(String user) {
 		this.user = user;
 	}
+
 	/**
 	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
 	}
+
 	/**
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	/**
+	 * @return the fullSeed
+	 */
+	public String getFullSeed() {
+		return fullSeed;
+	}
+
+	/**
+	 * @param fullSeed the fullSeed to set
+	 */
+	public void setFullSeed(String fullSeed) {
+		this.fullSeed = fullSeed;
+	}
+
 	/**
 	 * @return the mailCount
 	 */
 	public int getMailCount() {
 		return mailCount;
 	}
+
 	/**
 	 * @param mailCount the mailCount to set
 	 */
 	public void setMailCount(int mailCount) {
 		this.mailCount = mailCount;
 	}
+
 	/**
 	 * @return the opened
 	 */
 	public int getOpened() {
 		return opened;
 	}
+
 	/**
 	 * @param opened the opened to set
 	 */
 	public void setOpened(int opened) {
 		this.opened = opened;
 	}
+
 	/**
 	 * @return the clicked
 	 */
 	public int getClicked() {
 		return clicked;
 	}
+
 	/**
 	 * @param clicked the clicked to set
 	 */
 	public void setClicked(int clicked) {
 		this.clicked = clicked;
 	}
+
 	/**
 	 * @return the spammed
 	 */
 	public int getSpammed() {
 		return spammed;
 	}
+
 	/**
 	 * @param spammed the spammed to set
 	 */
 	public void setSpammed(int spammed) {
 		this.spammed = spammed;
 	}
+
+	/**
+	 * @return the notSpammed
+	 */
+	public int getNotSpammed() {
+		return notSpammed;
+	}
+
+	/**
+	 * @param notSpammed the notSpammed to set
+	 */
+	public void setNotSpammed(int notSpammed) {
+		this.notSpammed = notSpammed;
+	}
+
 	/**
 	 * @return the feederUpdatedDate
 	 */
 	public Timestamp getFeederUpdatedDate() {
 		return feederUpdatedDate;
 	}
+
 	/**
 	 * @param feederUpdatedDate the feederUpdatedDate to set
 	 */
 	public void setFeederUpdatedDate(Timestamp feederUpdatedDate) {
 		this.feederUpdatedDate = feederUpdatedDate;
 	}
+
 	/**
 	 * @return the seederUpdatedDate
 	 */
 	public Timestamp getSeederUpdatedDate() {
 		return seederUpdatedDate;
 	}
+
 	/**
 	 * @param seederUpdatedDate the seederUpdatedDate to set
 	 */
 	public void setSeederUpdatedDate(Timestamp seederUpdatedDate) {
 		this.seederUpdatedDate = seederUpdatedDate;
 	}
+
+	/**
+	 * @return the subscription
+	 */
 	public String getSubscription() {
 		return subscription;
 	}
+
+	/**
+	 * @param subscription the subscription to set
+	 */
 	public void setSubscription(String subscription) {
 		this.subscription = subscription;
 	}
-	public int getNotSpammed() {
-		return notSpammed;
-	}
-	public void setNotSpammed(int notSpammed) {
-		this.notSpammed = notSpammed;
+
+	/**
+	 * @return the newUser
+	 */
+	public String getNewUser() {
+		return newUser;
 	}
 
+	/**
+	 * @param newUser the newUser to set
+	 */
+	public void setNewUser(String newUser) {
+		this.newUser = newUser;
+	}
 	
 }

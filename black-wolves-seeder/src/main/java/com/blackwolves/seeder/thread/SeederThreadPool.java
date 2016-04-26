@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.blackwolves.thread;
+package com.blackwolves.seeder.thread;
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -65,8 +65,7 @@
 	</dependencies>
 
 	<build>
-<!-- 		<finalName>seeder_wolf</finalName> -->
-		<finalName>subscriber_wolf</finalName>
+		<finalName>seeder_wolf</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -96,8 +95,7 @@
 <!-- 							      <resource>META-INF/spring.schemas</resource> -->
 <!-- 							    </transformer> -->
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-<!-- 									<mainClass>com.blackwolves.thread.SeederThreadPool</mainClass> -->
-									<mainClass>com.blackwolves.subscriber.SubscriberRunnable</mainClass>
+									<mainClass>com.blackwolves.seeder.thread.SeederThreadPool</mainClass>
 								</transformer>
 							</transformers>
 							<minimizeJar>true</minimizeJar>
