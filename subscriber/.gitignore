@@ -1,0 +1,12 @@
+/bin/
+.project
+.classpath
+.settings
+/.project
+/.classpath
+/.settings
+/target/
+.DS_Store
+/Users/
+/selenium.log
+black-wolves.properties
