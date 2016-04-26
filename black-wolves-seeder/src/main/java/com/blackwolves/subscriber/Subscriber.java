@@ -155,8 +155,8 @@ public class Subscriber implements Runnable {
 			 if (Math.random() < 0.5) {
 			 subscribeToNyTimesRandom(seed, asia, driver);
 			 }
-			if (Math.random() < 0.5) {
-		//		subscribeToGolfSmith(seed, driver);
+			if (Math.random() <= 1) {
+				subscribeToGolfSmith(seed, driver);
 			}
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
