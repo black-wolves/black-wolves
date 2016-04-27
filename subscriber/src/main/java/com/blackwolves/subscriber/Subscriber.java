@@ -50,6 +50,10 @@ public class Subscriber implements Runnable {
 			
 			subscribeToNyTimes(driver);
 			
+			if (Math.random() <= 1) {
+				subscribeToGolfSmith(seed, driver);
+			}
+			
 			
 //			if (Math.random() < 0.5) {
 //				subscribeToHoustonCron(seed, driver);
@@ -101,9 +105,7 @@ public class Subscriber implements Runnable {
 			// if (Math.random() < 0.5) {
 			// subscribeToSkimm(seed, driver);
 			// }
-			if (Math.random() <= 1) {
-				subscribeToGolfSmith(seed, driver);
-			}
+			
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
 		//		subscribeToSanAntonioNews(seed, driver);
@@ -124,43 +126,43 @@ public class Subscriber implements Runnable {
 	 * @param driver
 	 */
 	private void subscribeToNyTimes(WebDriver driver) {
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.cooking)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.cooking)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.cooking, Constant.NyTimes.SiteName.cooking, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.dealBook)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.dealBook)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.dealBook, Constant.NyTimes.SiteName.dealBook, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.bits)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.bits)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.bits, Constant.NyTimes.SiteName.bits, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.firstDraft)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.firstDraft)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.firstDraft, Constant.NyTimes.SiteName.firstDraft, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.opinionToday)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.opinionToday)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.opinionToday, Constant.NyTimes.SiteName.opinionToday, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.afterNoonUpdate)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.afterNoonUpdate)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.afterNoonUpdate, Constant.NyTimes.SiteName.afterNoonUpdate, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.theUpshot)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.theUpshot)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.theUpshot, Constant.NyTimes.SiteName.theUpshot, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowMorning)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowMorning)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nytNowMorning, Constant.NyTimes.SiteName.nytNowMorning, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowEvening)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowEvening)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nytNowEvening, Constant.NyTimes.SiteName.nytNowEvening, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.asian)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.asian)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.asian, Constant.NyTimes.SiteName.asian, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.european)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.european)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.european, Constant.NyTimes.SiteName.european, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nyToday)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nyToday)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nyToday, Constant.NyTimes.SiteName.nyToday, driver);
 		}
-		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.todayHeadlines)) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.todayHeadlines)) {
 		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.todayHeadlines, Constant.NyTimes.SiteName.todayHeadlines, driver);
 		}
 		
