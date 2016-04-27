@@ -49,7 +49,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * FROM FEEDER ORDER BY RAND() LIMIT 1";
+		String selectSQL = "SELECT * FROM FEEDER ORDER BY RAND() LIMIT 25";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
