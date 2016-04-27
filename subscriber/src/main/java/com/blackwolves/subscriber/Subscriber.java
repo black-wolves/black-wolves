@@ -123,11 +123,12 @@ public class Subscriber implements Runnable {
 				subscribeToNBCSanDiego(seed, Constant.NBCSanDiego.siteUrl, Constant.NBCSanDiego.siteName, driver);
 			}
 			
-			JDBC.updateSubscription(seed);
-
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
+			
+			JDBC.updateSubscription(seed);
+			
 			logger.info("Closing driver");
 			driver.close();
 			driver.quit();
