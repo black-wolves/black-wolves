@@ -43,9 +43,15 @@ public class Subscriber implements Runnable {
 
 	@Override
 	public void run() {
+		
 		logger.info("Creating the driver");
 		WebDriver driver = createWebDriver();
+		
 		try {
+			
+			if(seed.getSubscription() == null){
+				seed.setSubscription(Constant.EMPTY_STRING);
+			}
 			
 			subscribeToNyTimes(driver);
 			
@@ -85,36 +91,37 @@ public class Subscriber implements Runnable {
 				subscribeToTheWashingtonPost(seed, Constant.TheWashingtonPost.siteUrl, Constant.TheWashingtonPost.siteName, driver);
 			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheGolfChannel.siteName)) {
+				subscribeToTheGolfChannel(seed, Constant.TheGolfChannel.siteUrl, Constant.TheGolfChannel.siteName, driver);
+			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NYDailyNews.siteName)) {
+				subscribeToNYDailyNews(seed, Constant.NYDailyNews.siteUrl, Constant.NYDailyNews.siteName, driver);
+			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheSkimm.siteName)) {
+				subscribeToSkimm(seed, Constant.TheSkimm.siteUrl, Constant.TheSkimm.siteName, driver);
+			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.ReDef.siteName)) {
+				subscribeToReDef(seed, Constant.ReDef.siteUrl, Constant.ReDef.siteName, driver);
+			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.DetroitDailyNews.siteName)) {
+				subscribeToDetroitDailyNews(seed, Constant.DetroitDailyNews.siteUrl, Constant.DetroitDailyNews.siteName, driver);
+			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.SanAntonioNews.siteName)) {
+				subscribeToSanAntonioNews(seed, Constant.SanAntonioNews.siteUrl, Constant.SanAntonioNews.siteName, driver);
+			}
 			
-//			if (Math.random() < 0.5) {
-//				subscribeToHoustonCron(seed, driver);
-//			}
-//			if (Math.random() < 0.5) {
-//				subscribeToNYDailyNews(seed, driver);
-//			}
-//			if (Math.random() < 0.2) {
-//				subscribeToNBCSanDiego(seed, driver);
-//			}
-//			if (Math.random() < 0.5) {
-//				subscribeToTheGolfChannel(seed, driver);
-//			}
-//			if (Math.random() < 0.5) {
-//				subscribeToDetroitDailyNews(seed, driver);
-//			}
-//			if (Math.random() < 0.5) {
-//				subscribeToSanAntonioNews(seed, driver);
-//			}
-//			if (Math.random() < 0.5) {
-//				subscribeToReDef(seed, driver);
-//			}
-//			if (Math.random() < 0.5) {
-//				subscribeToSkimm(seed, driver);
-//			}
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.HoustonCron.siteName)) {
+				subscribeToHoustonCron(seed, Constant.HoustonCron.siteUrl, Constant.HoustonCron.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NBCSanDiego.siteName)) {
+				subscribeToNBCSanDiego(seed, Constant.NBCSanDiego.siteUrl, Constant.NBCSanDiego.siteName, driver);
+			}
 			
 			JDBC.updateSubscription(seed);
 
@@ -185,9 +192,9 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement input = driver.findElement(By.className("text"));
-			input.clear();
-			input.sendKeys(seed.getUser());
+			WebElement email = driver.findElement(By.className("text"));
+			email.clear();
+			email.sendKeys(seed.getUser());
 			
 			WebElement button = driver.findElement(By.className("applicationButton"));
 			button.click();
@@ -213,9 +220,9 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement input = driver.findElement(By.name("email"));
-			input.clear();
-			input.sendKeys(seed.getUser());
+			WebElement email = driver.findElement(By.name("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
 			
 			WebElement button = driver.findElement(By.id("submitAddress_footer"));
 			button.submit();
@@ -284,9 +291,9 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement input = driver.findElement(By.name("email"));
-			input.clear();
-			input.sendKeys(seed.getUser());
+			WebElement email = driver.findElement(By.name("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
 
 			WebElement zipcode = driver.findElement(By.name("zipcode"));
 			zipcode.clear();
@@ -335,10 +342,10 @@ public class Subscriber implements Runnable {
 			WebElement continueBtn = driver.findElement(By.className("continue-button"));
 			continueBtn.click();
 			
-			WebElement input = driver.findElement(By.id("Email"));
-			input.clear();
-			input.sendKeys(seed.getUser());
-			input.sendKeys(Keys.RETURN);
+			WebElement email = driver.findElement(By.id("Email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			email.sendKeys(Keys.RETURN);
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
@@ -361,10 +368,10 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement input = driver.findElement(By.id("free_email"));
-			input.clear();
-			input.sendKeys(seed.getUser());
-			input.submit();
+			WebElement email = driver.findElement(By.id("free_email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			email.submit();
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
@@ -387,10 +394,10 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement input = driver.findElement(By.name("input_1"));
-			input.clear();
-			input.sendKeys(seed.getUser());
-			input.submit();
+			WebElement email = driver.findElement(By.name("email_1"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			email.submit();
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
@@ -413,10 +420,10 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement input = driver.findElement(By.name("email"));
-			input.clear();
-			input.sendKeys(seed.getUser());
-			input.submit();
+			WebElement email = driver.findElement(By.name("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			email.submit();
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
@@ -444,7 +451,7 @@ public class Subscriber implements Runnable {
 			int i = 0;
 			int j = 0;
 			int x = 0;
-			boolean searchInput = true;
+			boolean input = true;
 			do{
 				if(j == 3){
 					j=0;
@@ -453,16 +460,16 @@ public class Subscriber implements Runnable {
 				}
 				signUpButtons.get(i).click();
 				Thread.sleep(1000);
-				if(searchInput){
-					WebElement input = driver.findElement(By.name("email"));
-					input.clear();
-					input.sendKeys(seed.getUser());
+				if(input){
+					WebElement email = driver.findElement(By.name("email"));
+					email.clear();
+					email.sendKeys(seed.getUser());
 				}
 				buttons.get(i).click();
 				Thread.sleep(3500);
 				i++;
 				j++;
-				searchInput = false;
+				input = false;
 			}while(i < signUpButtons.size());
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
@@ -474,271 +481,318 @@ public class Subscriber implements Runnable {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param driver
+	 */
 	private void scrollDown(int x, WebDriver driver){
 		JavascriptExecutor jse = (JavascriptExecutor)driver;
 		jse.executeScript("scroll(0, " + x + ");");
 	}
 	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToTheGolfChannel(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.id("news-form_email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			List<WebElement> checkboxes = driver.findElements(By.className("customCheckbox"));
+			for (int i = 0; i < checkboxes.size(); i++) {
+				checkboxes.get(i).click();
+			}
+			
+			WebElement submit = driver.findElement(By.className("submit-btn"));
+			submit.click();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToNYDailyNews(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.name("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement checkbox = driver.findElement(By.id("nydn-offer"));
+			checkbox.click();
+			
+			WebElement submit = driver.findElement(By.className("nydn-submit"));
+			submit.click();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 	
-	private void subscribeToHoustonCron(Seed seed, WebDriver driver) {
-		String url = "http://www.chron.com/newsletters/";
-		String site = "HoustonCron,";
-		if (seed.getSubscription().isEmpty() || !seed.getSubscription().contains(site)) {
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.id("email"));
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToSkimm(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			if(driver.findElements(By.className("cf-column")).size() > 0 ){
+				logger.info(driver.findElement(By.className("cf-column")).getText());
+			}else{
+				WebElement email = driver.findElement(By.name("email"));
 				email.clear();
 				email.sendKeys(seed.getUser());
-				WebElement confirmEmail = driver.findElement(By.id("custom_confirm_email"));
-				confirmEmail.clear();
-				confirmEmail.sendKeys(seed.getUser());
+				email.submit();
+				
+				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			}
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToReDef(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.id("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement firstRadioButton = driver.findElement(By.xpath("//div[@class='TS__toggle']/label")); 
+			firstRadioButton.click();
+			
+			Thread.sleep(10000);
+			
+			List<WebElement> radioButtons = driver.findElements(By.xpath("//div[@class='TS__toggle']/label"));
+			for (int i = 1; i < radioButtons.size(); i++) {
+				radioButtons.get(i).click();
+				Thread.sleep(1000);
+			}
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToDetroitDailyNews(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.id("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement confirmEmail = driver.findElement(By.id("email-confirm"));
+			confirmEmail.clear();
+			confirmEmail.sendKeys(seed.getUser());
 
-				WebElement first = driver.findElement(By.id("first"));
-				first.clear();
-				first.sendKeys(seed.getUser());
+			List<WebElement> checkboxes = driver.findElements(By.xpath("//input[@name='pubLists']"));
+			for (int i = 0; i < checkboxes.size(); i++) {
+				checkboxes.get(i).click();
+			}
+			List<WebElement> checkboxesOffers = driver.findElements(By.xpath("//input[@name='categories']"));
+			for (int i = 0; i < checkboxesOffers.size(); i++) {
+				checkboxesOffers.get(i).click();
+			}
+			WebElement submit = driver.findElement(By.xpath("//button[@name='action']"));
+			submit.click();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToSanAntonioNews(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.name("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement spursNation = driver.findElement(By.id("slid2"));
+			spursNation.click();
+			
+			WebElement breakingNews = driver.findElement(By.id("slid3"));
+			breakingNews.click();
+			
+			WebElement submit = driver.findElement(By.name("submit"));
+			submit.click();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param driver
+	 */
+	private void subscribeToHoustonCron(Seed seed, String url, String site, WebDriver driver) {
+		
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.id("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement confirmEmail = driver.findElement(By.id("custom_confirm_email"));
+			confirmEmail.clear();
+			confirmEmail.sendKeys(seed.getUser());
 
-				WebElement last = driver.findElement(By.id("last"));
-				last.clear();
-				last.sendKeys(seed.getUser());
+			WebElement first = driver.findElement(By.id("first"));
+			first.clear();
+			first.sendKeys(seed.getUser());
 
-				for (int i = 1; i <= 32; i++) {
-					try {
-						if (Math.random() < 0.8) {
-							WebElement checkbox = driver.findElement(By.name("slid_" + i));
-							checkbox.click();
-						}
+			WebElement last = driver.findElement(By.id("last"));
+			last.clear();
+			last.sendKeys(seed.getUser());
 
-					} catch (WebDriverException e) {
-						logger.info("ElementNotClickable in Houston. Trying another one");
+			for (int i = 1; i <= 32; i++) {
+				WebElement checkbox = driver.findElement(By.name("slid_" + i));
+				checkbox.click();
+				scrollDown(-100, driver);
+			}
+			
+			email.sendKeys(Keys.RETURN);
+
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private void subscribeToNBCSanDiego(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement name = driver.findElement(By.name("fname"));
+			name.clear();
+			name.sendKeys(seed.getUser());
+			
+			WebElement lname = driver.findElement(By.name("lname"));
+			lname.clear();
+			lname.sendKeys(seed.getUser());
+			
+			WebElement email = driver.findElement(By.name("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			List<WebElement> radioButtons = driver.findElements(By.name("sex"));
+			if (Math.random() < 0.5) {
+				radioButtons.get(0).click();
+			}else{
+				radioButtons.get(1).click();
+			}
+			
+			WebElement zip = driver.findElement(By.name("zip"));
+			zip.clear();
+			CharSequence code = new String(Integer.toString(randInt(91901, 92199)));
+			zip.sendKeys(code);
+			
+			WebElement dob = driver.findElement(By.className("dob"));
+			dob.click();
+			
+			List<WebElement> days = driver.findElements(By.className("ui-state-default"));
+			days.get(randInt(0, days.size()-1)).click();;
+			
+			List<WebElement> checkboxes = driver.findElements(By.className("newsletterSelection"));
+			for (int i = 0; i < checkboxes.size(); i++) {
+				if(i != 4 && i != 5 && i != 6){
+					if(i==10){
+						scrollDown(50, driver);
 					}
-
-				}
-				email.sendKeys(Keys.RETURN);
-
-				Thread.sleep(1000);
-				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(1000);
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToNBCSanDiego(Seed seed, WebDriver driver) {
-		String url = "http://www.nbcsandiego.com/newsletters/";
-		String site = "NBCSanDiego,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement name = driver.findElement(By.name("fname"));
-				name.clear();
-				name.sendKeys(seed.getUser());
-				WebElement lname = driver.findElement(By.name("lname"));
-				lname.clear();
-				lname.sendKeys(seed.getUser());
-
-				WebElement checkbox1 = driver.findElements(By.name("newsletterSelection")).get(0);
-				checkbox1.click();
-				// if (Math.random() < 0.5) {
-				// WebElement checkbox2 =
-				// driver.findElement(By.name("subscriptions.interestCategories[1].selected"));
-				// checkbox2.click();
-				// }
-				// WebElement submit =
-				// driver.findElement(By.className("btn-primary"));
-				Thread.sleep(1000);
-				// submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToTheGolfChannel(Seed seed, WebDriver driver) {
-		String url = "http://email.thegolfchannel.com/golfchan3/golfchan_reg.action";
-		String site = "TheGolfChannel,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.id("news-form_email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				List<WebElement> checkboxes = driver.findElements(By.className("customCheckbox"));
-				for (int i = 0; i < checkboxes.size(); i++) {
 					checkboxes.get(i).click();
 				}
-				WebElement submit = driver.findElement(By.className("submit-btn"));
-				Thread.sleep(1000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(1000);
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-				getScreenShot(driver, seed.getUser() + "such");
-				logger.info("Saving screenshot as /var/www/errors/" + seed.getUser() + "such");
-
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Saving screenshot as /var/www/errors/"
-						+ seed.getUser());
-				getScreenShot(driver, seed.getUser());
-
 			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
+			
+			WebElement button = driver.findElement(By.className("signupBtn"));
+			button.click();
 
-	}
-
-	private void subscribeToDetroitDailyNews(Seed seed, WebDriver driver) {
-		String url = "https://account.detroitnews.com/newsletters/";
-		String site = "DetroitDailyNews,";
-		if (seed.getSubscription() != null && !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.id("email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement confirmEmail = driver.findElement(By.id("email-confirm"));
-				confirmEmail.clear();
-				confirmEmail.sendKeys(seed.getUser());
-
-				List<WebElement> checkboxes = driver.findElements(By.xpath("//input[@name='pubLists']"));
-				for (int i = 0; i < checkboxes.size(); i++) {
-					if (Math.random() < 0.4) {
-						checkboxes.get(i).click();
-					}
-				}
-				List<WebElement> checkboxesOffers = driver.findElements(By.xpath("//input[@name='categories']"));
-				for (int i = 0; i < checkboxesOffers.size(); i++) {
-					if (Math.random() < 0.3) {
-						checkboxesOffers.get(i).click();
-					}
-				}
-				WebElement submit = driver.findElement(By.xpath("//button[@name='action']"));
-				Thread.sleep(1000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(1000);
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-
-	}
-
-	private void subscribeToNYDailyNews(Seed seed, WebDriver driver) {
-		String url = "http://link.nydailynews.com/join/4xm/newslettersignup-desktop";
-		String site = "NYDailyNews,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.name("email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement checkbox = driver.findElement(By.id("nydn-offer"));
-				checkbox.click();
-				WebElement submit = driver.findElement(By.className("nydn-submit"));
-				Thread.sleep(1000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-
-				Thread.sleep(1000);
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToSanAntonioNews(Seed seed, WebDriver driver) {
-		String url = "http://www.mysanantonio.com/news/local/";
-		String site = "SanAntonioNews,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.name("email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement spursNation = driver.findElement(By.id("slid2"));
-				spursNation.click();
-				WebElement breakingNews = driver.findElement(By.id("slid3"));
-				breakingNews.click();
-				WebElement submit = driver.findElement(By.name("submit"));
-				Thread.sleep(1000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(2000);
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	// Works! :)
-	private void subscribeToReDef(Seed seed, WebDriver driver) {
-		String url = "http://link.mediaredefined.com/join/353/media-redefweb";
-		String site = "ReDef,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.name("email")).clear();
-			driver.findElement(By.name("email")).sendKeys(seed.getUser());
-			driver.findElement(By.xpath("//div[@id='button']/input")).click();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
-		} catch (NoSuchElementException | InterruptedException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-		}
-	}
-
-	// Works! :)
-	private void subscribeToSkimm(Seed seed, WebDriver driver) {
-		String url = "http://www.theskimm.com/";
-		String site = "TheSkimm,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.name("email")).clear();
-			driver.findElement(By.name("email")).sendKeys(seed.getUser());
-			driver.findElement(By.name("email")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
-		} catch (InterruptedException | NoSuchElementException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 

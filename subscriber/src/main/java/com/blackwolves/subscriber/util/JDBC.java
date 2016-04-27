@@ -35,10 +35,7 @@ public class JDBC {
 	private static BufferedReader reader;
 	
 	public static void main(String[] args) throws ParseException {
-//		updateSeed("lhnxoj@yahoo.com", 0, 0, 0);
-//		getStats();
-//		getLastUpdatedSeeds();
-//		getSeedsForSubscriptions(9994,10000);
+		
 	}
 	
 	public static List<Seed> getSeedsForSubscriptions() {
@@ -49,7 +46,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * FROM FEEDER ORDER BY RAND() LIMIT 10";
+		String selectSQL = "SELECT * FROM FEEDER ORDER BY RAND() LIMIT 25";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();

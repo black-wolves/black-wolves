@@ -121,4 +121,44 @@ public interface Constant {
 		final String siteName = "TheWashingtonPost";
 	}
 	
+	public interface TheGolfChannel{
+		final String siteUrl = "http://email.thegolfchannel.com/golfchan3/golfchan_reg.action";
+		final String siteName = "TheGolfChannel";
+	}
+	
+	public interface NYDailyNews{
+		final String siteUrl = "http://link.nydailynews.com/join/4xm/newslettersignup-desktop";
+		final String siteName = "NYDailyNews";
+	}
+	
+	public interface TheSkimm{
+		final String siteUrl = "http://www.theskimm.com/";
+		final String siteName = "TheSkimm";
+	}
+	
+	public interface ReDef{
+		final String siteUrl = "https://redef.com/new-subscription";
+		final String siteName = "ReDef";
+	}
+	
+	public interface DetroitDailyNews{
+		final String siteUrl = "https://account.detroitnews.com/newsletters/";
+		final String siteName = "DetroitDailyNews";
+	}
+	
+	public interface SanAntonioNews{
+		final String siteUrl = "http://www.mysanantonio.com/news/local/";
+		final String siteName = "SanAntonioNews";
+	}
+	
+	public interface HoustonCron{
+		final String siteUrl = "http://www.chron.com/newsletters/";
+		final String siteName = "HoustonCron";
+	}
+	
+	public interface NBCSanDiego{
+		final String siteUrl = "http://www.nbcsandiego.com/newsletters/";
+		final String siteName = "NBCSanDiego";
+	}
+	
 }
