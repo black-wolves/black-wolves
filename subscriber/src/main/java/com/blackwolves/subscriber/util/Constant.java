@@ -41,18 +41,36 @@ public interface Constant {
 	}
 	
 	public interface NyTimes{
-		final String cooking = "http://www.nytimes.com/newsletters/cooking?pgtype=subscriptionspage&version=lifestyle&contentId=CK&eventName=signup&module=newsletter-sign-up&region=button";
-		final String dealBook = "http://www.nytimes.com/newsletters/dealbook?pgtype=subscriptionspage&version=business&contentId=DK&eventName=signup&module=newsletter-sign-up&region=button";
-		final String bits = "http://www.nytimes.com/newsletters/bits?pgtype=subscriptionspage&version=business&contentId=TU&eventName=signup&module=newsletter-sign-up&region=button";
-		final String firstDraft = "http://www.nytimes.com/newsletters/politics?pgtype=subscriptionspage&version=news&contentId=CN&eventName=signup&module=newsletter-sign-up&region=button";
-		final String opinionToday = "http://www.nytimes.com/newsletters/opiniontoday?pgtype=subscriptionspage&version=news&contentId=TY&eventName=signup&module=newsletter-sign-up&region=button";
-		final String afterNoonUpdate = "http://www.nytimes.com/newsletters/afternoonupdate?pgtype=subscriptionspage&version=news&contentId=AU&eventName=signup&module=newsletter-sign-up&region=button";
-		final String theUpshot = "http://www.nytimes.com/newsletters/upshot?pgtype=subscriptionspage&version=news&contentId=UP&eventName=signup&module=newsletter-sign-up&region=button";
-		final String nytNowMorning = "http://www.nytimes.com/newsletters/nyt-now-morning-briefing?pgtype=subscriptionspage&version=news&contentId=NN&eventName=signup&module=newsletter-sign-up&region=button";
-		final String nytNowEvening = "http://www.nytimes.com/newsletters/nyt-now-evening-briefing?pgtype=subscriptionspage&version=new&contentId=NE&eventName=signup&module=newsletter-sign-up&region=button";
-		final String asian = "http://www.nytimes.com/newsletters/asianheadlines?pgtype=subscriptionspage&version=news&contentId=AE&eventName=signup&module=newsletter-sign-up&region=button";
-		final String european = "http://www.nytimes.com/newsletters/europeanheadlines?pgtype=subscriptionspage&version=news&contentId=EE&eventName=signup&module=newsletter-sign-up&region=button";
-		final String nyToday = "http://www.nytimes.com/newsletters/newyorktoday?pgtype=subscriptionspage&version=news&contentId=UR&eventName=signup&module=newsletter-sign-up&region=button";
-		final String todayHeadlines = "http://www.nytimes.com/newsletters/todaysheadlines?pgtype=subscriptionspage&version=news&contentId=TH&eventName=signup&module=newsletter-sign-up&region=button";
+		public interface SiteUrl{
+			final String cooking = "https://regilite.nytimes.com/regilite?product=CK&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Cooking";
+			final String dealBook = "https://regilite.nytimes.com/regilite?product=DK&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=DealBook";
+			final String bits = "https://regilite.nytimes.com/regilite?product=TU&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Bits";
+			final String firstDraft = "https://regilite.nytimes.com/regilite?product=CN&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=First+Draft";
+			final String opinionToday = "https://regilite.nytimes.com/regilite?product=TY&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Opinion+Today";
+			final String afterNoonUpdate = "https://regilite.nytimes.com/regilite?product=AU&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Afternoon+Update";
+			final String theUpshot = "https://regilite.nytimes.com/regilite?product=UP&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=The+Upshot";
+			final String nytNowMorning = "https://regilite.nytimes.com/regilite?product=NN&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=The+NYT+Now+Morning+Briefing";
+			final String nytNowEvening = "https://regilite.nytimes.com/regilite?product=NE&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=The+NYT+Now+Evening+Briefing";
+			final String asian = "https://regilite.nytimes.com/regilite?product=AE&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Today%E2%80%99s+Headlines+Asian+Morning";
+			final String european = "https://regilite.nytimes.com/regilite?product=EE&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Today%E2%80%99s+Headlines+European+Morning";
+			final String nyToday = "https://regilite.nytimes.com/regilite?product=UR&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=New+York+Today";
+			final String todayHeadlines = "https://regilite.nytimes.com/regilite?product=TH&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Today%E2%80%99s+Headlines";
+		}
+		
+		public interface SiteName{
+			final String cooking = "NYTimes-Cooking,";
+			final String dealBook = "NYTimes-Dealbook,";
+			final String bits = "NYTimes-Bits,";
+			final String firstDraft = "NYTimes-FirstDraft,";
+			final String opinionToday = "NYTimes-OpinionToday,";
+			final String afterNoonUpdate = "NYTimes-AfternoonUpdate,";
+			final String theUpshot = "NYTimes-TheUpshot,";
+			final String nytNowMorning = "NYTimes-NytMorning,";
+			final String nytNowEvening = "NYTimes-NytEvening,";
+			final String asian = "NYTimes-Asian,";
+			final String european = "NYTimes-European,";
+			final String nyToday = "NYTimes-NyToday,";
+			final String todayHeadlines = "NYTimes-TodayHeadlines,";
+		}
 	}
 }

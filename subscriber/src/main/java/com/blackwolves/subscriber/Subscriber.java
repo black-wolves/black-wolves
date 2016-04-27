@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -21,10 +22,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.blackwolves.subscriber.util.Constant;
 import com.blackwolves.subscriber.util.JDBC;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
  * @author gaston.dapice
@@ -32,12 +33,13 @@ import com.blackwolves.subscriber.util.JDBC;
  */
 public class Subscriber implements Runnable {
 	
-	private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);
+	private Logger logger;
 
 	private Seed seed;
 
-	public Subscriber(Seed seed) {
+	public Subscriber(Seed seed, Logger logger) {
 		this.seed = seed;
+		this.logger = logger;
 	}
 
 	@Override
@@ -45,14 +47,6 @@ public class Subscriber implements Runnable {
 		logger.info("Creating the driver");
 		WebDriver driver = createWebDriver();
 		try {
-			String currentSubs = seed.getSubscription();
-			seed.setSubscription(new String("1"));
-			JDBC.updateSubscription(seed);
-			if (currentSubs == null) {
-				currentSubs =  new String();
-
-			}
-			seed.setSubscription(currentSubs);
 			
 			subscribeToNyTimes(driver);
 			
@@ -130,44 +124,44 @@ public class Subscriber implements Runnable {
 	 * @param driver
 	 */
 	private void subscribeToNyTimes(WebDriver driver) {
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.cooking, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.cooking)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.cooking, Constant.NyTimes.SiteName.cooking, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.dealBook, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.dealBook)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.dealBook, Constant.NyTimes.SiteName.dealBook, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.bits, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.bits)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.bits, Constant.NyTimes.SiteName.bits, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.firstDraft, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.firstDraft)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.firstDraft, Constant.NyTimes.SiteName.firstDraft, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.opinionToday, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.opinionToday)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.opinionToday, Constant.NyTimes.SiteName.opinionToday, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.afterNoonUpdate, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.afterNoonUpdate)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.afterNoonUpdate, Constant.NyTimes.SiteName.afterNoonUpdate, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.theUpshot, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.theUpshot)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.theUpshot, Constant.NyTimes.SiteName.theUpshot, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.nytNowMorning, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowMorning)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nytNowMorning, Constant.NyTimes.SiteName.nytNowMorning, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.nytNowEvening, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowEvening)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nytNowEvening, Constant.NyTimes.SiteName.nytNowEvening, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.asian, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.asian)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.asian, Constant.NyTimes.SiteName.asian, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.european, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.european)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.european, Constant.NyTimes.SiteName.european, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.nyToday, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nyToday)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nyToday, Constant.NyTimes.SiteName.nyToday, driver);
 		}
-		if (Math.random() < 0.5) {
-		    subscribeToNyTimesRandom(seed, Constant.NyTimes.todayHeadlines, driver);
+		if (Math.random() < 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.todayHeadlines)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.todayHeadlines, Constant.NyTimes.SiteName.todayHeadlines, driver);
 		}
 		
 	}
@@ -178,25 +172,23 @@ public class Subscriber implements Runnable {
 	 * @param url
 	 * @param driver
 	 */
-	private void subscribeToNyTimesRandom(Seed seed, String url, WebDriver driver) {
-		String site = "NYTimes,";
-		List<WebElement> fields = driver.findElements(By.className("signup-header"));
-		if(fields.size() > 0){
-			site += fields.get(0).getText();
+	private void subscribeToNyTimesRandom(Seed seed, String url, String site, WebDriver driver) {
+		driver.get(url);
+		if(driver.findElements(By.className("signup-header")).size() > 0){
+			WebElement header = driver.findElement(By.className("signup-header"));
+			site += header.getText();
 		}
 		logger.info("Subscribing " + seed.getUser() + " to " + site);
-		driver.get(url);
 		try {
-			Thread.sleep(2500);
-			fields = driver.findElements(By.xpath("//div[@class='filedElements']/input"));
-			if (fields.size() > 0) {
-				fields.get(0).clear();
-				fields.get(0).sendKeys(seed.getUser());
-				driver.findElement(By.xpath("//button[@class='applicationButton']")).click();
+			if (driver.findElements(By.className("text")).size() > 0) {
+				WebElement input = driver.findElement(By.className("text"));
+				input.clear();
+				input.sendKeys(seed.getUser());
+				WebElement button = driver.findElement(By.className("applicationButton"));
+				button.click();
 				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(2000);
 			}
-		} catch (NoSuchElementException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 		}
 	}
