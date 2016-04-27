@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.blackwolves.subscriber;
 
 import java.io.File;
@@ -11,6 +8,7 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -24,9 +22,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.blackwolves.subscriber.util.Constant;
 import com.blackwolves.subscriber.util.JDBC;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
  * @author gaston.dapice
@@ -34,25 +33,13 @@ import com.blackwolves.subscriber.util.JDBC;
  */
 public class Subscriber implements Runnable {
 	
-	private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);
+	private Logger logger;
 
 	private Seed seed;
 
-	final String liveStyle = "https://regilite.nytimes.com/regilite?product=LI&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=NYT+Living";
-	final String bits = "https://regilite.nytimes.com/regilite?product=TU&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Bits";
-	final String cooking = "https://regilite.nytimes.com/regilite?product=CK&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Cooking";
-	final String news = "https://regilite.nytimes.com/regilite?product=NN&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=The+NYT+Now+Morning+Briefing";
-	final String headlines = "https://regilite.nytimes.com/regilite?product=TH&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Today%E2%80%99s+Headlines";
-	final String afterNoon = "https://regilite.nytimes.com/regilite?product=AU&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Afternoon+Update";
-	final String today = "https://regilite.nytimes.com/regilite?product=UR&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=New+York+Today";
-	final String firstDraft = "https://regilite.nytimes.com/regilite?product=CN&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=First+Draft";
-	final String dealBook = "https://regilite.nytimes.com/regilite?product=DK&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=DealBook";
-	final String opinion = "https://regilite.nytimes.com/regilite?product=TY&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Opinion+Today";
-	final String europe = "https://regilite.nytimes.com/regilite?product=EE&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Today%E2%80%99s+Headlines+European+Morning";
-	final String asia = "https://regilite.nytimes.com/regilite?product=AE&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Today%E2%80%99s+Headlines+Asian+Morning";
-
-	public Subscriber(Seed seed) {
+	public Subscriber(Seed seed, Logger logger) {
 		this.seed = seed;
+		this.logger = logger;
 	}
 
 	@Override
@@ -60,14 +47,12 @@ public class Subscriber implements Runnable {
 		logger.info("Creating the driver");
 		WebDriver driver = createWebDriver();
 		try {
-			String currentSubs = seed.getSubscription();
-			seed.setSubscription(new String("1"));
-			JDBC.updateSubscription(seed);
-			if (currentSubs == null) {
-				currentSubs =  new String();
-
+			
+			subscribeToNyTimes(driver);
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Golfsmith.siteName)) {
+				subscribeToGolfSmith(seed, Constant.Golfsmith.siteUrl, Constant.Golfsmith.siteName, driver);
 			}
-			seed.setSubscription(currentSubs);
 			
 //			if (Math.random() < 0.5) {
 //				subscribeToHoustonCron(seed, driver);
@@ -116,48 +101,10 @@ public class Subscriber implements Runnable {
 //			if (Math.random() < 0.5) {
 //				subscribeToReDef(seed, driver);
 //			}
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, liveStyle, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, bits, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, cooking, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, news, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, headlines, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, afterNoon, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, today, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, firstDraft, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, dealBook, driver);
-			 }
 			// if (Math.random() < 0.5) {
 			// subscribeToSkimm(seed, driver);
 			// }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, opinion, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, europe, driver);
-			 }
-			 if (Math.random() < 0.5) {
-			 subscribeToNyTimesRandom(seed, asia, driver);
-			 }
-			if (Math.random() <= 1) {
-				subscribeToGolfSmith(seed, driver);
-			}
+			
 			if (seed.getSubscription().equals("")) {
 				logger.info("saving SanAntonioNews by default");
 		//		subscribeToSanAntonioNews(seed, driver);
@@ -172,9 +119,99 @@ public class Subscriber implements Runnable {
 			driver.quit();
 		}
 	}
+	
+	/**
+	 * Subscribes to different newsletters from the NY Times
+	 * @param driver
+	 */
+	private void subscribeToNyTimes(WebDriver driver) {
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.cooking)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.cooking, Constant.NyTimes.SiteName.cooking, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.dealBook)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.dealBook, Constant.NyTimes.SiteName.dealBook, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.bits)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.bits, Constant.NyTimes.SiteName.bits, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.firstDraft)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.firstDraft, Constant.NyTimes.SiteName.firstDraft, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.opinionToday)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.opinionToday, Constant.NyTimes.SiteName.opinionToday, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.afterNoonUpdate)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.afterNoonUpdate, Constant.NyTimes.SiteName.afterNoonUpdate, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.theUpshot)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.theUpshot, Constant.NyTimes.SiteName.theUpshot, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowMorning)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nytNowMorning, Constant.NyTimes.SiteName.nytNowMorning, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nytNowEvening)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nytNowEvening, Constant.NyTimes.SiteName.nytNowEvening, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.asian)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.asian, Constant.NyTimes.SiteName.asian, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.european)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.european, Constant.NyTimes.SiteName.european, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.nyToday)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.nyToday, Constant.NyTimes.SiteName.nyToday, driver);
+		}
+		if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NyTimes.SiteName.todayHeadlines)) {
+		    subscribeToNyTimesRandom(seed, Constant.NyTimes.SiteUrl.todayHeadlines, Constant.NyTimes.SiteName.todayHeadlines, driver);
+		}
+		
+	}
+	
+	/**
+	 * Subscribes to the NY Times newsletter url given by param
+	 * @param seed
+	 * @param url
+	 * @param driver
+	 */
+	private void subscribeToNyTimesRandom(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			if (driver.findElements(By.className("text")).size() > 0) {
+				WebElement input = driver.findElement(By.className("text"));
+				input.clear();
+				input.sendKeys(seed.getUser());
+				WebElement button = driver.findElement(By.className("applicationButton"));
+				button.click();
+				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			}
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToGolfSmith(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			WebElement input = driver.findElement(By.name("email"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			WebElement button = driver.findElement(By.id("submitAddress_footer"));
+			button.submit();
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}
+	}
 
-	
-	
 	private void subscribeToIGN(Seed seed, WebDriver driver) {
 		String url = "http://www.ign.com/articles/2015/06/04/sign-up-for-ign-newsletters";
 		String site = "IGN,";
@@ -610,25 +647,6 @@ public class Subscriber implements Runnable {
 
 	}
 
-	private void subscribeToNyTimesRandom(Seed seed, String url, WebDriver driver) {
-		String site = "NYTimes,";
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			try {
-				Thread.sleep(5000);
-				List<WebElement> fields = driver.findElements(By.xpath("//div[@class='filedElements']/input"));
-				if (fields.size() > 0) {
-					fields.get(0).clear();
-					fields.get(0).sendKeys(seed.getUser());
-					driver.findElement(By.xpath("//button[@class='applicationButton']")).click();
-					seed.setSubscription(seed.getSubscription().concat(site));
-					Thread.sleep(2000);
-				}
-			} catch (NoSuchElementException | InterruptedException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			}
-	}
-
 	// Works! :)
 	private void subscribeToReDef(Seed seed, WebDriver driver) {
 		String url = "http://link.mediaredefined.com/join/353/media-redefweb";
@@ -722,24 +740,6 @@ public class Subscriber implements Runnable {
 		}
 	}
 
-	// Works! :)
-	private void subscribeToGolfSmith(Seed seed, WebDriver driver) {
-		String url = "http://www.golfsmith.com/";
-		String site = "GolfSmith,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.name("email")).clear();
-			driver.findElement(By.name("email")).sendKeys(seed.getUser());
-			driver.findElement(By.id("submitAddress_footer")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
-		} catch (InterruptedException | NoSuchElementException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-		}
-	}
-	
 	/**
 	 * @return
 	 */

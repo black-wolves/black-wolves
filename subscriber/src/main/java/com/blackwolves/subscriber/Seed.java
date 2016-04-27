@@ -51,11 +51,13 @@ public class Seed {
 	 * @param user
 	 * @param password
 	 * @param fullSeed
+	 * @param subscription 
 	 */
-	public Seed(String user, String password, String fullSeed) {
+	public Seed(String user, String password, String fullSeed, String subscription) {
 		this.user = user;
 		this.password = password;
 		this.fullSeed = fullSeed;
+		this.subscription = subscription;
 	}
 
 	/**

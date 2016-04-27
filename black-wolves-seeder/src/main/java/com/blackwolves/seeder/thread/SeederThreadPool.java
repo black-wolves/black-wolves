@@ -77,6 +77,23 @@ public class SeederThreadPool {
 		//}while(!goal);
 		
 	}
+	
+	/**
+	 * 
+	 * @param executor
+	 * @param size
+	 * @param finalSeeds
+	 */
+	private static void processSeeds(ExecutorService executor, int size, List<Seed> finalSeeds) {
+		for (int i = 0; i < finalSeeds.size(); i++) {
+			Seed seed = finalSeeds.get(i);
+			MDC.put("logFileName", seed.getUser());
+			Seeder seeder = new Seeder(seed, logger);
+			Runnable worker = seeder;
+			logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword());
+			executor.execute(worker);
+		}
+	}
 
 //	private static boolean checkGoal() {
 //		Map<String, Object> stats = JDBC.getStats();
@@ -100,18 +117,6 @@ public class SeederThreadPool {
 //		return false;
 //	}
 
-	private static void processSeeds(ExecutorService executor, int size, List<Seed> finalSeeds) {
-		logger.info("Processing seeds before the for");
-		for (int i = 0; i < finalSeeds.size(); i++) {
-			Seed seed = finalSeeds.get(i);
-			MDC.put("logFileName", seed.getUser());
-			Seeder seeder = new Seeder(seed, logger);
-			Runnable worker = seeder;
-			logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword());
-			executor.execute(worker);
-		}
-	}
-	
 	public static void writeSeedsToFile(List<Seed> seeds) {
 		PrintWriter pw = null;
 		try {

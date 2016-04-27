@@ -41,7 +41,7 @@ public class JDBC {
 //		getSeedsForSubscriptions(9994,10000);
 	}
 	
-	public static List<Seed> getSeedsForSubscriptions(int index, int top) {
+	public static List<Seed> getSeedsForSubscriptions() {
 		Connection dbConnection = null;
 		Statement statement = null;
 		
@@ -49,7 +49,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * FROM FEEDER WHERE  FEEDER.ID >= "+index+" AND FEEDER.ID < "+top+" AND SUBSCRIPTION is NULL ORDER BY FEEDER.ID ASC LIMIT 15";
+		String selectSQL = "SELECT * FROM FEEDER ORDER BY RAND() LIMIT 25";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
@@ -61,8 +61,9 @@ public class JDBC {
 			while(rs.next()){
 				String user = rs.getString(Constant.FEEDER.SEED);
 				String password = rs.getString(Constant.FEEDER.PASSWORD);
+				String fullSeed = rs.getString(Constant.FEEDER.FULL_SEED);
 				String subscriptions = rs.getString(Constant.FEEDER.SUBSCRIPTION);
-				Seed seed = new Seed(user, password, subscriptions);
+				Seed seed = new Seed(user, password, fullSeed, subscriptions);
 				seeds.add(seed);
 			}
 
