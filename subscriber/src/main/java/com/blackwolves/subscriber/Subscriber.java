@@ -604,7 +604,7 @@ public class Subscriber implements Runnable {
 			WebElement firstRadioButton = driver.findElement(By.xpath("//div[@class='TS__toggle']/label")); 
 			firstRadioButton.click();
 			
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 			
 			List<WebElement> radioButtons = driver.findElements(By.xpath("//div[@class='TS__toggle']/label"));
 			for (int i = 1; i < radioButtons.size(); i++) {
