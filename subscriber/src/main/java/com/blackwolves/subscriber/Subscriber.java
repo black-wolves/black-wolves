@@ -54,7 +54,6 @@ public class Subscriber implements Runnable {
 				subscribeToGolfSmith(seed, Constant.Golfsmith.siteUrl, Constant.Golfsmith.siteName, driver);
 			}
 			
-			
 //			if (Math.random() < 0.5) {
 //				subscribeToHoustonCron(seed, driver);
 //
@@ -191,15 +190,23 @@ public class Subscriber implements Runnable {
 		}
 	}
 	
-	// Works! :)
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
 	private void subscribeToGolfSmith(Seed seed, String url, String site, WebDriver driver) {
 		try {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
-			driver.findElement(By.name("email")).clear();
-			driver.findElement(By.name("email")).sendKeys(seed.getUser());
-			driver.findElement(By.id("submitAddress_footer")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
+			WebElement input = driver.findElement(By.name("email"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			WebElement button = driver.findElement(By.id("submitAddress_footer"));
+			button.submit();
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 		}
