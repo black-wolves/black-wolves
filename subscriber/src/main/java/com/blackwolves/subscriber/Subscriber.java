@@ -9,6 +9,7 @@ import java.util.Random;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -19,8 +20,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import com.blackwolves.subscriber.util.Constant;
@@ -54,61 +53,69 @@ public class Subscriber implements Runnable {
 				subscribeToGolfSmith(seed, Constant.Golfsmith.siteUrl, Constant.Golfsmith.siteName, driver);
 			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheHerald.siteName)) {
+				subscribeToTheHerald(seed, Constant.TheHerald.siteUrl, Constant.TheHerald.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.NBCNews.siteName)) {
+				subscribeToNBCNews(seed, Constant.NBCNews.siteUrl, Constant.NBCNews.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.DailyNews.siteName)) {
+				subscribeToDailyNews(seed, Constant.DailyNews.siteUrl, Constant.DailyNews.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Forbes.siteName)) {
+				subscribeToForbes(seed, Constant.Forbes.siteUrl, Constant.Forbes.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Mattermark.siteName)) {
+				subscribeToMatterMark(seed, Constant.Mattermark.siteUrl, Constant.Mattermark.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.FashionMagazine.siteName)) {
+				subscribeFashionMagazine(seed, Constant.FashionMagazine.siteUrl, Constant.FashionMagazine.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheFetch.siteName)) {
+				subscribeToFetch(seed, Constant.TheFetch.siteUrl, Constant.TheFetch.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheWashingtonPost.siteName)) {
+				subscribeToTheWashingtonPost(seed, Constant.TheWashingtonPost.siteUrl, Constant.TheWashingtonPost.siteName, driver);
+			}
+			
+			
+			
+			
+			
+			
+			
 //			if (Math.random() < 0.5) {
 //				subscribeToHoustonCron(seed, driver);
-//
 //			}
 //			if (Math.random() < 0.5) {
 //				subscribeToNYDailyNews(seed, driver);
 //			}
-			if (Math.random() < 0.5) {
-				subscribeToSoccerWire(seed, driver);
-			}
-			// if (Math.random() < 0.2) {
-			// subscribeToNBCSanDiego(seed, driver);
-			// subscribeToTheGolfChannel(seed, driver);
-			// }
+//			if (Math.random() < 0.2) {
+//				subscribeToNBCSanDiego(seed, driver);
+//			}
+//			if (Math.random() < 0.5) {
+//				subscribeToTheGolfChannel(seed, driver);
+//			}
 //			if (Math.random() < 0.5) {
 //				subscribeToDetroitDailyNews(seed, driver);
 //			}
 //			if (Math.random() < 0.5) {
 //				subscribeToSanAntonioNews(seed, driver);
 //			}
-			if (Math.random() < 0.5) {
-				subscribeToBostonMagazine(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToTheHerald(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToNBCNews(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToDailyNews(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToForbes(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToMatterMark(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeFashionMagazine(seed, driver);
-			}
-			if (Math.random() < 0.5) {
-				subscribeToFetch(seed, driver);
-			}
 //			if (Math.random() < 0.5) {
 //				subscribeToReDef(seed, driver);
 //			}
-			// if (Math.random() < 0.5) {
-			// subscribeToSkimm(seed, driver);
-			// }
+//			if (Math.random() < 0.5) {
+//				subscribeToSkimm(seed, driver);
+//			}
 			
-			if (seed.getSubscription().equals("")) {
-				logger.info("saving SanAntonioNews by default");
-		//		subscribeToSanAntonioNews(seed, driver);
-			}
 			JDBC.updateSubscription(seed);
 
 		} catch (Exception e) {
@@ -177,16 +184,20 @@ public class Subscriber implements Runnable {
 		try {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
-			if (driver.findElements(By.className("text")).size() > 0) {
-				WebElement input = driver.findElement(By.className("text"));
-				input.clear();
-				input.sendKeys(seed.getUser());
-				WebElement button = driver.findElement(By.className("applicationButton"));
-				button.click();
-				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
-			}
+			
+			WebElement input = driver.findElement(By.className("text"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			
+			WebElement button = driver.findElement(By.className("applicationButton"));
+			button.click();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -201,41 +212,274 @@ public class Subscriber implements Runnable {
 		try {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
+			
 			WebElement input = driver.findElement(By.name("email"));
 			input.clear();
 			input.sendKeys(seed.getUser());
+			
 			WebElement button = driver.findElement(By.id("submitAddress_footer"));
 			button.submit();
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToTheHerald(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.id("txtEmailAddress"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement submit = driver.findElement(By.id("btnSave"));
+			submit.click();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private void subscribeToNBCNews(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.className("j-email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement submit = driver.findElement(By.className("j-submit"));
+			submit.click();
+			Thread.sleep(5000); //We wait 5 seconds until the email is saved on the page
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private void subscribeToDailyNews(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement input = driver.findElement(By.name("email"));
+			input.clear();
+			input.sendKeys(seed.getUser());
 
-	private void subscribeToIGN(Seed seed, WebDriver driver) {
-		String url = "http://www.ign.com/articles/2015/06/04/sign-up-for-ign-newsletters";
-		String site = "IGN,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
+			WebElement zipcode = driver.findElement(By.name("zipcode"));
+			zipcode.clear();
+			CharSequence code = new String(Integer.toString(randInt(60000, 799999)));
+			zipcode.sendKeys(code);
 
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.className("email-input"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement submit = driver.findElement(By.className("email-submit"));
-				Thread.sleep(3000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
+			List<WebElement> radioButtons = driver.findElements(By.name("print_subscriber"));
+			radioButtons.get(1).click();
+			
+			List<WebElement> checkboxes = driver.findElements(By.xpath("//label[@class='nw_label']/input"));
+			for (int i = 0; i < checkboxes.size(); i++) {
+				checkboxes.get(i).click();
 			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
+			
+			WebElement button = driver.findElement(By.xpath("//div[@class='nw_submit_contain']/input"));
+			button.click();
+			
+			if(driver.findElements(By.id("update_pref")).size() > 0){
+				WebElement update = driver.findElement(By.id("update_pref"));
+				update.click();
+				
+				checkboxes = driver.findElements(By.xpath("//label[@class='nw_label']/input"));
+				for (int i = 0; i < checkboxes.size(); i++) {
+					if(!checkboxes.get(i).isSelected()){
+						checkboxes.get(i).click();
+					}
+				}
+				button = driver.findElement(By.xpath("//div[@class='nw_submit_contain']/input"));
+				button.click();
+			}
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
+	
+	private void subscribeToForbes(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement continueBtn = driver.findElement(By.className("continue-button"));
+			continueBtn.click();
+			
+			WebElement input = driver.findElement(By.id("Email"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			input.sendKeys(Keys.RETURN);
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToMatterMark(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement input = driver.findElement(By.id("free_email"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			input.submit();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeFashionMagazine(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement input = driver.findElement(By.name("input_1"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			input.submit();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToFetch(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement input = driver.findElement(By.name("email"));
+			input.clear();
+			input.sendKeys(seed.getUser());
+			input.submit();
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToTheWashingtonPost(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			List<WebElement> signUpButtons = driver.findElements(By.className("action"));
+			List<WebElement> buttons = driver.findElements(By.xpath("//span[@class='input-group-btn']/button"));
+			int i = 0;
+			int j = 0;
+			int x = 0;
+			boolean searchInput = true;
+			do{
+				if(j == 3){
+					j=0;
+					x++;
+					scrollDown(450*x, driver);
+				}
+				signUpButtons.get(i).click();
+				Thread.sleep(1000);
+				if(searchInput){
+					WebElement input = driver.findElement(By.name("email"));
+					input.clear();
+					input.sendKeys(seed.getUser());
+				}
+				buttons.get(i).click();
+				Thread.sleep(3500);
+				i++;
+				j++;
+				searchInput = false;
+			}while(i < signUpButtons.size());
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private void scrollDown(int x, WebDriver driver){
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("scroll(0, " + x + ");");
+	}
+	
+	
 	
 	private void subscribeToHoustonCron(Seed seed, WebDriver driver) {
 		String url = "http://www.chron.com/newsletters/";
@@ -311,39 +555,6 @@ public class Subscriber implements Runnable {
 				// driver.findElement(By.className("btn-primary"));
 				Thread.sleep(1000);
 				// submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToSoccerWire(Seed seed, WebDriver driver) {
-		String url = "http://www.soccerwire.com/category/news/leagues/mls/";
-		String site = "SoccerWire,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement subscribeBtn = driver.findElement(By.partialLinkText("Subscribe Here"));
-				subscribeBtn.click();
-				WebElement email = driver.findElement(By.id("inputProp0"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement checkbox1 = driver.findElement(By.name("subscriptions.interestCategories[0].selected"));
-				checkbox1.click();
-				if (Math.random() < 0.5) {
-					WebElement checkbox2 = driver.findElement(By.name("subscriptions.interestCategories[1].selected"));
-					checkbox2.click();
-				}
-				WebElement submit = driver.findElement(By.className("btn-primary"));
-				Thread.sleep(1000);
-				submit.click();
 				seed.setSubscription(seed.getSubscription().concat(site));
 
 			} catch (InterruptedException | NoSuchElementException e) {
@@ -465,44 +676,6 @@ public class Subscriber implements Runnable {
 		}
 	}
 
-	private void subscribeToDailyNews(Seed seed, WebDriver driver) {
-		String url = "http://www.dailynews.com/email_signup";
-		String site = "DailyNews,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.name("email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-
-				WebElement zipcode = driver.findElement(By.name("zipcode"));
-				zipcode.clear();
-				CharSequence code = new String(Integer.toString(randInt(60000, 799999)));
-				zipcode.sendKeys(code);
-
-				List<WebElement> radioButtons = driver.findElements(By.name("print_subscriber"));
-				radioButtons.get(1).click();
-				List<WebElement> checkboxes = driver.findElements(By.xpath("//label[@class='nw_label']/input"));
-				for (int i = 0; i < checkboxes.size(); i++) {
-					if (Math.random() > 0.4) {
-						checkboxes.get(i).click();
-					}
-				}
-				Thread.sleep(2000);
-				driver.findElement(By.xpath("//div[@class='nw_submit_contain']/input")).click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
 	private void subscribeToSanAntonioNews(Seed seed, WebDriver driver) {
 		String url = "http://www.mysanantonio.com/news/local/";
 		String site = "SanAntonioNews,";
@@ -533,120 +706,6 @@ public class Subscriber implements Runnable {
 		}
 	}
 
-	private void subscribeToBostonMagazine(Seed seed, WebDriver driver) {
-		String url = "http://www.bostonmagazine.com/newsletters/";
-		String site = "BostonMagazine,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.name("email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				List<WebElement> checkboxes = driver.findElements(By.xpath("//input[@name='newsletter_lists']"));
-				for (int i = 0; i < checkboxes.size(); i++) {
-					if (Math.random() > 0.4) {
-						checkboxes.get(i).click();
-					}
-				}
-				WebElement submit = driver.findElement(By.className("hubspot-button"));
-				Thread.sleep(1000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(2000);
-			} catch (InterruptedException | NoSuchElementException e) {
-
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToTheHerald(Seed seed, WebDriver driver) {
-		String url = "https://affiliates.eblastengine.com/Widgets/EmailSignup.aspx?wcguid=3E8B8709-AF46-4F2C-AFBA-2D662DFCC337";
-		String site = "TheHerald,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.id("txtEmailAddress"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement submit = driver.findElement(By.id("btnSave"));
-				Thread.sleep(1000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-				Thread.sleep(1000);
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToNBCNews(Seed seed, WebDriver driver) {
-		String url = "http://www.nbcnews.com/";
-		String site = "NBCNews,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebElement email = driver.findElement(By.className("j-email"));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				WebElement submit = driver.findElement(By.className("j-submit"));
-				Thread.sleep(3000);
-				submit.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (WebDriverException e) {
-				logger.info("Element in " + url + "is not clickable. Please review");
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-	}
-
-	private void subscribeToForbes(Seed seed, WebDriver driver) {
-		String url = "http://www.forbes.com/";
-		String site = "Forbes,";
-		if (seed.getSubscription().isEmpty() | !seed.getSubscription().contains(site)) {
-
-			try {
-				logger.info("Subscribing " + seed.getUser() + " to " + site);
-				driver.get(url);
-				WebDriverWait wait = new WebDriverWait(driver, 15);
-				WebElement continueBtn = wait
-						.until(ExpectedConditions.visibilityOfElementLocated(By.className("continue-button")));
-				continueBtn.click();
-				WebElement email = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Email")));
-				email.clear();
-				email.sendKeys(seed.getUser());
-				email.sendKeys(Keys.RETURN);
-				Thread.sleep(1000);
-				seed.setSubscription(seed.getSubscription().concat(site));
-			} catch (InterruptedException | NoSuchElementException e) {
-				logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-			} catch (Exception e) {
-				logger.info("Element in " + url + " not found. Saving screenshot as /var/www/errors/" + seed.getUser());
-				// getScreenShot(driver, seed.getUser());
-			}
-		} else {
-			logger.info("Seed " + seed.getUser() + " is already subscripted to " + site);
-		}
-
-	}
-
 	// Works! :)
 	private void subscribeToReDef(Seed seed, WebDriver driver) {
 		String url = "http://link.mediaredefined.com/join/353/media-redefweb";
@@ -666,24 +725,6 @@ public class Subscriber implements Runnable {
 	}
 
 	// Works! :)
-	private void subscribeToFetch(Seed seed, WebDriver driver) {
-		String url = "http://thefetch.com/";
-		String site = "TheFetch,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.name("email")).clear();
-			driver.findElement(By.name("email")).sendKeys(seed.getUser());
-			driver.findElement(By.name("email")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(1000);
-		} catch (NoSuchElementException | InterruptedException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-		}
-	}
-
-	// Works! :)
 	private void subscribeToSkimm(Seed seed, WebDriver driver) {
 		String url = "http://www.theskimm.com/";
 		String site = "TheSkimm,";
@@ -694,45 +735,6 @@ public class Subscriber implements Runnable {
 			driver.findElement(By.name("email")).clear();
 			driver.findElement(By.name("email")).sendKeys(seed.getUser());
 			driver.findElement(By.name("email")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
-		} catch (InterruptedException | NoSuchElementException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-		}
-	}
-
-	// Works :)
-	private void subscribeToMatterMark(Seed seed, WebDriver driver) {
-		String url = "http://mattermark.com/app/Newsletter";
-		String site = "Mattermark,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.id("free_email")).sendKeys(seed.getUser());
-			driver.findElement(By.id("free_email")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
-		} catch (InterruptedException | NoSuchElementException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-		}
-
-	}
-
-	// Works :)
-	private void subscribeFashionMagazine(Seed seed, WebDriver driver) {
-		String url = "http://www.fashionmagazine.com/";
-		String site = "FashionMagazine,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.name("input_1")).clear();
-			driver.findElement(By.name("input_1")).sendKeys(seed.getUser());
-			driver.findElement(By.name("input_1")).submit();
-			if (driver.getPageSource().contains("Thanks")) {
-				logger.info("Fashion Magazine Subscription succesful.");
-			}
 			seed.setSubscription(seed.getSubscription().concat(site));
 			Thread.sleep(3000);
 		} catch (InterruptedException | NoSuchElementException e) {

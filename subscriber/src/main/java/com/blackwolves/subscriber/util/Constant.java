@@ -80,4 +80,45 @@ public interface Constant {
 		final String siteUrl = "http://www.golfsmith.com/";
 		final String siteName = "GolfSmith";
 	}
+	
+	public interface TheHerald{
+		final String siteUrl = "https://affiliates.eblastengine.com/Widgets/EmailSignup.aspx?wcguid=3E8B8709-AF46-4F2C-AFBA-2D662DFCC337";
+		final String siteName = "TheHerald";
+	}
+	
+	public interface NBCNews{
+		final String siteUrl = "http://www.nbcnews.com/";
+		final String siteName = "NBCNews";
+	}
+	
+	public interface DailyNews{
+		final String siteUrl = "http://www.dailynews.com/email_signup";
+		final String siteName = "DailyNews";
+	}
+	
+	public interface Forbes{
+		final String siteUrl = "http://www.forbes.com/";
+		final String siteName = "Forbes";
+	}
+	
+	public interface Mattermark{
+		final String siteUrl = "http://mattermark.com/app/Newsletter";
+		final String siteName = "Mattermark";
+	}
+	
+	public interface FashionMagazine{
+		final String siteUrl = "http://www.fashionmagazine.com/";
+		final String siteName = "FashionMagazine";
+	}
+	
+	public interface TheFetch{
+		final String siteUrl = "http://thefetch.com/";
+		final String siteName = "TheFetch";
+	}
+	
+	public interface TheWashingtonPost{
+		final String siteUrl = "https://subscribe.washingtonpost.com/newsletters/#/newsletters";
+		final String siteName = "TheWashingtonPost";
+	}
+	
 }
