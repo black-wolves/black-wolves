@@ -50,8 +50,8 @@ public class Subscriber implements Runnable {
 			
 			subscribeToNyTimes(driver);
 			
-			if (Math.random() <= 1) {
-				subscribeToGolfSmith(seed, driver);
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Golfsmith.siteName)) {
+				subscribeToGolfSmith(seed, Constant.Golfsmith.siteUrl, Constant.Golfsmith.siteName, driver);
 			}
 			
 			
@@ -175,21 +175,31 @@ public class Subscriber implements Runnable {
 	 * @param driver
 	 */
 	private void subscribeToNyTimesRandom(Seed seed, String url, String site, WebDriver driver) {
-		driver.get(url);
-		if(driver.findElements(By.className("signup-header")).size() > 0){
-			WebElement header = driver.findElement(By.className("signup-header"));
-			site += header.getText();
-		}
-		logger.info("Subscribing " + seed.getUser() + " to " + site);
 		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
 			if (driver.findElements(By.className("text")).size() > 0) {
 				WebElement input = driver.findElement(By.className("text"));
 				input.clear();
 				input.sendKeys(seed.getUser());
 				WebElement button = driver.findElement(By.className("applicationButton"));
 				button.click();
-				seed.setSubscription(seed.getSubscription().concat(site));
+				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			}
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
+		}
+	}
+	
+	// Works! :)
+	private void subscribeToGolfSmith(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			driver.findElement(By.name("email")).clear();
+			driver.findElement(By.name("email")).sendKeys(seed.getUser());
+			driver.findElement(By.id("submitAddress_footer")).submit();
+			seed.setSubscription(seed.getSubscription().concat(site));
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
 			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
 		}
@@ -723,24 +733,6 @@ public class Subscriber implements Runnable {
 		}
 	}
 
-	// Works! :)
-	private void subscribeToGolfSmith(Seed seed, WebDriver driver) {
-		String url = "http://www.golfsmith.com/";
-		String site = "GolfSmith,";
-
-		try {
-			logger.info("Subscribing " + seed.getUser() + " to " + site);
-			driver.get(url);
-			driver.findElement(By.name("email")).clear();
-			driver.findElement(By.name("email")).sendKeys(seed.getUser());
-			driver.findElement(By.id("submitAddress_footer")).submit();
-			seed.setSubscription(seed.getSubscription().concat(site));
-			Thread.sleep(3000);
-		} catch (InterruptedException | NoSuchElementException e) {
-			logger.info("Error with Seed: " + seed.getUser() + " in " + url);
-		}
-	}
-	
 	/**
 	 * @return
 	 */

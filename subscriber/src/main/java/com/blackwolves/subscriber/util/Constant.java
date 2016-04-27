@@ -6,6 +6,7 @@ public interface Constant {
 	public static final String ROUTE = "/var/www/";
 	public static final String EMPTY_STRING = "";
 	public static final String HOME_BLACKWOLVES_LOGS = "/home/blackwolves/logs/";
+	public static final String COMMA = ",";
 	
 	public interface JDBC{
 		final String SEEDER_DB = "SEEDER_DB";
@@ -41,6 +42,7 @@ public interface Constant {
 	}
 	
 	public interface NyTimes{
+		
 		public interface SiteUrl{
 			final String cooking = "https://regilite.nytimes.com/regilite?product=CK&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=Cooking";
 			final String dealBook = "https://regilite.nytimes.com/regilite?product=DK&theme=Transparent&landing=true&app=newsletter&interface=sign_up_page&sourceApp=nyt-v5&title=DealBook";
@@ -58,19 +60,24 @@ public interface Constant {
 		}
 		
 		public interface SiteName{
-			final String cooking = "NYTimes-Cooking,";
-			final String dealBook = "NYTimes-Dealbook,";
-			final String bits = "NYTimes-Bits,";
-			final String firstDraft = "NYTimes-FirstDraft,";
-			final String opinionToday = "NYTimes-OpinionToday,";
-			final String afterNoonUpdate = "NYTimes-AfternoonUpdate,";
-			final String theUpshot = "NYTimes-TheUpshot,";
-			final String nytNowMorning = "NYTimes-NytMorning,";
-			final String nytNowEvening = "NYTimes-NytEvening,";
-			final String asian = "NYTimes-Asian,";
-			final String european = "NYTimes-European,";
-			final String nyToday = "NYTimes-NyToday,";
-			final String todayHeadlines = "NYTimes-TodayHeadlines,";
+			final String cooking = "NYTimes-Cooking";
+			final String dealBook = "NYTimes-Dealbook";
+			final String bits = "NYTimes-Bits";
+			final String firstDraft = "NYTimes-FirstDraft";
+			final String opinionToday = "NYTimes-OpinionToday";
+			final String afterNoonUpdate = "NYTimes-AfternoonUpdate";
+			final String theUpshot = "NYTimes-TheUpshot";
+			final String nytNowMorning = "NYTimes-NytMorning";
+			final String nytNowEvening = "NYTimes-NytEvening";
+			final String asian = "NYTimes-Asian";
+			final String european = "NYTimes-European";
+			final String nyToday = "NYTimes-NyToday";
+			final String todayHeadlines = "NYTimes-TodayHeadlines";
 		}
+	}
+	
+	public interface Golfsmith{
+		final String siteUrl = "http://www.golfsmith.com/";
+		final String siteName = "GolfSmith";
 	}
 }
