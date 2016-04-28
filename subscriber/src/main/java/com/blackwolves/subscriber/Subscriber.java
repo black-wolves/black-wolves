@@ -200,9 +200,11 @@ public class Subscriber implements Runnable {
 			WebElement button = driver.findElement(By.className("applicationButton"));
 			button.click();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -228,9 +230,11 @@ public class Subscriber implements Runnable {
 			WebElement button = driver.findElement(By.id("submitAddress_footer"));
 			button.submit();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -256,9 +260,11 @@ public class Subscriber implements Runnable {
 			WebElement submit = driver.findElement(By.id("btnSave"));
 			submit.click();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -276,7 +282,7 @@ public class Subscriber implements Runnable {
 			
 			WebElement submit = driver.findElement(By.className("j-submit"));
 			submit.click();
-			Thread.sleep(5000); //We wait 5 seconds until the email is saved on the page
+			Thread.sleep(10000);
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
@@ -312,9 +318,13 @@ public class Subscriber implements Runnable {
 			WebElement button = driver.findElement(By.xpath("//div[@class='nw_submit_contain']/input"));
 			button.click();
 			
+			Thread.sleep(5000);
+			
 			if(driver.findElements(By.id("update_pref")).size() > 0){
 				WebElement update = driver.findElement(By.id("update_pref"));
 				update.click();
+				
+				Thread.sleep(5000);
 				
 				checkboxes = driver.findElements(By.xpath("//label[@class='nw_label']/input"));
 				for (int i = 0; i < checkboxes.size(); i++) {
@@ -324,11 +334,13 @@ public class Subscriber implements Runnable {
 				}
 				button = driver.findElement(By.xpath("//div[@class='nw_submit_contain']/input"));
 				button.click();
+				
+				Thread.sleep(5000);
 			}
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -348,9 +360,11 @@ public class Subscriber implements Runnable {
 			email.sendKeys(seed.getUser());
 			email.sendKeys(Keys.RETURN);
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -374,9 +388,11 @@ public class Subscriber implements Runnable {
 			email.sendKeys(seed.getUser());
 			email.submit();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -400,9 +416,11 @@ public class Subscriber implements Runnable {
 			email.sendKeys(seed.getUser());
 			email.submit();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -426,9 +444,11 @@ public class Subscriber implements Runnable {
 			email.sendKeys(seed.getUser());
 			email.submit();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -473,6 +493,8 @@ public class Subscriber implements Runnable {
 				input = false;
 			}while(i < signUpButtons.size());
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
@@ -516,9 +538,11 @@ public class Subscriber implements Runnable {
 			WebElement submit = driver.findElement(By.className("submit-btn"));
 			submit.click();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -547,9 +571,11 @@ public class Subscriber implements Runnable {
 			WebElement submit = driver.findElement(By.className("nydn-submit"));
 			submit.click();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -576,10 +602,11 @@ public class Subscriber implements Runnable {
 				email.sendKeys(seed.getUser());
 				email.submit();
 				
+				Thread.sleep(5000);
+				
 				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			}
-			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -612,6 +639,8 @@ public class Subscriber implements Runnable {
 				radioButtons.get(i).click();
 				Thread.sleep(1000);
 			}
+			
+			Thread.sleep(5000);
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
@@ -653,9 +682,11 @@ public class Subscriber implements Runnable {
 			WebElement submit = driver.findElement(By.xpath("//button[@name='action']"));
 			submit.click();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -687,9 +718,11 @@ public class Subscriber implements Runnable {
 			WebElement submit = driver.findElement(By.name("submit"));
 			submit.click();
 			
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -731,9 +764,11 @@ public class Subscriber implements Runnable {
 			
 			email.sendKeys(Keys.RETURN);
 
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -788,9 +823,11 @@ public class Subscriber implements Runnable {
 			WebElement button = driver.findElement(By.className("signupBtn"));
 			button.click();
 
+			Thread.sleep(5000);
+			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
