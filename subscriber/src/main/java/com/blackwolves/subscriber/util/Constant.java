@@ -161,4 +161,10 @@ public interface Constant {
 		final String siteName = "NBCSanDiego";
 	}
 	
+	public interface AltoPalermo{
+		final String siteUrl = "http://www.altopalermo.com.ar/newsletter-formulario.php";
+		final String siteName = "AltoPalermo";
+	}
+
+	
 }

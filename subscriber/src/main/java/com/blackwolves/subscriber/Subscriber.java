@@ -125,6 +125,10 @@ public class Subscriber implements Runnable {
 				subscribeToNBCSanDiego(seed, Constant.NBCSanDiego.siteUrl, Constant.NBCSanDiego.siteName, driver);
 			}
 			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.AltoPalermo.siteName)) {
+				subscribeToAltoPalermo(seed, Constant.AltoPalermo.siteUrl, Constant.AltoPalermo.siteName, driver);
+			}
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -766,6 +770,8 @@ public class Subscriber implements Runnable {
 	/**
 	 * 
 	 * @param seed
+	 * @param url
+	 * @param site
 	 * @param driver
 	 */
 	private void subscribeToHoustonCron(Seed seed, String url, String site, WebDriver driver) {
@@ -811,6 +817,13 @@ public class Subscriber implements Runnable {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
 	private void subscribeToNBCSanDiego(Seed seed, String url, String site, WebDriver driver) {
 		try {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
@@ -858,6 +871,68 @@ public class Subscriber implements Runnable {
 			
 			WebElement button = driver.findElement(By.className("signupBtn"));
 			button.click();
+
+			Thread.sleep(5000);
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToAltoPalermo(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+//			WebElement nombre = driver.findElement(By.id("nombre"));
+//			nombre.clear();
+//			nombre.sendKeys(seed.getUser());
+//			
+//			WebElement apellido = driver.findElement(By.id("apellido"));
+//			apellido.clear();
+//			apellido.sendKeys(seed.getUser());
+//			
+			WebElement mail = driver.findElement(By.name("mail"));
+			mail.clear();
+			mail.sendKeys("gastondapice@yahoo.com");
+			mail.submit();
+			
+//			if (Math.random() < 0.5) {
+//				WebElement femenino = driver.findElement(By.id("femenino"));
+//				femenino.click();
+//			}else{
+//				WebElement masculino = driver.findElement(By.id("masculino"));
+//				masculino.click();
+//			}
+//			
+//			WebElement dia = driver.findElement(By.id("dia"));
+//			dia.clear();
+//			dia.sendKeys(String.valueOf(randInt(1, 28)));
+//			
+//			WebElement mes = driver.findElement(By.id("mes"));
+//			mes.clear();
+//			mes.sendKeys(String.valueOf(randInt(1, 12)));
+//			
+//			WebElement ano = driver.findElement(By.id("ano"));
+//			ano.clear();
+//			ano.sendKeys(String.valueOf(randInt(1940, 1998)));
+//			
+//			
+//			WebElement button = driver.findElement(By.className("btn-enviar"));
+//			button.click();
 
 			Thread.sleep(5000);
 			
