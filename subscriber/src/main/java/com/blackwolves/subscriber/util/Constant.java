@@ -165,6 +165,13 @@ public interface Constant {
 		final String siteUrl = "http://www.altopalermo.com.ar/newsletter-formulario.php";
 		final String siteName = "AltoPalermo";
 	}
+	
+	public interface AdidasES{
+		final String siteUrl = "http://www.adidas.es/ayuda/newsletter.html";
+		final String siteName = "AdidasES";
+	}
+	
+	
 
 	
 }
