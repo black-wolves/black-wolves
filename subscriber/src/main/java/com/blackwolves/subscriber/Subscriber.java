@@ -13,7 +13,9 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -204,9 +206,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -234,9 +238,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -264,9 +270,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -286,9 +294,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -340,9 +350,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -364,9 +376,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -392,9 +406,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -420,9 +436,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -448,9 +466,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -497,9 +517,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -542,9 +564,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -575,9 +599,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -606,9 +632,11 @@ public class Subscriber implements Runnable {
 				
 				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			}
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -644,9 +672,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -686,9 +716,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -722,9 +754,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -768,9 +802,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -827,9 +863,11 @@ public class Subscriber implements Runnable {
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
 		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
