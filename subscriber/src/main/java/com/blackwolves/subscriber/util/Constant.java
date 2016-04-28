@@ -166,12 +166,24 @@ public interface Constant {
 		final String siteName = "AltoPalermo";
 	}
 	
-	public interface AdidasES{
-		final String siteUrl = "http://www.adidas.es/ayuda/newsletter.html";
-		final String siteName = "AdidasES";
+	public interface AirBerlin{
+		final String siteUrl = "https://www.airberlin.com/en-RO/newsletter/index/email//preselection/profileSubscribe";
+		final String siteName = "AirBerlin";
 	}
 	
+	public interface Virgin{
+		final String siteUrl = "https://www.virgin.com/newsletter";
+		final String siteName = "Virgin";
+	}
 	
-
+	public interface TomPeters{
+		final String siteUrl = "http://tompeters.com/contact/subscribe/";
+		final String siteName = "TomPeters";
+	}
+	
+	public interface DanielPink{
+		final String siteUrl = "http://www.danpink.com/contact/";
+		final String siteName = "DanielPink";
+	}
 	
 }

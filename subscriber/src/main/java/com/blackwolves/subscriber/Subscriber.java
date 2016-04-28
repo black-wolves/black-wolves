@@ -25,7 +25,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
 import com.blackwolves.subscriber.util.Constant;
-import com.blackwolves.subscriber.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -129,15 +128,27 @@ public class Subscriber implements Runnable {
 				subscribeToAltoPalermo(seed, Constant.AltoPalermo.siteUrl, Constant.AltoPalermo.siteName, driver);
 			}
 			
-			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.AdidasES.siteName)) {
-				subscribeToAdidasES(seed, Constant.AdidasES.siteUrl, Constant.AdidasES.siteName, driver);
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.AirBerlin.siteName)) {
+				subscribeToAirBerlin(seed, Constant.AirBerlin.siteUrl, Constant.AirBerlin.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Virgin.siteName)) {
+				subscribeToVirgin(seed, Constant.Virgin.siteUrl, Constant.Virgin.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TomPeters.siteName)) {
+				subscribeToTomPeters(seed, Constant.TomPeters.siteUrl, Constant.TomPeters.siteName, driver);
+			}
+			
+			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.DanielPink.siteName)) {
+				subscribeToDanielPink(seed, Constant.DanielPink.siteUrl, Constant.DanielPink.siteName, driver);
 			}
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
 			
-			JDBC.updateSubscription(seed);
+//			JDBC.updateSubscription(seed);
 			
 			logger.info("Closing driver");
 			driver.close();
@@ -926,32 +937,146 @@ public class Subscriber implements Runnable {
 	 * @param site
 	 * @param driver
 	 */
-	private void subscribeToAdidasES(Seed seed, String url, String site, WebDriver driver) {
+	private void subscribeToAirBerlin(Seed seed, String url, String site, WebDriver driver) {
 		try {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement email = driver.findElement(By.name("email"));
+			WebElement email = driver.findElement(By.id("loginEmailAddress"));
 			email.clear();
 			email.sendKeys(seed.getUser());
-			email.submit();
 			
-			WebElement button = driver.findElement(By.id("footernewslettersubmitbutton"));
+			WebElement button = driver.findElement(By.id("loginNewsletter"));
 			button.click();
-
+			
 			Thread.sleep(5000);
 			
 			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
-			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url + " message: " + e.getMessage());
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToVirgin(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement email = driver.findElement(By.id("edit-mergevars-email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			scrollDown(100, driver);
+			
+			WebElement checkbox = driver.findElement(By.id("edit-privacy-checkbox"));
+			checkbox.click();
+			
+			WebElement button = driver.findElement(By.id("edit-submit"));
+			button.click();
+			
+			Thread.sleep(5000);
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToTomPeters(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement firstname = driver.findElement(By.id("firstname"));
+			firstname.clear();
+			firstname.sendKeys(seed.getUser());
+			
+			WebElement lastname = driver.findElement(By.id("lastname"));
+			lastname.clear();
+			lastname.sendKeys(seed.getUser());
+			
+			WebElement email = driver.findElement(By.id("email"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			scrollDown(200, driver);
+			
+			WebElement button = driver.findElements(By.tagName("input")).get(11);
+			button.click();
+			
+			Thread.sleep(5000);
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param url
+	 * @param site
+	 * @param driver
+	 */
+	private void subscribeToDanielPink(Seed seed, String url, String site, WebDriver driver) {
+		try {
+			logger.info("Subscribing " + seed.getUser() + " to " + site);
+			driver.get(url);
+			
+			WebElement name = driver.findElement(By.name("NAME"));
+			name.clear();
+			name.sendKeys(seed.getUser());
+			
+			WebElement email = driver.findElement(By.name("EMAIL"));
+			email.clear();
+			email.sendKeys(seed.getUser());
+			
+			WebElement button = driver.findElement(By.name("submit"));
+			button.click();
+			
+			Thread.sleep(5000);
+			
+			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " in " + url + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
 	/**
 	 * @return
 	 */
