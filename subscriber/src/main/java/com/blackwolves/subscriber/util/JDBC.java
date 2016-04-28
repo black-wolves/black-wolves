@@ -46,7 +46,7 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 		
-		String selectSQL = "SELECT * FROM FEEDER ORDER BY RAND() WHERE SUBSCRIPTION IS NULL LIMIT 50";
+		String selectSQL = "SELECT * FROM FEEDER WHERE SUBSCRIPTION is null ORDER BY RAND() LIMIT 50";
 		List<Seed> seeds = new ArrayList<Seed>();
 		try {
 			dbConnection = getDBConnection();
