@@ -1,6 +1,7 @@
 package com.blackwolves.seeder;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * @author gastondapice
@@ -82,6 +83,20 @@ public class Seed {
 		this.fullSeed = fullSeed;
 		this.feederUpdatedDate = feederUpdatedDate;
 		this.seederUpdatedDate = seederUpdatedDate;
+		this.subscription = subscription;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @param fullSeed
+	 * @param subscription
+	 */
+	public Seed(String user, String password, String fullSeed, String subscription) {
+		this.user = user;
+		this.password = password;
+		this.fullSeed = fullSeed;
 		this.subscription = subscription;
 	}
 
@@ -349,6 +364,27 @@ public class Seed {
 	 */
 	public void setFbConfirmed(boolean fbConfirmed) {
 		this.fbConfirmed = fbConfirmed;
+	}
+	
+	public String getDayOfBirth(){
+		long timestamp = getBirthDate().getTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		return String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+	}
+	
+	public String getMonthOfBirth(){
+		long timestamp = getBirthDate().getTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		return String.valueOf(cal.get(Calendar.MONTH));
+	}
+	
+	public String getYearOfBirth(){
+		long timestamp = getBirthDate().getTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		return String.valueOf(cal.get(Calendar.YEAR));
 	}
 	
 }
