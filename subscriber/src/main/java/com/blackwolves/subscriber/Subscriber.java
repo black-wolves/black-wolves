@@ -1156,8 +1156,7 @@ public class Subscriber implements Runnable {
 	
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
-		// nextInt is normally exclusive of the top value, so add 1 to make it
-		// inclusive
+		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
@@ -1171,7 +1170,6 @@ public class Subscriber implements Runnable {
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
-
 	}
 
 }

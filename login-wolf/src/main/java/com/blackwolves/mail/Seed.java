@@ -20,6 +20,13 @@ public class Seed {
 	private Timestamp seederUpdatedDate;
 	private String subscription = new String();
 	private String newUser;
+	private String firstName;
+	private String lastName;
+	private String gender;
+	private Timestamp birthDate;
+	private boolean validated;
+	private boolean fbRegistered;
+	private boolean fbConfirmed;
 	
 	/**
 	 * @param user
@@ -244,6 +251,104 @@ public class Seed {
 	 */
 	public void setNewUser(String newUser) {
 		this.newUser = newUser;
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	/**
+	 * @return the birthDate
+	 */
+	public Timestamp getBirthDate() {
+		return birthDate;
+	}
+
+	/**
+	 * @param birthDate the birthDate to set
+	 */
+	public void setBirthDate(Timestamp birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	/**
+	 * @return the validated
+	 */
+	public boolean isValidated() {
+		return validated;
+	}
+
+	/**
+	 * @param validated the validated to set
+	 */
+	public void setValidated(boolean validated) {
+		this.validated = validated;
+	}
+
+	/**
+	 * @return the fbRegistered
+	 */
+	public boolean isFbRegistered() {
+		return fbRegistered;
+	}
+
+	/**
+	 * @param fbRegistered the fbRegistered to set
+	 */
+	public void setFbRegistered(boolean fbRegistered) {
+		this.fbRegistered = fbRegistered;
+	}
+
+	/**
+	 * @return the fbConfirmed
+	 */
+	public boolean isFbConfirmed() {
+		return fbConfirmed;
+	}
+
+	/**
+	 * @param fbConfirmed the fbConfirmed to set
+	 */
+	public void setFbConfirmed(boolean fbConfirmed) {
+		this.fbConfirmed = fbConfirmed;
 	}
 	
 }
