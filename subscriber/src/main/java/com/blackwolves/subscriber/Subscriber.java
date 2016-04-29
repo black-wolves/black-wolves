@@ -25,6 +25,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
 import com.blackwolves.subscriber.util.Constant;
+import com.blackwolves.subscriber.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -148,7 +149,7 @@ public class Subscriber implements Runnable {
 			logger.error(e.getMessage(), e);
 		} finally {
 			
-//			JDBC.updateSubscription(seed);
+			JDBC.updateSubscription(seed);
 			
 			logger.info("Closing driver");
 			driver.close();
