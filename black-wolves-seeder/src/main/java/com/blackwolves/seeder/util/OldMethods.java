@@ -960,23 +960,39 @@ public class OldMethods {
 //		}
 //	}
 	
-//	public WebElement findMyMsgBySearchBox() {
-//		WebElement searchBox = driver.findElement(By.className("typeahead-input-usertext"));
-//		String searchString = "From: Entrepreneur is: unread";
-//		human.type(searchBox, searchString);
-//		WebElement searchButton = driver.findElement(By.id("mail-search-btn"));
-//		searchButton.click();
-//		List<WebElement> myMessages = new ArrayList<WebElement>();
-//		if (driver.findElements(By.className("message-list-group")).size() > 0) {
-//			myMessages = driver.findElements(By.className("message-list-group"));
+//	/**
+//	 * 
+//	 * @param driver
+//	 * @param from
+//	 * @return
+//	 */
+//	private WebElement findMyMsgBySearchBox(WebDriver driver, String from) {
+//		WebElement message = null;
+//		try{
+//			if(driver.findElements(By.className("typeahead-input-usertext")).size() > 0){
+//				WebElement searchBox = driver.findElement(By.className("typeahead-input-usertext"));
+//				String searchString = "From: " + from + " is: unread";
+//				human.type(searchBox, searchString);
+//				searchBox.sendKeys(Keys.ENTER);
+//				Thread.sleep(10000);
+//				List<WebElement> myMessages = new ArrayList<WebElement>();
+//				if (driver.findElements(By.className("message-list-item")).size() > 0) {
+//					myMessages = driver.findElements(By.className("message-list-item"));
+//				}
+//				if (myMessages.isEmpty()) {
+//					return null;
+//				}
+//				logger.info("Getting first facebook message");
+//				message = myMessages.get(0);
+//			}
+//		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+//			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+//		} catch (WebDriverException e) {
+//			logger.error(e.getMessage(), e);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage(), e);
 //		}
-//		if (myMessages.isEmpty()) {
-//			return null;
-//		}
-//		int randomPosition = obtainRandomMsgsPosition(myMessages);
-//
-//		logger.info("Getting my message randomly");
-//		return myMessages.get(randomPosition);
+//		return message;
 //	}
 
 }
