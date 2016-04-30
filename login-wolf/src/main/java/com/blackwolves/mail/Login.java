@@ -8,6 +8,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -374,8 +375,10 @@ public class Login implements Runnable {
 			
 			WebElement birthday = driver.findElement(By.id("birthday"));
 			String[] birthDate = birthday.getText().trim().split(Constant.LINE_BREAK);
-			DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-			seed.setBirthDate(dateFormat.parse(birthDate[0]).toString());
+			DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			Date date = dateFormat.parse(birthDate[0]);
+			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+			seed.setBirthDate(df.format(date));
 			
 			JDBC.updateSeedPersonalInfo(seed);
 			
@@ -443,8 +446,8 @@ public class Login implements Runnable {
 			String monthString = seed.getMonthOfBirth();
 			String yearString = seed.getYearOfBirth();
 			
-			day.selectByVisibleText(dayString);
-			month.selectByValue(monthString);
+			day.selectByVisibleText(dayString.startsWith("0") ? dayString.substring(1) : dayString);
+			month.selectByValue(monthString.startsWith("0") ? monthString.substring(1) : monthString);
 			year.selectByVisibleText(yearString);
 			
 			gender.click();
