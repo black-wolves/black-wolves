@@ -84,5 +84,8 @@ public interface Constant {
 		public static final String YAHOO = "Yahoo";
 		public static final String LGE = "Experts";
 		public static final String POLITICA = "Politica";
+
+
+		
 	}
 }

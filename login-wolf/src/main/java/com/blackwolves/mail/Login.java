@@ -5,8 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -23,9 +28,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.blackwolves.behavior.AverageHuman;
+import com.blackwolves.behavior.DumbHuman;
+import com.blackwolves.behavior.FastHuman;
+import com.blackwolves.behavior.Human;
 import com.blackwolves.mail.util.Constant;
 import com.blackwolves.mail.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
@@ -45,46 +55,77 @@ public class Login implements Runnable {
 	private String invalidMessage;
 	
 	private boolean mailChanged;
+	
+	private String action;
 
 	public Login() {
 		
 	}
 
-	public Login(Seed seed, Logger logger) {
+	/**
+	 * 
+	 * @param seed
+	 * @param logger
+	 * @param action
+	 */
+	public Login(Seed seed, Logger logger, String action) {
 		this.seed = seed;
 		this.logger = logger;
+		this.action = action;
 	}
 
 	/**
 	 * 
 	 */
 	public void run() {
-
+		
 		WebDriver driver = createWebDriver();
-
-		human = new Human();
-
-		yahooLogin(Constant.YAHOO_MAIL_RO_URL, seed, driver);
-
+		
+		human = generateRandomHumanUser();
+		
+		yahooLogin(Constant.Yahoo.YAHOO_MAIL_RO_URL, seed, driver);
+		
 		if (validateYahooVersion(driver, seed)) {
+			
 			if(mailChanged){
 				JDBC.updateSeed(seed, mailChanged);
 			}
-			writeSeedToFile(seed, true);
-			removeConversationMailView(driver);
+			
+			if(!Constant.Facebook.FACEBOOK_NAME.equals(action)){
+			
+				writeSeedToFile(seed, true);
+				
+				removeConversationMailView(driver);
+				
+			}
+			
+			if(seed.getBirthDate() == null){
+				gatherPersonalInfo(driver, seed);
+			}
+			
 			if(!mailChanged){
 				JDBC.updateSeed(seed, mailChanged);
 			}
-			logger.info("Finished!!");
+			
+			if(Constant.Facebook.FACEBOOK_NAME.equals(action)){
+				createNewAccount(driver);
+				
+				confirmFacebookAccount(driver);
+			}
 
+			logger.info("Finished!!");
+			
 		} else {
-			writeSeedToFile(seed, false);
-			logger.info("Invalid seed detected");
+			if(!Constant.Facebook.FACEBOOK_NAME.equals(action)){
+				writeSeedToFile(seed, false);
+				logger.info("Invalid seed detected");
+			}
 		}
+		
 		driver.close();
 		driver.quit();
 	}
-
+	
 	/**
 	 * 
 	 * @param yahooUrl
@@ -101,7 +142,7 @@ public class Login implements Runnable {
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed.getUser());
 
-			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
+			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.Yahoo.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Yahoo.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
 				driver.findElement(By.id("login-signin")).click();
 				Thread.sleep(randInt(2000, 3000));
 				if(driver.findElements(By.id("mbr-login-error")).size() > 0){
@@ -117,7 +158,6 @@ public class Login implements Runnable {
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
 				Thread.sleep(randInt(2000, 3000));
-				
 			}
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
@@ -197,10 +237,10 @@ public class Login implements Runnable {
 				logger.info("==========   "+ invalidMessage +"   ==========");
 			} else if(driver.findElements(By.id("mbr-login-error")).size() > 0){
 				String error = driver.findElement(By.id("mbr-login-error")).getText();
-				if(error.contains(Constant.ERROR_TEXT_1)){
+				if(error.contains(Constant.Yahoo.ERROR_TEXT_1)){
 					invalidMessage = "Not able to login, The email and password you entered dont match.";
 					logger.info("==========   "+ invalidMessage +"   ==========");
-				} else if(error.contains(Constant.ERROR_TEXT_2)){
+				} else if(error.contains(Constant.Yahoo.ERROR_TEXT_2)){
 					invalidMessage = "Sorry, we dont recognize this email.";
 				} else{
 					invalidMessage = "mbr-login-error not found";
@@ -230,50 +270,54 @@ public class Login implements Runnable {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param driver
+	 */
 	private void removeConversationMailView(WebDriver driver) {
 
 		try {
 			Actions myMouse = new Actions(driver);
 			WebElement settings = driver.findElement(By.id("yucs-help"));
 			myMouse.moveToElement(settings).build().perform();
-			Thread.sleep(randInt(1000, 2000));
+			Thread.sleep(randInt(2000, 3000));
 			settings = driver.findElement(By.id("yucs-help"));
 			myMouse.moveToElement(settings).build().perform();
-			Thread.sleep(randInt(1000, 2000));
+			Thread.sleep(randInt(2000, 3000));
 			logger.info("Moving to configuration wheel");
-			Thread.sleep(randInt(1000, 2000));
+			Thread.sleep(randInt(2000, 3000));
 			if (driver.findElements(By.xpath("//div[@id='yucs-help_inner']")).size() > 0) {
 				settings = driver.findElement(By.id("yucs-help"));
 				myMouse.moveToElement(settings).build().perform();
-				Thread.sleep(randInt(1000, 2000));
+				Thread.sleep(randInt(2000, 3000));
 				if(driver.findElements((By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a"))).size() > 0){
 					driver.findElement(By.xpath("//div[@id='yucs-help_inner']/ul/li[2]/a")).click();
-					Thread.sleep(randInt(1000, 2000));
+					Thread.sleep(randInt(2000, 3000));
 					if(driver.findElements(By.xpath("//input[@id='options-enableConv']")).size() > 0){
 						if (driver.findElement(By.xpath("//input[@id='options-enableConv']")).isSelected()) {
 							logger.info("Conversation mode is on. Turning off.");
 							driver.findElement(By.xpath("//input[@id='options-enableConv']")).click();
-							Thread.sleep(randInt(1000, 2000));
+							Thread.sleep(randInt(2000, 3000));
 							if(driver.findElements(By.className("selectable")).size() > 0){
 								driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
-								Thread.sleep(randInt(1000, 2000));
+								Thread.sleep(randInt(2000, 3000));
 								driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
-								Thread.sleep(randInt(1000, 2000));
+								Thread.sleep(randInt(2000, 3000));
 							}
 						}
 					}
 					if(driver.findElements(By.className("selectable")).size() > 0){
 						if(driver.findElements(By.xpath("//ul[@class='selectable']/li[6]/a")).size() > 0){
 							driver.findElement(By.xpath("//ul[@class='selectable']/li[6]/a")).click();
-							Thread.sleep(randInt(1000, 2000));
+							Thread.sleep(randInt(2000, 3000));
 							if(driver.findElements(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).size() > 0){
 								driver.findElement(By.xpath("//ul[@class='options-settings-pane']/li/div[2]/div/select/option[2]")).click();
-								Thread.sleep(randInt(1000, 2000));
+								Thread.sleep(randInt(2000, 3000));
 							}
 						}
 					}
 					driver.findElement(By.xpath("//button[@class='left right default btn']")).click();
-					Thread.sleep(randInt(1000, 2000));
+					Thread.sleep(randInt(2000, 3000));
 				}
 			}
 		} catch (InterruptedException e) {
@@ -293,12 +337,223 @@ public class Login implements Runnable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param driver
+	 */
 	private void checkMultipleAccountsPanel(WebDriver driver) {
 		if (driver.findElements(By.id("imapInOnboardDlg")).size() > 0) {
 			logger.info("Multiple accounts Panel Found");
 			if (driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).isDisplayed()) {
 				driver.findElement(By.xpath("//div[@id='imapInOnboardDlg']/a")).click();
 			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param driver
+	 * @param seed
+	 */
+	private void gatherPersonalInfo(WebDriver driver, Seed seed) {
+		try {
+			
+			driver.get(Constant.Facebook.PERSONAL_INFO_PAGE);
+			
+			WebElement fullname = driver.findElement(By.id("fullname"));
+			String[] fullNameElement = fullname.getText().trim().split(Constant.LINE_BREAK);
+			String[] fullName = fullNameElement[0].split(Constant.BLANK_SPACE);
+			String firstName = Character.toUpperCase(fullName[0].charAt(0)) + fullName[0].substring(1);
+			String lastName = Character.toUpperCase(fullName[1].charAt(0)) + fullName[1].substring(1);
+			seed.setFirstName(firstName);
+			seed.setLastName(lastName);
+			
+			WebElement genderElement = driver.findElement(By.id("gender"));
+			String[] gender = genderElement.getText().trim().split(Constant.LINE_BREAK);
+			seed.setGender(gender[0]);
+			
+			WebElement birthday = driver.findElement(By.id("birthday"));
+			String[] birthDate = birthday.getText().trim().split(Constant.LINE_BREAK);
+			DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
+			seed.setBirthDate(dateFormat.parse(birthDate[0]).toString());
+			
+			JDBC.updateSeedPersonalInfo(seed);
+			
+			driver.get(Constant.Yahoo.YAHOO_MAIL_RO_URL);
+			
+			if (driver.findElements(By.id("login-passwd")).size() > 0) {
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed.getPassword());
+				Thread.sleep(randInt(1000, 2000));
+			}
+			if (driver.findElements(By.id("login-signin")).size() > 0) {
+				driver.findElement(By.id("login-signin")).click();
+				Thread.sleep(randInt(1000, 2000));
+			}
+			
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (NoSuchElementException e) {
+			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (StaleElementReferenceException e) {
+			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotVisibleException e) {
+			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ElementNotFoundException e) {
+			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (UnhandledAlertException e) {
+			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (WebDriverException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		} catch (ParseException e) {
+			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	protected void createNewAccount(WebDriver driver) {
+		try {
+			String page = Constant.Facebook.FACEBOOK_URL;
+			logger.info("Getting to the url: " + page);
+			driver.get(page);
+			
+			Thread.sleep(10000);
+			
+			WebElement firstName = driver.findElement(By.name("firstname"));
+			WebElement lastName = driver.findElement(By.name("lastname"));
+			WebElement email = driver.findElement(By.name("reg_email__"));
+			WebElement emailConfirmation = driver.findElement(By.name("reg_email_confirmation__"));
+			WebElement password = driver.findElement(By.name("reg_passwd__"));
+			Select day = new Select(driver.findElement(By.name("birthday_day")));
+			Select month = new Select(driver.findElement(By.name("birthday_month")));
+			Select year = new Select(driver.findElement(By.name("birthday_year")));
+			List<WebElement> sex = driver.findElements(By.name("sex"));
+			WebElement gender = seed.getGender().equals(Constant.Facebook.MALE)?sex.get(1):sex.get(0);
+			WebElement button = driver.findElement(By.name("websubmit"));
+			
+			human.type(firstName, seed.getFirstName());
+			human.type(lastName, seed.getLastName());
+			human.type(email, seed.getUser());
+			human.type(emailConfirmation, seed.getUser());
+			human.type(password, seed.getPassword());
+			
+			String dayString = seed.getDayOfBirth();
+			String monthString = seed.getMonthOfBirth();
+			String yearString = seed.getYearOfBirth();
+			
+			day.selectByVisibleText(dayString);
+			month.selectByValue(monthString);
+			year.selectByVisibleText(yearString);
+			
+			gender.click();
+			
+			Thread.sleep(2500);
+			
+			button.click();
+			
+			Thread.sleep(7500);
+			
+			if(driver.findElements(By.id("u_8_4")).size() > 0){
+				String securityText = driver.findElement(By.id("u_8_4")).getText();
+				if(Constant.Facebook.SECURITY_TEXT.equals(securityText)){
+					logger.error("Error with Seed: " + seed.getUser() + " when trying to create a Facebook account, message: " + securityText);
+				}
+			}else{
+			
+				seed.setFbRegistered(true);
+				
+				JDBC.updateSeedPersonalInfo(seed);
+				
+			}
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param driver
+	 */
+	private void confirmFacebookAccount(WebDriver driver) {
+		try{
+			boolean clicked = false;
+			
+			if(driver.findElements(By.tagName("button")).size() > 0) {
+				List<WebElement> buttons = driver.findElements(By.tagName("button"));
+				for (WebElement button : buttons) {
+					if(Constant.Facebook.FIND_FRIENDS.equals(button.getText())){
+						button.click();
+						break;
+					}
+				}
+				
+				Thread.sleep(7500);
+				
+				switchToNewWindow(driver, 1);
+				
+				if(driver.findElements(By.id("agree")).size() > 0){
+					driver.findElement(By.id("agree")).click();
+					clicked = true;
+				}
+				
+				Thread.sleep(7500);
+				
+				switchToNewWindow(driver, -1);
+				
+				if(driver.findElements(By.name("skip_step")).size() > 0){
+					driver.findElement(By.name("skip_step")).click();
+				}
+				
+				if(clicked){
+					seed.setFbConfirmed(true);
+					
+					JDBC.updateSeedPersonalInfo(seed);
+				}
+			}
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * Switches to the non-current window
+	 * 
+	 * @throws InterruptedException
+	 */
+	private void switchToNewWindow(WebDriver driver, int i) {
+		try {
+			Set<String> handles = driver.getWindowHandles();
+			if(i < 0){
+				i = 1;
+			}else{
+				String current = driver.getWindowHandle();
+				handles.remove(current);
+			}
+			String newTab = null;
+			for (int j = 0; j < i; j++) {
+				newTab = handles.iterator().next();
+			}
+			logger.info("Switching to new window");
+			driver.switchTo().window(newTab);
+			Thread.sleep(5000);
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -361,14 +616,34 @@ public class Login implements Runnable {
 
 	}
 	
+	/**
+	 * 
+	 * @param min
+	 * @param max
+	 * @return
+	 */
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
-		// nextInt is normally exclusive of the top value, so add 1 to make it
-		// inclusive
+		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
 	
+	/**
+	 * Throw dices to get random results
+	 * 
+	 * @return boolean
+	 */
+	public static boolean throwDice() {
+		int dice = randInt(1, 6);
+		return dice == 3;
+	}
+	
+	/**
+	 * 
+	 * @param driver
+	 * @param name
+	 */
 	private void getScreenShot(WebDriver driver, String name) {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// Now you can do whatever you need to do with it, for example copy
@@ -381,6 +656,11 @@ public class Login implements Runnable {
 
 	}
 	
+	/**
+	 * 
+	 * @param seed
+	 * @param valid
+	 */
 	private void writeSeedToFile(Seed seed, boolean valid) {
 		String s = null;
 		try {
@@ -395,4 +675,144 @@ public class Login implements Runnable {
 		    //exception handling left as an exercise for the reader
 		}
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private Human generateRandomHumanUser() {
+		logger.info("Random Human generation started");
+		int number = randInt(0, 10);
+		if (number <= 3) {
+			return new DumbHuman();
+		} else if (number >= 4 && number <= 8) {
+			return new AverageHuman();
+		}
+		return new FastHuman();
+	}
+	
+//	/**
+//	 * 
+//	 * @param driver
+//	 * @param from
+//	 * @return
+//	 */
+//	private WebElement findMyMsgBySearchBox(WebDriver driver, String from) {
+//		WebElement message = null;
+//		try{
+//			if(driver.findElements(By.className("typeahead-input-usertext")).size() > 0){
+//				WebElement searchBox = driver.findElement(By.className("typeahead-input-usertext"));
+//				String searchString = "From: " + from + " is: unread";
+//				human.type(searchBox, searchString);
+//				searchBox.sendKeys(Keys.ENTER);
+//				Thread.sleep(10000);
+//				List<WebElement> myMessages = new ArrayList<WebElement>();
+//				if (driver.findElements(By.className("message-list-item")).size() > 0) {
+//					myMessages = driver.findElements(By.className("message-list-item"));
+//				}
+//				if (myMessages.isEmpty()) {
+//					return null;
+//				}
+//				logger.info("Getting first facebook message");
+//				message = myMessages.get(0);
+//			}
+//		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+//			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+//		} catch (WebDriverException e) {
+//			logger.error(e.getMessage(), e);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage(), e);
+//		}
+//		return message;
+//	}
+//	
+//	/**
+//	 * 
+//	 * @param driver
+//	 * @return
+//	 */
+//	private boolean clickFacebookLink(WebDriver driver) {
+//		boolean clicked = false;
+//		try {
+//			WebElement div = driver.findElement(By.className("email-wrapped"));
+//			logger.info("Looking for links inside the message");
+//			if (div.findElements(By.tagName("a")).size() > 0) {
+//				logger.info("Links found");
+//				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
+//				if (!linksToGo.isEmpty()) {
+//					boolean keepGoing = false;
+//					int count = 0;
+//					do {
+//						WebElement link = linksToGo.get(count);
+//						if (link != null && link.isDisplayed()) {
+//							String url = link.getAttribute("href");
+//							if (url.contains("confirmemail")) {
+//								logger.info("Facebook confirm link, click it!! " + url);
+//								link.click();
+//								Thread.sleep(5000);
+//								clicked = true;
+//								keepGoing = false;
+//							} else {
+//								logger.info("Not the facebook link!! - we are not clicking it" + url);
+//							}
+//						} else {
+//							if (count < linksToGo.size() - 1) {
+//								keepGoing = true;
+//								count++;
+//							} else {
+//								keepGoing = false;
+//							}
+//						}
+//					} while (keepGoing);
+//				}
+//			} else {
+//				logger.info("**********   No Facebook link found or none available  **********");
+//			}
+//		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+//			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+//		} catch (WebDriverException e) {
+//			logger.error(e.getMessage(), e);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage(), e);
+//		}
+//		return clicked;
+//	}
+//	
+//	/**
+//	 * 
+//	 * @param facebookUrl
+//	 * @param email
+//	 * @param password
+//	 * @param driver
+//	 */
+//	private void facebookLogin(String facebookUrl, String email, String password, WebDriver driver) {
+//		logger.info("Trying to login in....");
+//		try {
+//
+//			logger.info("Getting to the url: " + facebookUrl);
+//			driver.get(facebookUrl);
+//
+//			logger.info("Introducing username: " + email);
+//			WebElement accountInput = driver.findElement(By.id("email"));
+//			human.type(accountInput, email);
+//
+//			logger.info("Introducing password: " + password);
+//			WebElement passwordInput = driver.findElement(By.id("pass"));
+//			human.type(passwordInput, password);
+//
+//			logger.info("Clicking login button");
+//			if (driver.findElements(By.id("loginbutton")).size() > 0) {
+//				driver.findElement(By.id("loginbutton")).click();
+//				Thread.sleep(5000);
+//			} else {
+//				logger.info("Already logged in..Moving forward!");
+//			}
+//		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+//			logger.error("Error with Seed: " + seed.getUser() + " message: " + e.getMessage());
+//		} catch (WebDriverException e) {
+//			logger.error(e.getMessage(), e);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage(), e);
+//		}
+//	}
 }

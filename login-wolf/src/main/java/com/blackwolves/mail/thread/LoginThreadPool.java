@@ -42,12 +42,18 @@ public class LoginThreadPool {
 
 		if(Constant.VALIDATE.equals(args[0])){
 			
-			if(args.length > 1 && Constant.FEEDER.FILE.equals(args[1])){
-				processSeedsFromFile();
+			if(args.length > 1 && Constant.Feeder.FILE.equals(args[1])){
+				processSeedsFromFile(args);
 			}else{
-				processSeedsFromDB();
+				processSeedsFromDB(args);
 			}
+			
+		}else if(Constant.Facebook.FACEBOOK_NAME.equals(args[0])){
+			
+			processFacebookSeeds(args);
+			
 		}else{
+			
 			// arguments to test this part
 			//seeds.csv seeds_bun.csv 1
 			String inputFileName = args[0];
@@ -95,23 +101,74 @@ public class LoginThreadPool {
 			}
 		}
 	}
-
+	
 	/**
+	 * @param args 
 	 * 
 	 */
-	private static void processSeedsFromDB() {
+	private static void processFacebookSeeds(String[] args) {
 		ExecutorService executor;
 		List<Seed> finalSeeds;
-		finalSeeds = JDBC.get50NonValidatedSeeds();
-		
-//		String user = "auowusx@yahoo.com";
-//		String password = "3C*g%qsg2b4J3aQ";
-//		String fullSeed = user + "," + password;
-//		List<Seed> finalSeeds = new ArrayList<Seed>();
-//		Seed s = new Seed(user, password, fullSeed);
-//		finalSeeds.add(s);
+		boolean keepGoing = true;
+		do{
+			finalSeeds = JDBC.getNonRegisteredFacebookSeeds();
+			
+//			String user = "auowusx@yahoo.com";
+//			String password = "3C*g%qsg2b4J3aQ";
+//			String fullSeed = user + "," + password;
+//			finalSeeds = new ArrayList<Seed>();
+//			Seed s = new Seed(user, password, fullSeed);
+//			finalSeeds.add(s);
+			
+			
+			int size = finalSeeds.size();
+			
+			if(size>0){
+				logger.info("Final Seeds size: " + size);
+				executor = Executors.newFixedThreadPool(size);
+				
+				logger.info("Processing seeds before the for");
+				for (int i = 0; i < size; i++) {
+					Seed seed = finalSeeds.get(i);
+					MDC.put("logFileName", seed.getUser());
+					Login seeder = new Login(seed, logger, args[0]);
+					Runnable worker = seeder;
+					logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (size-i));
+					executor.execute(worker);
+				}
+				
+				if (executor != null) {
+					executor.shutdown();
+	
+					while (!executor.isTerminated()) {
+	
+					}
+					logger.info("Finished all threads");
+				}
+			}else{
+				keepGoing = false;
+			}
+		}while(keepGoing);
+	}
+
+	/**
+	 * @param args 
+	 * 
+	 */
+	private static void processSeedsFromDB(String[] args) {
+		ExecutorService executor;
+		List<Seed> finalSeeds;
 		
 		do{
+			finalSeeds = JDBC.get50NonValidatedSeeds();
+			
+//			String user = "auowusx@yahoo.com";
+//			String password = "3C*g%qsg2b4J3aQ";
+//			String fullSeed = user + "," + password;
+//			finalSeeds = new ArrayList<Seed>();
+//			Seed s = new Seed(user, password, fullSeed);
+//			finalSeeds.add(s);
+			
 			int size = finalSeeds.size();
 			logger.info("Final Seeds size: " + size);
 			executor = Executors.newFixedThreadPool(size);
@@ -120,7 +177,7 @@ public class LoginThreadPool {
 			for (int i = 0; i < size; i++) {
 				Seed seed = finalSeeds.get(i);
 				MDC.put("logFileName", seed.getUser());
-				Login seeder = new Login(seed, logger);
+				Login seeder = new Login(seed, logger, args[0]);
 				Runnable worker = seeder;
 				logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (size-i));
 				executor.execute(worker);
@@ -139,17 +196,17 @@ public class LoginThreadPool {
 	}
 
 	/**
+	 * @param args 
 	 * 
 	 */
-	private static void processSeedsFromFile() {
+	private static void processSeedsFromFile(String[] args) {
 		ExecutorService executor;
-		List<Seed> finalSeeds;
-		finalSeeds = getSeedsList("final_seeds.txt");
+		List<Seed> finalSeeds = getSeedsList("final_seeds.txt");
 		
 //		String user = "auowusx@yahoo.com";
 //		String password = "3C*g%qsg2b4J3aQ";
 //		String fullSeed = user + "," + password;
-//		List<Seed> finalSeeds = new ArrayList<Seed>();
+//		finalSeeds = new ArrayList<Seed>();
 //		Seed s = new Seed(user, password, fullSeed);
 //		finalSeeds.add(s);
 		
@@ -163,7 +220,7 @@ public class LoginThreadPool {
 			for (int j = 0; j < jSize; j++, i++) {
 				Seed seed = finalSeeds.get(i);
 				MDC.put("logFileName", seed.getUser());
-				Login seeder = new Login(seed, logger);
+				Login seeder = new Login(seed, logger, args[0]);
 				Runnable worker = seeder;
 				logger.info("Executing thread: " + j + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (seedsSize-i));
 				executor.execute(worker);
@@ -292,7 +349,7 @@ public class LoginThreadPool {
 	 * @param fileName
 	 * @return
 	 */
-	public static List<String[]> generateSeedsList(String fileName) {
+	private static List<String[]> generateSeedsList(String fileName) {
 		List<String[]> seeds = new ArrayList<String[]>();
 		try {
 			CSVReader seedsReader = new CSVReader(new FileReader(Constant.ROUTE + fileName));

@@ -1,18 +1,22 @@
-package com.blackwolves.mail;
-
-import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 
- * @author gastondapice
+ */
+package com.blackwolves.behavior;
+
+import org.openqa.selenium.WebElement;
+
+import com.blackwolves.mail.Login;
+
+/**
+ * @author danigrane
  *
  */
-public class Human {
+public class AverageHuman extends Human {
 	
-	public static final Logger logger = LoggerFactory.getLogger(Human.class);
+	public AverageHuman() {
+	}
 
+	@Override
 	public void type(WebElement input, String string) {
 		char[] charArray = string.toCharArray();
 		for (int i = 0; i < charArray.length; i++) {
@@ -26,5 +30,5 @@ public class Human {
 			}
 		}
 	}
-	
+
 }

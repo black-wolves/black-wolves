@@ -2,6 +2,8 @@ package com.blackwolves.mail;
 
 import java.sql.Timestamp;
 
+import com.blackwolves.mail.util.Constant;
+
 /**
  * @author gastondapice
  *
@@ -23,7 +25,7 @@ public class Seed {
 	private String firstName;
 	private String lastName;
 	private String gender;
-	private Timestamp birthDate;
+	private String birthDate;
 	private boolean validated;
 	private boolean fbRegistered;
 	private boolean fbConfirmed;
@@ -82,6 +84,20 @@ public class Seed {
 		this.fullSeed = fullSeed;
 		this.feederUpdatedDate = feederUpdatedDate;
 		this.seederUpdatedDate = seederUpdatedDate;
+		this.subscription = subscription;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @param fullSeed
+	 * @param subscription
+	 */
+	public Seed(String user, String password, String fullSeed, String subscription) {
+		this.user = user;
+		this.password = password;
+		this.fullSeed = fullSeed;
 		this.subscription = subscription;
 	}
 
@@ -298,14 +314,14 @@ public class Seed {
 	/**
 	 * @return the birthDate
 	 */
-	public Timestamp getBirthDate() {
+	public String getBirthDate() {
 		return birthDate;
 	}
 
 	/**
 	 * @param birthDate the birthDate to set
 	 */
-	public void setBirthDate(Timestamp birthDate) {
+	public void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
 
@@ -349,6 +365,21 @@ public class Seed {
 	 */
 	public void setFbConfirmed(boolean fbConfirmed) {
 		this.fbConfirmed = fbConfirmed;
+	}
+	
+	public String getDayOfBirth(){
+		String[] s = getBirthDate().split(Constant.DASH);
+		return s[2];
+	}
+	
+	public String getMonthOfBirth(){
+		String[] s = getBirthDate().split(Constant.DASH);
+		return s[1];
+	}
+	
+	public String getYearOfBirth(){
+		String[] s = getBirthDate().split(Constant.DASH);
+		return s[0];
 	}
 	
 }
