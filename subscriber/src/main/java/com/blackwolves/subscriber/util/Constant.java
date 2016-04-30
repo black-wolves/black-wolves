@@ -2,11 +2,15 @@ package com.blackwolves.subscriber.util;
 
 public interface Constant {
 
+	public static final String HOME_BLACKWOLVES_LOGS = "/home/blackwolves/logs/";
 	public static final String IMAGES_PATH = "/var/www/screenshots/";
+	public static final String ROUTE_LOGS_ERROR = "/var/www/logs/errors/";
 	public static final String ROUTE = "/var/www/";
 	public static final String EMPTY_STRING = "";
-	public static final String HOME_BLACKWOLVES_LOGS = "/home/blackwolves/logs/";
 	public static final String COMMA = ",";
+	public static final String DASH = "-";
+	public static final String BLANK_SPACE = " ";
+	public static final String LINE_BREAK = "\n";
 	
 	public interface JDBC{
 		final String SEEDER_DB = "SEEDER_DB";

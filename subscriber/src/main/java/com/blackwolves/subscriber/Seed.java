@@ -1,7 +1,8 @@
 package com.blackwolves.subscriber;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
+
+import com.blackwolves.subscriber.util.Constant;
 
 /**
  * @author gastondapice
@@ -24,7 +25,7 @@ public class Seed {
 	private String firstName;
 	private String lastName;
 	private String gender;
-	private Timestamp birthDate;
+	private String birthDate;
 	private boolean validated;
 	private boolean fbRegistered;
 	private boolean fbConfirmed;
@@ -313,14 +314,14 @@ public class Seed {
 	/**
 	 * @return the birthDate
 	 */
-	public Timestamp getBirthDate() {
+	public String getBirthDate() {
 		return birthDate;
 	}
 
 	/**
 	 * @param birthDate the birthDate to set
 	 */
-	public void setBirthDate(Timestamp birthDate) {
+	public void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
 
@@ -367,24 +368,18 @@ public class Seed {
 	}
 	
 	public String getDayOfBirth(){
-		long timestamp = getBirthDate().getTime();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		return String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+		String[] s = getBirthDate().split(Constant.DASH);
+		return s[2];
 	}
 	
 	public String getMonthOfBirth(){
-		long timestamp = getBirthDate().getTime();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		return String.valueOf(cal.get(Calendar.MONTH));
+		String[] s = getBirthDate().split(Constant.DASH);
+		return s[1];
 	}
 	
 	public String getYearOfBirth(){
-		long timestamp = getBirthDate().getTime();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		return String.valueOf(cal.get(Calendar.YEAR));
+		String[] s = getBirthDate().split(Constant.DASH);
+		return s[0];
 	}
 	
 }
