@@ -109,9 +109,12 @@ public class Login implements Runnable {
 			}
 			
 			if(Constant.Facebook.FACEBOOK_NAME.equals(action)){
-				createNewAccount(driver);
 				
-				confirmFacebookAccount(driver);
+				boolean created = createNewAccount(driver);
+				
+				if(created){
+					confirmFacebookAccount(driver);
+				}
 			}
 
 			logger.info("Finished!!");
@@ -416,7 +419,8 @@ public class Login implements Runnable {
 	/**
 	 * 
 	 */
-	protected void createNewAccount(WebDriver driver) {
+	private boolean createNewAccount(WebDriver driver) {
+		boolean created = false;
 		try {
 			String page = Constant.Facebook.FACEBOOK_URL;
 			logger.info("Getting to the url: " + page);
@@ -465,6 +469,8 @@ public class Login implements Runnable {
 				}
 			}else{
 			
+				created = true;
+				
 				seed.setFbRegistered(true);
 				
 				JDBC.updateSeedPersonalInfo(seed);
@@ -478,6 +484,7 @@ public class Login implements Runnable {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
+		return created;
 	}
 	
 	/**
@@ -675,7 +682,7 @@ public class Login implements Runnable {
 				Files.write(Paths.get(Constant.ROUTE + "wolf_invalid_seeds.txt"), s.getBytes(), StandardOpenOption.APPEND);
 			}
 		}catch (IOException e) {
-		    //exception handling left as an exercise for the reader
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
