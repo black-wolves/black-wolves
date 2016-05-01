@@ -127,13 +127,12 @@ public class LoginThreadPool {
 				logger.info("Final Seeds size: " + size);
 				executor = Executors.newFixedThreadPool(size);
 				
-				logger.info("Processing seeds before the for");
 				for (int i = 0; i < size; i++) {
 					Seed seed = finalSeeds.get(i);
 					MDC.put("logFileName", seed.getUser());
 					Login seeder = new Login(seed, logger, args[0]);
 					Runnable worker = seeder;
-					logger.info("Executing thread: " + i + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (size-i));
+					logger.info("Executing thread: " + (i+1) + " with seed: " + seed.getUser() + " and password " + seed.getPassword() + " remaining seeds: " + (size-(i+1)));
 					executor.execute(worker);
 				}
 				
