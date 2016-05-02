@@ -384,17 +384,24 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement continueBtn = driver.findElement(By.className("continue-button"));
-			continueBtn.click();
+			Thread.sleep(5000);
 			
-			WebElement email = driver.findElement(By.id("Email"));
-			email.clear();
-			email.sendKeys(seed.getUser());
-			email.sendKeys(Keys.RETURN);
+			if(driver.findElements(By.className("continue-button")).size() > 0){
+				WebElement continueBtn = driver.findElement(By.className("continue-button"));
+				continueBtn.click();
+			}
+			
+			if(driver.findElements(By.id("Email")).size() > 0){
+				WebElement email = driver.findElement(By.id("Email"));
+				email.clear();
+				email.sendKeys(seed.getUser());
+				email.sendKeys(Keys.RETURN);
+				
+				seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			}
 			
 			Thread.sleep(5000);
 			
-			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
 			
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
@@ -447,14 +454,24 @@ public class Subscriber implements Runnable {
 			logger.info("Subscribing " + seed.getUser() + " to " + site);
 			driver.get(url);
 			
-			WebElement email = driver.findElement(By.name("email_1"));
-			email.clear();
-			email.sendKeys(seed.getUser());
-			email.submit();
+			scrollDown(10000, driver);
+			
+			if(driver.findElements(By.name("input_1")).size() > 0){
+				WebElement email = driver.findElement(By.name("input_1"));
+				email.clear();
+				email.sendKeys(seed.getUser());
+				email.submit();
+			}
 			
 			Thread.sleep(5000);
 			
-			seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+			if(driver.findElements(By.tagName("h1")).size() > 0){
+				String h1 = driver.findElement(By.tagName("h1")).getText();
+				if(!"Your access to this site has been limited".equals(h1)){
+					seed.setSubscription(seed.getSubscription().concat(site + Constant.COMMA));
+				}
+			}
+			
 			
 		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
 			logger.error("Error with Seed: " + seed.getUser() + " in " + url);
@@ -979,7 +996,7 @@ public class Subscriber implements Runnable {
 			email.clear();
 			email.sendKeys(seed.getUser());
 			
-			scrollDown(100, driver);
+			scrollDown(150, driver);
 			
 			WebElement checkbox = driver.findElement(By.id("edit-privacy-checkbox"));
 			checkbox.click();
