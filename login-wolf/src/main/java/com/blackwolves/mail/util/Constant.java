@@ -32,6 +32,7 @@ public interface Constant {
 		final String CONTENT_TRANSFER_ENCODING = "7bit";
 	
 		final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com";
+		final String PERSONAL_INFO_PAGE = "https://login.yahoo.com/account/personalinfo?.intl=ro&.lang=en-US&.done=https://ro-mg42.mail.yahoo.com/neo/launch%3f.rand=4fm77darlq323&.src=cdgm";
 		final String CONTINUE = "Continue";
 		final String Next = "Next";
 		final String ERROR_TEXT_1 = "The email and password you entered";
@@ -87,7 +88,6 @@ public interface Constant {
 		final String CREATE = "create";
 		final String MALE = "male";
 		final String FACEBOOK_NAME = "facebook";
-		final String PERSONAL_INFO_PAGE = "https://login.yahoo.com/account/personalinfo?.intl=ro&.lang=en-US&.done=https://ro-mg42.mail.yahoo.com/neo/launch%3f.rand=4fm77darlq323&.src=cdgm";
 		final String FIND_FRIENDS = "Find Friends";
 		final String SECURITY_TEXT = "Please Complete a Security Check";
 	}
@@ -103,7 +103,7 @@ public interface Constant {
 	public interface Confirmation{
 		final String Facebook = "confirmemail";
 		final String DanielPink = "confirm";
-		final String AirBerlin = "news.airberlin.com";
+		final String AirBerlin = "Confirm & edit profile";
 	}
 	
 }

@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -31,6 +34,7 @@ import org.slf4j.Logger;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.seeder.util.Constant;
+import com.blackwolves.seeder.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -77,6 +81,16 @@ public abstract class YahooRunnable {
 	 * @param logger
 	 */
 	public void runProcess() {
+		
+		if(seed.getBirthDate() == null){
+			
+			clickAllNotSapm(driver);
+			
+			gatherPersonalInfo(driver, seed);
+			
+			
+		}
+		
 		processInbox(seed);
 		if (Math.random() <= 0.1) {
 			processSpam(seed);
@@ -376,6 +390,99 @@ public abstract class YahooRunnable {
 			return true;
 		} catch (WebDriverException e) {
 			return false;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param driver
+	 * @param seed
+	 */
+	private void gatherPersonalInfo(WebDriver driver, Seed seed) {
+		try {
+			logger.info("Gathering personal information");
+			driver.get(Constant.PERSONAL_INFO_PAGE);
+			
+			WebElement fullname = driver.findElement(By.id("fullname"));
+			String[] fullNameElement = fullname.getText().trim().split(Constant.LINE_BREAK);
+			String[] fullName = fullNameElement[0].split(Constant.BLANK_SPACE);
+			String firstName = Character.toUpperCase(fullName[0].charAt(0)) + fullName[0].substring(1);
+			String lastName = Character.toUpperCase(fullName[1].charAt(0)) + fullName[1].substring(1);
+			seed.setFirstName(firstName);
+			seed.setLastName(lastName);
+			
+			WebElement genderElement = driver.findElement(By.id("gender"));
+			String[] gender = genderElement.getText().trim().split(Constant.LINE_BREAK);
+			seed.setGender(gender[0]);
+			
+			WebElement birthday = driver.findElement(By.id("birthday"));
+			String[] birthDate = birthday.getText().trim().split(Constant.LINE_BREAK);
+			DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			Date date = dateFormat.parse(birthDate[0]);
+			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+			seed.setBirthDate(df.format(date));
+			
+			JDBC.updateSeedPersonalInfo(seed);
+			logger.info("Personal information saved in the database");
+			
+			driver.get(Constant.YAHOO_MAIL_RO_URL);
+			
+			if (driver.findElements(By.id("login-passwd")).size() > 0) {
+				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+				human.type(passwordInput, seed.getPassword());
+			}
+			if (driver.findElements(By.id("login-signin")).size() > 0) {
+				driver.findElement(By.id("login-signin")).click();
+				Thread.sleep(5000);
+			}
+			
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param driver
+	 */
+	private void clickAllNotSapm(WebDriver driver) {
+		try {
+			logger.info("Checking spam folder");
+			if (driver.findElements(By.id("spam-label")).size() > 0) {
+				WebElement spam = driver.findElement(By.id("spam-label"));
+				logger.info("Clicking spam folder");
+				spam.click();
+				Thread.sleep(5000);
+				if (driver.findElements(By.className("list-view-item")).size() > 0) {
+					logger.info("There are emails in the spam folder");
+					if(driver.findElements(By.xpath("//span[@id='btn-ml-cbox']/label/input")).size() > 0){
+						WebElement checkbox = driver.findElement(By.xpath("//span[@id='btn-ml-cbox']/label/input"));
+						if (!checkbox.isSelected()) {
+							logger.info("Checking not spam checkbox");
+							checkbox.click();
+							Thread.sleep(2500);
+						}
+						if(driver.findElements(By.id("btn-not-spam")).size() > 0){
+							WebElement notSpam = driver.findElement(By.id("btn-not-spam"));
+							logger.info("Clicking NOT SPAM button");
+							notSpam.click();
+							Thread.sleep(5000);
+						}
+					}
+				}else{
+					logger.info("There are NO emails in the spam folder");
+				}
+			}
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 

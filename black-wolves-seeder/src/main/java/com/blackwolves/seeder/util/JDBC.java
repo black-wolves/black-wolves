@@ -467,4 +467,85 @@ public class JDBC {
 		}
 		return Constant.EMPTY_STRING;
 	}
+	
+	/**
+	 * 
+	 * @param seed
+	 */
+	public static void updateSeedPersonalInfo(Seed seed) {
+		Connection dbConnection = null;
+		Statement statement = null;
+		
+		String updateSQL = "UPDATE FEEDER"
+				+ " SET VALIDATED = 1"
+				+ firstName(seed)
+				+ lastName(seed)
+				+ gender(seed)
+				+ birthDate(seed)
+				+ " WHERE SEED = '" + seed.getUser() + "'";
+
+		try {
+			dbConnection = getDBConnection();
+			statement = dbConnection.createStatement();
+
+			logger.info(updateSQL);
+
+			statement.execute(updateSQL);
+
+			logger.info("Seed updated to FEEDER table!");
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			closeStatementAndConnection(dbConnection, statement);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @return
+	 */
+	private static String firstName(Seed seed) {
+		if(seed.getFirstName()!=null){
+			return " , FIRST_NAME = '" + seed.getFirstName() + "'";
+		}
+		return Constant.EMPTY_STRING;
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @return
+	 */
+	private static String lastName(Seed seed) {
+		if(seed.getLastName()!=null){
+			return " , LAST_NAME = '" + seed.getLastName() + "'";
+		}
+		return Constant.EMPTY_STRING;
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @return
+	 */
+	private static String gender(Seed seed) {
+		if(seed.getGender()!=null){
+			return " , GENDER = '" + seed.getGender() + "'";
+		}
+		return Constant.EMPTY_STRING;
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @return
+	 */
+	private static String birthDate(Seed seed) {
+		if(seed.getBirthDate()!=null){
+			return " , BIRTH_DATE = '" + seed.getBirthDate() + "'";
+		}
+		return Constant.EMPTY_STRING;
+	}
 }

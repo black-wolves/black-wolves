@@ -18,6 +18,7 @@ import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -345,7 +346,7 @@ public class Login implements Runnable {
 	private void gatherPersonalInfo(WebDriver driver, Seed seed) {
 		try {
 			logger.info("Gathering personal information");
-			driver.get(Constant.Facebook.PERSONAL_INFO_PAGE);
+			driver.get(Constant.Yahoo.PERSONAL_INFO_PAGE);
 			
 			WebElement fullname = driver.findElement(By.id("fullname"));
 			String[] fullNameElement = fullname.getText().trim().split(Constant.LINE_BREAK);
@@ -515,6 +516,63 @@ public class Login implements Runnable {
 	}
 	
 	/**
+	 * 
+	 * @param driver
+	 */
+	private void searchAndConfirmAirBerlin(WebDriver driver) {
+		try{
+			if(seed.getSubscription().contains(Constant.Subscriber.AirBerlin)){
+				logger.info("Looking for airberlin confirmation email");
+				WebElement myMessage = findMyMsgBySearchBox(driver, Constant.Subscriber.AirBerlin_Search);
+				if(myMessage!=null){
+					myMessage.click();
+					Thread.sleep(5000);
+					
+					clickLink(driver, Constant.Confirmation.AirBerlin);
+					
+					switchToNewWindow(driver, 1);
+					
+					scrollDown(300, driver);
+					
+					List<WebElement> interests = driver.findElements(By.id("interests"));
+					for (WebElement interest : interests) {
+						interest.click();
+						Thread.sleep(500);
+					}
+					
+					List<WebElement> flaggeIds = driver.findElements(By.id("flaggeIDs"));
+					for (WebElement flagId : flaggeIds) {
+						if(Constant.Subscriber.AirBerlin_FlagValue.equals(flagId.getAttribute("value"))){
+							flagId.click();
+							Thread.sleep(500);
+							break;
+						}
+					}
+					if(driver.findElements(By.id("submitSubscribe")).size() > 0){
+						WebElement saveChanges = driver.findElement(By.id("submitSubscribe"));
+						saveChanges.click();
+						Thread.sleep(10000);
+					}
+					driver.close();
+					switchToNewWindow(driver, -1);
+				}
+				
+				if(driver.findElements(By.className("inbox-label")).size() > 0){
+					logger.info("Going back to inbox");
+					driver.findElement(By.className("inbox-label")).click();
+				}
+			}
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
+		} catch (WebDriverException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 
 	 * @param driver
 	 */
 	private void searchAndConfirmDanielPink(WebDriver driver) {
@@ -543,55 +601,6 @@ public class Login implements Runnable {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-	}
-
-	/**
-	 * @param driver
-	 */
-	private void searchAndConfirmAirBerlin(WebDriver driver) {
-		try{
-			if(seed.getSubscription().contains(Constant.Subscriber.AirBerlin)){
-				logger.info("Looking for airberlin confirmation email");
-				WebElement myMessage = findMyMsgBySearchBox(driver, Constant.Subscriber.AirBerlin_Search);
-				if(myMessage!=null){
-					myMessage.click();
-					Thread.sleep(5000);
-					clickLink(driver, Constant.Confirmation.AirBerlin);
-					switchToNewWindow(driver, 1);
-					List<WebElement> interests = driver.findElements(By.id("interests"));
-					for (WebElement interest : interests) {
-						interest.click();
-						Thread.sleep(500);
-					}
-					List<WebElement> flaggeIds = driver.findElements(By.id("flaggeIDs"));
-					for (WebElement flagId : flaggeIds) {
-						if(Constant.Subscriber.AirBerlin_FlagValue.equals(flagId.getAttribute("value"))){
-							flagId.click();
-							Thread.sleep(500);
-							break;
-						}
-					}
-					if(driver.findElements(By.id("submitSubscribe")).size() > 0){
-						WebElement saveChanges = driver.findElement(By.id("submitSubscribe"));
-						saveChanges.click();
-						Thread.sleep(10000);
-					}
-					driver.close();
-					switchToNewWindow(driver, -1);
-				}
-				
-				if(driver.findElements(By.className("inbox-label")).size() > 0){
-					logger.info("Going back to inbox");
-					driver.findElement(By.className("inbox-label")).click();
-				}
-			}
-	} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
-		logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
-	} catch (WebDriverException e) {
-		logger.error(e.getMessage(), e);
-	} catch (Exception e) {
-		logger.error(e.getMessage(), e);
-	}
 	}
 	
 	/**
@@ -644,36 +653,54 @@ public class Login implements Runnable {
 			if (div.findElements(By.tagName("a")).size() > 0) {
 				logger.info("Links found");
 				List<WebElement> linksToGo = div.findElements(By.tagName("a"));
-				if (!linksToGo.isEmpty()) {
-					boolean keepGoing = false;
-					int count = 0;
-					do {
+				boolean keepGoing = false;
+				int count = 0;
+				do {
+					try{
 						WebElement link = linksToGo.get(count);
 						if (link != null && link.isDisplayed()) {
-							String url = link.getAttribute("href");
-							if (url.contains(containing)) {
-								logger.info("Containing " + containing + " link, click it!! " + url);
+							String text = link.getText();
+							if(text!=null && !text.isEmpty() && text.contains(containing)){
+								logger.info("Containing " + containing + " link, click it!!");
 								link.click();
 								Thread.sleep(5000);
 								clicked = true;
 								keepGoing = false;
-							} else {
-								logger.info("Not the link we want!! - we are not clicking it" + url);
+							}else{
+								String url = link.getAttribute("href");
+								if (url.contains(containing)) {
+									logger.info("Containing " + containing + " link, click it!!");
+									link.click();
+									Thread.sleep(5000);
+									clicked = true;
+									keepGoing = false;
+								} else {
+									logger.info("Not the link we want!! - we are not clicking it");
+									keepGoing = true;
+								}
 							}
-						} else {
-							if (count < linksToGo.size() - 1) {
-								keepGoing = true;
-								count++;
-							} else {
-								keepGoing = false;
-							}
+						}else{
+							keepGoing = true;
 						}
-					} while (keepGoing);
-				}
+						
+						if (keepGoing && count < linksToGo.size() - 1) {
+							count++;
+						} else {
+							keepGoing = false;
+						}
+					} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+						logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
+					} catch (WebDriverException e) {
+						logger.error(e.getMessage(), e);
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+					
+				} while (keepGoing);
 			} else {
 				logger.info("**********   No Facebook link found or none available  **********");
 			}
-		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException e) {
 			logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
 		} catch (WebDriverException e) {
 			logger.error(e.getMessage(), e);
@@ -811,6 +838,16 @@ public class Login implements Runnable {
 		uas[8] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36";
 		return uas[randInt(0, 8)];
 
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param driver
+	 */
+	private void scrollDown(int x, WebDriver driver){
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("scroll(0, " + x + ");");
 	}
 	
 	/**
