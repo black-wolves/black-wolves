@@ -89,9 +89,9 @@ public class Subscriber implements Runnable {
 				subscribeToFetch(seed, Constant.TheFetch.siteUrl, Constant.TheFetch.siteName, driver);
 			}
 			
-			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheWashingtonPost.siteName)) {
-				subscribeToTheWashingtonPost(seed, Constant.TheWashingtonPost.siteUrl, Constant.TheWashingtonPost.siteName, driver);
-			}
+//			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheWashingtonPost.siteName)) {
+//				subscribeToTheWashingtonPost(seed, Constant.TheWashingtonPost.siteUrl, Constant.TheWashingtonPost.siteName, driver);
+//			}
 			
 			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TheGolfChannel.siteName)) {
 				subscribeToTheGolfChannel(seed, Constant.TheGolfChannel.siteUrl, Constant.TheGolfChannel.siteName, driver);
@@ -105,9 +105,9 @@ public class Subscriber implements Runnable {
 				subscribeToSkimm(seed, Constant.TheSkimm.siteUrl, Constant.TheSkimm.siteName, driver);
 			}
 			
-			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.ReDef.siteName)) {
-				subscribeToReDef(seed, Constant.ReDef.siteUrl, Constant.ReDef.siteName, driver);
-			}
+//			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.ReDef.siteName)) {
+//				subscribeToReDef(seed, Constant.ReDef.siteUrl, Constant.ReDef.siteName, driver);
+//			}
 			
 			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.DetroitDailyNews.siteName)) {
 				subscribeToDetroitDailyNews(seed, Constant.DetroitDailyNews.siteUrl, Constant.DetroitDailyNews.siteName, driver);
@@ -133,9 +133,9 @@ public class Subscriber implements Runnable {
 				subscribeToAirBerlin(seed, Constant.AirBerlin.siteUrl, Constant.AirBerlin.siteName, driver);
 			}
 			
-			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Virgin.siteName)) {
-				subscribeToVirgin(seed, Constant.Virgin.siteUrl, Constant.Virgin.siteName, driver);
-			}
+//			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.Virgin.siteName)) {
+//				subscribeToVirgin(seed, Constant.Virgin.siteUrl, Constant.Virgin.siteName, driver);
+//			}
 			
 			if (Math.random() <= 1 && !seed.getSubscription().contains(Constant.TomPeters.siteName)) {
 				subscribeToTomPeters(seed, Constant.TomPeters.siteUrl, Constant.TomPeters.siteName, driver);
