@@ -178,7 +178,7 @@ public class JDBC {
 	 * @param click
 	 * @throws SQLException
 	 */
-	public static void updateSeed(String user, int openCount, int clickCount, int spamCount, int notSpamCount ,boolean inUse){
+	public static void updateSeed(Seed seed, int openCount, int clickCount, int spamCount, int notSpamCount ,boolean inUse, boolean mailChanged){
 
 		Connection dbConnection = null;
 		Statement statement = null;
@@ -189,14 +189,24 @@ public class JDBC {
 		TimeZone tz = TimeZone.getTimeZone(Constant.JDBC.GMT_3);
 		formatter.setTimeZone(tz);
 
-		String updateSQL = "UPDATE FEEDER"
-				+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
-				+ " , IN_USE = "+ inUse
-				+ openSql(openCount)
-				+ clickSql(clickCount)
-				+ spamSql(spamCount)
-				+ notSpamSql(notSpamCount)
-				+ " WHERE SEED = '" + user + "'";
+		String updateSQL = Constant.EMPTY_STRING;
+		
+		if(mailChanged){
+			updateSQL = "UPDATE FEEDER"
+					+ " SET VALIDATED = 1"
+					+ mailChangeSQL(seed, mailChanged)
+					+ " WHERE SEED = '" + seed.getUser() + "'";
+		}else{
+			updateSQL = "UPDATE FEEDER"
+					+ " SET SEEDER_UPDATED_DATE = '" + formatter.format(now) + "'"
+					+ " , IN_USE = "+ inUse
+					+ openSql(openCount)
+					+ clickSql(clickCount)
+					+ spamSql(spamCount)
+					+ notSpamSql(notSpamCount)
+					+ " WHERE SEED = '" + seed.getUser() + "'";
+		}
+		
 
 		try {
 			dbConnection = getDBConnection();
@@ -213,6 +223,19 @@ public class JDBC {
 		} finally {
 			closeStatementAndConnection(dbConnection, statement);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param seed
+	 * @param mailChanged
+	 * @return
+	 */
+	private static String mailChangeSQL(Seed seed, boolean mailChanged) {
+		if(mailChanged){
+			return " , SEED = '" + seed.getNewUser() + "' , FULL_SEED = '" + seed.getFullSeed() + "'";
+		}
+		return Constant.EMPTY_STRING;
 	}
 
 	/**

@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.blackwolves.seeder.util.Constant;
+import com.blackwolves.seeder.util.JDBC;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 /**
@@ -42,6 +43,8 @@ public class Seeder implements Runnable {
 	private Seed seed;
 	
 	private String invalidMessage;
+	
+	private boolean mailChanged;
 
 	public Seeder() {
 		
@@ -56,13 +59,6 @@ public class Seeder implements Runnable {
 	 * 
 	 */
 	public void run() {
-		checkMail();
-	}
-
-	/**
-	 */
-	private void checkMail() {
-		
 //		seed.setUser("roderigocuffarouwr@yahoo.com");
 //		seed.setPassword("mqA9dhmzQZ");
 
@@ -76,6 +72,11 @@ public class Seeder implements Runnable {
 		handler = validateYahooVersion(driver, seed);
 
 		if (handler != null) {
+			
+			if(mailChanged){
+				JDBC.updateSeed(seed, 0, 0, 0, 0, true, true);
+			}
+			
 			handler.runProcess();
 		
 			logger.info("Finished!!");
@@ -87,59 +88,78 @@ public class Seeder implements Runnable {
 		driver.close();
 		driver.quit();
 	}
-	
+
 	/**
+	 * 
 	 * @param yahooUrl
 	 * @param seed
 	 * @param driver
-	 * @param session
-	 * @throws IOException
-	 * @throws InterruptedException
 	 */
 	private void yahooLogin(String yahooUrl, Seed seed, WebDriver driver) {
 		logger.info("Trying to login in....");
 		try {
 
 			driver.get(yahooUrl);
-			Thread.sleep(YahooRunnable.randInt(2500, 3500));
+			Thread.sleep(YahooRunnable.randInt(2000, 3000));
 
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed.getUser());
 
 			if(driver.findElements(By.id("login-signin")).size() > 0 && (Constant.CONTINUE.equals(driver.findElement(By.id("login-signin")).getText()) || Constant.Next.equals(driver.findElement(By.id("login-signin")).getText()))) {
 				driver.findElement(By.id("login-signin")).click();
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				
+				Thread.sleep(YahooRunnable.randInt(2000, 3000));
+				if(driver.findElements(By.id("mbr-login-error")).size() > 0){
+					if(!driver.findElement(By.id("mbr-login-error")).getText().isEmpty()){
+						return;
+					}
+				}
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				Thread.sleep(YahooRunnable.randInt(2000, 3000));
 				
 			}else if (driver.findElements(By.id("login-passwd")).size() > 0) {
 				WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 				human.type(passwordInput, seed.getPassword());
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
-				
+				Thread.sleep(YahooRunnable.randInt(2000, 3000));
 			}
 			if (driver.findElements(By.id("login-signin")).size() > 0) {
 				driver.findElement(By.id("login-signin")).click();
-				Thread.sleep(YahooRunnable.randInt(2500, 3500));
+				Thread.sleep(YahooRunnable.randInt(2000, 3000));
+				if(driver.findElements(By.id("mbr-login-error")).size() > 0){
+					if(!driver.findElement(By.id("mbr-login-error")).getText().isEmpty()){
+						return;
+					}
+				}
+				if (driver.findElements(By.id("login-signin")).size() > 0) {
+					WebElement passwordInput = driver.findElement(By.id("login-passwd"));
+					human.type(passwordInput, seed.getPassword());
+					Thread.sleep(YahooRunnable.randInt(2000, 3000));
+				}
+			}
+			if (driver.findElements(By.id("login-signin")).size() > 0) {
+				driver.findElement(By.id("login-signin")).click();
+				Thread.sleep(YahooRunnable.randInt(2000, 3000));
 			} else {
 				logger.info("Already logged in..Moving forward!");
 			}
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-		} catch (NoSuchElementException e) {
-			logger.error("NoSuchElementException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
-		} catch (StaleElementReferenceException e) {
-			logger.error("StaleElementReferenceException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
-		} catch (ElementNotVisibleException e) {
-			logger.error("ElementNotVisibleException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
-		} catch (ElementNotFoundException e) {
-			logger.error("ElementNotFoundException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " ", e); 
-		} catch (UnhandledAlertException e) {
-			logger.error("UnhandledAlertException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			if (driver.findElements(By.id("IAgreeBtnNew")).size() > 0) {
+				mailChanged = true;
+				String newUser = seed.getUser();
+				if (driver.findElements(By.id("IAgreeBtnNew")).size() > 0) {
+					newUser = driver.findElement(By.id("ymemformfield")).getText();
+				}
+				seed.setNewUser(newUser);
+				String newFullSeed = seed.getNewUser() + "," + seed.getPassword();
+				seed.setFullSeed(newFullSeed);
+				driver.findElement(By.id("IAgreeBtnNew")).click();
+				Thread.sleep(YahooRunnable.randInt(2000, 3000));
+			}
+		} catch (NoSuchElementException | ElementNotVisibleException | ElementNotFoundException | StaleElementReferenceException | UnhandledAlertException | InterruptedException e) {
+			logger.error("Error with seed: " + seed.getUser() + " with password: " + seed.getPassword() + " message: " + e.getMessage());
 		} catch (WebDriverException e) {
-			logger.error("WebDriverException for seed: " + seed.getUser() + " with password: " + seed.getPassword() + " " + e.getMessage() + " " , e);
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 

@@ -132,7 +132,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 								Thread.sleep(randInt(2500, 3500));
 
 								if (opened) {
-									JDBC.updateSeed(seed.getUser(), 1, clicked ? 1 : 0, spam ? 1 : 0, 0, true);
+									JDBC.updateSeed(seed, 1, clicked ? 1 : 0, spam ? 1 : 0, 0, true, false);
 								}
 
 								archiveMsg();
@@ -189,7 +189,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 			if (validateSpamFolder()) {
 				if (normalNotSpam()) {
 					logger.info("Msg found adding to NOT_SPAM");
-					JDBC.updateSeed(seed.getUser(), 1, 0, 0, 1, false);
+					JDBC.updateSeed(seed, 1, 0, 0, 1, false, false);
 				} else {
 					logger.info("Msg not found in SPAM.");
 				}
