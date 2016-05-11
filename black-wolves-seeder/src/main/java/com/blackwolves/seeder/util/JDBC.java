@@ -60,7 +60,7 @@ public class JDBC {
 			statement = dbConnection.createStatement();
 			
 			String selectSQL = "SELECT * FROM "
-					+ "(SELECT * FROM FEEDER WHERE FEEDER_UPDATED_DATE IS NOT NULL AND LOGGED_IN = 0 order by FEEDER_UPDATED_DATE DESC) x "
+					+ "(SELECT * FROM FEEDER WHERE FEEDER_UPDATED_DATE IS NOT NULL  order by FEEDER_UPDATED_DATE DESC) x "
 					+ "ORDER BY RAND() LIMIT 40";
 			
 //			String selectSQL =  "SELECT * FROM FEEDER  where SEED='voxackkhzzc@yahoo.com'";
