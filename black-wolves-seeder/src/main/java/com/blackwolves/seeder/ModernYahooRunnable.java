@@ -83,7 +83,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
 //							currentMsg = findMessage(inboxMsgs, Constant.FROM.YAHOO);
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.POLITICA);
+							currentMsg = findMessage(inboxMsgs, Constant.FROM.NYTIMES);
 							if (currentMsg != null) {
 //								logger.info(" #########  MAIL "+ Constant.FROM.YAHOO +" FOUND AT INBOX ##############");
 								logger.info(" #########  MAIL "+ Constant.FROM.POLITICA +" FOUND AT INBOX ##############");
@@ -112,7 +112,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.POLITICA)) {
+								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.NYTIMES)) {
 									opened = true;
 									if (Math.random() <= 0.2) {
 										clickShowImages("show-text");

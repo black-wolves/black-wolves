@@ -86,7 +86,7 @@ public interface Constant {
 		final String ENTREPRENEUR = "Entrepreneur";
 		final String SPAM = "Golfsmith";
 		final String JERRY = "Jerry Seinfeld";
-		final String NYTIMES = "NYTimes. com";
+		final String NYTIMES = "NYTimes";
 		final String YAHOO = "Yahoo";
 		final String LGE = "Experts";
 		final String POLITICA = "Politica";
