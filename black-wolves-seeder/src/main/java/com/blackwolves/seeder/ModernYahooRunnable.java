@@ -1,6 +1,7 @@
 package com.blackwolves.seeder;
 
 import java.util.List;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -82,11 +83,10 @@ public class ModernYahooRunnable extends YahooRunnable {
 						currentMsg = null;
 						// Looking for MyMessage
 						if (findMyMessage() && !foundMyMsg) {
-							currentMsg = findMessage(inboxMsgs, Constant.FROM.YAHOO);
-//							currentMsg = findMessage(inboxMsgs, Constant.FROM.POLITICA);
+							String from = chooseFrom();
+							currentMsg = findMessage(inboxMsgs, from);
 							if (currentMsg != null) {
-								logger.info(" #########  MAIL "+ Constant.FROM.YAHOO +" FOUND AT INBOX ##############");
-//								logger.info(" #########  MAIL "+ Constant.FROM.POLITICA +" FOUND AT INBOX ##############");
+								logger.info(" #########  MAIL " + from + " FOUND AT INBOX ##############");
 								foundMyMsg = true;
 							}
 
@@ -184,6 +184,22 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private String chooseFrom() {
+		Random random = new Random();
+
+		if(random.nextBoolean()){
+			return Constant.FROM.POLITICA;
+		}
+		return Constant.FROM.YAHOO;
+	}
+
+	/**
+	 * 
+	 */
 	public void processSpam(Seed seed) {
 		logger.info("Processing spam....");
 		try {
