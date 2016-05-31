@@ -89,10 +89,9 @@ public interface Constant {
 		final String NYTIMES = "NYTimes";
 		final String YAHOO = "Yahoo";
 		final String LGE = "Experts";
-		final String POLITICA = "Politica";
+		final String LA_POLITICA_HOY = "Politica";
 		final String HARP = "Harp";
-
-		final String LA_POLITICA_HOY = "La Politica Hoy";
+		final String ELECTION_TODAY = "Election";
 
 
 		

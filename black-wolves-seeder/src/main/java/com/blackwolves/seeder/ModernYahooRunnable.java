@@ -112,7 +112,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.POLITICA)) {
+								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.ELECTION_TODAY) || fromText.contains(Constant.FROM.LA_POLITICA_HOY)) {
 									opened = true;
 									if (Math.random() <= 0.2) {
 										clickShowImages("show-text");
@@ -192,7 +192,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 		Random random = new Random();
 
 		if(random.nextBoolean()){
-			return Constant.FROM.POLITICA;
+			return Constant.FROM.ELECTION_TODAY;
 		}
 		return Constant.FROM.YAHOO;
 	}
@@ -267,7 +267,6 @@ public class ModernYahooRunnable extends YahooRunnable {
 
 			Thread.sleep(randInt(2000, 3000));
 
-		//	WebElement currentMsg = findMessage(spamMsgs, Constant.FROM.POLITICA);
 			WebElement currentMsg =  spamMsgs.get(randInt(0, spamMsgs.size()-1));
 			if (currentMsg != null) {
 
