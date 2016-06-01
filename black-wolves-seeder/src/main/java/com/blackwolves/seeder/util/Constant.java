@@ -1,5 +1,10 @@
 package com.blackwolves.seeder.util;
 
+/**
+ * 
+ * @author gastondapice
+ *
+ */
 public interface Constant {
 
 	final String HOME_BLACKWOLVES_LOGS = "/home/blackwolves/logs/";

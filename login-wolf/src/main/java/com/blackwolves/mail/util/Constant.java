@@ -1,5 +1,10 @@
 package com.blackwolves.mail.util;
 
+/**
+ * 
+ * @author gastondapice
+ *
+ */
 public interface Constant {
 
 	final String HOME_BLACKWOLVES_LOGS = "/home/blackwolves/logs/";
@@ -46,6 +51,7 @@ public interface Constant {
 		final String RO_DB = "ro";
 		final String US_DB = "us";
 		final String CAB_DB = "cab";
+		final String MTA2_DB = "mta2";
 		
 		final String DB_DRIVER = "com.mysql.jdbc.Driver";
 		
@@ -60,6 +66,10 @@ public interface Constant {
 		final String CAB_DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_seeds";
 		final String CAB_DB_USER = "obcabril_root";
 		final String CAB_DB_PASSWORD = "Daniel123";
+		
+		final String MTA2_DB_CONNECTION = "jdbc:mysql://38.95.111.2:3306/obcabril_mta2";
+		final String MTA2_DB_USER = "obcabril_root";
+		final String MTA2_DB_PASSWORD = "Daniel123";
 		
 		final String SDF = "yyyy-M-dd HH:mm:ss";
 		final String GMT_3 = "GMT-3";
