@@ -93,12 +93,12 @@ public interface Constant {
 		final String SPAM = "Golfsmith";
 		final String JERRY = "Jerry Seinfeld";
 		final String NYTIMES = "NYTimes";
-		final String YAHOO = "Yahoo";
-		final String LGE = "Experts";
-		final String LA_POLITICA_HOY = "Politica";
 		final String HARP = "Harp";
-		final String ELECTION_TODAY = "Election";
-		final CharSequence THE_COOL_INFO = "Cool";
-		final CharSequence TRENDING_VIDEOS_ARGENTINA = "Argentina";
+		final String YAHOO = "Yahoo";
+		final String ET = "Election";
+		final String LPH = "Politica";
+		final CharSequence TVA = "Argentina";
+		final String LGE = "Experts";
+		final CharSequence TCI = "Cool";
 	}
 }

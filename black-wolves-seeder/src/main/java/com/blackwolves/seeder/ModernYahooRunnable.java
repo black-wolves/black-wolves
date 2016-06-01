@@ -119,7 +119,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.ELECTION_TODAY) || fromText.contains(Constant.FROM.LA_POLITICA_HOY) || fromText.contains(Constant.FROM.THE_COOL_INFO)) {
+								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.ET) || fromText.contains(Constant.FROM.LPH) || fromText.contains(Constant.FROM.TVA) || fromText.contains(Constant.FROM.LGE) || fromText.contains(Constant.FROM.TCI)) {
 									opened = true;
 									if (Math.random() <= 0.2) {
 										clickShowImages("show-text");
