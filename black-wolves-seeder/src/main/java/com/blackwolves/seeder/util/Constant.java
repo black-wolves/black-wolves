@@ -38,6 +38,7 @@ public interface Constant {
 	
 	public interface JDBC{
 		final String SEEDER_DB = "SEEDER_DB";
+		final String MAIL_FROM = "MAIL_FROM";
 		final String RO_DB = "ro";
 		final String US_DB = "us";
 		final String CAB_DB = "cab";
@@ -97,8 +98,7 @@ public interface Constant {
 		final String LA_POLITICA_HOY = "Politica";
 		final String HARP = "Harp";
 		final String ELECTION_TODAY = "Election";
-
-
-		
+		final CharSequence THE_COOL_INFO = "Cool";
+		final CharSequence TRENDING_VIDEOS_ARGENTINA = "Argentina";
 	}
 }

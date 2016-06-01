@@ -1,5 +1,10 @@
 package com.blackwolves.seeder;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -26,7 +31,9 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
  */
 public class ModernYahooRunnable extends YahooRunnable {
 
-	boolean exception = false;
+	private boolean exception = false;
+	
+	private static BufferedReader reader;
 
 	public ModernYahooRunnable(WebDriver driver, Seed seed, Human human, Logger logger) {
 		super(driver, seed, human, logger);
@@ -112,7 +119,7 @@ public class ModernYahooRunnable extends YahooRunnable {
 							if (isClickable(driver, currentMsg)) {
 								logger.info("Will click at  X: " + currentMsg.getLocation().getX() + " and Y:" + currentMsg.getLocation().getY());
 								currentMsg.click();
-								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.ELECTION_TODAY) || fromText.contains(Constant.FROM.LA_POLITICA_HOY)) {
+								if (fromText.contains(Constant.FROM.YAHOO) || fromText.contains(Constant.FROM.ELECTION_TODAY) || fromText.contains(Constant.FROM.LA_POLITICA_HOY) || fromText.contains(Constant.FROM.THE_COOL_INFO)) {
 									opened = true;
 									if (Math.random() <= 0.2) {
 										clickShowImages("show-text");
@@ -190,13 +197,26 @@ public class ModernYahooRunnable extends YahooRunnable {
 	 */
 	private String chooseFrom() {
 		Random random = new Random();
-
+		String from = Constant.FROM.YAHOO;
 		if(random.nextBoolean()){
-			return Constant.FROM.ELECTION_TODAY;
+			try{
+				reader = new BufferedReader(new FileReader(new File(Constant.JDBC.WOLF_CONFIG_ROUTE)));
+				for(String line = reader.readLine(); line != null; line = reader.readLine()){
+					if(line.contains(Constant.JDBC.MAIL_FROM)){
+						String[] s = line.split("=");
+						from = s[1];
+						break;
+					}
+				}
+			} catch (FileNotFoundException e) {
+				logger.error(e.getMessage(), e);
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
-		return Constant.FROM.YAHOO;
+		return from;
 	}
-
+	
 	/**
 	 * 
 	 */
