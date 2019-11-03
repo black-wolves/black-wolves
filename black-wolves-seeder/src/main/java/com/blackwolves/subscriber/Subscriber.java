@@ -23,7 +23,19 @@ public class Subscriber {
 	public static void main(String[] args) {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		SubscriberRunnable sr = context.getBean(SubscriberRunnable.class);
-		sr.runProcess(args[0]);
+	//	sr.runProcess(args[0]);
+
+		for (int i = 0; i < args.length; i++) {
+			sr.runProcess(args[i]);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		
 		logger.info("Subscriber process finished");
 		return;
 	}

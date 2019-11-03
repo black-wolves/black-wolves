@@ -2,12 +2,14 @@ package com.blackwolves.subscriber;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,9 @@ public class SubscriberRunnable {
 	 * @param mySeed
 	 */
 	public void runProcess(String mySeed) {
+		System.out.println(mySeed);
 		String[] seed = mySeed.split(",");
-		Seed dbSeed = seedService.getSeedFromDb(seed);
+		Seed dbSeed = new Seed(seed[0], seed[1]); //seedService.getSeedFromDb(seed);
 
 		logger.info("Creating the driver");
 		DesiredCapabilities caps = new DesiredCapabilities();
@@ -50,11 +53,15 @@ public class SubscriberRunnable {
 		caps.setCapability("resolution", "1280x800");
 		WebDriver driver = new FirefoxDriver(caps);
 		try {
-			subscribeToSkimm(dbSeed, driver);
-			subscribeToMatterMark(dbSeed, driver);
-			subscribeFashionMagazine(dbSeed, driver);
-			subscribeToDigg(dbSeed, driver);
+		//	subscribeToSkimm(dbSeed, driver);
+		//	subscribeToMatterMark(dbSeed, driver);
+		//	subscribeFashionMagazine(dbSeed, driver);
+		//	subscribeToDigg(dbSeed, driver);
+		
+			
 			subscribeToTheWeek(dbSeed, driver);
+			subscribeToRentalCars(dbSeed, driver);
+			subscribeToHollister(dbSeed, driver);
 		}
 
 		catch (NoSuchElementException e) {
@@ -68,24 +75,26 @@ public class SubscriberRunnable {
 	
 	// Works! :)
 	private void subscribeToSkimm(Seed dbSeed, WebDriver driver) throws InterruptedException {
-		String url = "http://www.theskimm.com/";
+		String url = "https://www.avantrip.com/";
 		if (isSubscribed(dbSeed, url)) {
 			logger.info("This seed is already subscribe to: " + url);
 			return;
 		}
 		logger.info("Subscribing to The Skimm");
 		driver.get(url);
-		driver.findElement(By.name("email")).clear();
-		driver.findElement(By.name("email")).sendKeys(dbSeed.getEmail());
-		driver.findElement(By.name("email")).submit();
-		Subscription subscription = new Subscription("The Skimm", url);
-		dbSeed.getSubscriptions().add(subscription);
-		try {
-			seedService.saveOrUpdate(dbSeed);
-			logger.info("Successfully subscribed to: " + url);
-		} catch (ServiceException e) {
-			logger.error(e.getMessage(), e);
-		}
+		
+		List<WebElement> listOfElements = driver.findElements(By.xpath("//input"));
+		//driver.findElement(By.className("styled__StyledInput-s1dmtr08-0 buKiPa")).clear();
+		//driver.findElement(By.name("email")).sendKeys(dbSeed.getEmail());
+		//driver.findElement(By.name("email")).submit();
+	//	Subscription subscription = new Subscription("The Skimm", url);
+	//	dbSeed.getSubscriptions().add(subscription);
+	//	try {
+	//		seedService.saveOrUpdate(dbSeed);
+	//		logger.info("Successfully subscribed to: " + url);
+	//	} catch (ServiceException e) {
+	//		logger.error(e.getMessage(), e);
+	//	}
 		Thread.sleep(3000);
 	}
 	
@@ -172,20 +181,58 @@ public class SubscriberRunnable {
 		}
 		logger.info("Subscribing to The Week");
 		driver.get(url);
-		driver.findElement(By.name("email")).clear();
+		driver.manage().window().maximize();
+		Thread.sleep(5000);
+
+	//	driver.findElement(By.name("email")).clear();
 		driver.findElement(By.name("email")).sendKeys(dbSeed.getEmail());
 		driver.findElement(By.name("email")).submit();
 		Subscription subscription = new Subscription("The Week", url);
 		dbSeed.getSubscriptions().add(subscription);
-		try {
-			seedService.saveOrUpdate(dbSeed);
-			logger.info("Successfully subscribed to: " + url);
-		} catch (ServiceException e) {
-			logger.error(e.getMessage(), e);
-		}
-		Thread.sleep(3000);
+//		try {
+//			seedService.saveOrUpdate(dbSeed);
+//			logger.info("Successfully subscribed to: " + url);
+//		} catch (ServiceException e) {
+//			logger.error(e.getMessage(), e);
+//		}
+//		Thread.sleep(3000);
 	}
 
+	// Works! :)
+		private void subscribeToRentalCars(Seed dbSeed, WebDriver driver) throws InterruptedException {
+			String url = "https://www.rentalcars.com";
+			if (isSubscribed(dbSeed, url)) {
+				logger.info("This seed is already subscribe to: " + url);
+				return;
+			}
+			logger.info("Subscribing to RentalCars");
+			driver.get(url);
+			driver.manage().window().maximize();
+			Thread.sleep(5000);
+
+			driver.findElement(By.id("emailAddress")).clear();
+			driver.findElement(By.id("emailAddress")).sendKeys(dbSeed.getEmail());
+			driver.findElement(By.className("cb-c-email-signup__submit")).submit();
+
+		}
+	
+		// Works! :)
+				private void subscribeToHollister(Seed dbSeed, WebDriver driver) throws InterruptedException {
+					String url = "https://hollisterco.com";
+					if (isSubscribed(dbSeed, url)) {
+						logger.info("This seed is already subscribe to: " + url);
+						return;
+					}
+					logger.info("Subscribing to Hollister");
+					driver.get(url);
+					driver.manage().window().maximize();
+					Thread.sleep(5000);
+
+					driver.findElement(By.id("banner-email-field")).clear();
+					driver.findElement(By.id("banner-email-field")).sendKeys(dbSeed.getEmail());
+					driver.findElement(By.className("footer-email-subscribe")).submit();
+
+				}
 	/**
 	 * 
 	 * @param dbSeed
