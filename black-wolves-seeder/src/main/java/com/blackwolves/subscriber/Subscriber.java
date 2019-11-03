@@ -22,7 +22,7 @@ public class Subscriber {
 	
 	public static void main(String[] args) {
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-		SubscriberRunnable sr = context.getBean(SubscriberRunnable.class);
+		SubscriberRunnable   sr = context.getBean(SubscriberRunnable.class);
 	//	sr.runProcess(args[0]);
 
 		for (int i = 0; i < args.length; i++) {
