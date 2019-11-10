@@ -4,7 +4,7 @@
 	<groupId>com.black.wolves</groupId>
 	<artifactId>yahoo</artifactId>
 	<version>CURRENT</version>
-	<packaging>war</packaging>
+
 
 	<dependencies>
 
