@@ -3,19 +3,29 @@
  */
 package com.blackwolves.seeder;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 //github.com/black-wolves/black-wolves.git
@@ -39,7 +49,7 @@ public class Seeder {
 
 	private static final Logger logger = LogManager.getLogger(Seeder.class.getName());
 
-	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/?.src=ym&.intl=ro&.lang=ro-RO&.done=https%3a//mail.yahoo.com";
+	private static final String YAHOO_MAIL_RO_URL = "https://login.yahoo.com/";
 	private static String IMAGES_PATH = "/var/www/screenshots/";
 
 	@Autowired
@@ -50,13 +60,25 @@ public class Seeder {
 	private static Human human;
 	private static ApplicationContext context;
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws Exception, IOException {
+
 //		testPurposes();
-		
+
 		context = new ClassPathXmlApplicationContext("classpath:application-context.xml");
 		Seeder seeder = context.getBean(Seeder.class);
-		seeder.checkMail(args[0], args[1]);
+		int inboxCounter = 0;
+		int totalCounter = 0;
+
+		try (BufferedReader br = new BufferedReader(
+				new FileReader("/Users/danigrane/git/black-wolves/black-wolves-seeder/src/main/resources/seeds.txt"))) {
+			String line;
+			inboxCounter = 0;
+			while ((line = br.readLine()) != null) {
+				totalCounter++;
+				inboxCounter += seeder.checkMail(args[0], line);
+			}
+		}
+		System.out.println("#########  Inbox Rate is " + inboxCounter+ "out of " +totalCounter);
 		logger.info("Finished checking mails");
 		return;
 	}
@@ -66,21 +88,22 @@ public class Seeder {
 	 * @param myIp
 	 * @param mySeed
 	 */
-	private void checkMail(String myIp, String mySeed) {
+	private int checkMail(String myIp, String mySeed) {
 
 		String[] seed = mySeed.split(",");
-
-		Seed dbSeed = seedService.getSeedFromDb(seed);
+		int inbox = 0;
+		// Seed dbSeed = seedService.getSeedFromDb(seed);
+		Seed dbSeed = new Seed(seed[0], seed[1]); // seedService.getSeedFromDb(seed);
 
 		Session session = validateLastSession(myIp, dbSeed);
 
 		if (session == null) {
 			logger.info("This seed can't continue the process");
-			return;
+			return 0;
 		} else {
 			WebDriver driver = createWebDriver();
 
-			logger.info("Firefox Created");
+			logger.info("Chrome Created");
 
 			human = generateRandomHumanUser();
 
@@ -89,13 +112,13 @@ public class Seeder {
 			handler = validateYahooVersion(driver, mySeed);
 
 			if (handler != null) {
+				//inbox = handler.checkInboxRate();
 				handler.runProcess();
 				try {
-					dbSeed.getSessions().add(session);
-					logger.info("Saving seed session in the database");
-					seedService.saveOrUpdate(dbSeed);
-				} catch (ServiceException e) {
-					logger.error(e.getMessage(), e);
+					// dbSeed.getSessions().add(session);
+					// logger.info("Saving seed session in the database");
+					// seedService.saveOrUpdate(dbSeed);
+					System.out.println("Ending");
 				} finally {
 					driver.quit();
 					logger.info("Thread should end now.");
@@ -103,9 +126,10 @@ public class Seeder {
 			} else {
 				logger.info("New Interface detected.Exiting");
 				driver.quit();
-				return;
+				return inbox;
 			}
 		}
+		return inbox;
 	}
 
 	/**
@@ -122,11 +146,11 @@ public class Seeder {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		// The below method will save the screen shot in d drive with name
 		// "screenshot.png"
-		try {
-			FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot_1.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//		//	FileUtils.copyFile(scrFile, new File("/home/blackwolves/screenshot_1.jpg"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -134,29 +158,13 @@ public class Seeder {
 	 */
 	private WebDriver createWebDriver() {
 		logger.info("Creating the web driver");
-		
-		
-		 FirefoxProfile profile = new FirefoxProfile();
-		  File modifyHeaders = new File("/var/www/modify_headers.xpi");
-		  profile.setEnableNativeEvents(false); 
-		  try {
-		    profile.addExtension(modifyHeaders); 
-		  } catch (IOException e) {
-		    e.printStackTrace(); 
-		  }
-		  profile.setPreference("modifyheaders.headers.count", 1);
-		   profile.setPreference("modifyheaders.headers.action0", "Add");
-		   profile.setPreference("modifyheaders.headers.name0", "sox");
-		   profile.setPreference("modifyheaders.headers.value0", "305471");
-		   profile.setPreference("modifyheaders.headers.enabled0", true);
-		   profile.setPreference("modifyheaders.config.active", true);
-		   profile.setPreference("modifyheaders.config.alwaysOn", true);
-		   profile.setPreference("general.useragent.override", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+
+		System.setProperty("webdriver.chrome.driver", "/Applications/chromedriver");
+		logger.info("Creating the driver");
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		//capabilities.setBrowserName("Graneeeeeeekk");
+		// capabilities.setBrowserName("Graneeeeeeekk");
 		capabilities.setPlatform(org.openqa.selenium.Platform.ANY);
-		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 
 		// caps.setCapability("applicationCacheEnabled", false);
 		// String PROXY = "192.168.1.111:8888";
@@ -165,16 +173,16 @@ public class Seeder {
 		// .setFtpProxy(PROXY)
 		// .setSslProxy(PROXY);
 		// caps.setCapability(CapabilityType.PROXY, proxy);
-		WebDriver driver = new FirefoxDriver(capabilities);
+		WebDriver driver = new ChromeDriver(capabilities);
 
-		driver.manage().window().maximize();
+		// driver.manage().window().;
 		return driver;
 	}
 
 	/**
 	 * Validate if the seed has any session created. If it doesn't have any it
-	 * continues the process. If it has at least one it validates the last date
-	 * of the session to see if the seed can continue the process
+	 * continues the process. If it has at least one it validates the last date of
+	 * the session to see if the seed can continue the process
 	 * 
 	 * @param myIp
 	 * @param dbSeed
@@ -240,17 +248,28 @@ public class Seeder {
 			logger.info("Introducing username: " + seed[0]);
 			WebElement accountInput = driver.findElement(By.id("login-username"));
 			human.type(accountInput, seed[0]);
+			logger.info("Clicking login-1 button");
+			accountInput.sendKeys(Keys.ENTER);
+			// if (driver.findElements(By.name("signin")).size() > 0) {
 
+//			} else {
+//				logger.info("Already logged in..Moving forward!");
+//			}
+			Thread.sleep(3000);
 			logger.info("Introducing password: " + seed[1]);
 			WebElement passwordInput = driver.findElement(By.id("login-passwd"));
 			human.type(passwordInput, seed[1]);
-
+			passwordInput.sendKeys(Keys.ENTER);
 			logger.info("Clicking login button");
-			if (driver.findElements(By.id("login-signin")).size() > 0) {
-				driver.findElement(By.id("login-signin")).click();
-			} else {
-				logger.info("Already logged in..Moving forward!");
-			}
+			// if (driver.findElements(By.name("verifyPassword")).size() > 0) {
+			// driver.findElement(By.name("login-signin")).click();
+			// } else {
+			// logger.info("Already logged in..Moving forward!");
+			// }
+			Thread.sleep(3000);
+			logger.info("LogginSuccess going to Mail");
+			driver.get("https://mail.yahoo.com");
+
 		} catch (NoSuchElementException e) {
 			logger.error("Enter was already pressed...Moving forward!");
 			// logger.error(e.getMessage(), e);
@@ -287,6 +306,7 @@ public class Seeder {
 				logger.info("**********   There is a new yahoo version in town  **********");
 				// SubscriberRunnable.writeToFile("new_version_in_town.html",
 				// driver.getPageSource());
+				handler = new ModernYahooRunnable(driver, seed, human);
 			}
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);

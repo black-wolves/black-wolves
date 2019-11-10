@@ -3,7 +3,6 @@
  */
 package com.blackwolves.seeder;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
@@ -25,8 +24,8 @@ public class DumbHuman extends Human {
 			Character myCharacter = new Character(charArray[i]);
 			if (YahooRunnable.throwDice()) {
 				logger.info("Human make mistakes");
-				String typo = RandomStringUtils.random(1, "abcdefghijklmnopqrstuvwxyz");
-				input.sendKeys(typo);
+			//	String typo = RandomStringUtils.random(1, "abcdefghijklmnopqrstuvwxyz");
+				input.sendKeys("z");
 				Thread.sleep(YahooRunnable.randInt(500, 2500));
 				input.sendKeys(Keys.BACK_SPACE);
 			}

@@ -34,12 +34,12 @@ public abstract class YahooRunnable {
 
 	private static final Logger logger = LogManager.getLogger(YahooRunnable.class.getName());
 
-	protected static final double PERCENTAGE = generateDoubleRandom(0.7, 0.9) ;
-	
+	protected static final double PERCENTAGE = generateDoubleRandom(0.1, 0.15);
+
 	private static final String ROUTE = "/var/www/";
 
 	private String seed = "";
-	
+
 	protected Human human;
 
 	protected WebDriver driver;
@@ -50,6 +50,7 @@ public abstract class YahooRunnable {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param driver
 	 * @param seed
 	 * @param human
@@ -61,8 +62,10 @@ public abstract class YahooRunnable {
 		this.jse = (JavascriptExecutor) driver;
 		this.human = human;
 	}
+
 	/**
 	 * Generates a random value of type doulbe
+	 * 
 	 * @param max
 	 * @param min
 	 * @return double
@@ -80,21 +83,23 @@ public abstract class YahooRunnable {
 	public abstract void processSpam(String[] seed) throws InterruptedException;
 
 	public abstract void clickRandomLink() throws InterruptedException;
-	
+
 	public abstract void addToAddressBook() throws InterruptedException;
-	
+
 	public abstract void replyToEmail(WebDriverWait wait) throws InterruptedException;
-	
+
 	public abstract void replyToEmailFromSubList(WebDriverWait wait) throws InterruptedException;
-	
+
 	public abstract void forwardEmail(WebDriverWait wait) throws InterruptedException;
-	
+
 	public abstract void forwardEmailFromSubList(WebDriverWait wait) throws InterruptedException;
-	
+
 	public abstract void sendEmail() throws InterruptedException;
-	
+
 	public abstract void clickSpam() throws InterruptedException;
 	
+	public abstract int checkInboxRate();
+
 	/**
 	 * Starts the wolf seeder process
 	 */
@@ -110,16 +115,19 @@ public abstract class YahooRunnable {
 			logger.error(e.getMessage(), e);
 		}
 	}
+	
+
 
 	/**
 	 * Throw dices to get random results
+	 * 
 	 * @return boolean
 	 */
 	public static boolean throwDice() {
 		int dice = randInt(1, 6);
 		return dice == 6;
 	}
-	
+
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
 		// nextInt is normally exclusive of the top value, so add 1 to make it inclusive
@@ -144,25 +152,23 @@ public abstract class YahooRunnable {
 	 * @throws InterruptedException
 	 */
 	protected void clickShowImages(String className) throws InterruptedException {
-		if (validateInboxShowImagesButton(className)) {
-			if(driver.findElements(By.className("show-text")).size() > 0){
-				logger.info("Getting the show images div");
-				List<WebElement> divs = driver.findElements(By.className("show-text"));
+		if (driver.findElements(By.partialLinkText("Here")).size() > 0) {
+			if (generateDoubleRandom(1.0, 0.0) > 0.5) {
+				logger.info("Getting the  images ");
+				List<WebElement> divs = driver.findElements(By.partialLinkText("Here"));
 				WebElement showImage = divs.get(0);
-				WebElement a = showImage.findElement(By.tagName("a"));
-				mouse.moveToElement(a);
+				// WebElement a = showImage.findElement(By.tagName("a"));
+				mouse.moveToElement(showImage);
 				logger.info("Clicking the show images button");
-				a.click();
+				showImage.click();
 				logger.info("**********  Wohooo! Showing Images. Waiting a little bit to display them **********");
 				Thread.sleep(3000 + randInt(1000, 4000));
-			}else{
-				logger.info("No Images to click");
 			}
 		} else {
-			logger.info("**********   No show images button found or there is none   **********");
+			logger.info("No Images to click");
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param className
@@ -183,9 +189,9 @@ public abstract class YahooRunnable {
 
 		logger.info("Cicking this link: " + a.getAttribute("href"));
 		Actions newTab = new Actions(driver);
-		try{
+		try {
 			newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
-		} catch (MoveTargetOutOfBoundsException e){
+		} catch (MoveTargetOutOfBoundsException e) {
 			logger.error(e.getMessage(), e);
 		}
 		Thread.sleep(5000);
@@ -196,9 +202,9 @@ public abstract class YahooRunnable {
 
 		set.remove(base);
 		assert set.size() == 1;
-		try{
+		try {
 			driver.switchTo().window((String) set.toArray()[0]);
-		} catch (ArrayIndexOutOfBoundsException e){
+		} catch (ArrayIndexOutOfBoundsException e) {
 			logger.error(e.getMessage(), e);
 		}
 
@@ -212,7 +218,7 @@ public abstract class YahooRunnable {
 			driver.switchTo().window(winHandle);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -244,7 +250,7 @@ public abstract class YahooRunnable {
 		}
 		return seeds;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -260,17 +266,18 @@ public abstract class YahooRunnable {
 		}
 		return domains;
 	}
-	
+
 	/**
 	 * Adds the performed action to the session
+	 * 
 	 * @param session
-	 * @param actionName 
+	 * @param actionName
 	 */
 	public static void addActionToSession(Session session, String actionName) {
 		Action action = new Action(actionName);
 		session.getActions().add(action);
 	}
-	
+
 //	protected void openLinkInNewWindow(WebElement a) throws InterruptedException{
 //		Actions newTab = new Actions(driver);
 //		newTab.keyDown(Keys.SHIFT).click(a).keyUp(Keys.SHIFT).build().perform();
@@ -312,7 +319,7 @@ public abstract class YahooRunnable {
 //		driver.close();
 //		driver.switchTo().window(base);
 //	}
-	
+
 //	/**
 //	 * Executes a script on an element
 //	 * @note Really should only be used when the web driver is sucking at exposing

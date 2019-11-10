@@ -17,7 +17,7 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<mysql.version>5.1.36</mysql.version>
         <commons.beanutils>1.8.3</commons.beanutils>
-		<selenium.version>2.45.0</selenium.version>
+		<selenium.version>3.14.0</selenium.version>
 		<quartz.version>2.2.1</quartz.version>
 	</properties>
 
@@ -143,17 +143,6 @@
 			<version>${selenium.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-htmlunit-driver</artifactId>
-			<version>${selenium.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 
 
 		<dependency>

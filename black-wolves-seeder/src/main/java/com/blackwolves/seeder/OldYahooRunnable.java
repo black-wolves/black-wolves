@@ -275,4 +275,10 @@ public class OldYahooRunnable extends YahooRunnable{
 		
 	}
 
+	@Override
+	public int checkInboxRate() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
