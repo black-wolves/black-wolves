@@ -18,7 +18,7 @@
 		<mysql.version>5.1.36</mysql.version>
         <commons.beanutils>1.8.3</commons.beanutils>
 		<selenium.version>3.14.0</selenium.version>
-		<quartz.version>2.2.1</quartz.version>
+		<quartz.version>2.3.2</quartz.version>
 	</properties>
 
 	<dependencies>
