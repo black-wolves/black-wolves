@@ -15,7 +15,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
-		<mysql.version>5.1.36</mysql.version>
+		<mysql.version>8.0.28</mysql.version>
         <commons.beanutils>1.8.3</commons.beanutils>
 		<selenium.version>3.14.0</selenium.version>
 		<quartz.version>2.2.1</quartz.version>
